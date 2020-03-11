@@ -1,3 +1,5 @@
-from .DataContainer import DataContainer
+from .DataContainer import DataContainer, DATASET_LIST
 
-__all__ = ['DataContainer']
+__all__ = [
+    'DataContainer', 'DATASET_LIST'
+]
