@@ -57,7 +57,7 @@ class DataContainer:
         assert self.num_train != 0 and self.num_test != 0, \
             'WARNING: empty dataset!'
         assert self.num_train + self.num_test == self.size, \
-            'WARNING: train+test is NOT euqal to data size'
+            'WARNING: train+test is NOT equal to data size'
 
         print('Successfully load data! Time taken: {:2.0f}m {:3.1f}s'.format(
             time_elapsed // 60,
@@ -101,7 +101,7 @@ class DataContainer:
         print('Preparing DataFrame...')
         self.dataframe = self._get_dataframe()
         n = len(self.dataframe.index)
-        m = self.dataframe.shape[1] - 1  # the label is also insided frame
+        m = self.dataframe.shape[1] - 1  # the label is also in the frame
 
         assert self.size == n, f'Expecting size {self.size}, got {n}'
         assert self.dim_data[0] == m, \
