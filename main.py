@@ -1,7 +1,7 @@
 import sys
 
 from attacks import AttackContainer
-from basemodels import ModelContainer
+from basemodels import ModelContainer, MnistCnnCW
 from datasets import (DATASET_LIST, DataContainer, get_image_list,
                       get_quantitative_list)
 from defences import DefenceContainer
@@ -15,6 +15,7 @@ def main():
     print(get_quantitative_list())
     print()
 
+    # 1. choose a dataset
     DATA_ROOT = 'data'
     BATCH_SIZE = 64
     TYPE = 'image'  # image or quantitative
@@ -22,20 +23,27 @@ def main():
     # quantitative: 'BankNote', 'BreastCancerWisconsin', 'WheatSeed', 'HTRU2'
     NAME = 'MNIST'
 
-    print(f'Start {NAME} data container')
+    print(f'Starting {NAME} data container...')
     IMAGE_DATASET = DATASET_LIST[TYPE][NAME]
     dc = DataContainer(IMAGE_DATASET, DATA_ROOT)
-    dc(batch_size=BATCH_SIZE, normalize=False)
-    print(len(dc))
-    print('train:', dc.dim_train)
-    print('test[:16]: ', dc.label_test_np[:16])
-    print('train mean:', dc.train_mean)
-    print('train std:', dc.train_std)
+    dc(BATCH_SIZE)
 
-    # model = ModelContainer()
-    # model()
+    # 2. choose a model
+    model = MnistCnnCW()
+
+    # 3. train/load the model
+    # train, save, load
+    mc = ModelContainer(model, dc)
+    mc.fit(epochs=5)
+    
+    # 4. populate adversarial examples
+    # train, save, load
     # attack = AttackContainer()
     # attack()
+
+
+    # 5. test defence method
+    # train, save, load
     # defence = DefenceContainer()
     # defence()
 
