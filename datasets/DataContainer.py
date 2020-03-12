@@ -231,12 +231,13 @@ class DataContainer:
             file_path = os.path.join(
                 self.path, 'data_banknote_authentication.txt')
             self._check_file(file_path)
+            col_names = ['variance', 'skewness', 'curtosis', 'entropy', 'class']
             dataframe = pd.read_csv(
                 file_path,
                 header=None,
-                names=['variance', 'skewness', 'curtosis', 'entropy', 'class'],
+                names=col_names,
                 dtype=np.float32)
-            # Expecting y/class/label has column name "class"
+            # Expecting y (label, output) has column name "class"
             dataframe['class'] = dataframe['class'].astype('int64')
             return dataframe
 
@@ -245,19 +246,22 @@ class DataContainer:
             self._check_file(file_path)
             return self._handle_bc_dataframe(file_path)
         elif self.name == 'WheatSeed':
-            raise Exception('Not implemented!')
+            file_path = os.path.join(self.path, 'seeds_dataset.txt')
+            self._check_file(file_path)
+            return self._handle_wheat_seed_dataframe(file_path)
         elif self.name == 'HTRU2':
             raise Exception('Not implemented!')
-
         else:
             raise Exception(f'Dataset {self.name} not found!')
-    
+
     def _handle_bc_dataframe(self, file_path):
+        ''' Preprocessing the Breast Cancer Wisconsin (Diagnostic) DataFrame
+        '''
         dataframe = pd.read_csv(file_path, index_col=0)
 
         # remove empty column
         dataframe = dataframe.drop(
-            dataframe.columns[dataframe.columns.str.contains('^Unnamed')], 
+            dataframe.columns[dataframe.columns.str.contains('^Unnamed')],
             axis=1)
         # rename column 'diagnosis' to 'class'
         dataframe.rename({'diagnosis': 'class'}, axis='columns', inplace=True)
@@ -266,9 +270,22 @@ class DataContainer:
         dataframe['class'] = dataframe['class'].cat.codes.astype('int64')
         # move output column to the end of table
         col_names = dataframe.columns
-        col_names = [c for c in col_names if c !='class'] + ['class']
+        col_names = [c for c in col_names if c != 'class'] + ['class']
         dataframe = dataframe[col_names]
-        
+        return dataframe
+
+    def _handle_wheat_seed_dataframe(self, file_path):
+        ''' Preprocessing the Seeds of Wheat DataFrame
+        '''
+        col_names = ['area', 'perimeter', 'compactness', 'kernel length',
+                     'kernel width', 'asymmetry coefficient', 'kernel groove length',
+                     'class']
+        dataframe = pd.read_csv(file_path, header=None,
+                                names=col_names, sep='\s+')
+        # convert categorical data to integer codes
+        dataframe['class'] = dataframe['class'].astype('category')
+        # map [1, 2, 3] to [0, 1, 2]
+        dataframe['class'] = dataframe['class'].cat.codes.astype('int64')
         return dataframe
 
     def _check_file(self, file):

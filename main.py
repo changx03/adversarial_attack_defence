@@ -20,7 +20,7 @@ def main():
     TYPE = 'quantitative'  # image or quantitative
     # image: 'MNIST', 'CIFAR10', 'SVHN'
     # quantitative: 'BankNote', 'BreastCancerWisconsin', 'WheatSeed', 'HTRU2'
-    NAME = 'BreastCancerWisconsin'
+    NAME = 'WheatSeed'
 
     print(f'Start {NAME} data container')
     IMAGE_DATASET = DATASET_LIST[TYPE][NAME]
