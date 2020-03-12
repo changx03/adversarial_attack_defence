@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import torch
 import torchvision as tv
+from scipy.io import arff
 from torch.utils.data import DataLoader, TensorDataset
 
 from .dataset_list import DATASET_LIST, get_sample_mean, get_sample_std
@@ -232,14 +233,14 @@ class DataContainer:
                 self.path, 'data_banknote_authentication.txt')
             self._check_file(file_path)
             col_names = ['variance', 'skewness', 'curtosis', 'entropy', 'class']
-            dataframe = pd.read_csv(
+            df = pd.read_csv(
                 file_path,
                 header=None,
                 names=col_names,
                 dtype=np.float32)
             # Expecting y (label, output) has column name "class"
-            dataframe['class'] = dataframe['class'].astype('int64')
-            return dataframe
+            df['class'] = df['class'].astype('int64')
+            return df
 
         elif self.name == 'BreastCancerWisconsin':
             file_path = os.path.join(self.path, 'BreastCancerWisconsin.csv')
@@ -250,29 +251,31 @@ class DataContainer:
             self._check_file(file_path)
             return self._handle_wheat_seed_dataframe(file_path)
         elif self.name == 'HTRU2':
-            raise Exception('Not implemented!')
+            file_path = os.path.join(self.path, 'HTRU2', 'HTRU_2.arff')
+            self._check_file(file_path)
+            return self._handle_htru2_datafram(file_path)
         else:
             raise Exception(f'Dataset {self.name} not found!')
 
     def _handle_bc_dataframe(self, file_path):
         ''' Preprocessing the Breast Cancer Wisconsin (Diagnostic) DataFrame
         '''
-        dataframe = pd.read_csv(file_path, index_col=0)
+        df = pd.read_csv(file_path, index_col=0)
 
         # remove empty column
-        dataframe = dataframe.drop(
-            dataframe.columns[dataframe.columns.str.contains('^Unnamed')],
+        df = df.drop(
+            df.columns[df.columns.str.contains('^Unnamed')],
             axis=1)
         # rename column 'diagnosis' to 'class'
-        dataframe.rename({'diagnosis': 'class'}, axis='columns', inplace=True)
+        df.rename({'diagnosis': 'class'}, axis='columns', inplace=True)
         # map categorical outputs to integer codes
-        dataframe['class'] = dataframe['class'].astype('category')
-        dataframe['class'] = dataframe['class'].cat.codes.astype('int64')
+        df['class'] = df['class'].astype('category')
+        df['class'] = df['class'].cat.codes.astype('int64')
         # move output column to the end of table
-        col_names = dataframe.columns
+        col_names = df.columns
         col_names = [c for c in col_names if c != 'class'] + ['class']
-        dataframe = dataframe[col_names]
-        return dataframe
+        df = df[col_names]
+        return df
 
     def _handle_wheat_seed_dataframe(self, file_path):
         ''' Preprocessing the Seeds of Wheat DataFrame
@@ -280,13 +283,23 @@ class DataContainer:
         col_names = ['area', 'perimeter', 'compactness', 'kernel length',
                      'kernel width', 'asymmetry coefficient', 'kernel groove length',
                      'class']
-        dataframe = pd.read_csv(file_path, header=None,
+        df = pd.read_csv(file_path, header=None,
                                 names=col_names, sep='\s+')
         # convert categorical data to integer codes
-        dataframe['class'] = dataframe['class'].astype('category')
+        df['class'] = df['class'].astype('category')
         # map [1, 2, 3] to [0, 1, 2]
-        dataframe['class'] = dataframe['class'].cat.codes.astype('int64')
-        return dataframe
+        df['class'] = df['class'].cat.codes.astype('int64')
+        return df
+
+    def _handle_htru2_datafram(self, file_path):
+        ''' Preprocessing the HTRU2 DataFrame
+        '''
+        data = arff.loadarff(file_path)
+        df = pd.DataFrame(data[0])
+        # convert categorical data to integer codes
+        df['class'] = df['class'].astype('category')
+        df['class'] = df['class'].cat.codes.astype('int64')
+        return df
 
     def _check_file(self, file):
         print(f'Reading from {file}')

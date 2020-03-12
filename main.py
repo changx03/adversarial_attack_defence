@@ -44,6 +44,8 @@ def main():
     print(data_container.train_mean)
     print(data_container.train_std)
 
+    print(data_container.dataframe.head())
+    
     # model = ModelContainer()
     # model()
     # attack = AttackContainer()
