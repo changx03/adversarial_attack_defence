@@ -20,7 +20,7 @@ def main():
     TYPE = 'quantitative'  # image or quantitative
     # image: 'MNIST', 'CIFAR10', 'SVHN'
     # quantitative: 'BankNote', 'BreastCancerWisconsin', 'WheatSeed', 'HTRU2'
-    NAME = 'WheatSeed'
+    NAME = 'HTRU2'
 
     print(f'Start {NAME} data container')
     IMAGE_DATASET = DATASET_LIST[TYPE][NAME]
@@ -41,8 +41,8 @@ def main():
         print(f'{s:.4f}', end=', ')
     print('],')
 
-    print(data_container.mean)
-    print(data_container.std)
+    print(data_container.train_mean)
+    print(data_container.train_std)
 
     # model = ModelContainer()
     # model()

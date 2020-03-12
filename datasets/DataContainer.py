@@ -45,11 +45,11 @@ class DataContainer:
             shuffle, normalize, num_workers, size_train, require_np_array)
 
         if self.type == 'image':
-            self.mean = get_sample_mean(self.name)
-            self.std = get_sample_std(self.name)
+            self.train_mean = get_sample_mean(self.name)
+            self.train_std = get_sample_std(self.name)
         else:
-            self.mean = self.data_train_np.mean(axis=0)
-            self.std = self.data_train_np.std(axis=0)
+            self.train_mean = self.data_train_np.mean(axis=0)
+            self.train_std = self.data_train_np.std(axis=0)
 
         time_elapsed = time.time() - since
 
