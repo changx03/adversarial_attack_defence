@@ -62,25 +62,18 @@ def get_image_list():
 def get_quantitative_list():
     return list(DATASET_LIST['quantitative'].keys())
 
-
+# Only images are listed here. For quantitative data, the mean and std will vary 
+# by the normalization option.
 MEAN_LOOKUP = {
     'MNIST': [0.13066046],
     'CIFAR10': [0.49139947, 0.48215836, 0.44653094],
     'SVHN': [0.43768215, 0.4437698, 0.47280422],
-    'BankNote': [],
-    'BreastCancerWisconsin': [],
-    'WheatSeed': [],
-    'HTRU2': []
 }
 
 STD_LOOKUP = {
     'MNIST': [0.30150425],
     'CIFAR10': [0.20230092, 0.1994128, 0.20096162],
     'SVHN': [0.12008651, 0.12313706, 0.10520393],
-    'BankNote': [],
-    'BreastCancerWisconsin': [],
-    'WheatSeed': [],
-    'HTRU2': []
 }
 
 

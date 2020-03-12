@@ -24,8 +24,6 @@ class DataContainer:
         self.dim_data = dataset_dict['dim_data']
         self.path = path
         assert os.path.exists(path), f'{path} does NOT exist!'
-        self.mean = get_sample_mean(self.name)
-        self.std = get_sample_std(self.name)
 
     def __len__(self):
         return self.size
@@ -45,6 +43,14 @@ class DataContainer:
         since = time.time()
         self._prepare_data(
             shuffle, normalize, num_workers, size_train, require_np_array)
+
+        if self.type == 'image':
+            self.mean = get_sample_mean(self.name)
+            self.std = get_sample_std(self.name)
+        else:
+            self.mean = self.data_train_np.mean(axis=0)
+            self.std = self.data_train_np.std(axis=0)
+
         time_elapsed = time.time() - since
 
         assert self.num_train != 0 and self.num_test != 0, \
@@ -100,8 +106,6 @@ class DataContainer:
         assert self.dim_data[0] == m, \
             f'Expecting {self.dim_data[0]} attributes, got {m}'
 
-        # Expecting y/class/label has column name "class"
-        self.dataframe['class'] = self.dataframe['class'].astype('int64')
         self.data_range = get_range(self.dataframe.values[:, :m])
 
         print('Spliting train/test sets into numpy arrays...')
@@ -178,8 +182,7 @@ class DataContainer:
                 download=True,
                 transform=self.transform)
         else:
-            # TODO: implement other datasets
-            raise Exception('Not implemented!')
+            raise Exception(f'Dataset {self.name} not found!')
 
     def _loader_to_np(self, loader, train):
         data_shape = self.dim_train if train else self.dim_test
@@ -227,17 +230,47 @@ class DataContainer:
         if self.name == 'BankNote':
             file_path = os.path.join(
                 self.path, 'data_banknote_authentication.txt')
-            print(f'Reading from {file_path}')
-            if not os.path.exists(file_path):
-                raise FileExistsError(
-                    'data_banknote_authentication.txt does NOT exist!')
-
+            self._check_file(file_path)
             dataframe = pd.read_csv(
                 file_path,
                 header=None,
                 names=['variance', 'skewness', 'curtosis', 'entropy', 'class'],
                 dtype=np.float32)
+            # Expecting y/class/label has column name "class"
+            dataframe['class'] = dataframe['class'].astype('int64')
             return dataframe
-        else:
-            # TODO: implement dataframe for other sets
+
+        elif self.name == 'BreastCancerWisconsin':
+            file_path = os.path.join(self.path, 'BreastCancerWisconsin.csv')
+            self._check_file(file_path)
+            return self._handle_bc_dataframe(file_path)
+        elif self.name == 'WheatSeed':
             raise Exception('Not implemented!')
+        elif self.name == 'HTRU2':
+            raise Exception('Not implemented!')
+
+        else:
+            raise Exception(f'Dataset {self.name} not found!')
+    
+    def _handle_bc_dataframe(self, file_path):
+        dataframe = pd.read_csv(file_path, index_col=0)
+
+        # remove empty column
+        dataframe = dataframe.drop(
+            dataframe.columns[dataframe.columns.str.contains('^Unnamed')], 
+            axis=1)
+        # rename column 'diagnosis' to 'class'
+        dataframe.rename({'diagnosis': 'class'}, axis='columns', inplace=True)
+        # map categorical outputs to integer codes
+        dataframe['class'] = dataframe['class'].astype('category')
+        dataframe['class'] = dataframe['class'].cat.codes.astype('int64')
+        # move output column to the end of table
+        col_names = dataframe.columns
+        col_names = [c for c in col_names if c !='class'] + ['class']
+        dataframe = dataframe[col_names]
+        
+        return dataframe
+
+    def _check_file(self, file):
+        print(f'Reading from {file}')
+        assert os.path.exists(file), f'{file} does NOT exist!'
