@@ -27,7 +27,12 @@ class MnistCnnCW_hidden(nn.Module):
 
 
 class MnistCnnCW(nn.Module):
-    def __init__(self, lr=0.01, momentum=0.9):
+    def __init__(
+            self,
+            lr=0.1,
+            momentum=0,
+            scheduler=None,
+            scheduler_params=None):
         super(MnistCnnCW, self).__init__()
         self.lr = lr
         self.momentum = momentum
@@ -39,6 +44,8 @@ class MnistCnnCW(nn.Module):
 
         self.optimizer = torch.optim.SGD
         self.loss_fn = nn.NLLLoss()
+        self.scheduler = scheduler
+        self.scheduler_params = scheduler_params
 
     def forward(self, x):
         x = self.model_no_softmax(x)

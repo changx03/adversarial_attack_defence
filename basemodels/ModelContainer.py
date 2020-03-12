@@ -90,16 +90,25 @@ class ModelContainer:
         momentum = self.model.momentum
         optimizer = self.model.optimizer(
             self.model.parameters(), lr=lr, momentum=momentum)
+        # optimizer = self.model.optimizer(self.model.parameters(), lr=lr)
+        # if self.model.scheduler:
+        #     scheduler_params = self.model.scheduler_params
+        #     scheduler = self.model.scheduler(
+        #         optimizer, 
+        #         step_size=scheduler_params['step_size'], 
+        #         gamma=scheduler_params['gamma'])
+        print(f'Learning rate: {lr}')
 
         for epoch in range(epochs):
             time_start = time.time()
 
-            tr_loss, tr_acc, lr = self._train_torch(optimizer)
+            tr_loss, tr_acc = self._train_torch(optimizer)
             va_loss, va_acc = self._validate_torch()
+            # scheduler.step()
 
             time_elapsed = time.time() - time_start
-            print(('[{:2d}/{:d}] {:2.0f}m {:2.1f}s - lr: {:.4f} - Train Loss: {:.4f} Acc: {:.4f}% - Test Loss: {:.4f} Acc: {:.4f}%').format(
-                epoch+1, epochs, lr,
+            print(('[{:2d}/{:d}] {:2.0f}m {:2.1f}s - Train Loss: {:.4f} Acc: {:.4f}% - Test Loss: {:.4f} Acc: {:.4f}%').format(
+                epoch+1, epochs,
                 time_elapsed // 60, time_elapsed % 60,
                 tr_loss, tr_acc*100, va_loss, va_acc*100))
 
@@ -129,8 +138,7 @@ class ModelContainer:
         n = self.data_container.num_train
         total_loss = total_loss / n
         acc = corrects / n
-        lr = self._get_torch_lr(optimizer)
-        return total_loss, acc, lr
+        return total_loss, acc
 
     def _validate_torch(self):
         self.model.eval()
@@ -180,7 +188,3 @@ class ModelContainer:
                 filename, '.'.join(arr)))
 
         return '.'.join(arr)
-
-    def _get_torch_lr(self, optimizer):
-        for p in optimizer.param_groups:
-            return p['lr']
