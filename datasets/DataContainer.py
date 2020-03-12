@@ -232,7 +232,8 @@ class DataContainer:
             file_path = os.path.join(
                 self.path, 'data_banknote_authentication.txt')
             self._check_file(file_path)
-            col_names = ['variance', 'skewness', 'curtosis', 'entropy', 'class']
+            col_names = ['variance', 'skewness',
+                         'curtosis', 'entropy', 'class']
             df = pd.read_csv(
                 file_path,
                 header=None,
@@ -253,7 +254,7 @@ class DataContainer:
         elif self.name == 'HTRU2':
             file_path = os.path.join(self.path, 'HTRU2', 'HTRU_2.arff')
             self._check_file(file_path)
-            return self._handle_htru2_datafram(file_path)
+            return self._handle_htru2_dataframe(file_path)
         else:
             raise Exception(f'Dataset {self.name} not found!')
 
@@ -284,14 +285,14 @@ class DataContainer:
                      'kernel width', 'asymmetry coefficient', 'kernel groove length',
                      'class']
         df = pd.read_csv(file_path, header=None,
-                                names=col_names, sep='\s+')
+                         names=col_names, sep='\s+')
         # convert categorical data to integer codes
         df['class'] = df['class'].astype('category')
         # map [1, 2, 3] to [0, 1, 2]
         df['class'] = df['class'].cat.codes.astype('int64')
         return df
 
-    def _handle_htru2_datafram(self, file_path):
+    def _handle_htru2_dataframe(self, file_path):
         ''' Preprocessing the HTRU2 DataFrame
         '''
         data = arff.loadarff(file_path)
