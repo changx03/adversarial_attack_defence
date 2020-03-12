@@ -1,5 +1,5 @@
-from .DataContainer import DataContainer, DATASET_LIST, get_range, \
-    scale_normalize, shuffle_data
+from .DataContainer import DataContainer, DATASET_LIST
+from .utils import get_range, scale_normalize, shuffle_data
 from .NumeralDataset import NumeralDataset
 
 __all__ = [
