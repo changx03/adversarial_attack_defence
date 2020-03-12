@@ -27,7 +27,7 @@ class MnistCnnCW_hidden(nn.Module):
 
 
 class MnistCnnCW(nn.Module):
-    def __init__(self, lr=0.1, momentum=0.9):
+    def __init__(self, lr=0.01, momentum=0.9):
         super(MnistCnnCW, self).__init__()
         self.lr = lr
         self.momentum = momentum
@@ -38,7 +38,6 @@ class MnistCnnCW(nn.Module):
             torch.nn.Linear(128, 10))
 
         self.optimizer = torch.optim.SGD
-        self.scheduler = None
         self.loss_fn = nn.NLLLoss()
 
     def forward(self, x):

@@ -1,3 +1,4 @@
+import datetime
 import os
 import time
 
@@ -12,13 +13,18 @@ class ModelContainer:
         self.data_container = data_container
         assert isinstance(model, nn.Module)
 
+        self.device = torch.device(
+            'cuda:0' if torch.cuda.is_available() else 'cpu')
+        print(f'Using device: {self.device}')
+
     def fit(self, **kwargs):
         since = time.time()
         if isinstance(self.model, nn.Module):
             assert 'epochs' in kwargs, "Argument 'epochs' is required"
             epochs = kwargs['epochs']
+            lr = kwargs['lr'] if 'lr' in kwargs.keys() else self.model.lr
 
-            self._fit_torch(epochs)
+            self._fit_torch(epochs, lr)
         else:
             # TODO: methods other than CNN
             raise Exception('Not implemented!')
@@ -26,48 +32,78 @@ class ModelContainer:
         print('Time taken for training: {:2.0f}m {:2.1f}s'.format(
             time_elapsed // 60, time_elapsed % 60))
 
-    def save(self):
-        return None
+    def save(self, filename, overwrite=False):
+        if isinstance(self.model, nn.Module):
+            filename = self._name_handler(filename, overwrite)
+            torch.save(self.model.state_dict(), filename)
+        else:
+            # TODO: methods other than CNN
+            raise Exception('Not implemented!')
+        print(f'Successfully saved model to "{filename}"')
 
-    def load(self):
-        return None
+    def load(self, filename):
+        if isinstance(self.model, nn.Module):
+            self.model.load_state_dict(
+                torch.load(filename, map_location=self.device))
+        else:
+            # TODO: methods other than CNN
+            raise Exception('Not implemented!')
+        print(f'Successfully loaded model from "{filename}"')
 
-    def pred(self, x):
-        return x
+    def pred(self, x, require_output=False):
+        if isinstance(self.model, nn.Module):
+            if not isinstance(x, torch.Tensor):
+                x = torch.tensor(x)
+            x = x.to(self.device)
+            outputs = self.model(x)
+            predictions = outputs.max(1, keepdim=True)[1]
+            predictions = predictions.cpu().detach().numpy().squeeze()
 
-    def pred_one(self, x):
-        return x
+            if require_output:
+                outputs = outputs.cpu().detach().numpy()
+                return predictions, outputs
+            else:
+                return predictions
+        else:
+            # TODO: methods other than CNN
+            raise Exception('Not implemented!')
 
-    def _fit_torch(self, epochs):
-        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-        print(f'Using device: {device}')
+    def pred_one(self, x, require_output=False):
+        if isinstance(self.model, nn.Module):
+            prediction, output = self.pred(x.unsqueeze(0), True)
+            if require_output:
+                return prediction.squeeze(), output.squeeze()
+            else:
+                return prediction.squeeze()
+        else:
+            # TODO: methods other than CNN
+            raise Exception('Not implemented!')
 
+    def _fit_torch(self, epochs, lr):
         # Not all models run multiple iterations
         self.loss_train = np.zeros(epochs, dtype=np.float32)
         self.loss_test = np.zeros(epochs, dtype=np.float32)
         self.accuracy_train = np.zeros(epochs, dtype=np.float32)
         self.accuracy_test = np.zeros(epochs, dtype=np.float32)
 
-        self.model.to(device)
-        lr = self.model.lr
+        self.model.to(self.device)
         momentum = self.model.momentum
         optimizer = self.model.optimizer(
             self.model.parameters(), lr=lr, momentum=momentum)
-        
+
         for epoch in range(epochs):
             time_start = time.time()
 
-            tr_loss, tr_acc = self._train_torch(optimizer, device)
-            va_loss, va_acc = self._validate_torch(device)
+            tr_loss, tr_acc, lr = self._train_torch(optimizer)
+            va_loss, va_acc = self._validate_torch()
 
             time_elapsed = time.time() - time_start
-            print(('[{:2d}/{:d}] {:2.0f}m {:2.1f}s Train Loss: {:.4f} Acc: {:.4f}% - Test Loss: {:.4f} Acc: {:.4f}%').format(
-                epoch+1, epochs,
+            print(('[{:2d}/{:d}] {:2.0f}m {:2.1f}s - lr: {:.4f} - Train Loss: {:.4f} Acc: {:.4f}% - Test Loss: {:.4f} Acc: {:.4f}%').format(
+                epoch+1, epochs, lr,
                 time_elapsed // 60, time_elapsed % 60,
-                tr_loss, tr_acc*100.,
-                va_loss, va_acc*100.))
+                tr_loss, tr_acc*100, va_loss, va_acc*100))
 
-    def _train_torch(self, optimizer, device):
+    def _train_torch(self, optimizer):
         self.model.train()
         total_loss = 0.
         corrects = 0.
@@ -75,8 +111,8 @@ class ModelContainer:
         loss_fn = self.model.loss_fn
 
         for x, y in loader:
-            x = x.to(device)
-            y = y.to(device)
+            x = x.to(self.device)
+            y = y.to(self.device)
             batch_size = x.size(0)
 
             optimizer.zero_grad()
@@ -87,15 +123,16 @@ class ModelContainer:
 
             # for logging
             total_loss += loss.item() * batch_size
-            preds = output.max(1, keepdim=True)[1]
-            corrects += preds.eq(y.view_as(preds)).sum().item()
+            predictions = output.max(1, keepdim=True)[1]
+            corrects += predictions.eq(y.view_as(predictions)).sum().item()
 
         n = self.data_container.num_train
         total_loss = total_loss / n
         acc = corrects / n
-        return total_loss, acc
+        lr = self._get_torch_lr(optimizer)
+        return total_loss, acc, lr
 
-    def _validate_torch(self, device):
+    def _validate_torch(self):
         self.model.eval()
         total_loss = 0.
         corrects = 0
@@ -104,16 +141,46 @@ class ModelContainer:
 
         with torch.no_grad():
             for x, y in loader:
-                x = x.to(device)
-                y = y.to(device)
+                x = x.to(self.device)
+                y = y.to(self.device)
                 batch_size = x.size(0)
                 output = self.model(x)
                 loss = loss_fn(output, y)
                 total_loss += loss.item() * batch_size
-                preds = output.max(1, keepdim=True)[1]
-                corrects += preds.eq(y.view_as(preds)).sum().item()
+                predictions = output.max(1, keepdim=True)[1]
+                corrects += predictions.eq(y.view_as(predictions)).sum().item()
 
         n = self.data_container.num_test
         total_loss = total_loss / n
         accuracy = corrects / n
         return total_loss, accuracy
+
+    def _name_handler(self, filename, overwrite):
+        arr = filename.split('.')
+
+        # handle wrong extension
+        if isinstance(self.model, nn.Module):
+            extension = 'pt'
+        else:
+            # TODO: 'npy' is for numpy. Haven't check anything else
+            extension = 'npy'
+
+        if len(arr) > 1 and arr[-1] != extension:
+            arr[len(arr)-1] = extension
+        elif len(arr) == 1:
+            arr.append(extension)
+        filename = '.'.join(arr)
+
+        # handle existing file
+        if not overwrite and os.path.exists(filename):
+            arr = filename.split('.')
+            time_str = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+            arr.insert(-1, time_str)  # already fixed extension
+            print('File {:s} already exists. Save new file as "{:s}"'.format(
+                filename, '.'.join(arr)))
+
+        return '.'.join(arr)
+
+    def _get_torch_lr(self, optimizer):
+        for p in optimizer.param_groups:
+            return p['lr']
