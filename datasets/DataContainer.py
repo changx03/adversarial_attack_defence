@@ -7,7 +7,7 @@ import torch
 import torchvision as tv
 from torch.utils.data import DataLoader, TensorDataset
 
-from .dataset_list import DATASET_LIST
+from .dataset_list import DATASET_LIST, get_sample_mean, get_sample_std
 from .NumeralDataset import NumeralDataset
 from .utils import get_range, scale_normalize, shuffle_data
 
@@ -22,18 +22,16 @@ class DataContainer:
         self.size = int(dataset_dict['size'])
         self.num_classes = int(dataset_dict['num_classes'])
         self.dim_data = dataset_dict['dim_data']
-
-        if self.type == 'image':
-            self.c, self.h, self.w = self.dim_data
-
         self.path = path
-        assert isinstance(self.path, str)
+        assert os.path.exists(path), f'{path} does NOT exist!'
+        self.mean = get_sample_mean(self.name)
+        self.std = get_sample_std(self.name)
 
     def __len__(self):
         return self.size
 
-    def __call__(self, batch_size, transform=None, shuffle=True, normalize=False,
-                 num_workers=0, size_train=0.8,
+    def __call__(self, batch_size=16, transform=None, shuffle=True,
+                 normalize=False, num_workers=0, size_train=0.8,
                  require_np_array=True, enable_cross_validation=False):
         # TODO: implement cross_validation
         assert enable_cross_validation == False, \
@@ -48,13 +46,18 @@ class DataContainer:
         self._prepare_data(
             shuffle, normalize, num_workers, size_train, require_np_array)
         time_elapsed = time.time() - since
-        print('Successfully loaded data - {:2.0f}m {:3.1f}s'.format(
+
+        assert self.num_train != 0 and self.num_test != 0, \
+            'WARNING: empty dataset!'
+        assert self.num_train + self.num_test == self.size, \
+            'WARNING: train+test is NOT euqal to data size'
+
+        print('Successfully load data! Time taken: {:2.0f}m {:3.1f}s'.format(
             time_elapsed // 60,
             time_elapsed % 60))
 
     def _prepare_image_data(self, shuffle, num_workers, require_np_array):
         # for images, we prepare dataloader first, and then convert it to numpy array.
-        # pytorch dataloaders
         print('Preparing DataLoaders...')
         self._dataset_train = self._get_dataset(True)
         self._dataset_test = self._get_dataset(False)
@@ -73,7 +76,6 @@ class DataContainer:
         # get dimensions
         self.num_train = len(self._dataset_train)
         self.num_test = len(self._dataset_test)
-        assert self.num_train != 0 and self.num_test != 0, 'WARNING: empty dataset!'
         self.dim_train = tuple([self.num_train] + list(self.dim_data))
         self.dim_test = tuple([self.num_test] + list(self.dim_data))
 
@@ -118,6 +120,12 @@ class DataContainer:
         self.label_train_np = y_train
         self.data_test_np = x_test
         self.label_test_np = y_test
+
+        # record dimensions
+        self.num_train = len(x_train)
+        self.num_test = len(x_test)
+        self.dim_train = x_train.shape
+        self.dim_test = x_test.shape
 
         # to pytorch DataLoader
         print('Preparing DataLoaders...')

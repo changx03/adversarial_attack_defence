@@ -15,30 +15,28 @@ def main():
     print(get_quantitative_list())
     print()
 
-    print('Start MNIST data container')
-    IMAGE_DATASET = DATASET_LIST['image']['MNIST']
     DATA_ROOT = 'data'
     BATCH_SIZE = 64
+    TYPE = 'image'  # image or quantitative
+    # image: 'MNIST', 'CIFAR10', 'SVHN'
+    # quantitative: 'BankNote', 'BreastCancerWisconsin', 'WheatSeed', 'HTRU2'
+    NAME = 'SVHN'
 
+    print(f'Start {NAME} data container')
+    IMAGE_DATASET = DATASET_LIST[TYPE][NAME]
     image_data = DataContainer(IMAGE_DATASET, DATA_ROOT)
     image_data(batch_size=BATCH_SIZE)
     print(len(image_data))
-    print(image_data.dim_train)
+    print('train', image_data.dim_train)
     print(image_data.label_test_np[:16])
     print()
 
-    print('Start BankNote data container')
-    NUM_DATASET = DATASET_LIST['quantitative']['BankNote']
-    num_data = DataContainer(NUM_DATASET, DATA_ROOT)
-    num_data(BATCH_SIZE, normalize=True)
-    print()
-
-    model = ModelContainer()
-    model()
-    attack = AttackContainer()
-    attack()
-    defence = DefenceContainer()
-    defence()
+    # model = ModelContainer()
+    # model()
+    # attack = AttackContainer()
+    # attack()
+    # defence = DefenceContainer()
+    # defence()
 
 
 if __name__ == '__main__':
