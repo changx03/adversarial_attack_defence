@@ -284,8 +284,7 @@ class DataContainer:
         col_names = ['area', 'perimeter', 'compactness', 'kernel length',
                      'kernel width', 'asymmetry coefficient', 'kernel groove length',
                      'class']
-        df = pd.read_csv(file_path, header=None,
-                         names=col_names, sep='\s+')
+        df = pd.read_csv(file_path, header=None, names=col_names, sep='\s+')
         # convert categorical data to integer codes
         df['class'] = df['class'].astype('category')
         # map [1, 2, 3] to [0, 1, 2]
