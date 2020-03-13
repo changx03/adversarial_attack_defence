@@ -37,19 +37,26 @@ DATASET_LIST = {
             'num_classes': 2,
             'dim_data': (30,),
         },
-        'WheatSeed': {
-            'name': 'WheatSeed',
-            'type': 'quantitative',
-            'size': 210,
-            'num_classes': 3,
-            'dim_data': (7,),
-        },
         'HTRU2': {
             'name': 'HTRU2',
             'type': 'quantitative',
             'size': 17898,
             'num_classes': 2,
             'dim_data': (8,),
+        },
+        'Iris': {
+            'name': 'Iris',
+            'type': 'quantitative',
+            'size': 150,
+            'num_classes': 3,
+            'dim_data': (4,),
+        },
+        'WheatSeed': {
+            'name': 'WheatSeed',
+            'type': 'quantitative',
+            'size': 210,
+            'num_classes': 3,
+            'dim_data': (7,),
         },
     },
 }
@@ -62,7 +69,8 @@ def get_image_list():
 def get_quantitative_list():
     return list(DATASET_LIST['quantitative'].keys())
 
-# Only images are listed here. For quantitative data, the mean and std will vary 
+
+# Only images are listed here. For quantitative data, the mean and std will vary
 # by the normalization option.
 MEAN_LOOKUP = {
     'MNIST': [0.13066046],

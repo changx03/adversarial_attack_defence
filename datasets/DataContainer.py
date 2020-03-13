@@ -192,7 +192,7 @@ class DataContainer:
 
         data_np = np.zeros(data_shape, dtype=np.float32)
         # assign -1 for all labels
-        label_np = -np.ones(label_shape, dtype=np.int64)
+        label_np = -np.ones(label_shape, dtype=np.long)
 
         start = 0
         with torch.no_grad():
@@ -228,6 +228,10 @@ class DataContainer:
 
         return x_train, y_train, x_test, y_test
 
+    def _check_file(self, file):
+        print(f'Reading from {file}')
+        assert os.path.exists(file), f'{file} does NOT exist!'
+
     def _get_dataframe(self):
         if self.name == 'BankNote':
             file_path = os.path.join(
@@ -241,7 +245,7 @@ class DataContainer:
                 names=col_names,
                 dtype=np.float32)
             # Expecting y (label, output) has column name "class"
-            df['class'] = df['class'].astype('int64')
+            df['class'] = df['class'].astype('long')
             return df
 
         elif self.name == 'BreastCancerWisconsin':
@@ -256,6 +260,10 @@ class DataContainer:
             file_path = os.path.join(self.path, 'HTRU2', 'HTRU_2.arff')
             self._check_file(file_path)
             return self._handle_htru2_dataframe(file_path)
+        elif self.name == 'Iris':
+            file_path = os.path.join(self.path, 'iris.data')
+            self._check_file(file_path)
+            return self._handle_iris_dataframe(file_path)
         else:
             raise Exception(f'Dataset {self.name} not found!')
 
@@ -272,7 +280,7 @@ class DataContainer:
         df.rename({'diagnosis': 'class'}, axis='columns', inplace=True)
         # map categorical outputs to integer codes
         df['class'] = df['class'].astype('category')
-        df['class'] = df['class'].cat.codes.astype('int64')
+        df['class'] = df['class'].cat.codes.astype('long')
         # move output column to the end of table
         col_names = df.columns
         col_names = [c for c in col_names if c != 'class'] + ['class']
@@ -289,7 +297,7 @@ class DataContainer:
         # convert categorical data to integer codes
         df['class'] = df['class'].astype('category')
         # map [1, 2, 3] to [0, 1, 2]
-        df['class'] = df['class'].cat.codes.astype('int64')
+        df['class'] = df['class'].cat.codes.astype('long')
         return df
 
     def _handle_htru2_dataframe(self, file_path):
@@ -299,9 +307,21 @@ class DataContainer:
         df = pd.DataFrame(data[0])
         # convert categorical data to integer codes
         df['class'] = df['class'].astype('category')
-        df['class'] = df['class'].cat.codes.astype('int64')
+        df['class'] = df['class'].cat.codes.astype('long')
         return df
 
-    def _check_file(self, file):
-        print(f'Reading from {file}')
-        assert os.path.exists(file), f'{file} does NOT exist!'
+    def _handle_iris_dataframe(self, file_path):
+        ''' Preprocessing the Iris DataFrame
+        '''
+        df = pd.read_csv(
+            file_path,
+            header=None,
+            names=['SepalLength', 'SepalWidth', 'PetalLength', 'PetalWidth', 'class'],
+            dtype={'SepalLength': np.float32, 
+                'SepalWidth': np.float32, 
+                'PetalLength': np.float32, 
+                'PetalWidth': np.float32, 
+                'class': np.str})
+        df['class'] = df['class'].astype('category')
+        df['class'] = df['class'].cat.codes.astype('long')
+        return df

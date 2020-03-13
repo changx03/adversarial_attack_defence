@@ -91,6 +91,11 @@ class TorchModelContainer:
                 time_elapsed // 60, time_elapsed % 60,
                 tr_loss, tr_acc*100, va_loss, va_acc*100))
 
+            # early stopping 
+            if tr_acc >= 0.999 and va_acc >= 0.999:
+                print(f'Satisfied the accuracy threshold. Abort at {epoch} epoch!')
+                break
+
     def _train_torch(self, optimizer):
         self.model.train()
         total_loss = 0.

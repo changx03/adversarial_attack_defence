@@ -11,24 +11,36 @@ from defences import DefenceContainer
 
 def main():
     DATA_ROOT = 'data'
-    BATCH_SIZE = 64
-    # TYPE := {'image', 'quantitative'}
+    BATCH_SIZE = 128
+    # TYPE in {'image', 'quantitative'}
     TYPE = 'quantitative'  
-    # image: {'MNIST', 'CIFAR10', 'SVHN'}
-    # quantitative: {'BankNote', 'BreastCancerWisconsin', 'WheatSeed', 'HTRU2'}
-    NAME = 'BreastCancerWisconsin'
+
+    # image in {'MNIST', 'CIFAR10', 'SVHN'}
+    # quantitative in {'BankNote', 'BreastCancerWisconsin', 'HTRU2', 'Iris', 'WheatSeed'}
+    NAME = 'BankNote'
     print(f'Starting {NAME} data container...')
     IMAGE_DATASET = DATASET_LIST[TYPE][NAME]
+    print(IMAGE_DATASET)
+
     dc = DataContainer(IMAGE_DATASET, DATA_ROOT)
     dc(BATCH_SIZE, normalize=True)
-    # model := {BCNN, MnistCnnCW}
-    model = BCNN()
+
+    num_features = dc.dim_data[0]
+    num_classes = dc.num_classes
+    print('Features:', num_features)
+    print('Classes:', num_classes)
+
+    # model in {BCNN, MnistCnnCW}
+    model = BCNN(num_features, num_classes)
+    model_name = model.__class__.__name__
+    print('Using model:', model_name)
+
     mc = TorchModelContainer(model, dc)
     mc.fit(epochs=200)
 
-    mc.save('BC_NN2')
+    mc.save(f'{NAME}-{model_name}')
 
-    # mc.load('BC_NN1.pt')
+    mc.load(f'{NAME}-{model_name}.pt')
 
 if __name__ == '__main__':
     print(sys.version)
