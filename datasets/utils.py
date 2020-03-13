@@ -23,6 +23,19 @@ def scale_normalize(data, xmin, xmax):
     return (data - xmin) / (xmax - xmin)
 
 
+def scale_unnormalize(data, xmin, xmax):
+    '''rescaling the normalized data back to raw
+    '''
+    assert (type(data) == np.ndarray and
+            type(xmax) == np.ndarray and
+            type(xmin) == np.ndarray)
+    assert data.shape[1] == len(xmax) and data.shape[1] == len(xmin)
+    assert np.all(np.max(data, axis=0) <= 1)
+    assert np.all(np.min(data, axis=0) >= 0)
+
+    return data * (xmax - xmin) + xmin
+
+
 def shuffle_data(data):
     assert isinstance(data, (np.ndarray, pd.DataFrame))
 
