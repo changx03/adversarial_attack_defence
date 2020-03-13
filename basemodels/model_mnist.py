@@ -2,6 +2,12 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+# NOTE: You must call this function!
+LOSS_FN = nn.NLLLoss() 
+OPTIMIZER = torch.optim.SGD
+OPTIM_PARAMS = {'lr': 0.1, 'momentum': 0}
+SCHEDULER = None
+SCHEDULER_PARAMS = None
 
 class MnistCnnCW_hidden(nn.Module):
     def __init__(self):
@@ -29,21 +35,21 @@ class MnistCnnCW_hidden(nn.Module):
 class MnistCnnCW(nn.Module):
     def __init__(
             self,
-            lr=0.1,
-            momentum=0,
-            scheduler=None,
-            scheduler_params=None):
+            loss_fn=LOSS_FN,
+            optimizer=OPTIMIZER,
+            optim_params=OPTIM_PARAMS,
+            scheduler=SCHEDULER,
+            scheduler_params=SCHEDULER_PARAMS):
         super(MnistCnnCW, self).__init__()
-        self.lr = lr
-        self.momentum = momentum
 
         self.model_hidden = MnistCnnCW_hidden()
         self.model_no_softmax = nn.Sequential(
             self.model_hidden,
             torch.nn.Linear(128, 10))
 
-        self.optimizer = torch.optim.SGD
-        self.loss_fn = nn.NLLLoss()
+        self.loss_fn = loss_fn
+        self.optimizer = optimizer
+        self.optim_params = optim_params
         self.scheduler = scheduler
         self.scheduler_params = scheduler_params
 

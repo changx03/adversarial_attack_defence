@@ -15,15 +15,13 @@ class TorchModelContainer:
         self.data_container = data_container
         self.device = torch.device(
             'cuda:0' if torch.cuda.is_available() else 'cpu')
+        self.model.to(self.device)
         print(f'Using device: {self.device}')
 
-    def fit(self, **kwargs):
+    def fit(self, epochs=5):
         since = time.time()
-        assert 'epochs' in kwargs, "Argument 'epochs' is required"
-        epochs = kwargs['epochs']
-        lr = kwargs['lr'] if 'lr' in kwargs.keys() else self.model.lr
 
-        self._fit_torch(epochs, lr)
+        self._fit_torch(epochs)
 
         time_elapsed = time.time() - since
         print('Time taken for training: {:2.0f}m {:2.1f}s'.format(
@@ -62,32 +60,30 @@ class TorchModelContainer:
         else:
             return prediction.squeeze()
 
-    def _fit_torch(self, epochs, lr):
+    def _fit_torch(self, epochs):
         # Not all models run multiple iterations
         self.loss_train = np.zeros(epochs, dtype=np.float32)
         self.loss_test = np.zeros(epochs, dtype=np.float32)
         self.accuracy_train = np.zeros(epochs, dtype=np.float32)
         self.accuracy_test = np.zeros(epochs, dtype=np.float32)
 
-        self.model.to(self.device)
-        momentum = self.model.momentum
-        optimizer = self.model.optimizer(
-            self.model.parameters(), lr=lr, momentum=momentum)
-        # optimizer = self.model.optimizer(self.model.parameters(), lr=lr)
-        # if self.model.scheduler:
-        #     scheduler_params = self.model.scheduler_params
-        #     scheduler = self.model.scheduler(
-        #         optimizer,
-        #         step_size=scheduler_params['step_size'],
-        #         gamma=scheduler_params['gamma'])
-        print(f'Learning rate: {lr}')
+        # parameters are passed as dict, so it allows different optimizer
+        params = self.model.optim_params
+        optimizer = self.model.optimizer(self.model.parameters(), **params)
+        print(params)
+
+        # scheduler is optional
+        if self.model.scheduler:
+            scheduler_params = self.model.scheduler_params
+            scheduler = self.model.scheduler(optimizer, **scheduler_params)
 
         for epoch in range(epochs):
             time_start = time.time()
 
             tr_loss, tr_acc = self._train_torch(optimizer)
             va_loss, va_acc = self._validate_torch()
-            # scheduler.step()
+            if self.model.scheduler:
+                scheduler.step()
 
             time_elapsed = time.time() - time_start
             print(('[{:2d}/{:d}] {:2.0f}m {:2.1f}s - Train Loss: {:.4f} Acc: {:.4f}% - Test Loss: {:.4f} Acc: {:.4f}%').format(
@@ -110,6 +106,7 @@ class TorchModelContainer:
             optimizer.zero_grad()
             output = self.model(x)
             loss = loss_fn(output, y)
+            
             loss.backward()
             optimizer.step()
 
@@ -150,11 +147,7 @@ class TorchModelContainer:
         arr = filename.split('.')
 
         # handle wrong extension
-        if isinstance(self.model, nn.Module):
-            extension = 'pt'
-        else:
-            # TODO: 'npy' is for numpy. Haven't check anything else
-            extension = 'npy'
+        extension = 'pt'
 
         if len(arr) > 1 and arr[-1] != extension:
             arr[len(arr)-1] = extension

@@ -121,10 +121,11 @@ class DataContainer:
             x_test = scale_normalize(x_test, xmin, xmax)
 
         # to numpy array
-        self.data_train_np = x_train
-        self.label_train_np = y_train
-        self.data_test_np = x_test
-        self.label_test_np = y_test
+        # NOTE: Only handle numeral data
+        self.data_train_np = x_train.astype(np.float32)
+        self.label_train_np = y_train.astype(np.long)
+        self.data_test_np = x_test.astype(np.float32)
+        self.label_test_np = y_test.astype(np.long)
 
         # record dimensions
         self.num_train = len(x_train)
@@ -135,11 +136,11 @@ class DataContainer:
         # to pytorch DataLoader
         print('Preparing DataLoaders...')
         self._dataset_train = NumeralDataset(
-            torch.Tensor(x_train),
-            torch.Tensor(y_train))
+            torch.as_tensor(self.data_train_np),
+            torch.as_tensor(self.label_train_np))
         self._dataset_test = NumeralDataset(
-            torch.Tensor(x_test),
-            torch.Tensor(y_test))
+            torch.as_tensor(self.data_test_np),
+            torch.as_tensor(self.label_test_np))
 
         self.dataloader_train = DataLoader(
             self._dataset_train,
