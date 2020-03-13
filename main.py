@@ -1,7 +1,7 @@
 import sys
 
 from attacks import AttackContainer
-from basemodels import ModelContainer, MnistCnnCW
+from basemodels import TorchModelContainer, MnistCnnCW
 from datasets import (DATASET_LIST, DataContainer, get_image_list,
                       get_quantitative_list)
 from defences import DefenceContainer
@@ -33,7 +33,7 @@ def main():
 
     # 3. train/load the model
     # train, save, load
-    mc = ModelContainer(model, dc)
+    mc = TorchModelContainer(model, dc)
     mc.fit(epochs=5)
     
     # 4. populate adversarial examples

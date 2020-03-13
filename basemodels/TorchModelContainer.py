@@ -7,77 +7,60 @@ import torch
 import torch.nn as nn
 
 
-class ModelContainer:
+class TorchModelContainer:
     def __init__(self, model, data_container):
+        assert isinstance(
+            model, nn.Module), f'Expecting a Torch Module, got {type(model)}'
         self.model = model
         self.data_container = data_container
-        assert isinstance(model, nn.Module)
-
         self.device = torch.device(
             'cuda:0' if torch.cuda.is_available() else 'cpu')
         print(f'Using device: {self.device}')
 
     def fit(self, **kwargs):
         since = time.time()
-        if isinstance(self.model, nn.Module):
-            assert 'epochs' in kwargs, "Argument 'epochs' is required"
-            epochs = kwargs['epochs']
-            lr = kwargs['lr'] if 'lr' in kwargs.keys() else self.model.lr
+        assert 'epochs' in kwargs, "Argument 'epochs' is required"
+        epochs = kwargs['epochs']
+        lr = kwargs['lr'] if 'lr' in kwargs.keys() else self.model.lr
 
-            self._fit_torch(epochs, lr)
-        else:
-            # TODO: methods other than CNN
-            raise Exception('Not implemented!')
+        self._fit_torch(epochs, lr)
+
         time_elapsed = time.time() - since
         print('Time taken for training: {:2.0f}m {:2.1f}s'.format(
             time_elapsed // 60, time_elapsed % 60))
 
     def save(self, filename, overwrite=False):
-        if isinstance(self.model, nn.Module):
-            filename = self._name_handler(filename, overwrite)
-            torch.save(self.model.state_dict(), filename)
-        else:
-            # TODO: methods other than CNN
-            raise Exception('Not implemented!')
+        filename = self._name_handler(filename, overwrite)
+        torch.save(self.model.state_dict(), filename)
+
         print(f'Successfully saved model to "{filename}"')
 
     def load(self, filename):
-        if isinstance(self.model, nn.Module):
-            self.model.load_state_dict(
-                torch.load(filename, map_location=self.device))
-        else:
-            # TODO: methods other than CNN
-            raise Exception('Not implemented!')
+        self.model.load_state_dict(torch.load(
+            filename, map_location=self.device))
+
         print(f'Successfully loaded model from "{filename}"')
 
     def pred(self, x, require_output=False):
-        if isinstance(self.model, nn.Module):
-            if not isinstance(x, torch.Tensor):
-                x = torch.tensor(x)
-            x = x.to(self.device)
-            outputs = self.model(x)
-            predictions = outputs.max(1, keepdim=True)[1]
-            predictions = predictions.cpu().detach().numpy().squeeze()
+        if not isinstance(x, torch.Tensor):
+            x = torch.tensor(x)
+        x = x.to(self.device)
+        outputs = self.model(x)
+        predictions = outputs.max(1, keepdim=True)[1]
+        predictions = predictions.cpu().detach().numpy().squeeze()
 
-            if require_output:
-                outputs = outputs.cpu().detach().numpy()
-                return predictions, outputs
-            else:
-                return predictions
+        if require_output:
+            outputs = outputs.cpu().detach().numpy()
+            return predictions, outputs
         else:
-            # TODO: methods other than CNN
-            raise Exception('Not implemented!')
+            return predictions
 
     def pred_one(self, x, require_output=False):
-        if isinstance(self.model, nn.Module):
-            prediction, output = self.pred(x.unsqueeze(0), True)
-            if require_output:
-                return prediction.squeeze(), output.squeeze()
-            else:
-                return prediction.squeeze()
+        prediction, output = self.pred(x.unsqueeze(0), True)
+        if require_output:
+            return prediction.squeeze(), output.squeeze()
         else:
-            # TODO: methods other than CNN
-            raise Exception('Not implemented!')
+            return prediction.squeeze()
 
     def _fit_torch(self, epochs, lr):
         # Not all models run multiple iterations
@@ -94,8 +77,8 @@ class ModelContainer:
         # if self.model.scheduler:
         #     scheduler_params = self.model.scheduler_params
         #     scheduler = self.model.scheduler(
-        #         optimizer, 
-        #         step_size=scheduler_params['step_size'], 
+        #         optimizer,
+        #         step_size=scheduler_params['step_size'],
         #         gamma=scheduler_params['gamma'])
         print(f'Learning rate: {lr}')
 
