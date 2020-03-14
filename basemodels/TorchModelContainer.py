@@ -23,6 +23,12 @@ class TorchModelContainer:
         self.model.to(self.device)
         print(f'Using device: {self.device}')
 
+        # to allow the model train multiple times
+        self.loss_train = []
+        self.loss_test = []
+        self.accuracy_train = []
+        self.accuracy_test = []
+
     def fit(self, epochs=5, batch_size=64):
         since = time.time()
 
@@ -44,40 +50,44 @@ class TorchModelContainer:
 
         print(f'Successfully loaded model from "{filename}"')
 
-    def pred(self, x, require_output=False):
+    def score(self, x):
         if not isinstance(x, torch.Tensor):
             if self.data_container.type == 'image':
-                x = swap_image_channel(x).astype(np.float32)
+                x = swap_image_channel(x)
             x = torch.from_numpy(x)
-        x = x.to(self.device)
+        x = x.float().to(self.device)
+        return self.model(x).cpu().detach().numpy()
+
+    def predict(self, x, require_score=False):
+        if not isinstance(x, torch.Tensor):
+            if self.data_container.type == 'image':
+                x = swap_image_channel(x)
+            x = torch.from_numpy(x)
+        x = x.float().to(self.device)
         outputs = self.model(x)
         predictions = outputs.max(1, keepdim=True)[1]
         predictions = predictions.cpu().detach().numpy().squeeze()
 
-        if require_output:
+        if require_score:
             outputs = outputs.cpu().detach().numpy()
             return predictions, outputs
         else:
             return predictions
 
-    def pred_one(self, x, require_output=False):
-        prediction, output = self.pred(x.unsqueeze(0), True)
-        if require_output:
+    def predict_one(self, x, require_score=False):
+        prediction, output = self.predict(np.expand_dims(x, axis=0), True)
+        if require_score:
             return prediction.squeeze(), output.squeeze()
         else:
             return prediction.squeeze()
 
     def evaluate(self, x, labels):
-        predictions = self.pred(x)
+        predictions = self.predict(x)
         accuracy = np.sum(np.equal(predictions, labels)) / len(labels)
         return accuracy
 
     def _fit_torch(self, epochs, batch_size):
-        # Not all models run multiple iterations
-        self.loss_train = np.zeros(epochs, dtype=np.float32)
-        self.loss_test = np.zeros(epochs, dtype=np.float32)
-        self.accuracy_train = np.zeros(epochs, dtype=np.float32)
-        self.accuracy_test = np.zeros(epochs, dtype=np.float32)
+
 
         train_loader = self.data_container.get_dataloader(
             batch_size, is_train=True)
@@ -107,6 +117,12 @@ class TorchModelContainer:
                 epoch+1, epochs,
                 time_elapsed // 60, time_elapsed % 60,
                 tr_loss, tr_acc*100, va_loss, va_acc*100))
+
+            # save logs
+            self.loss_train.append(tr_loss)
+            self.loss_test.append(va_loss)
+            self.accuracy_train.append(tr_acc)
+            self.accuracy_test.append(va_acc)
 
             # early stopping
             if tr_acc >= 0.999 and va_acc >= 0.999:
