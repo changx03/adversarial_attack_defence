@@ -6,7 +6,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from datasets import DataContainer
+from datasets import DataContainer, swap_image_channel
 
 
 class TorchModelContainer:
@@ -46,7 +46,9 @@ class TorchModelContainer:
 
     def pred(self, x, require_output=False):
         if not isinstance(x, torch.Tensor):
-            x = torch.tensor(x)
+            if self.data_container.type == 'image':
+                x = swap_image_channel(x).astype(np.float32)
+            x = torch.from_numpy(x)
         x = x.to(self.device)
         outputs = self.model(x)
         predictions = outputs.max(1, keepdim=True)[1]
@@ -64,6 +66,11 @@ class TorchModelContainer:
             return prediction.squeeze(), output.squeeze()
         else:
             return prediction.squeeze()
+
+    def evaluate(self, x, labels):
+        predictions = self.pred(x)
+        accuracy = np.sum(np.equal(predictions, labels)) / len(labels)
+        return accuracy
 
     def _fit_torch(self, epochs, batch_size):
         # Not all models run multiple iterations

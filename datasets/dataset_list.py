@@ -2,14 +2,14 @@ DATASET_LIST = {
     'MNIST': {
         'name': 'MNIST',
         'type': 'image',
-        'size': 7e4,
+        'size': int(7e4),
         'num_classes': 10,
         'dim_data': (1, 28, 28),
     },
     'CIFAR10': {
         'name': 'CIFAR10',
         'type': 'image',
-        'size': 6e4,
+        'size': int(6e4),
         'num_classes': 10,
         'dim_data': (3, 32, 32),
     },
