@@ -57,12 +57,8 @@ DATASET_LIST = {
     }}
 
 
-def get_image_list():
-    return list(DATASET_LIST['image'].keys())
-
-
-def get_quantitative_list():
-    return list(DATASET_LIST['quantitative'].keys())
+def get_dataset_list():
+    return list(DATASET_LIST.keys())
 
 
 # Only images are listed here. For quantitative data, the mean and std will vary

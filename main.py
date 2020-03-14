@@ -5,8 +5,7 @@ import torch
 
 from attacks import AttackContainer
 from basemodels import BCNN, IrisNN, MnistCnnCW, TorchModelContainer
-from datasets import (DATASET_LIST, DataContainer, get_image_list,
-                      get_quantitative_list)
+from datasets import DATASET_LIST, DataContainer
 from defences import DefenceContainer
 
 
@@ -14,14 +13,13 @@ def main():
     DATA_ROOT = 'data'
     BATCH_SIZE = 64
 
-    ## image datasets: {'MNIST', 'CIFAR10', 'SVHN'}
-    ## quantitative datasets: {'BankNote', 'BreastCancerWisconsin', 'HTRU2', 'Iris', 'WheatSeed'}
+    # image datasets: {'MNIST', 'CIFAR10', 'SVHN'}
+    # quantitative datasets: {'BankNote', 'BreastCancerWisconsin', 'HTRU2', 'Iris', 'WheatSeed'}
     NAME = 'MNIST'
     print(f'Starting {NAME} data container...')
-    IMAGE_DATASET = DATASET_LIST[NAME]
-    print(IMAGE_DATASET)
+    print(DATASET_LIST[NAME])
 
-    dc = DataContainer(IMAGE_DATASET, DATA_ROOT)
+    dc = DataContainer(DATASET_LIST[NAME], DATA_ROOT)
     dc(size_train=0.8, normalize=True)
 
     num_features = dc.dim_data[0]
@@ -42,7 +40,7 @@ def main():
     # mc.fit(epochs=200, batch_size=BATCH_SIZE)
     print('Test acc:', mc.accuracy_test)
 
-    ## shouldn't lose results when train multiple times
+    # shouldn't lose results when train multiple times
     mc.fit(epochs=5, batch_size=BATCH_SIZE)
     print('Test acc:', mc.accuracy_test)
 

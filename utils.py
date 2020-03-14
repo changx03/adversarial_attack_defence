@@ -1,3 +1,6 @@
+import datetime
+import os
+
 import numpy as np
 import pandas as pd
 
@@ -57,3 +60,21 @@ def swap_image_channel(np_arr):
         return np.swapaxes(np_arr, 0, 2)
     else:
         raise Exception('Not enough axes for swapping!')
+
+
+def name_handler(filename, extension='pt', overwrite=False):
+    arr = filename.split('.')
+
+    if (len(arr) > 1 and arr[-1] != extension) or len(arr) == 1:
+        arr.append(extension)
+    filename = '.'.join(arr)
+
+    # handle existing file
+    if not overwrite and os.path.exists(filename):
+        arr = filename.split('.')
+        time_str = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+        arr.insert(-1, time_str)  # already fixed extension
+        print('File {:s} already exists. Save new file as "{:s}"'.format(
+            filename, '.'.join(arr)))
+
+    return '.'.join(arr)

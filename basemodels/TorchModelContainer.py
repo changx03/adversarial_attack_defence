@@ -1,12 +1,11 @@
-import datetime
-import os
 import time
 
 import numpy as np
 import torch
 import torch.nn as nn
 
-from datasets import DataContainer, swap_image_channel
+from datasets import DataContainer
+from utils import name_handler, swap_image_channel
 
 
 class TorchModelContainer:
@@ -39,7 +38,7 @@ class TorchModelContainer:
             time_elapsed // 60, time_elapsed % 60))
 
     def save(self, filename, overwrite=False):
-        filename = self._name_handler(filename, overwrite)
+        filename = name_handler(filename, overwrite)
         torch.save(self.model.state_dict(), filename)
 
         print(f'Successfully saved model to "{filename}"')
@@ -87,7 +86,6 @@ class TorchModelContainer:
         return accuracy
 
     def _fit_torch(self, epochs, batch_size):
-
 
         train_loader = self.data_container.get_dataloader(
             batch_size, is_train=True)
@@ -179,25 +177,3 @@ class TorchModelContainer:
         total_loss = total_loss / n
         accuracy = corrects / n
         return total_loss, accuracy
-
-    def _name_handler(self, filename, overwrite):
-        arr = filename.split('.')
-
-        # handle wrong extension
-        extension = 'pt'
-
-        if len(arr) > 1 and arr[-1] != extension:
-            arr[len(arr)-1] = extension
-        elif len(arr) == 1:
-            arr.append(extension)
-        filename = '.'.join(arr)
-
-        # handle existing file
-        if not overwrite and os.path.exists(filename):
-            arr = filename.split('.')
-            time_str = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-            arr.insert(-1, time_str)  # already fixed extension
-            print('File {:s} already exists. Save new file as "{:s}"'.format(
-                filename, '.'.join(arr)))
-
-        return '.'.join(arr)

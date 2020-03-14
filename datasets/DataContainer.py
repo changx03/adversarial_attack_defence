@@ -10,7 +10,7 @@ from torch.utils.data import DataLoader, TensorDataset
 
 from .dataset_list import DATASET_LIST, get_sample_mean, get_sample_std
 from .NumeralDataset import NumeralDataset
-from .utils import get_range, scale_normalize, shuffle_data, swap_image_channel
+from utils import get_range, scale_normalize, shuffle_data, swap_image_channel
 
 
 class DataContainer:
@@ -27,7 +27,7 @@ class DataContainer:
         # total length = train + test
         return len(self.data_train_np) + len(self.data_test_np)
 
-    def __call__(self, shuffle=True, normalize=False, 
+    def __call__(self, shuffle=True, normalize=False,
                  size_train=0.8, enable_cross_validation=False):
         '''Load data and prepare for numpy arrays. `normalize` and `size_train` 
         are not used in image datasets

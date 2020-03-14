@@ -1,7 +1,54 @@
-class AttackContainer:
-    def __init__(self):
-        print('Place holder for adversarial attacks')
+import numpy as np
 
-    def __call__(self):
-        # TODO: Not implemented!
-        print('Working progress...')
+from utils import name_handler
+from basemodels import TorchModelContainer
+
+
+class AttackContainer:
+    attack_params = []
+
+    def __init__(self, model_containter):
+        assert isinstance(model_containter, TorchModelContainer)
+        self.model_container = model_containter
+
+    def generate(self, count, use_test=True, x=None, y=None, **kwargs):
+        raise NotImplementedError
+
+    def set_params(self, **kwargs):
+        for key, value in kwargs.items():
+            if key in self.attack_params:
+                setattr(self, key, value)
+        return True
+
+    @staticmethod
+    def save_attack(filename, x_adv, y_adv=None, x_clean=None, y_clean=None):
+        assert isinstance(x_adv, np.ndarray)
+        filename_adv = name_handler(filename + '.adv', extension='npy')
+        x_adv.astype(np.float32).tofile(filename_adv)
+        if y_adv is not None:
+            assert isinstance(y_adv, np.ndarray) \
+                and len(y_adv) == len(x_adv)
+            filename_y_adv = filename_adv.replace('.adv', '.y_adv')
+            y_adv.astype(np.int64).tofile(filename_y_adv)
+        if x_clean is not None:
+            assert isinstance(x_clean, np.ndarray) \
+                and x_adv.shape == x_clean.shape
+            filename_raw = filename_adv.replace('.adv', '.x_raw')
+            x_clean.astype(np.float32).tofile(filename_raw)
+        if y_clean is not None:
+            assert isinstance(y_clean, np.ndarray) \
+                and len(y_clean) == len(x_adv)
+            filename_y = filename_adv.replace('.adv', '.y')
+            y_clean.astype(np.int64).tofile(filename_y)
+        print(f'Successfully saved model to "{filename_adv}"')
+
+    @staticmethod
+    def get_l2_norm(x, x_adv):
+        assert isinstance(x, np.ndarray)
+        assert isinstance(x_adv, np.ndarray)
+        assert x.shape == x_adv.shape
+        assert len(x.shape) in (2, 4)
+
+        n = len(x)
+        l2 = np.sum(np.square(x.reshape(n, -1) - x_adv.reshape(n, -1)), axis=1)
+        return np.sqrt(l2)
