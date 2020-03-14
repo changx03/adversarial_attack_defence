@@ -10,102 +10,108 @@ from torch.utils.data import DataLoader, TensorDataset
 
 from .dataset_list import DATASET_LIST, get_sample_mean, get_sample_std
 from .NumeralDataset import NumeralDataset
-from .utils import get_range, scale_normalize, shuffle_data
+from .utils import get_range, scale_normalize, shuffle_data, swap_image_channel
 
 
 class DataContainer:
     def __init__(self, dataset_dict, path):
         self.name = dataset_dict['name']
-        assert self.name in DATASET_LIST['image'].keys() \
-            or self.name in DATASET_LIST['quantitative'].keys()
         self.type = dataset_dict['type']
         assert self.type in ('image', 'quantitative')
-        self.size = int(dataset_dict['size'])
         self.num_classes = int(dataset_dict['num_classes'])
         self.dim_data = dataset_dict['dim_data']
         self.path = path
         assert os.path.exists(path), f'{path} does NOT exist!'
 
     def __len__(self):
-        return self.size
+        # total length = train + test
+        return len(self.data_train_np) + len(self.data_test_np)
 
-    def __call__(self, batch_size=16, transform=None, shuffle=True,
-                 normalize=False, num_workers=0, size_train=0.8,
-                 require_np_array=True, enable_cross_validation=False):
+    def __call__(self, shuffle=True, normalize=False, 
+                 size_train=0.8, enable_cross_validation=False):
+        '''Load data and prepare for numpy arrays. `normalize` and `size_train` 
+        are not used in image datasets
+        '''
         # TODO: implement cross_validation
         assert enable_cross_validation == False, \
             'cross validation is not supported'
 
-        self.batch_size = batch_size
-        self.transform = transform if transform is not None \
-            else tv.transforms.Compose([tv.transforms.ToTensor()])
-
         print('Loading data...')
         since = time.time()
-        self._prepare_data(
-            shuffle, normalize, num_workers, size_train, require_np_array)
-
         if self.type == 'image':
+            self._prepare_image_data(shuffle, num_workers=0)
             self.train_mean = get_sample_mean(self.name)
             self.train_std = get_sample_std(self.name)
         else:
+            self._prepare_quantitative_data(
+                shuffle, normalize, size_train)
             self.train_mean = self.data_train_np.mean(axis=0)
             self.train_std = self.data_train_np.std(axis=0)
 
         time_elapsed = time.time() - since
 
-        assert self.num_train != 0 and self.num_test != 0, \
-            'WARNING: empty dataset!'
-        assert self.num_train + self.num_test == self.size, \
-            'WARNING: train+test is NOT equal to data size'
-
         print('Successfully load data! Time taken: {:2.0f}m {:3.1f}s'.format(
             time_elapsed // 60,
             time_elapsed % 60))
 
-    def _prepare_image_data(self, shuffle, num_workers, require_np_array):
+    def get_dataloader(self, batch_size=64, is_train=True, shuffle=True, num_workers=0):
+        if self.type == 'image':
+            data_train_np = swap_image_channel(self.data_train_np)
+            data_test_np = swap_image_channel(self.data_test_np)
+        else:
+            data_train_np = self.data_train_np
+            data_test_np = self.data_test_np
+
+        if is_train:
+            dataset = NumeralDataset(
+                torch.as_tensor(data_train_np),
+                torch.as_tensor(self.label_train_np))
+        else:
+            dataset = NumeralDataset(
+                torch.as_tensor(data_test_np),
+                torch.as_tensor(self.label_test_np))
+
+        dataloader = DataLoader(
+            dataset,
+            batch_size,
+            shuffle=shuffle,
+            num_workers=num_workers)
+        return dataloader
+
+    def _prepare_image_data(self, shuffle, num_workers):
         # for images, we prepare dataloader first, and then convert it to numpy array.
         print('Preparing DataLoaders...')
-        self._dataset_train = self._get_dataset(True)
-        self._dataset_test = self._get_dataset(False)
+        self._dataset_train = self._get_dataset(train=True)
+        self._dataset_test = self._get_dataset(train=False)
 
+        batch_size = 128  # this batch size is only used for loading.
         self.dataloader_train = DataLoader(
             self._dataset_train,
-            self.batch_size,
-            shuffle=shuffle,
-            num_workers=num_workers)
+            batch_size,
+            shuffle=shuffle)
         self.dataloader_test = DataLoader(
             self._dataset_test,
-            self.batch_size,
+            batch_size,
             shuffle=shuffle,
             num_workers=num_workers)
 
-        # get dimensions
-        self.num_train = len(self._dataset_train)
-        self.num_test = len(self._dataset_test)
-        self.dim_train = tuple([self.num_train] + list(self.dim_data))
-        self.dim_test = tuple([self.num_test] + list(self.dim_data))
+        print('Preparing numpy arrays...')
+        data_train_np, self.label_train_np = self._loader_to_np(
+            self.dataloader_train, train=True)
+        data_test_np, self.label_test_np = self._loader_to_np(
+            self.dataloader_test, train=False)
+        # pytorch uses (c, h, w). numpy uses (h, w, c)
+        self.data_train_np = swap_image_channel(data_train_np)
+        self.data_test_np = swap_image_channel(data_test_np)
 
-        # to numpy array
-        if require_np_array:
-            print('Preparing numpy arrays...')
-            self.data_train_np, self.label_train_np = self._loader_to_np(
-                self.dataloader_train, train=True)
-            self.data_test_np, self.label_test_np = self._loader_to_np(
-                self.dataloader_test, train=False)
+        self.data_range = get_range(self.data_train_np)
 
-    def _prepare_quantitative_data(self, shuffle, normalize,
-                                   num_workers, size_train, require_np_array):
+    def _prepare_quantitative_data(self, shuffle, normalize, size_train):
         # for quantitative, starts with a Pandas dataframe, and then
         # populate numpy array and then pytorch DataLoader
         print('Preparing DataFrame...')
         self.dataframe = self._get_dataframe()
-        n = len(self.dataframe.index)
         m = self.dataframe.shape[1] - 1  # the label is also in the frame
-
-        assert self.size == n, f'Expecting size {self.size}, got {n}'
-        assert self.dim_data[0] == m, \
-            f'Expecting {self.dim_data[0]} attributes, got {m}'
 
         self.data_range = get_range(self.dataframe.values[:, :m])
 
@@ -127,72 +133,37 @@ class DataContainer:
         self.data_test_np = x_test.astype(np.float32)
         self.label_test_np = y_test.astype(np.long)
 
-        # record dimensions
-        self.num_train = len(x_train)
-        self.num_test = len(x_test)
-        self.dim_train = x_train.shape
-        self.dim_test = x_test.shape
-
-        # to pytorch DataLoader
-        print('Preparing DataLoaders...')
-        self._dataset_train = NumeralDataset(
-            torch.as_tensor(self.data_train_np),
-            torch.as_tensor(self.label_train_np))
-        self._dataset_test = NumeralDataset(
-            torch.as_tensor(self.data_test_np),
-            torch.as_tensor(self.label_test_np))
-
-        self.dataloader_train = DataLoader(
-            self._dataset_train,
-            self.batch_size,
-            shuffle=shuffle,
-            num_workers=num_workers)
-        self.dataloader_test = DataLoader(
-            self._dataset_test,
-            self.batch_size,
-            shuffle=shuffle,
-            num_workers=num_workers)
-
-    def _prepare_data(self, shuffle, normalize,
-                      num_workers, size_train, require_np_array):
-        if self.type == 'image':
-            self._prepare_image_data(shuffle, num_workers, require_np_array)
-        elif self.type == 'quantitative':
-            self._prepare_quantitative_data(
-                shuffle, normalize, num_workers, size_train, require_np_array)
-        else:
-            # TODO: expecting mixed data in future
-            raise Exception('Not implemented!')
-
     def _get_dataset(self, train):
+        transform = tv.transforms.Compose([tv.transforms.ToTensor()])
+
         if self.name == 'MNIST':
             return tv.datasets.MNIST(
                 self.path,
                 train=train,
                 download=True,
-                transform=self.transform)
+                transform=transform)
         elif self.name == 'CIFAR10':
             return tv.datasets.CIFAR10(
                 self.path,
                 train=train,
                 download=True,
-                transform=self.transform)
+                transform=transform)
         elif self.name == 'SVHN':
             return tv.datasets.SVHN(
                 self.path,
                 split='train' if train else 'test',
                 download=True,
-                transform=self.transform)
+                transform=transform)
         else:
             raise Exception(f'Dataset {self.name} not found!')
 
-    def _loader_to_np(self, loader, train):
-        data_shape = self.dim_train if train else self.dim_test
-        label_shape = (self.num_train if train else self.num_test,)
+    def _loader_to_np(self, loader, train=True):
+        n = len(loader.dataset)
+        data_shape = tuple([n]+list(self.dim_data))
+        label_shape = (n, )
 
         data_np = np.zeros(data_shape, dtype=np.float32)
-        # assign -1 for all labels
-        label_np = -np.ones(label_shape, dtype=np.long)
+        label_np = -np.ones(label_shape, dtype=np.long)  # assign -1
 
         start = 0
         with torch.no_grad():
@@ -207,7 +178,7 @@ class DataContainer:
         assert isinstance(size_train, (int, float))
 
         # split train/test by ratio of fixed size of train data
-        n = self.size
+        n = len(self.dataframe.index)
         num_train = size_train
         if size_train < 1:
             num_train = int(np.round(n * size_train))
@@ -316,12 +287,13 @@ class DataContainer:
         df = pd.read_csv(
             file_path,
             header=None,
-            names=['SepalLength', 'SepalWidth', 'PetalLength', 'PetalWidth', 'class'],
-            dtype={'SepalLength': np.float32, 
-                'SepalWidth': np.float32, 
-                'PetalLength': np.float32, 
-                'PetalWidth': np.float32, 
-                'class': np.str})
+            names=['SepalLength', 'SepalWidth',
+                   'PetalLength', 'PetalWidth', 'class'],
+            dtype={'SepalLength': np.float32,
+                   'SepalWidth': np.float32,
+                   'PetalLength': np.float32,
+                   'PetalWidth': np.float32,
+                   'class': np.str})
         df['class'] = df['class'].astype('category')
         df['class'] = df['class'].cat.codes.astype('long')
         return df

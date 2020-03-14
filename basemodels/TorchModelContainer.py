@@ -6,22 +6,27 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+from datasets import DataContainer
+
 
 class TorchModelContainer:
     def __init__(self, model, data_container):
-        assert isinstance(
-            model, nn.Module), f'Expecting a Torch Module, got {type(model)}'
+        assert isinstance(model, nn.Module), \
+            f'Expecting a Torch Module, got {type(model)}'
         self.model = model
+        assert isinstance(data_container, DataContainer), \
+            f'Expectiong a DataContainer, got {type(data_container)}'
         self.data_container = data_container
+
         self.device = torch.device(
             'cuda:0' if torch.cuda.is_available() else 'cpu')
         self.model.to(self.device)
         print(f'Using device: {self.device}')
 
-    def fit(self, epochs=5):
+    def fit(self, epochs=5, batch_size=64):
         since = time.time()
 
-        self._fit_torch(epochs)
+        self._fit_torch(epochs, batch_size)
 
         time_elapsed = time.time() - since
         print('Time taken for training: {:2.0f}m {:2.1f}s'.format(
@@ -60,12 +65,17 @@ class TorchModelContainer:
         else:
             return prediction.squeeze()
 
-    def _fit_torch(self, epochs):
+    def _fit_torch(self, epochs, batch_size):
         # Not all models run multiple iterations
         self.loss_train = np.zeros(epochs, dtype=np.float32)
         self.loss_test = np.zeros(epochs, dtype=np.float32)
         self.accuracy_train = np.zeros(epochs, dtype=np.float32)
         self.accuracy_test = np.zeros(epochs, dtype=np.float32)
+
+        train_loader = self.data_container.get_dataloader(
+            batch_size, is_train=True)
+        test_loader = self.data_container.get_dataloader(
+            batch_size, is_train=False)
 
         # parameters are passed as dict, so it allows different optimizer
         params = self.model.optim_params
@@ -80,8 +90,8 @@ class TorchModelContainer:
         for epoch in range(epochs):
             time_start = time.time()
 
-            tr_loss, tr_acc = self._train_torch(optimizer)
-            va_loss, va_acc = self._validate_torch()
+            tr_loss, tr_acc = self._train_torch(optimizer, train_loader)
+            va_loss, va_acc = self._validate_torch(test_loader)
             if self.model.scheduler:
                 scheduler.step()
 
@@ -91,16 +101,16 @@ class TorchModelContainer:
                 time_elapsed // 60, time_elapsed % 60,
                 tr_loss, tr_acc*100, va_loss, va_acc*100))
 
-            # early stopping 
+            # early stopping
             if tr_acc >= 0.999 and va_acc >= 0.999:
-                print(f'Satisfied the accuracy threshold. Abort at {epoch} epoch!')
+                print(
+                    f'Satisfied the accuracy threshold. Abort at {epoch} epoch!')
                 break
 
-    def _train_torch(self, optimizer):
+    def _train_torch(self, optimizer, loader):
         self.model.train()
         total_loss = 0.
         corrects = 0.
-        loader = self.data_container.dataloader_train
         loss_fn = self.model.loss_fn
 
         for x, y in loader:
@@ -111,7 +121,7 @@ class TorchModelContainer:
             optimizer.zero_grad()
             output = self.model(x)
             loss = loss_fn(output, y)
-            
+
             loss.backward()
             optimizer.step()
 
@@ -120,16 +130,15 @@ class TorchModelContainer:
             predictions = output.max(1, keepdim=True)[1]
             corrects += predictions.eq(y.view_as(predictions)).sum().item()
 
-        n = self.data_container.num_train
+        n = len(loader.dataset)
         total_loss = total_loss / n
         acc = corrects / n
         return total_loss, acc
 
-    def _validate_torch(self):
+    def _validate_torch(self, loader):
         self.model.eval()
         total_loss = 0.
         corrects = 0
-        loader = self.data_container.dataloader_test
         loss_fn = self.model.loss_fn
 
         with torch.no_grad():
@@ -143,7 +152,7 @@ class TorchModelContainer:
                 predictions = output.max(1, keepdim=True)[1]
                 corrects += predictions.eq(y.view_as(predictions)).sum().item()
 
-        n = self.data_container.num_test
+        n = len(loader.dataset)
         total_loss = total_loss / n
         accuracy = corrects / n
         return total_loss, accuracy

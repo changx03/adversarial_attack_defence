@@ -47,3 +47,13 @@ def shuffle_data(data):
         n = len(data.index)
         shuffled_indices = np.random.permutation(n)
         return data.iloc[shuffled_indices]
+
+
+def swap_image_channel(np_arr):
+    n = len(np_arr.shape)
+    if n == 4:
+        return np.swapaxes(np_arr, 1, 3)
+    elif n == 3:
+        return np.swapaxes(np_arr, 0, 2)
+    else:
+        raise Exception('Not enough axes for swapping!')
