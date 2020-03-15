@@ -39,15 +39,19 @@ class FGSMContainer(AttackContainer):
             input_shape=dim_data,
             nb_classes=num_classes)
 
-    def generate(self, count=1000, use_test=True, x=None, y=None, **kwargs):
+    def generate(self, count=1000, use_test=True, x=None, labels=None, **kwargs):
+        assert use_test or x is not None
+        assert use_test or labels is not None
+        
         since = time.time()
         # parameters should able to set before training
         self.set_params(**kwargs)
         dc = self.model_container.data_container
         if len(dc.data_test_np) < count:
-            count = len(x)
-        x = np.copy(dc.data_test_np[:count])
-        y = np.copy(dc.label_test_np[:count])
+            count = len(dc.data_test_np)
+
+        x = np.copy(dc.data_test_np[:count]) if use_test else np.copy(x)
+        labels = np.copy(dc.label_test_np[:count]) if use_test else np.copy(labels)
 
         attack = FastGradientMethod(
             classifier=self.classifier,
@@ -63,7 +67,7 @@ class FGSMContainer(AttackContainer):
         adv = attack.generate(x)
         y_adv = self.model_container.predict(adv)
         x_clean = np.copy(x)
-        y_clean = self.model_container.predict(x_clean)
+        y_clean = labels
 
         time_elapsed = time.time() - since
         print('Time taken for training {} adversarial examples: {:2.0f}m {:2.1f}s'.format(
