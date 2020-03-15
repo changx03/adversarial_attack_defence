@@ -37,25 +37,29 @@ class BIMContainer(AttackContainer):
             input_shape=dim_data,
             nb_classes=num_classes)
 
-    def generate(self, count=1000, use_test=True, x=None, targets=None, **kwargs):
-        assert use_test or x is not None
+    def generate(self, count=1000, use_testset=True, x=None, targets=None, **kwargs):
+        assert use_testset or x is not None
 
         since = time.time()
         # parameters should able to set before training
         self.set_params(**kwargs)
+
         dc = self.model_container.data_container
-        if use_test:
-            if len(dc.data_test_np) < count:
-                count = len(dc.data_test_np)
-        else:
-            assert x is not None
-            count = len(x)
+        # handle the situation where testset has less samples than we want
+        if use_testset and len(dc.data_test_np) < count:
+            count = len(dc.data_test_np)
 
-        x = np.copy(dc.data_test_np[:count]) if use_test else np.copy(x)
-        assert targets == None or len(targets) == len(x)
+        x = np.copy(dc.data_test_np[:count]) if use_testset else np.copy(x)
 
-        self.set_params(**kwargs)
-        attack = BasicIterativeMethod(classifier=self.classifier, **kwargs)
+        targeted = targets is not None
+        # handle the situation where targets are more than test set
+        if targets is not None:
+            assert len(targets) >= len(x)
+            targets = targets[:len(x)]  # trancate targets
+
+        self.attack_params['targeted'] = targeted
+        attack = BasicIterativeMethod(
+            classifier=self.classifier, **self.attack_params)
 
         # predict the outcomes
         adv = attack.generate(x, targets)

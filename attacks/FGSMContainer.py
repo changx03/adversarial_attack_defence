@@ -42,8 +42,8 @@ class FGSMContainer(AttackContainer):
             input_shape=dim_data,
             nb_classes=num_classes)
 
-    def generate(self, count=1000, use_test=True, x=None, **kwargs):
-        assert use_test or x is not None
+    def generate(self, count=1000, use_testset=True, x=None, **kwargs):
+        assert use_testset or x is not None
 
         since = time.time()
         # parameters should able to set before training
@@ -52,7 +52,7 @@ class FGSMContainer(AttackContainer):
         if len(dc.data_test_np) < count:
             count = len(dc.data_test_np)
 
-        x = np.copy(dc.data_test_np[:count]) if use_test else np.copy(x)
+        x = np.copy(dc.data_test_np[:count]) if use_testset else np.copy(x)
 
         self.set_params(**kwargs)
         attack = FastGradientMethod(self.classifier, **self.attack_params)

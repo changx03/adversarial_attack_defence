@@ -78,3 +78,12 @@ def name_handler(filename, extension='pt', overwrite=False):
             filename, '.'.join(arr)))
 
     return '.'.join(arr)
+
+def onehot_encoding(y, num_classes, dtype=np.long):
+    assert isinstance(y, np.ndarray)
+    assert len(y.shape) == 1  # should be an 1D array
+
+    onehot = np.zeros((len(y), num_classes)).astype(dtype)
+    onehot[np.arange(len(x)), y] = 1
+    return onehot
+    

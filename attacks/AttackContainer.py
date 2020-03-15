@@ -1,7 +1,7 @@
 import numpy as np
 
 from basemodels import TorchModelContainer
-from utils import name_handler
+from utils import name_handler, onehot_encoding
 
 
 class AttackContainer:
@@ -11,7 +11,7 @@ class AttackContainer:
         assert isinstance(model_containter, TorchModelContainer)
         self.model_container = model_containter
 
-    def generate(self, count, use_test=True, x=None, y=None, **kwargs):
+    def generate(self, count, use_testset=True, x=None, y=None, **kwargs):
         raise NotImplementedError
 
     def set_params(self, **kwargs):
@@ -57,3 +57,11 @@ class AttackContainer:
         n = len(x)
         l2 = np.sum(np.square(x.reshape(n, -1) - x_adv.reshape(n, -1)), axis=1)
         return np.sqrt(l2)
+    
+    @staticmethod
+    def randam_targets(count, num_classes, use_onehot=False, dtype=np.long):
+        y_rand = np.random.choice(num_classes, count, replace=True)
+        if not use_onehot:
+            return y_rand
+        else:
+            return onehot_encoding(y_rand, num_classes, dtype)
