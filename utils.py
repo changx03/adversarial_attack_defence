@@ -14,6 +14,14 @@ def get_range(data):
     x_min = np.min(data, axis=0)
     return (x_min, x_max)
 
+def get_image_range(data):
+    '''return (min, max) of a tuple
+    '''
+    assert type(data) == np.ndarray
+
+    x_max = np.max(data)
+    x_min = np.min(data)
+    return (x_min, x_max)
 
 def scale_normalize(data, xmin, xmax):
     ''' scaling normalization puts data in range between 0 and 1
@@ -84,6 +92,6 @@ def onehot_encoding(y, num_classes, dtype=np.long):
     assert len(y.shape) == 1  # should be an 1D array
 
     onehot = np.zeros((len(y), num_classes)).astype(dtype)
-    onehot[np.arange(len(x)), y] = 1
+    onehot[np.arange(len(y)), y] = 1
     return onehot
     

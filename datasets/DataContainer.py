@@ -8,9 +8,10 @@ import torchvision as tv
 from scipy.io import arff
 from torch.utils.data import DataLoader, TensorDataset
 
+from utils import (get_image_range, get_range, scale_normalize, shuffle_data,
+                   swap_image_channel)
 from .dataset_list import DATASET_LIST, get_sample_mean, get_sample_std
 from .NumeralDataset import NumeralDataset
-from utils import get_range, scale_normalize, shuffle_data, swap_image_channel
 
 
 class DataContainer:
@@ -55,12 +56,12 @@ class DataContainer:
             time_elapsed % 60))
 
     def get_dataloader(self, batch_size=64, is_train=True, shuffle=True, num_workers=0):
+        data_train_np = self.data_train_np
+        data_test_np = self.data_test_np
+        # pytorch uses (c, h, w). numpy uses (h, w, c)
         if self.type == 'image':
             data_train_np = swap_image_channel(self.data_train_np)
             data_test_np = swap_image_channel(self.data_test_np)
-        else:
-            data_train_np = self.data_train_np
-            data_test_np = self.data_test_np
 
         if is_train:
             dataset = NumeralDataset(
@@ -96,15 +97,15 @@ class DataContainer:
             num_workers=num_workers)
 
         print('Preparing numpy arrays...')
-        data_train_np, self.label_train_np = self._loader_to_np(
+        self.data_train_np, self.label_train_np = self._loader_to_np(
             self.dataloader_train, train=True)
-        data_test_np, self.label_test_np = self._loader_to_np(
+        self.data_test_np, self.label_test_np = self._loader_to_np(
             self.dataloader_test, train=False)
         # pytorch uses (c, h, w). numpy uses (h, w, c)
-        self.data_train_np = swap_image_channel(data_train_np)
-        self.data_test_np = swap_image_channel(data_test_np)
+        self.data_train_np = swap_image_channel(self.data_train_np)
+        self.data_test_np = swap_image_channel(self.data_test_np)
 
-        self.data_range = get_range(self.data_train_np)
+        self.data_range = get_image_range(self.data_train_np)
 
     def _prepare_quantitative_data(self, shuffle, normalize, size_train):
         # for quantitative, starts with a Pandas dataframe, and then

@@ -51,7 +51,8 @@ class TorchModelContainer:
 
     def score(self, x):
         if not isinstance(x, torch.Tensor):
-            if self.data_container.type == 'image':
+            # only swap the channel when it is wrong!
+            if self.data_container.type == 'image' and x.shape[1] not in (1, 3):
                 x = swap_image_channel(x)
             x = torch.from_numpy(x)
         x = x.float().to(self.device)
@@ -59,7 +60,8 @@ class TorchModelContainer:
 
     def predict(self, x, require_score=False):
         if not isinstance(x, torch.Tensor):
-            if self.data_container.type == 'image':
+            # only swap the channel when it is wrong!
+            if self.data_container.type == 'image' and x.shape[1] not in (1, 3):
                 x = swap_image_channel(x)
             x = torch.from_numpy(x)
         x = x.float().to(self.device)

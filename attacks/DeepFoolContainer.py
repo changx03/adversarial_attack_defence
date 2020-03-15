@@ -10,7 +10,7 @@ from .AttackContainer import AttackContainer
 
 class DeepFoolContainer(AttackContainer):
     def __init__(self, model_container, max_iter=100, epsilon=1e-6,
-                 nb_grads=10, batch_size=1):
+                 nb_grads=10, batch_size=8):
         super(DeepFoolContainer, self).__init__(model_container, )
 
         params_received = {
