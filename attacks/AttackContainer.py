@@ -1,11 +1,11 @@
 import numpy as np
 
-from utils import name_handler
 from basemodels import TorchModelContainer
+from utils import name_handler
 
 
 class AttackContainer:
-    attack_params = []
+    attack_params = dict()
 
     def __init__(self, model_containter):
         assert isinstance(model_containter, TorchModelContainer)
@@ -16,9 +16,14 @@ class AttackContainer:
 
     def set_params(self, **kwargs):
         for key, value in kwargs.items():
-            if key in self.attack_params:
-                setattr(self, key, value)
+            if key in self.attack_params.keys():
+                self.attack_params[key] = value
         return True
+
+    def predict(self, adv, x):
+        y_adv = self.model_container.predict(adv)
+        y = self.model_container.predict(x)
+        return y_adv, y
 
     @staticmethod
     def save_attack(filename, x_adv, y_adv=None, x_clean=None, y_clean=None):
