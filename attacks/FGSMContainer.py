@@ -5,6 +5,7 @@ import torch
 from art.attacks import FastGradientMethod
 from art.classifiers import PyTorchClassifier
 
+from utils import swap_image_channel
 from .AttackContainer import AttackContainer
 
 
@@ -53,6 +54,11 @@ class FGSMContainer(AttackContainer):
             count = len(dc.data_test_np)
 
         x = np.copy(dc.data_test_np[:count]) if use_testset else np.copy(x)
+
+        # handle (h, w, c) to (c, h, w)
+        data_type = self.model_container.data_container.type
+        if data_type == 'image' and x.shape[1] not in (1, 3):
+            x = swap_image_channel(x)
 
         self.set_params(**kwargs)
         attack = FastGradientMethod(self.classifier, **self.attack_params)

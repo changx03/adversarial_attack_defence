@@ -6,7 +6,6 @@ from art.attacks import SaliencyMapMethod
 from art.classifiers import PyTorchClassifier
 
 from utils import swap_image_channel
-
 from .AttackContainer import AttackContainer
 
 
@@ -54,7 +53,11 @@ class JacobianSaliencyContainer(AttackContainer):
             count = len(dc.data_test_np)
 
         x = np.copy(dc.data_test_np[:count]) if use_testset else np.copy(x)
-        x = swap_image_channel(x)
+        
+        # handle (h, w, c) to (c, h, w)
+        data_type = self.model_container.data_container.type
+        if data_type == 'image' and x.shape[1] not in (1, 3):
+            x = swap_image_channel(x)
 
         # handle the situation where targets are more than test set
         if targets is not None:
@@ -66,7 +69,7 @@ class JacobianSaliencyContainer(AttackContainer):
 
         # predict the outcomes
         adv = attack.generate(x, y=targets)
-        y_adv, y_clean = self.predict(swap_image_channel(adv), swap_image_channel(x))
+        y_adv, y_clean = self.predict(adv, x)
 
         time_elapsed = time.time() - since
         print('Time taken for training {} adversarial examples: {:2.0f}m {:2.1f}s'.format(
