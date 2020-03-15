@@ -11,7 +11,7 @@ from .AttackContainer import AttackContainer
 
 
 class JacobianSaliencyContainer(AttackContainer):
-    def __init__(self, model_container, theta=0.1, gamma=1.0, batch_size=8):
+    def __init__(self, model_container, theta=0.1, gamma=1.0, batch_size=16):
         super(JacobianSaliencyContainer, self).__init__(model_container)
 
         dim_data = model_container.data_container.dim_data
