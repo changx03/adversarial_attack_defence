@@ -7,7 +7,7 @@ import pandas as pd
 import torch
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('utils')
 
 
 def master_seed(seed):
@@ -37,26 +37,17 @@ def master_seed(seed):
         if torch.cuda.is_available():
             torch.cuda.manual_seed_all(seed)
     except ImportError:
-        logger.info('Could not set random seed for PyTorch.')
+        logger.warning('Could not set random seed for PyTorch.')
 
 
-def get_range(data):
+def get_range(data, is_image=False):
     '''return (min, max) of a numpy array
     '''
     assert type(data) == np.ndarray
 
-    x_max = np.max(data, axis=0)
-    x_min = np.min(data, axis=0)
-    return (x_min, x_max)
-
-
-def get_image_range(data):
-    '''return (min, max) of a tuple
-    '''
-    assert type(data) == np.ndarray
-
-    x_max = np.max(data)
-    x_min = np.min(data)
+    axis = None if is_image else 0
+    x_max = np.max(data, axis=axis)
+    x_min = np.min(data, axis=axis)
     return (x_min, x_max)
 
 
@@ -104,7 +95,7 @@ def swap_image_channel(np_arr):
     elif n == 3:
         return np.swapaxes(np_arr, 0, 2)
     else:
-        raise Exception('Not enough axes for swapping!')
+        return np_arr # not a image, do nothing
 
 
 def name_handler(filename, extension='pt', overwrite=False):
