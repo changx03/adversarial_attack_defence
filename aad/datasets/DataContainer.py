@@ -8,7 +8,7 @@ import torchvision as tv
 from scipy.io import arff
 from torch.utils.data import DataLoader, TensorDataset
 
-from utils import (get_image_range, get_range, scale_normalize, shuffle_data,
+from ..utils import (get_image_range, get_range, scale_normalize, shuffle_data,
                    swap_image_channel)
 from .dataset_list import DATASET_LIST, get_sample_mean, get_sample_std
 from .NumeralDataset import NumeralDataset

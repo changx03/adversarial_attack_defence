@@ -4,8 +4,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from datasets import DataContainer
-from utils import name_handler, swap_image_channel
+from ..datasets import DataContainer
+from ..utils import name_handler, swap_image_channel
 
 
 class TorchModelContainer:

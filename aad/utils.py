@@ -1,8 +1,43 @@
 import datetime
+import logging
 import os
 
 import numpy as np
 import pandas as pd
+import torch
+
+
+logger = logging.getLogger(__name__)
+
+
+def master_seed(seed):
+    """
+    Set the seed for all random number generators used in the library. This 
+    ensures experiments reproducibility and stable testing.
+    :param seed: The value to be seeded in the random number generators.
+    :type seed: `int`
+    """
+    import numbers
+    import random
+
+    if not isinstance(seed, numbers.Integral):
+        raise TypeError(
+            'The seed for random number generators has to be an integer.')
+
+    # Set Python seed
+    random.seed(seed)
+
+    # Set Numpy seed
+    np.random.seed(seed)
+
+    # Now try to set seed for all specific frameworks
+    try:
+        logger.info('Setting random seed for PyTorch.')
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+    except ImportError:
+        logger.info('Could not set random seed for PyTorch.')
 
 
 def get_range(data):
@@ -14,6 +49,7 @@ def get_range(data):
     x_min = np.min(data, axis=0)
     return (x_min, x_max)
 
+
 def get_image_range(data):
     '''return (min, max) of a tuple
     '''
@@ -22,6 +58,7 @@ def get_image_range(data):
     x_max = np.max(data)
     x_min = np.min(data)
     return (x_min, x_max)
+
 
 def scale_normalize(data, xmin, xmax):
     ''' scaling normalization puts data in range between 0 and 1
@@ -87,6 +124,7 @@ def name_handler(filename, extension='pt', overwrite=False):
 
     return '.'.join(arr)
 
+
 def onehot_encoding(y, num_classes, dtype=np.long):
     assert isinstance(y, np.ndarray)
     assert len(y.shape) == 1  # should be an 1D array
@@ -94,4 +132,3 @@ def onehot_encoding(y, num_classes, dtype=np.long):
     onehot = np.zeros((len(y), num_classes)).astype(dtype)
     onehot[np.arange(len(y)), y] = 1
     return onehot
-    

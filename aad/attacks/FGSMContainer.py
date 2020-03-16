@@ -2,24 +2,29 @@ import time
 
 import numpy as np
 import torch
-from art.attacks import BasicIterativeMethod
+from art.attacks import FastGradientMethod
 from art.classifiers import PyTorchClassifier
 
-from utils import swap_image_channel
+from ..utils import swap_image_channel
 from .AttackContainer import AttackContainer
 
 
-class BIMContainer(AttackContainer):
-    def __init__(self, model_container, eps=.3, eps_step=0.1, max_iter=100,
-                 targeted=False, batch_size=64):
-        super(BIMContainer, self).__init__(model_container)
+class FGSMContainer(AttackContainer):
+    def __init__(self, model_container, norm=np.inf, eps=.3, eps_step=0.1,
+                 targeted=False, num_random_init=0, batch_size=64, minimal=False):
+        '''
+        Fast Gradient Sign Method. Use L-inf norm as default
+        '''
+        super(FGSMContainer, self).__init__(model_container)
 
         params_received = {
+            'norm': norm,
             'eps': eps,
             'eps_step': eps_step,
-            'max_iter': max_iter,
             'targeted': targeted,
-            'batch_size': batch_size}
+            'num_random_init': num_random_init,
+            'batch_size': batch_size,
+            'minimal': minimal}
         self.attack_params.update(params_received)
 
         # use IBM ART pytorch module wrapper
@@ -38,16 +43,14 @@ class BIMContainer(AttackContainer):
             input_shape=dim_data,
             nb_classes=num_classes)
 
-    def generate(self, count=1000, use_testset=True, x=None, targets=None, **kwargs):
+    def generate(self, count=1000, use_testset=True, x=None, **kwargs):
         assert use_testset or x is not None
 
         since = time.time()
         # parameters should able to set before training
         self.set_params(**kwargs)
-
         dc = self.model_container.data_container
-        # handle the situation where testset has less samples than we want
-        if use_testset and len(dc.data_test_np) < count:
+        if len(dc.data_test_np) < count:
             count = len(dc.data_test_np)
 
         x = np.copy(dc.data_test_np[:count]) if use_testset else np.copy(x)
@@ -57,18 +60,11 @@ class BIMContainer(AttackContainer):
         if data_type == 'image' and x.shape[1] not in (1, 3):
             x = swap_image_channel(x)
 
-        targeted = targets is not None
-        # handle the situation where targets are more than test set
-        if targets is not None:
-            assert len(targets) >= len(x)
-            targets = targets[:len(x)]  # trancate targets
-
-        self.attack_params['targeted'] = targeted
-        attack = BasicIterativeMethod(
-            classifier=self.classifier, **self.attack_params)
+        self.set_params(**kwargs)
+        attack = FastGradientMethod(self.classifier, **self.attack_params)
 
         # predict the outcomes
-        adv = attack.generate(x, targets)
+        adv = attack.generate(x)
         y_adv, y_clean = self.predict(adv, x)
 
         time_elapsed = time.time() - since

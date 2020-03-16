@@ -2,29 +2,29 @@ import time
 
 import numpy as np
 import torch
-from art.attacks import FastGradientMethod
+from art.attacks import CarliniL2Method
 from art.classifiers import PyTorchClassifier
 
-from utils import swap_image_channel
+from ..utils import swap_image_channel
 from .AttackContainer import AttackContainer
 
 
-class FGSMContainer(AttackContainer):
-    def __init__(self, model_container, norm=np.inf, eps=.3, eps_step=0.1,
-                 targeted=False, num_random_init=0, batch_size=64, minimal=False):
-        '''
-        Fast Gradient Sign Method. Use L-inf norm as default
-        '''
-        super(FGSMContainer, self).__init__(model_container)
+class CarliniL2Container(AttackContainer):
+    def __init__(self, model_container, confidence=0.0, targeted=False,
+                 learning_rate=1e-2, binary_search_steps=10, max_iter=100,
+                 initial_const=1e-2, max_halving=5, max_doubling=10, batch_size=8):
+        super(CarliniL2Container, self).__init__(model_container)
 
         params_received = {
-            'norm': norm,
-            'eps': eps,
-            'eps_step': eps_step,
+            'confidence': confidence,
             'targeted': targeted,
-            'num_random_init': num_random_init,
-            'batch_size': batch_size,
-            'minimal': minimal}
+            'learning_rate': learning_rate,
+            'binary_search_steps': binary_search_steps,
+            'max_iter': max_iter,
+            'initial_const': initial_const,
+            'max_halving': max_halving,
+            'max_doubling': max_doubling,
+            'batch_size': batch_size}
         self.attack_params.update(params_received)
 
         # use IBM ART pytorch module wrapper
@@ -43,14 +43,16 @@ class FGSMContainer(AttackContainer):
             input_shape=dim_data,
             nb_classes=num_classes)
 
-    def generate(self, count=1000, use_testset=True, x=None, **kwargs):
+    def generate(self, count=1000, use_testset=True, x=None, targets=None, **kwargs):
         assert use_testset or x is not None
 
         since = time.time()
         # parameters should able to set before training
         self.set_params(**kwargs)
+
         dc = self.model_container.data_container
-        if len(dc.data_test_np) < count:
+        # handle the situation where testset has less samples than we want
+        if use_testset and len(dc.data_test_np) < count:
             count = len(dc.data_test_np)
 
         x = np.copy(dc.data_test_np[:count]) if use_testset else np.copy(x)
@@ -60,11 +62,18 @@ class FGSMContainer(AttackContainer):
         if data_type == 'image' and x.shape[1] not in (1, 3):
             x = swap_image_channel(x)
 
-        self.set_params(**kwargs)
-        attack = FastGradientMethod(self.classifier, **self.attack_params)
+        targeted = targets is not None
+        # handle the situation where targets are more than test set
+        if targets is not None:
+            assert len(targets) >= len(x)
+            targets = targets[:len(x)]  # trancate targets
+
+        self.attack_params['targeted'] = targeted
+        attack = CarliniL2Method(
+            classifier=self.classifier, **self.attack_params)
 
         # predict the outcomes
-        adv = attack.generate(x)
+        adv = attack.generate(x, targets)
         y_adv, y_clean = self.predict(adv, x)
 
         time_elapsed = time.time() - since

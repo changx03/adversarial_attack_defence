@@ -1,7 +1,7 @@
 import numpy as np
 
-from basemodels import TorchModelContainer
-from utils import name_handler, onehot_encoding
+from ..basemodels import TorchModelContainer
+from ..utils import name_handler, onehot_encoding
 
 
 class AttackContainer:

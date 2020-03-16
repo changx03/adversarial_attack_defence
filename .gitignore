@@ -1,6 +1,8 @@
 .ipynb_checkpoints/
 .vscode/
 __pycache__/
+venv/
+*.egg-info
 
 # ignore downloadable and generated files
 data/

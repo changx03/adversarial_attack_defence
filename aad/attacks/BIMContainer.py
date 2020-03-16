@@ -2,28 +2,23 @@ import time
 
 import numpy as np
 import torch
-from art.attacks import CarliniL2Method
+from art.attacks import BasicIterativeMethod
 from art.classifiers import PyTorchClassifier
 
-from utils import swap_image_channel
+from ..utils import swap_image_channel
 from .AttackContainer import AttackContainer
 
 
-class CarliniL2Container(AttackContainer):
-    def __init__(self, model_container, confidence=0.0, targeted=False,
-                 learning_rate=1e-2, binary_search_steps=10, max_iter=100,
-                 initial_const=1e-2, max_halving=5, max_doubling=10, batch_size=8):
-        super(CarliniL2Container, self).__init__(model_container)
+class BIMContainer(AttackContainer):
+    def __init__(self, model_container, eps=.3, eps_step=0.1, max_iter=100,
+                 targeted=False, batch_size=64):
+        super(BIMContainer, self).__init__(model_container)
 
         params_received = {
-            'confidence': confidence,
-            'targeted': targeted,
-            'learning_rate': learning_rate,
-            'binary_search_steps': binary_search_steps,
+            'eps': eps,
+            'eps_step': eps_step,
             'max_iter': max_iter,
-            'initial_const': initial_const,
-            'max_halving': max_halving,
-            'max_doubling': max_doubling,
+            'targeted': targeted,
             'batch_size': batch_size}
         self.attack_params.update(params_received)
 
@@ -69,7 +64,7 @@ class CarliniL2Container(AttackContainer):
             targets = targets[:len(x)]  # trancate targets
 
         self.attack_params['targeted'] = targeted
-        attack = CarliniL2Method(
+        attack = BasicIterativeMethod(
             classifier=self.classifier, **self.attack_params)
 
         # predict the outcomes

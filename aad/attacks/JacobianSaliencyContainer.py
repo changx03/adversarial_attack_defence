@@ -2,24 +2,25 @@ import time
 
 import numpy as np
 import torch
-from art.attacks import DeepFool
+from art.attacks import SaliencyMapMethod
 from art.classifiers import PyTorchClassifier
 
-from utils import swap_image_channel
+from ..utils import swap_image_channel
 from .AttackContainer import AttackContainer
 
 
-class DeepFoolContainer(AttackContainer):
-    def __init__(self, model_container, max_iter=100, epsilon=1e-6,
-                 nb_grads=10, batch_size=16):
-        super(DeepFoolContainer, self).__init__(model_container, )
+class JacobianSaliencyContainer(AttackContainer):
+    def __init__(self, model_container, theta=0.1, gamma=1.0, batch_size=16):
+        super(JacobianSaliencyContainer, self).__init__(model_container)
+
+        dim_data = model_container.data_container.dim_data
+        assert len(dim_data) == 3, \
+            'Jacobian Saliency Map attack only works on images'
 
         params_received = {
-            'max_iter': max_iter,
-            'epsilon': epsilon,
-            'nb_grads': nb_grads,
-            'batch_size': batch_size
-        }
+            'theta': theta,
+            'gamma': gamma,
+            'batch_size': batch_size}
         self.attack_params.update(params_received)
 
         # use IBM ART pytorch module wrapper
@@ -30,6 +31,7 @@ class DeepFoolContainer(AttackContainer):
         optimizer = self.model_container.model.optimizer
         num_classes = self.model_container.data_container.num_classes
         dim_data = self.model_container.data_container.dim_data
+        print(clip_values)
         self.classifier = PyTorchClassifier(
             model=model,
             clip_values=clip_values,
@@ -38,7 +40,7 @@ class DeepFoolContainer(AttackContainer):
             input_shape=dim_data,
             nb_classes=num_classes)
 
-    def generate(self, count=1000, use_testset=True, x=None, **kwargs):
+    def generate(self, count=1000, use_testset=True, x=None, targets=None, **kwargs):
         assert use_testset or x is not None
 
         since = time.time()
@@ -51,16 +53,22 @@ class DeepFoolContainer(AttackContainer):
             count = len(dc.data_test_np)
 
         x = np.copy(dc.data_test_np[:count]) if use_testset else np.copy(x)
-
+        
         # handle (h, w, c) to (c, h, w)
         data_type = self.model_container.data_container.type
         if data_type == 'image' and x.shape[1] not in (1, 3):
             x = swap_image_channel(x)
 
-        attack = DeepFool(self.classifier, **self.attack_params)
+        # handle the situation where targets are more than test set
+        if targets is not None:
+            assert len(targets) >= len(x)
+            targets = targets[:len(x)]  # trancate targets
+
+        attack = SaliencyMapMethod(
+            classifier=self.classifier, **self.attack_params)
 
         # predict the outcomes
-        adv = attack.generate(x)
+        adv = attack.generate(x, y=targets)
         y_adv, y_clean = self.predict(adv, x)
 
         time_elapsed = time.time() - since

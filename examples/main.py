@@ -3,11 +3,10 @@ import sys
 import numpy as np
 import torch
 
-from attacks import AttackContainer
-from basemodels import BCNN, IrisNN, MnistCnnCW, TorchModelContainer
-from datasets import DATASET_LIST, DataContainer
-from defences import DefenceContainer
-
+from aad.attacks import AttackContainer
+from aad.basemodels import BCNN, IrisNN, MnistCnnCW, TorchModelContainer
+from aad.datasets import DATASET_LIST, DataContainer
+from aad.defences import DefenceContainer
 
 def main():
     DATA_ROOT = 'data'
