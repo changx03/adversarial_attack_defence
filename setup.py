@@ -4,11 +4,12 @@ from setuptools import setup, find_packages
 
 install_requires = [
     'adversarial-robustness-toolbox',
+    'astroid',
     'launchpadlib',
     'matplotlib',
     'numpy',
     'pandas',
-    'scikit-learn',
+    'scikit-learn==0.22.1',
     'scipy',
     'torch',
     'torchvision',
