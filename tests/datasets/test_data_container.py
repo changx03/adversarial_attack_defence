@@ -7,21 +7,16 @@ import numpy as np
 from aad.datasets import (DATASET_LIST, DataContainer, get_sample_mean,
                           get_sample_std)
 from aad.utils import master_seed, swap_image_channel
+from tests.utils import get_data_path
 
 SEED = 4096
 
 
 class TestDataContainer(unittest.TestCase):
-    @staticmethod
-    def get_data_path():
-        path = os.path.join(
-            os.path.dirname(__file__), os.pardir, os.pardir, 'data')
-        return path
-
     @classmethod
     def init_datacontainer(cls, name):
         x = DATASET_LIST[name]
-        path = cls.get_data_path()
+        path = get_data_path()
         dc = DataContainer(x, path)
         dc(shuffle=False, normalize=True, size_train=0.5,
             enable_cross_validation=False)
@@ -45,7 +40,7 @@ class TestDataContainer(unittest.TestCase):
         self.assertEqual(x, [1.])
 
     def test_file_exist(self):
-        self.assertTrue(os.path.exists(self.get_data_path()))
+        self.assertTrue(os.path.exists(get_data_path()))
 
     def test_DataContainer_MNIST(self):
         dataname = 'MNIST'
