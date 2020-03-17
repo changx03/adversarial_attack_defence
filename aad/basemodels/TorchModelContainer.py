@@ -1,5 +1,6 @@
 import time
 import os
+import logging
 
 import numpy as np
 import torch
@@ -7,6 +8,8 @@ import torch.nn as nn
 
 from ..datasets import DataContainer
 from ..utils import name_handler, swap_image_channel
+
+logger = logging.getLogger(__name__)
 
 
 class TorchModelContainer:
@@ -21,7 +24,7 @@ class TorchModelContainer:
         self.device = torch.device(
             'cuda:0' if torch.cuda.is_available() else 'cpu')
         self.model.to(self.device)
-        print(f'Using device: {self.device}')
+        logger.debug(f'Using device: {self.device}')
 
         # to allow the model train multiple times
         self.loss_train = []
@@ -41,7 +44,7 @@ class TorchModelContainer:
     def save(self, filename, overwrite=False):
         filename = name_handler(filename, 'pt', overwrite)
         filename = os.path.join('save', filename)
-        
+
         torch.save(self.model.state_dict(), filename)
 
         print(f'Successfully saved model to "{filename}"')
@@ -122,7 +125,7 @@ class TorchModelContainer:
                 scheduler.step()
 
             time_elapsed = time.time() - time_start
-            print(('[{:2d}/{:d}] {:2.0f}m {:2.1f}s - Train Loss: {:.4f} Acc: {:.4f}% - Test Loss: {:.4f} Acc: {:.4f}%').format(
+            logger.info(('[{:2d}/{:d}] {:2.0f}m {:2.1f}s - Train Loss: {:.4f} Acc: {:.4f}% - Test Loss: {:.4f} Acc: {:.4f}%').format(
                 epoch+1, epochs,
                 time_elapsed // 60, time_elapsed % 60,
                 tr_loss, tr_acc*100, va_loss, va_acc*100))
@@ -136,7 +139,7 @@ class TorchModelContainer:
             # early stopping
             if tr_acc >= 0.999 and va_acc >= 0.999:
                 print(
-                    f'Satisfied the accuracy threshold. Abort at {epoch} epoch!')
+                    'Satisfied the accuracy threshold. Abort at {} epoch!'.format(epoch))
                 break
 
     def _train_torch(self, optimizer, loader):

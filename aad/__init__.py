@@ -15,6 +15,6 @@ if not os.path.exists('save'):
 logging.basicConfig(
     # filename=os.path.join('log', 'aad.log'),
     format='%(asctime)s:%(levelname)s:%(module)s:%(message)s',
-    level=logging.INFO,
+    level=logging.DEBUG,
 )
 logger = logging.getLogger(__name__)

@@ -5,7 +5,7 @@ import unittest
 import numpy as np
 import torch
 
-from aad.basemodels import MnistCnnCW, TorchModelContainer
+from aad.basemodels import IrisNN, TorchModelContainer
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.utils import get_data_path, master_seed, swap_image_channel
 
@@ -14,7 +14,7 @@ SEED = 4096  # 2**12 = 4096
 BATCH_SIZE = 128
 
 
-class TestModelMNIST(unittest.TestCase):
+class TestModelIris(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         master_seed(SEED)
@@ -22,19 +22,19 @@ class TestModelMNIST(unittest.TestCase):
         if not os.path.exists(os.path.join('save', 'test')):
             os.makedirs(os.path.join('save', 'test'))
 
-        NAME = 'MNIST'
+        NAME = 'Iris'
         logger.info(f'Starting {NAME} data container...')
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
-        cls.dc(shuffle=False)
+        cls.dc(shuffle=True)
 
-        model = MnistCnnCW()
+        model = IrisNN()
         model_name = model.__class__.__name__
         logger.info(f'Using model: {model_name}')
         cls.mc = TorchModelContainer(model, cls.dc)
-        cls.mc.fit(epochs=2, batch_size=BATCH_SIZE)
+        cls.mc.fit(epochs=100, batch_size=BATCH_SIZE)
 
         # for comparison
-        model2 = MnistCnnCW()
+        model2 = IrisNN()
         cls.mc2 = TorchModelContainer(model2, cls.dc)
 
         # inputs for testing
@@ -45,30 +45,14 @@ class TestModelMNIST(unittest.TestCase):
         master_seed(SEED)
 
     def test_train(self):
-        self.mc.fit(epochs=2, batch_size=BATCH_SIZE)
         acc0 = self.mc.accuracy_test[-1]
         logger.debug('Test acc: {:.4f}'.format(acc0))
 
         # continue training
-        self.mc.fit(epochs=2, batch_size=BATCH_SIZE)
+        self.mc.fit(epochs=50, batch_size=BATCH_SIZE)
         acc1 = self.mc.accuracy_test[-1]
         self.assertGreaterEqual(acc1, acc0)
         logger.debug('Test acc: {:.4f}'.format(acc1))
-
-    def test_save(self):
-        self.mc.save(os.path.join('test', 'test_mnist'), overwrite=True)
-        full_path = os.path.join('save', 'test', 'test_mnist.pt')
-        self.assertTrue(os.path.exists(full_path))
-
-    def test_load(self):
-        self.mc.save(os.path.join('test', 'test_mnist'), overwrite=True)
-        full_path = os.path.join('save', 'test', 'test_mnist.pt')
-        self.mc2.load(full_path)
-
-        x = torch.tensor(swap_image_channel(self.x)).to(self.mc.device)
-        s1 = self.mc.model(x).cpu().detach().numpy()
-        s2 = self.mc2.model(x).cpu().detach().numpy()
-        np.testing.assert_almost_equal(s1, s2)
 
     def test_predict(self):
         x = torch.tensor(swap_image_channel(self.x)).to(self.mc.device)
@@ -85,7 +69,8 @@ class TestModelMNIST(unittest.TestCase):
         self.assertTrue((p1 == p2).all())
 
     def test_evaluate(self):
-        acc = self.mc.evaluate(self.x, [7, 2, 1, 0, 4])
+        p2 = self.mc.predict(self.x)
+        acc = self.mc.evaluate(self.x, [1, 0, 1, 2, 2])
         self.assertEqual(acc, 1.0)
 
 

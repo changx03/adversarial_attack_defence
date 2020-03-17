@@ -6,9 +6,9 @@ import numpy as np
 
 from aad.datasets import (DATASET_LIST, DataContainer, get_sample_mean,
                           get_sample_std)
-from aad.utils import master_seed, swap_image_channel
-from tests.utils import get_data_path
+from aad.utils import get_data_path, master_seed, swap_image_channel
 
+logger = logging.getLogger(__name__)
 SEED = 4096
 
 

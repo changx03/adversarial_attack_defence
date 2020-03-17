@@ -89,7 +89,8 @@ def shuffle_data(data):
             return data.iloc[shuffled_indices]
     except ImportError:
         logger.warning('Could not import Pandas.')
-    
+
+
 def swap_image_channel(np_arr):
     n = len(np_arr.shape)
     if n == 4:
@@ -125,3 +126,9 @@ def onehot_encoding(y, num_classes, dtype=np.long):
     onehot = np.zeros((len(y), num_classes)).astype(dtype)
     onehot[np.arange(len(y)), y] = 1
     return onehot
+
+
+def get_data_path():
+    path = os.path.join(os.path.dirname(__file__), os.pardir, 'data')
+    logger.debug(path)
+    return path
