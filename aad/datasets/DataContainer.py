@@ -1,3 +1,4 @@
+import logging
 import os
 import time
 
@@ -12,6 +13,8 @@ from ..utils import (get_range, scale_normalize, shuffle_data,
                      swap_image_channel)
 from .dataset_list import DATASET_LIST, get_sample_mean, get_sample_std
 from .NumeralDataset import NumeralDataset
+
+logger = logging.getLogger(__name__)
 
 
 class DataContainer:
@@ -56,28 +59,31 @@ class DataContainer:
             time_elapsed % 60))
 
     def get_dataloader(self, batch_size=64, is_train=True, shuffle=True, num_workers=0):
-        data_train_np = self.data_train_np
-        data_test_np = self.data_test_np
-        # pytorch uses (c, h, w). numpy uses (h, w, c)
-        if self.type == 'image':
-            data_train_np = swap_image_channel(self.data_train_np)
-            data_test_np = swap_image_channel(self.data_test_np)
+        try:
+            data_train_np = self.data_train_np
+            data_test_np = self.data_test_np
+            # pytorch uses (c, h, w). numpy uses (h, w, c)
+            if self.type == 'image':
+                data_train_np = swap_image_channel(self.data_train_np)
+                data_test_np = swap_image_channel(self.data_test_np)
 
-        if is_train:
-            dataset = NumeralDataset(
-                torch.as_tensor(data_train_np),
-                torch.as_tensor(self.label_train_np))
-        else:
-            dataset = NumeralDataset(
-                torch.as_tensor(data_test_np),
-                torch.as_tensor(self.label_test_np))
+            if is_train:
+                dataset = NumeralDataset(
+                    torch.as_tensor(data_train_np),
+                    torch.as_tensor(self.label_train_np))
+            else:
+                dataset = NumeralDataset(
+                    torch.as_tensor(data_test_np),
+                    torch.as_tensor(self.label_test_np))
 
-        dataloader = DataLoader(
-            dataset,
-            batch_size,
-            shuffle=shuffle,
-            num_workers=num_workers)
-        return dataloader
+            dataloader = DataLoader(
+                dataset,
+                batch_size,
+                shuffle=shuffle,
+                num_workers=num_workers)
+            return dataloader
+        except AttributeError:
+            raise Exception('Call class instance first!')
 
     def _prepare_image_data(self, shuffle, num_workers):
         # for images, we prepare dataloader first, and then convert it to numpy array.

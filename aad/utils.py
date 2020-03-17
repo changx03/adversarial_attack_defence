@@ -100,7 +100,7 @@ def swap_image_channel(np_arr):
         return np_arr  # not a image, do nothing
 
 
-def name_handler(filename, extension='pt', overwrite=False):
+def name_handler(filename, extension, overwrite=False):
     arr = filename.split('.')
 
     if (len(arr) > 1 and arr[-1] != extension) or len(arr) == 1:

@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 from ..basemodels import TorchModelContainer
@@ -28,7 +29,10 @@ class AttackContainer:
     @staticmethod
     def save_attack(filename, x_adv, y_adv=None, x_clean=None, y_clean=None):
         assert isinstance(x_adv, np.ndarray)
-        filename_adv = name_handler(filename + '.adv', extension='npy')
+        
+        filename_adv = name_handler(filename + 'adv', extension='npy')
+        filename_adv = os.path.join('save', filename_adv)
+
         x_adv.astype(np.float32).tofile(filename_adv)
         if y_adv is not None:
             assert isinstance(y_adv, np.ndarray) \

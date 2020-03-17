@@ -1,4 +1,5 @@
 import time
+import os
 
 import numpy as np
 import torch
@@ -38,7 +39,9 @@ class TorchModelContainer:
             time_elapsed // 60, time_elapsed % 60))
 
     def save(self, filename, overwrite=False):
-        filename = name_handler(filename, overwrite)
+        filename = name_handler(filename, 'pt', overwrite)
+        filename = os.path.join('save', filename)
+        
         torch.save(self.model.state_dict(), filename)
 
         print(f'Successfully saved model to "{filename}"')
@@ -76,7 +79,13 @@ class TorchModelContainer:
             return predictions
 
     def predict_one(self, x, require_score=False):
-        prediction, output = self.predict(np.expand_dims(x, axis=0), True)
+        if isinstance(x, np.ndarray):
+            x = np.expand_dims(x, axis=0)
+        elif isinstance(x, torch.Tensor):
+            x = x.unsqueeze(dim=0)
+        else:
+            raise TypeError(f'Got {type(x)}. Except a ndarray or tensor')
+        prediction, output = self.predict(x, True)
         if require_score:
             return prediction.squeeze(), output.squeeze()
         else:
