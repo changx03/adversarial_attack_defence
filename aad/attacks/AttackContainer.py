@@ -1,17 +1,23 @@
+import abc
+import logging
 import os
+
 import numpy as np
 
 from ..basemodels import TorchModelContainer
 from ..utils import name_handler, onehot_encoding
 
+logger = logging.getLogger(__name__)
 
-class AttackContainer:
+
+class AttackContainer(abc.ABC):
     attack_params = dict()
 
     def __init__(self, model_containter):
         assert isinstance(model_containter, TorchModelContainer)
         self.model_container = model_containter
 
+    @abc.abstractmethod
     def generate(self, count, use_testset=True, x=None, y=None, **kwargs):
         raise NotImplementedError
 
@@ -29,7 +35,7 @@ class AttackContainer:
     @staticmethod
     def save_attack(filename, x_adv, y_adv=None, x_clean=None, y_clean=None):
         assert isinstance(x_adv, np.ndarray)
-        
+
         filename_adv = name_handler(filename + 'adv', extension='npy')
         filename_adv = os.path.join('save', filename_adv)
 
@@ -61,7 +67,7 @@ class AttackContainer:
         n = len(x)
         l2 = np.sum(np.square(x.reshape(n, -1) - x_adv.reshape(n, -1)), axis=1)
         return np.sqrt(l2)
-    
+
     @staticmethod
     def randam_targets(count, num_classes, use_onehot=False, dtype=np.long):
         y_rand = np.random.choice(num_classes, count, replace=True)
