@@ -7,7 +7,7 @@ import pandas as pd
 import torch
 
 
-logger = logging.getLogger('utils')
+logger = logging.getLogger(__name__)
 
 
 def master_seed(seed):

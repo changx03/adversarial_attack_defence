@@ -8,7 +8,7 @@ from aad.utils import (get_range, master_seed, name_handler, onehot_encoding,
                        scale_normalize, scale_unnormalize, shuffle_data,
                        swap_image_channel)
 
-logger = logging.getLogger(os.path.basename(__file__))
+logger = logging.getLogger(__name__)
 SEED = 4096
 
 
@@ -49,20 +49,17 @@ class TestUtils(unittest.TestCase):
 
         master_seed(SEED)
         x = np.random.rand(10, 1, 28, 28)
-        out = np.round(np.array(list(get_range(x, is_image=True))) * 1e4)
-        self.assertTrue((out == [0., 9999.]).all())
+        out = np.array(list(get_range(x, is_image=True)))
+        np.testing.assert_almost_equal(out, [0., 0.9998], decimal=4)
 
     def test_normalize(self):
-        master_seed(SEED)
         x = np.random.rand(2, 3)
         xmin, xmax = get_range(x)
         x_norm = scale_normalize(x, xmin, xmax)
         x_unnorm = scale_unnormalize(x_norm, xmin, xmax)
-        self.assertTrue(np.array_equiv(
-            np.round(x*1e4), np.round(x_unnorm*1e4)))
+        np.testing.assert_almost_equal(x, x_unnorm)
 
     def test_shuffle_data(self):
-        master_seed(SEED)
         x = np.random.rand(3)
         out = shuffle_data(x)
         self.assertTrue(x.shape == out.shape)
@@ -77,7 +74,6 @@ class TestUtils(unittest.TestCase):
         self.assertFalse((d.values == out.values).all())
 
     def test_swap_image_channel(self):
-        master_seed(SEED)
         x = np.random.rand(1, 10, 10)
         out = swap_image_channel(x)
         self.assertTrue(out.shape == (10, 10, 1))

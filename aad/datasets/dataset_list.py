@@ -1,3 +1,8 @@
+import logging
+import os
+
+logger = logging.getLogger(__name__)
+
 DATASET_LIST = {
     'MNIST': {
         'name': 'MNIST',
@@ -78,8 +83,16 @@ STD_LOOKUP = {
 
 
 def get_sample_mean(dataset_name):
-    return MEAN_LOOKUP[dataset_name]
+    if dataset_name in MEAN_LOOKUP.keys():
+        return MEAN_LOOKUP[dataset_name]
+    else:
+        logger.warning(f'"{dataset_name}" is not in the lookup')
+        return [0.]
 
 
 def get_sample_std(dataset_name):
-    return STD_LOOKUP[dataset_name]
+    if dataset_name in MEAN_LOOKUP.keys():
+        return STD_LOOKUP[dataset_name]
+    else:
+        logger.warning(f'"{dataset_name}" is not in the lookup')
+        return [1.]

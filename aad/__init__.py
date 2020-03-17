@@ -1,15 +1,11 @@
 import logging
 
-from aad import attacks
-from aad import basemodels
-from aad import datasets
-from aad import defences
-from aad import defences
+from aad import attacks, basemodels, datasets, defences
 
 # Semantic Version
 __version__ = '0.0.1'
 
-LOGGING = {
+LOGGING_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
@@ -37,8 +33,8 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True
         }
-    }
+    },
 }
 
-logging.config.dictConfig(LOGGING)
+logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)

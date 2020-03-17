@@ -86,11 +86,13 @@ class DataContainer:
         self._dataset_test = self._get_dataset(train=False)
 
         batch_size = 128  # this batch size is only used for loading.
-        self.dataloader_train = DataLoader(
+
+        # client should not access these loader directly
+        dataloader_train = DataLoader(
             self._dataset_train,
             batch_size,
             shuffle=shuffle)
-        self.dataloader_test = DataLoader(
+        dataloader_test = DataLoader(
             self._dataset_test,
             batch_size,
             shuffle=shuffle,
@@ -98,14 +100,17 @@ class DataContainer:
 
         print('Preparing numpy arrays...')
         self.data_train_np, self.label_train_np = self._loader_to_np(
-            self.dataloader_train, train=True)
+            dataloader_train, train=True)
         self.data_test_np, self.label_test_np = self._loader_to_np(
-            self.dataloader_test, train=False)
+            dataloader_test, train=False)
         # pytorch uses (c, h, w). numpy uses (h, w, c)
         self.data_train_np = swap_image_channel(self.data_train_np)
         self.data_test_np = swap_image_channel(self.data_test_np)
 
         self.data_range = get_range(self.data_train_np, is_image=True)
+
+        # no Pandas dataframe is avaliable for images
+        self.dataframe = None
 
     def _prepare_quantitative_data(self, shuffle, normalize, size_train):
         # for quantitative, starts with a Pandas dataframe, and then
