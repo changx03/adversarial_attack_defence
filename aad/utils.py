@@ -75,18 +75,21 @@ def scale_unnormalize(data, xmin, xmax):
 
 
 def shuffle_data(data):
-    assert isinstance(data, (np.ndarray, pd.DataFrame))
+    try:
+        import pandas as pd
+        assert isinstance(data, (np.ndarray, pd.DataFrame))
 
-    if isinstance(data, np.ndarray):
-        n = len(data)
-        shuffled_indices = np.random.permutation(n)
-        return data[shuffled_indices]
-    else:
-        n = len(data.index)
-        shuffled_indices = np.random.permutation(n)
-        return data.iloc[shuffled_indices]
-
-
+        if isinstance(data, np.ndarray):
+            n = len(data)
+            shuffled_indices = np.random.permutation(n)
+            return data[shuffled_indices]
+        else:
+            n = len(data.index)
+            shuffled_indices = np.random.permutation(n)
+            return data.iloc[shuffled_indices]
+    except ImportError:
+        logger.warning('Could not import Pandas.')
+    
 def swap_image_channel(np_arr):
     n = len(np_arr.shape)
     if n == 4:
