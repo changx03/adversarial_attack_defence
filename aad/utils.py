@@ -3,9 +3,6 @@ import logging
 import os
 
 import numpy as np
-import pandas as pd
-import torch
-
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +29,9 @@ def master_seed(seed):
 
     # Now try to set seed for all specific frameworks
     try:
-        logger.info('Setting random seed for PyTorch.')
+        import torch
+
+        logger.debug('Setting random seed for PyTorch.')
         torch.manual_seed(seed)
         if torch.cuda.is_available():
             torch.cuda.manual_seed_all(seed)
@@ -95,7 +94,7 @@ def swap_image_channel(np_arr):
     elif n == 3:
         return np.swapaxes(np_arr, 0, 2)
     else:
-        return np_arr # not a image, do nothing
+        return np_arr  # not a image, do nothing
 
 
 def name_handler(filename, extension='pt', overwrite=False):
