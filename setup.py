@@ -5,6 +5,7 @@ from setuptools import setup, find_packages
 install_requires = [
     'adversarial-robustness-toolbox',
     'astroid',
+    'jupyterlab',
     'launchpadlib',
     'matplotlib',
     'numpy',
