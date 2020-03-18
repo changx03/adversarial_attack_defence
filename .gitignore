@@ -7,3 +7,4 @@ venv/
 # ignore downloadable and generated files
 data/
 checkpoint.pt
+save/test/
