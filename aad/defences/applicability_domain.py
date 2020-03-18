@@ -2,6 +2,7 @@ import logging
 import time
 
 import numpy as np
+import sklearn.neighbors as knn
 import torch
 from torch.utils.data import DataLoader
 
@@ -79,11 +80,21 @@ class ApplicabilityDomainContainer(DefenceContainer):
         # Step 1: compute hidden layer outputs from inputs
         dc = self.model_container.data_container
         x_train_np = dc.data_train_np
-        y_train_np = dc.label_train_np
-        encode_train_np = self._preprocessing(x_train_np)
+        self.encode_train_np = self._preprocessing(x_train_np)
+
+        # other parameters for AD
+        self.y_train_np = dc.label_train_np
+        self.num_components = self.encode_train_np.shape[1]
+        self.num_classes = self.model_container.data_container.num_classes
 
     def _fit_stage2(self):
-        pass
+        self._knn_models = []
+        self._k_means = np.zeros(self.num_classes, dtype=np.float32)
+        self._k_stds = np.zeros_like(self._k_means)
+
+        self._log_time_start
+        # TODO: add KNN models here!
+        self._log_time_end(f'train {self.num_classes} KNN models')
 
     def _fit_stage3(self):
         pass
