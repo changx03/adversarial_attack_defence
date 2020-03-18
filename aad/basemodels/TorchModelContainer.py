@@ -38,7 +38,7 @@ class TorchModelContainer:
         self._fit_torch(epochs, batch_size)
 
         time_elapsed = time.time() - since
-        print('Time taken for training: {:2.0f}m {:2.1f}s'.format(
+        print('Time to complete training: {:2.0f}m {:2.1f}s'.format(
             time_elapsed // 60, time_elapsed % 60))
 
     def save(self, filename, overwrite=False):

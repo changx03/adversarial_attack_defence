@@ -54,7 +54,7 @@ class DataContainer:
 
         time_elapsed = time.time() - since
 
-        print('Successfully load data! Time taken: {:2.0f}m {:3.1f}s'.format(
+        print('Successfully load data! Time to complete: {:2.0f}m {:3.1f}s'.format(
             time_elapsed // 60,
             time_elapsed % 60))
 

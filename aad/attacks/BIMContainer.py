@@ -72,6 +72,6 @@ class BIMContainer(AttackContainer):
         y_adv, y_clean = self.predict(adv, x)
 
         time_elapsed = time.time() - since
-        print('Time taken for training {} adversarial examples: {:2.0f}m {:2.1f}s'.format(
+        print('Time to complete training {} adversarial examples: {:2.0f}m {:2.1f}s'.format(
             count, time_elapsed // 60, time_elapsed % 60))
         return adv, y_adv, np.copy(x), y_clean
