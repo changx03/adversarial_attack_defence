@@ -12,9 +12,9 @@ from .AttackContainer import AttackContainer
 class FGSMContainer(AttackContainer):
     def __init__(self, model_container, norm=np.inf, eps=.3, eps_step=0.1,
                  targeted=False, num_random_init=0, batch_size=64, minimal=False):
-        '''
+        """
         Fast Gradient Sign Method. Use L-inf norm as default
-        '''
+        """
         super(FGSMContainer, self).__init__(model_container)
 
         params_received = {

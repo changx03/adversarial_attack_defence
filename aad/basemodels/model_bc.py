@@ -13,10 +13,10 @@ NUM_CLASSES = 2
 
 
 class BCNN(nn.Module):
-    '''Breast Cancer Neural Network
+    """Breast Cancer Neural Network
     Fully connected neural network tested on Breast Cancer Wisconsin.  
     This basic model should work on quantitative binary classification
-    '''
+    """
 
     def __init__(
             self,

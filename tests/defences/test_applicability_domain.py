@@ -1,6 +1,9 @@
 import logging
 import unittest
 
+import numpy as np
+import torch
+
 from aad.basemodels import IrisNN, TorchModelContainer
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.defences import ApplicabilityDomainContainer
@@ -25,7 +28,7 @@ class TestApplicabilityDomain(unittest.TestCase):
         model_name = model.__class__.__name__
         logger.info(f'Using model: {model_name}')
         cls.mc = TorchModelContainer(model, cls.dc)
-        cls.mc.fit(epochs=100, batch_size=BATCH_SIZE)
+        cls.mc.fit(epochs=10, batch_size=BATCH_SIZE)
 
         cls.ad = ApplicabilityDomainContainer(
             cls.mc, k1=3, k2=6, confidence=1.0)
@@ -34,7 +37,9 @@ class TestApplicabilityDomain(unittest.TestCase):
         master_seed(SEED)
 
     def test_fit(self):
-        result = self.ad.fit()
+        device = self.mc.device
+        hidden_model = self.mc.model.hidden_model
+        result = self.ad.fit(hidden_model)
         self.assertTrue(result)
 
 

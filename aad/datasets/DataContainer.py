@@ -33,9 +33,9 @@ class DataContainer:
 
     def __call__(self, shuffle=True, normalize=False,
                  size_train=0.8, enable_cross_validation=False):
-        '''Load data and prepare for numpy arrays. `normalize` and `size_train` 
+        """Load data and prepare for numpy arrays. `normalize` and `size_train` 
         are not used in image datasets
-        '''
+        """
         # TODO: implement cross_validation
         assert enable_cross_validation == False, \
             'cross validation is not supported'
@@ -243,8 +243,8 @@ class DataContainer:
             raise Exception(f'Dataset {self.name} not found!')
 
     def _handle_bc_dataframe(self, file_path):
-        ''' Preprocessing the Breast Cancer Wisconsin (Diagnostic) DataFrame
-        '''
+        """ Preprocessing the Breast Cancer Wisconsin (Diagnostic) DataFrame
+        """
         df = pd.read_csv(file_path, index_col=0)
 
         # remove empty column
@@ -263,8 +263,8 @@ class DataContainer:
         return df
 
     def _handle_wheat_seed_dataframe(self, file_path):
-        ''' Preprocessing the Seeds of Wheat DataFrame
-        '''
+        """ Preprocessing the Seeds of Wheat DataFrame
+        """
         col_names = ['area', 'perimeter', 'compactness', 'kernel length',
                      'kernel width', 'asymmetry coefficient', 'kernel groove length',
                      'class']
@@ -276,8 +276,8 @@ class DataContainer:
         return df
 
     def _handle_htru2_dataframe(self, file_path):
-        ''' Preprocessing the HTRU2 DataFrame
-        '''
+        """ Preprocessing the HTRU2 DataFrame
+        """
         data = arff.loadarff(file_path)
         df = pd.DataFrame(data[0])
         # convert categorical data to integer codes
@@ -286,8 +286,8 @@ class DataContainer:
         return df
 
     def _handle_iris_dataframe(self, file_path):
-        ''' Preprocessing the Iris DataFrame
-        '''
+        """ Preprocessing the Iris DataFrame
+        """
         df = pd.read_csv(
             file_path,
             header=None,

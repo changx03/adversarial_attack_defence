@@ -1,16 +1,18 @@
+import types
+
 import torch
 
 
 class NumeralDataset(torch.utils.data.Dataset):
     def __init__(self, data, label=None):
         assert isinstance(data, torch.Tensor) \
-            and type(label) in (torch.Tensor, None)
+            and isinstance(label, (torch.Tensor, type(None)))
 
         self.data = data
         self.label = label
 
     def __getitem__(self, index):
-        y = self.label[index] if self.label else -1
+        y = self.label[index] if isinstance(self.label, torch.Tensor) else -1
         return self.data[index], y
 
     def __len__(self):

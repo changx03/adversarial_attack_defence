@@ -40,8 +40,8 @@ def master_seed(seed):
 
 
 def get_range(data, is_image=False):
-    '''return (min, max) of a numpy array
-    '''
+    """return (min, max) of a numpy array
+    """
     assert type(data) == np.ndarray
 
     axis = None if is_image else 0
@@ -51,8 +51,8 @@ def get_range(data, is_image=False):
 
 
 def scale_normalize(data, xmin, xmax):
-    ''' scaling normalization puts data in range between 0 and 1
-    '''
+    """ scaling normalization puts data in range between 0 and 1
+    """
     assert (type(data) == np.ndarray and
             type(xmax) == np.ndarray and
             type(xmin) == np.ndarray)
@@ -62,8 +62,8 @@ def scale_normalize(data, xmin, xmax):
 
 
 def scale_unnormalize(data, xmin, xmax):
-    '''rescaling the normalized data back to raw
-    '''
+    """rescaling the normalized data back to raw
+    """
     assert (type(data) == np.ndarray and
             type(xmax) == np.ndarray and
             type(xmin) == np.ndarray)

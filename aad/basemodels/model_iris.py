@@ -12,11 +12,12 @@ NUM_FEATURES = 4
 NUM_CLASSES = 3
 HIDDEN_NODES = 16
 
+
 class IrisNN(nn.Module):
-    '''Iris Neural Network
+    """Iris Neural Network
     Fully connected neural network tested on Iris.  
     It has 2 hidden layers, the number of hidden nodes per layer can be adjusted.
-    '''
+    """
 
     def __init__(
             self,
@@ -30,12 +31,12 @@ class IrisNN(nn.Module):
             scheduler_params=SCHEDULER_PARAMS):
         super(IrisNN, self).__init__()
 
-        self.model_inner = nn.Sequential(
+        self.hidden_model = nn.Sequential(
             nn.Linear(num_features, hidden_nodes),
             nn.ReLU(),
             nn.Linear(hidden_nodes, hidden_nodes),
-            nn.ReLU(),
-            nn.Linear(hidden_nodes, num_classes))
+            nn.ReLU())
+        self.fc1 = nn.Linear(hidden_nodes, num_classes)
 
         self.loss_fn = loss_fn
         self.optimizer = optimizer
@@ -44,5 +45,6 @@ class IrisNN(nn.Module):
         self.scheduler_params = scheduler_params
 
     def forward(self, x):
-        x = self.model_inner(x)
+        x = self.hidden_model(x)
+        x = self.fc1(x)
         return x
