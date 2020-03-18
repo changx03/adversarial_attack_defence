@@ -60,22 +60,14 @@ class DataContainer:
 
     def get_dataloader(self, batch_size=64, is_train=True, shuffle=True, num_workers=0):
         try:
-            data_train_np = self.data_train_np
-            data_test_np = self.data_test_np
-            # pytorch uses (c, h, w). numpy uses (h, w, c)
+            x_np = self.data_train_np if is_train else self.data_test_np
+            y_np = self.label_train_np if is_train else self.label_test_np
             if self.type == 'image':
-                data_train_np = swap_image_channel(self.data_train_np)
-                data_test_np = swap_image_channel(self.data_test_np)
+                x_np = swap_image_channel(x_np)
 
-            if is_train:
-                dataset = NumeralDataset(
-                    torch.as_tensor(data_train_np),
-                    torch.as_tensor(self.label_train_np))
-            else:
-                dataset = NumeralDataset(
-                    torch.as_tensor(data_test_np),
-                    torch.as_tensor(self.label_test_np))
-
+            dataset = NumeralDataset(
+                torch.as_tensor(x_np),
+                torch.as_tensor(y_np))
             dataloader = DataLoader(
                 dataset,
                 batch_size,
