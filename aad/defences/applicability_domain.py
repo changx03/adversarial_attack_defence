@@ -36,43 +36,37 @@ class ApplicabilityDomainContainer(DefenceContainer):
     def defence(self, adv, **kwargs):
         pass
 
-    def _preprocessing(self, x_np, y_np):
-        dataset = NumeralDataset(
-            torch.as_tensor(x_np),
-            torch.as_tensor(y_np))
+    def _preprocessing(self, x_np):
+        dataset = NumeralDataset(torch.as_tensor(x_np))
         dataloader = DataLoader(
             dataset,
             batch_size=128,
             shuffle=False,
             num_workers=0)
-        
-        # TODO: this returns encoded ndarray
-        return x_np, y_np
+
+        # run 1 sample to get size of output
+        x, _ = next(iter(dataloader))
+        outputs = self.hidden_model(x[:1])
+        num_components = outputs.size()[1]  # number of hidden components
+
+        x_encoded = torch.empty(len(x_np), num_components)
+        device = self.model_container.device
+
+        start = 0
+        with torch.no_grad():
+            for x, _ in dataloader:
+                x = x.to(device)
+                batch_size = len(x)
+                x_out = self.hidden_model(x).view(batch_size, -1)  # flatten
+                x_encoded[start: start+batch_size] = x_out
+        return x_encoded.cpu().detach().numpy()
 
     def _fit_stage1(self):
         # Step 1: compute hidden layer outputs from inputs
         dc = self.model_container.data_container
-        device = self.model_container.device
-        loader_train = dc.get_dataloader(
-            batch_size=64, is_train=True, shuffle=False)
-        # run 1 sample to get size of output
-        x, _ = next(iter(loader_train))
-        outputs = self.hidden_model(x[:1])
-        self.num_components = outputs.size()[1]  # number of hidden components
-        self.num_train = len(loader_train.dataset)
-        self._encoded_train = torch.empty(self.num_train, self.num_components)
-        self._y_train = torch.empty(self.num_train, dtype=torch.long)
-
-        start = 0
-        with torch.no_grad():
-            for x, y in loader_train:
-                x = x.to(device)
-                y = y.to(device)
-                batch_size = len(x)
-                x_encoded = self.hidden_model(
-                    x).view(batch_size, -1)  # flatten
-                self._encoded_train[start: start+batch_size] = x_encoded
-                self._y_train[start: start+batch_size] = y
+        x_train_np = dc.data_train_np
+        y_train_np = dc.label_train_np
+        encode_train_np = self._preprocessing(x_train_np)
 
     def _fit_stage2(self):
         pass
