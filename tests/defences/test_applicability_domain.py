@@ -22,17 +22,17 @@ class TestApplicabilityDomain(unittest.TestCase):
         NAME = 'Iris'
         logger.info('Starting %s data container...', NAME)
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
-        cls.dc(shuffle=True)
+        cls.dc(shuffle=True, normalize=False)
 
-        model = IrisNN()
+        model = IrisNN(hidden_nodes=10)
         model_name = model.__class__.__name__
         logger.info('Using model: %s', model_name)
         cls.mc = TorchModelContainer(model, cls.dc)
-        cls.mc.fit(epochs=10, batch_size=BATCH_SIZE)
+        cls.mc.fit(epochs=120, batch_size=BATCH_SIZE)
 
         hidden_model = model.hidden_model
         cls.ad = ApplicabilityDomainContainer(
-            cls.mc, hidden_model=hidden_model, k1=3, k2=6, confidence=1.0)
+            cls.mc, hidden_model=hidden_model, k1=4, k2=6, confidence=0.8)
 
     def setUp(self):
         master_seed(SEED)
@@ -43,6 +43,12 @@ class TestApplicabilityDomain(unittest.TestCase):
         t = self.ad.thresholds
         self.assertTrue((t != 0).all())
         # TODO: all thresholds has save value?!
+
+        # test defence with testset
+        adv = self.dc.data_test_np
+        x_passed, blocked_indices = self.ad.defence(adv)
+        print(x_passed)
+        print(blocked_indices)
 
 
 if __name__ == '__main__':

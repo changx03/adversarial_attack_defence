@@ -13,7 +13,7 @@ class DefenceContainer(abc.ABC):
     def __init__(self, model_container):
         assert isinstance(model_container, TorchModelContainer)
         self.model_container = model_container
-        self._since = 0
+        self._since = 0.0
 
     def set_params(self, **kwargs):
         for key, value in kwargs.items():
