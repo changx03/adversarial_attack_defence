@@ -2,12 +2,12 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-# NOTE: You must call this function!
-LOSS_FN = nn.NLLLoss() 
+LOSS_FN = nn.NLLLoss()
 OPTIMIZER = torch.optim.SGD
 OPTIM_PARAMS = {'lr': 0.1, 'momentum': 0}
 SCHEDULER = None
 SCHEDULER_PARAMS = None
+
 
 class MnistCnnCW_hidden(nn.Module):
     def __init__(self):

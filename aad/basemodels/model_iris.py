@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-# NOTE: You must call this function!
 LOSS_FN = nn.CrossEntropyLoss()
 OPTIMIZER = torch.optim.SGD
 OPTIM_PARAMS = {'lr': 0.01, 'momentum': 0.9}

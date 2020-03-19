@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-# NOTE: You must call this function!
 LOSS_FN = nn.CrossEntropyLoss()
 OPTIMIZER = torch.optim.Adam
 OPTIM_PARAMS = {'lr': 1e-4, 'betas': (0.9, 0.999)}

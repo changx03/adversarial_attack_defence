@@ -1,8 +1,7 @@
-import time
 import logging
+import time
 
 import numpy as np
-
 from art.attacks import BasicIterativeMethod
 from art.classifiers import PyTorchClassifier
 
@@ -76,5 +75,5 @@ class BIMContainer(AttackContainer):
 
         time_elapsed = time.time() - since
         logger.info('Time to complete training %d adversarial examples: %2.0fm %2.1fs',
-            count, time_elapsed // 60, time_elapsed % 60)
+                    count, time_elapsed // 60, time_elapsed % 60)
         return adv, y_adv, np.copy(x), y_clean
