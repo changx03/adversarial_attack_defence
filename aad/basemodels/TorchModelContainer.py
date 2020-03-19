@@ -24,7 +24,7 @@ class TorchModelContainer:
         self.device = torch.device(
             'cuda:0' if torch.cuda.is_available() else 'cpu')
         self.model.to(self.device)
-        logger.debug(f'Using device: {self.device}')
+        logger.debug('Using device: %s', self.device)
 
         # to allow the model train multiple times
         self.loss_train = []

@@ -23,13 +23,13 @@ class TestModelMNIST(unittest.TestCase):
             os.makedirs(os.path.join('save', 'test'))
 
         NAME = 'MNIST'
-        logger.info(f'Starting {NAME} data container...')
+        logger.info('Starting %s data container...', NAME)
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
         cls.dc(shuffle=False)
 
         model = MnistCnnCW()
         model_name = model.__class__.__name__
-        logger.info(f'Using model: {model_name}')
+        logger.info('Using model: %s', model_name)
         cls.mc = TorchModelContainer(model, cls.dc)
         cls.mc.fit(epochs=2, batch_size=BATCH_SIZE)
 
@@ -47,13 +47,13 @@ class TestModelMNIST(unittest.TestCase):
     def test_train(self):
         self.mc.fit(epochs=2, batch_size=BATCH_SIZE)
         acc0 = self.mc.accuracy_test[-1]
-        logger.debug('Test acc: {:.4f}'.format(acc0))
+        logger.debug('Test acc: %.4f', acc0)
 
         # continue training
         self.mc.fit(epochs=2, batch_size=BATCH_SIZE)
         acc1 = self.mc.accuracy_test[-1]
         self.assertGreaterEqual(acc1, acc0)
-        logger.debug('Test acc: {:.4f}'.format(acc1))
+        logger.debug('Test acc: %.4f', acc1)
 
     def test_save(self):
         self.mc.save(os.path.join('test', 'test_mnist'), overwrite=True)

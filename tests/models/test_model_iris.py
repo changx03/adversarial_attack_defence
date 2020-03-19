@@ -23,13 +23,13 @@ class TestModelIris(unittest.TestCase):
             os.makedirs(os.path.join('save', 'test'))
 
         NAME = 'Iris'
-        logger.info('Starting {} data container...'.format(NAME))
+        logger.info('Starting %s data container...', NAME)
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
         cls.dc(shuffle=True)
 
         model = IrisNN()
         model_name = model.__class__.__name__
-        logger.info('Using model: {}'.format(model_name))
+        logger.info('Using model: %s', model_name)
         cls.mc = TorchModelContainer(model, cls.dc)
         cls.mc.fit(epochs=100, batch_size=BATCH_SIZE)
 
@@ -46,13 +46,13 @@ class TestModelIris(unittest.TestCase):
 
     def test_train(self):
         acc0 = self.mc.accuracy_test[-1]
-        logger.debug('Test acc: {:.4f}'.format(acc0))
+        logger.info('Test acc: %.4f', acc0)
 
         # continue training
         self.mc.fit(epochs=50, batch_size=BATCH_SIZE)
         acc1 = self.mc.accuracy_test[-1]
         self.assertGreaterEqual(acc1, acc0)
-        logger.debug('Test acc: {:.4f}'.format(acc1))
+        logger.info('Test acc: %.4f', acc1)
 
     def test_predict(self):
         x = torch.tensor(swap_image_channel(self.x)).to(self.mc.device)
@@ -69,7 +69,7 @@ class TestModelIris(unittest.TestCase):
         self.assertTrue((p1 == p2).all())
 
     def test_evaluate(self):
-        p2 = self.mc.predict(self.x)
+        # p2 = self.mc.predict(self.x)
         acc = self.mc.evaluate(self.x, [1, 0, 1, 2, 2])
         self.assertEqual(acc, 1.0)
 

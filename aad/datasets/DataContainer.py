@@ -7,11 +7,11 @@ import pandas as pd
 import torch
 import torchvision as tv
 from scipy.io import arff
-from torch.utils.data import DataLoader, TensorDataset
+from torch.utils.data import DataLoader
 
 from ..utils import (get_range, scale_normalize, shuffle_data,
                      swap_image_channel)
-from .dataset_list import DATASET_LIST, get_sample_mean, get_sample_std
+from .dataset_list import get_sample_mean, get_sample_std
 from .NumeralDataset import NumeralDataset
 
 logger = logging.getLogger(__name__)
@@ -26,6 +26,12 @@ class DataContainer:
         self.dim_data = dataset_dict['dim_data']
         self.path = path
         assert os.path.exists(path), f'{path} does NOT exist!'
+        self.train_mean = None
+        self.train_std = None
+        self.data_train_np, self.label_train_np = None, None
+        self.data_test_np, self.label_test_np = None, None
+        self.dataframe = None
+        self.data_range = None
 
     def __len__(self):
         # total length = train + test
@@ -80,35 +86,32 @@ class DataContainer:
     def _prepare_image_data(self, shuffle, num_workers):
         # for images, we prepare dataloader first, and then convert it to numpy array.
         print('Preparing DataLoaders...')
-        self._dataset_train = self._get_dataset(train=True)
-        self._dataset_test = self._get_dataset(train=False)
+        dataset_train = self._get_dataset(train=True)
+        dataset_test = self._get_dataset(train=False)
 
         batch_size = 128  # this batch size is only used for loading.
 
         # client should not access these loader directly
         dataloader_train = DataLoader(
-            self._dataset_train,
+            dataset_train,
             batch_size,
             shuffle=shuffle)
         dataloader_test = DataLoader(
-            self._dataset_test,
+            dataset_test,
             batch_size,
             shuffle=shuffle,
             num_workers=num_workers)
 
         print('Preparing numpy arrays...')
         self.data_train_np, self.label_train_np = self._loader_to_np(
-            dataloader_train, train=True)
+            dataloader_train)
         self.data_test_np, self.label_test_np = self._loader_to_np(
-            dataloader_test, train=False)
+            dataloader_test)
         # pytorch uses (c, h, w). numpy uses (h, w, c)
         self.data_train_np = swap_image_channel(self.data_train_np)
         self.data_test_np = swap_image_channel(self.data_test_np)
 
         self.data_range = get_range(self.data_train_np, is_image=True)
-
-        # no Pandas dataframe is avaliable for images
-        self.dataframe = None
 
     def _prepare_quantitative_data(self, shuffle, normalize, size_train):
         # for quantitative, starts with a Pandas dataframe, and then
@@ -161,7 +164,7 @@ class DataContainer:
         else:
             raise Exception(f'Dataset {self.name} not found!')
 
-    def _loader_to_np(self, loader, train=True):
+    def _loader_to_np(self, loader):
         n = len(loader.dataset)
         data_shape = tuple([n]+list(self.dim_data))
         label_shape = (n, )
@@ -262,20 +265,22 @@ class DataContainer:
         df = df[col_names]
         return df
 
-    def _handle_wheat_seed_dataframe(self, file_path):
+    @staticmethod
+    def _handle_wheat_seed_dataframe(file_path):
         """ Preprocessing the Seeds of Wheat DataFrame
         """
         col_names = ['area', 'perimeter', 'compactness', 'kernel length',
                      'kernel width', 'asymmetry coefficient', 'kernel groove length',
                      'class']
-        df = pd.read_csv(file_path, header=None, names=col_names, sep='\s+')
+        df = pd.read_csv(file_path, header=None, names=col_names, sep=r'\s+')
         # convert categorical data to integer codes
         df['class'] = df['class'].astype('category')
         # map [1, 2, 3] to [0, 1, 2]
         df['class'] = df['class'].cat.codes.astype('long')
         return df
 
-    def _handle_htru2_dataframe(self, file_path):
+    @staticmethod
+    def _handle_htru2_dataframe(file_path):
         """ Preprocessing the HTRU2 DataFrame
         """
         data = arff.loadarff(file_path)
@@ -285,7 +290,8 @@ class DataContainer:
         df['class'] = df['class'].cat.codes.astype('long')
         return df
 
-    def _handle_iris_dataframe(self, file_path):
+    @staticmethod
+    def _handle_iris_dataframe(file_path):
         """ Preprocessing the Iris DataFrame
         """
         df = pd.read_csv(
