@@ -30,17 +30,19 @@ class TestApplicabilityDomain(unittest.TestCase):
         cls.mc = TorchModelContainer(model, cls.dc)
         cls.mc.fit(epochs=10, batch_size=BATCH_SIZE)
 
+        hidden_model = model.hidden_model
         cls.ad = ApplicabilityDomainContainer(
-            cls.mc, k1=3, k2=6, confidence=1.0)
+            cls.mc, hidden_model=hidden_model, k1=3, k2=6, confidence=1.0)
 
     def setUp(self):
         master_seed(SEED)
 
     def test_fit(self):
-        # device = self.mc.device
-        hidden_model = self.mc.model.hidden_model
-        result = self.ad.fit(hidden_model)
+        result = self.ad.fit()
         self.assertTrue(result)
+        t = self.ad.thresholds
+        self.assertTrue((t != 0).all())
+        # TODO: all thresholds has save value?!
 
 
 if __name__ == '__main__':

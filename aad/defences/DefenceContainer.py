@@ -8,23 +8,24 @@ logger = logging.getLogger(__name__)
 
 
 class DefenceContainer(abc.ABC):
-    defence_params = dict()
+    params = dict()
 
     def __init__(self, model_container):
         assert isinstance(model_container, TorchModelContainer)
         self.model_container = model_container
+        self._since = 0
 
     def set_params(self, **kwargs):
         for key, value in kwargs.items():
-            if key in self.defence_params.keys():
-                self.defence_params[key] = value
+            if key in self.params.keys():
+                self.params[key] = value
 
     @abc.abstractmethod
-    def fit(self, **kwargs):
+    def fit(self):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def defence(self, adv, **kwargs):
+    def defence(self, adv):
         raise NotImplementedError
 
     def _log_time_start(self):
