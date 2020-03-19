@@ -28,10 +28,10 @@ class DefenceContainer(abc.ABC):
         raise NotImplementedError
 
     def _log_time_start(self):
-        self.since = time.time()
+        self._since = time.time()
 
     def _log_time_end(self, title=None):
-        time_elapsed = time.time() - self.since
+        time_elapsed = time.time() - self._since
         title = ' [' + title + ']' if title else ''
         logger.info('Time to complete{}: {:2.0f}m {:2.1f}s'.format(
             title, time_elapsed // 60, time_elapsed % 60))

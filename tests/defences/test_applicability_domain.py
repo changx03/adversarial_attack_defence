@@ -20,13 +20,13 @@ class TestApplicabilityDomain(unittest.TestCase):
         master_seed(SEED)
 
         NAME = 'Iris'
-        logger.info(f'Starting {NAME} data container...')
+        logger.info('Starting {} data container...'.format(NAME))
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
         cls.dc(shuffle=True)
 
         model = IrisNN()
         model_name = model.__class__.__name__
-        logger.info(f'Using model: {model_name}')
+        logger.info('Using model: {}'.format(model_name))
         cls.mc = TorchModelContainer(model, cls.dc)
         cls.mc.fit(epochs=10, batch_size=BATCH_SIZE)
 
@@ -37,7 +37,7 @@ class TestApplicabilityDomain(unittest.TestCase):
         master_seed(SEED)
 
     def test_fit(self):
-        device = self.mc.device
+        # device = self.mc.device
         hidden_model = self.mc.model.hidden_model
         result = self.ad.fit(hidden_model)
         self.assertTrue(result)

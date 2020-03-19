@@ -65,7 +65,7 @@ class ApplicabilityDomainContainer(DefenceContainer):
         outputs = self.hidden_model(x[:1])
         num_components = outputs.size()[1]  # number of hidden components
 
-        x_encoded = torch.empty(len(x_np), num_components)
+        x_encoded = torch.zeros(len(x_np), num_components)
 
         start = 0
         with torch.no_grad():

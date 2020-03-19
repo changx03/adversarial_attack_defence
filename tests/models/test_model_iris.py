@@ -23,13 +23,13 @@ class TestModelIris(unittest.TestCase):
             os.makedirs(os.path.join('save', 'test'))
 
         NAME = 'Iris'
-        logger.info(f'Starting {NAME} data container...')
+        logger.info('Starting {} data container...'.format(NAME))
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
         cls.dc(shuffle=True)
 
         model = IrisNN()
         model_name = model.__class__.__name__
-        logger.info(f'Using model: {model_name}')
+        logger.info('Using model: {}'.format(model_name))
         cls.mc = TorchModelContainer(model, cls.dc)
         cls.mc.fit(epochs=100, batch_size=BATCH_SIZE)
 
