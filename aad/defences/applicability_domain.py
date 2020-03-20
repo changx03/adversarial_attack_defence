@@ -1,3 +1,6 @@
+"""
+This module implements the Applicability Domain based adversarial detection.
+"""
 import logging
 
 import numpy as np
@@ -6,13 +9,19 @@ import torch
 from torch.utils.data import DataLoader
 
 from ..datasets import NumeralDataset
-from .DefenceContainer import DefenceContainer
+from .detector_container import DetectorContainer
 
 logger = logging.getLogger(__name__)
 
 
-class ApplicabilityDomainContainer(DefenceContainer):
+class ApplicabilityDomainContainer(DetectorContainer):
+    """
+    Class performs adversarial detection based on Applicability Domain.
+    """
+
     def __init__(self, model_container, hidden_model=None, k1=9, k2=12, confidence=0.8):
+        """Create a class `ApplicabilityDomainContainer` instance.
+        """
         super(ApplicabilityDomainContainer, self).__init__(model_container)
 
         params_received = {
@@ -29,18 +38,27 @@ class ApplicabilityDomainContainer(DefenceContainer):
             self.hidden_model = self.dummy_model
 
         # placeholders for the objects used by AD
-        self.num_components = 0
+        self.num_components = 0  # number of hidden components
+        # keep track max for each class, size: [num_classes, num_components]
         self._x_max = None
         self._x_min = None
-        self._s2_models = []
-        self._s3_model = None
+        self._s2_models = []  # in-class KNN models
+        self._s3_model = None  # KNN models using training set
         self.k_means = np.zeros(self.num_classes, dtype=np.float32)
         self.k_stds = np.zeros_like(self.k_means)
-        self.thresholds = np.zeros(self.num_classes, dtype=np.float32)
+        self.thresholds = np.zeros_like(self.k_means)
         self.encode_train_np = None
         self.y_train_np = None
 
     def fit(self):
+        """
+        Train the model using the training set from `model_container.data_container`.
+        """
+        if self.encode_train_np is not None:
+            logger.warning(
+                'You cannot call fit() method multiple times! Please start a new instance')
+            return False
+
         self._log_time_start()
 
         # Step 1: compute hidden layer outputs from inputs
@@ -57,7 +75,7 @@ class ApplicabilityDomainContainer(DefenceContainer):
         self._log_time_end('train AD')
         return True
 
-    def defence(self, adv):
+    def detect(self, adv):
         n = len(adv)
         # 1: passed test, 0: blocked by AD
         passed = np.ones(n, dtype=np.int8)
@@ -110,16 +128,22 @@ class ApplicabilityDomainContainer(DefenceContainer):
         return x_encoded.cpu().detach().numpy()
 
     def _fit_stage1(self):
-        # TODO: instead of using the bounding box for entire set. Each class should have it's own bounding box!
-        x = self.encode_train_np
-        self._x_max = np.amax(x, axis=0)
-        self._x_min = np.amin(x, axis=0)
+        self._x_min = np.empty(
+            (self.num_classes, self.num_components), dtype=np.float32)
+        self._x_max = np.empty_like(self._x_min)
+
+        for i in range(self.num_classes):
+            indices = np.where(self.y_train_np == i)[0]
+            x = self.encode_train_np[indices]
+            self._x_max[i] = np.amax(x, axis=0)
+            self._x_min[i] = np.amin(x, axis=0)
 
     def _fit_stage2(self):
+        self._s2_models = []
         k1 = self.params['k1']
         zeta = self.params['confidence']
-        for l in range(self.num_classes):
-            indices = np.where(self.y_train_np == l)[0]
+        for i in range(self.num_classes):
+            indices = np.where(self.y_train_np == i)[0]
             x = self.encode_train_np[indices]
             # models are grouped by classes, y doesn't matter
             y = np.ones(len(x))
@@ -129,9 +153,9 @@ class ApplicabilityDomainContainer(DefenceContainer):
             # number of neighbours is k + 1, since it will return the node itself
             dist, _ = model.kneighbors(x, n_neighbors=k1+1)
             avg_dist = np.sum(dist, axis=1) / float(k1)
-            self.k_means[l] = np.mean(avg_dist)
-            self.k_stds[l] = np.std(avg_dist)
-            self.thresholds[l] = self.k_means[l] + zeta * self.k_stds[l]
+            self.k_means[i] = np.mean(avg_dist)
+            self.k_stds[i] = np.std(avg_dist)
+            self.thresholds[i] = self.k_means[i] + zeta * self.k_stds[i]
 
     def _fit_stage3(self):
         x = self.encode_train_np
@@ -147,11 +171,15 @@ class ApplicabilityDomainContainer(DefenceContainer):
         """
         A bounding box which uses [min, max] from traning set
         """
-        blocked_indices = np.where(
-            np.all(
-                np.logical_or(adv > self._x_max, adv < self._x_min), axis=1)
-        )[0]
-        passed[blocked_indices] = 0
+        for i in range(self.num_classes):
+            indices = np.where(pred_adv == i)[0]
+            x = adv[indices]
+            i_min = self._x_min[i]
+            i_max = self._x_max[i]
+            blocked_indices = np.where(
+                np.all(np.logical_or(x < i_min, x > i_max), axis=1)
+            )[0]
+            passed[blocked_indices] = 0
         return passed
 
     def _def_state2(self, adv, pred_adv, passed):
@@ -196,7 +224,6 @@ class ApplicabilityDomainContainer(DefenceContainer):
     @staticmethod
     def dummy_model(x):
         """
-        Return the input. Do nothing. Use this method when we don't need a hidden 
-        layer encoding.
+        Return the input.Use this method when we don't need a hidden layer encoding.
         """
         return x

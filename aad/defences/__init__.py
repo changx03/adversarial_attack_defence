@@ -1,2 +1,2 @@
-from .DefenceContainer import DefenceContainer
+from .detector_container import DetectorContainer
 from .applicability_domain import ApplicabilityDomainContainer

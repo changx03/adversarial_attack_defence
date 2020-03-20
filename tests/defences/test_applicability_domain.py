@@ -44,21 +44,23 @@ class TestApplicabilityDomain(unittest.TestCase):
         testing defence with testset
         """
         adv = self.dc.data_test_np
-        x_passed, blocked_indices = self.ad.defence(adv)
+        x_passed, blocked_indices = self.ad.detect(adv)
         self.assertEqual(len(x_passed) + len(blocked_indices), len(adv))
         self.assertTrue(np.equal(blocked_indices, [4, 7]).all())
 
-    def test_adv(self):
+    def test_BIM_attack(self):
         """
         testing defence with adversarial examples
         """
         attack = BIMContainer(self.mc)
         adv, y_adv, x_clean, y_clean = attack.generate(count=30)
-        x_passed, blocked_indices = self.ad.defence(adv)
+        x_passed, blocked_indices = self.ad.detect(adv)
         self.assertEqual(len(x_passed) + len(blocked_indices), len(adv))
         print('Blocked {:2d}/{:2d} samples from adversarial examples'.format(
             len(blocked_indices), len(adv)))
-        print(blocked_indices)
+        print('blocked_indices', blocked_indices)
+        matched_indices = np.where(y_adv == y_clean)[0]
+        print('matched_indices', matched_indices)
         passed_indices = np.delete(np.arange(len(adv)), blocked_indices)
         passed_y_clean = y_clean[passed_indices]
         accuracy = self.mc.evaluate(x_passed, passed_y_clean)
@@ -67,7 +69,7 @@ class TestApplicabilityDomain(unittest.TestCase):
 
         # test the base inputs
         print('\nTesting on original clean samples')
-        x_passed, blocked_indices = self.ad.defence(x_clean)
+        x_passed, blocked_indices = self.ad.detect(x_clean)
         self.assertEqual(len(x_passed) + len(blocked_indices), len(adv))
         print('Blocked {:2d}/{:2d} samples from clean samples'.format(
             len(blocked_indices), len(adv)))

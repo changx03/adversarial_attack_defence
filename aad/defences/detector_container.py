@@ -1,3 +1,6 @@
+"""
+This module implements the base class for a detector
+"""
 import abc
 import logging
 import time
@@ -7,7 +10,10 @@ from ..basemodels import TorchModelContainer
 logger = logging.getLogger(__name__)
 
 
-class DefenceContainer(abc.ABC):
+class DetectorContainer(abc.ABC):
+    """
+    Class performing adversarial detection
+    """
     params = dict()
 
     def __init__(self, model_container):
@@ -22,10 +28,12 @@ class DefenceContainer(abc.ABC):
 
     @abc.abstractmethod
     def fit(self):
+        """Train the model."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def defence(self, adv):
+    def detect(self, adv):
+        """Detect adversarial examples."""
         raise NotImplementedError
 
     def _log_time_start(self):
