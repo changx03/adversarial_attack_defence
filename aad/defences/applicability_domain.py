@@ -30,7 +30,8 @@ class ApplicabilityDomainContainer(DefenceContainer):
 
         # placeholders for the objects used by AD
         self.num_components = 0
-        self._knn_models = []
+        self._s2_models = []
+        self._s3_model = None
         self.k_means = np.zeros(self.num_classes, dtype=np.float32)
         self.k_stds = np.zeros_like(self.k_means)
         self.thresholds = np.zeros(self.num_classes, dtype=np.float32)
@@ -49,7 +50,7 @@ class ApplicabilityDomainContainer(DefenceContainer):
 
         self._fit_stage1()
         self._fit_stage2()
-        # self._fit_stage3()
+        self._fit_stage3()
 
         self._log_time_end('train AD')
         return True
@@ -68,11 +69,17 @@ class ApplicabilityDomainContainer(DefenceContainer):
         encoded_adv = self._preprocessing(adv)
 
         passed = self._def_state1(encoded_adv, pred_adv, passed)
+        blocked = len(passed[passed == 0])
+        logger.info('Stage 1: blocked %d inputs', blocked)
         passed = self._def_state2(encoded_adv, pred_adv, passed)
+        blocked = len(passed[passed == 0]) - blocked
+        logger.info('Stage 2: blocked %d inputs', blocked)
         passed = self._def_state3(encoded_adv, pred_adv, passed)
+        blocked = len(passed[passed == 0]) - blocked
+        logger.info('Stage 3: blocked %d inputs', blocked)
 
         passed_indices = np.nonzero(passed)
-        blocked_indices = np.nonzero(np.ones_like(passed) - passed)
+        blocked_indices = np.delete(np.arange(n), passed_indices)
         return adv[passed_indices], blocked_indices
 
     def _preprocessing(self, x_np):
@@ -105,16 +112,16 @@ class ApplicabilityDomainContainer(DefenceContainer):
         logger.warning('Stage 1 of Applicability Domain is NOT impletmented!')
 
     def _fit_stage2(self):
-        self._log_time_start()
-
         k1 = self.params['k1']
         zeta = self.params['confidence']
         for l in range(self.num_classes):
             indices = np.where(self.y_train_np == l)[0]
             x = self.encode_train_np[indices]
+            # models are grouped by classes, y doesn't matter
+            y = np.ones(len(x))
             model = knn.KNeighborsClassifier(n_neighbors=k1, n_jobs=-1)
-            model.fit(x, np.ones(len(x)))
-            self._knn_models.append(model)
+            model.fit(x, y)
+            self._s2_models.append(model)
             # number of neighbours is k + 1, since it will return the node itself
             dist, _ = model.kneighbors(x, n_neighbors=k1+1)
             avg_dist = np.sum(dist, axis=1) / float(k1)
@@ -122,10 +129,15 @@ class ApplicabilityDomainContainer(DefenceContainer):
             self.k_stds[l] = np.std(avg_dist)
             self.thresholds[l] = self.k_means[l] + zeta * self.k_stds[l]
 
-        self._log_time_end(f'train {self.num_classes} KNN models')
-
     def _fit_stage3(self):
-        pass
+        x = self.encode_train_np
+        y = self.y_train_np
+        k2 = self.params['k2']
+        self._s3_model = knn.KNeighborsClassifier(
+            n_neighbors=k2,
+            n_jobs=-1,
+            weights='distance')
+        self._s3_model.fit(x, y)
 
     def _def_state1(self, adv, pred_adv, passed):
         return passed
@@ -138,7 +150,7 @@ class ApplicabilityDomainContainer(DefenceContainer):
         passed_indices = np.where(passed == 1)[0]
         passed_adv = adv[passed_indices]
         passed_pred = pred_adv[passed_indices]
-        models = self._knn_models
+        models = self._s2_models
         classes = np.arange(self.num_classes)
         k1 = self.params['k1']
         for model, threshold, c in zip(models, self.thresholds, classes):
@@ -154,6 +166,19 @@ class ApplicabilityDomainContainer(DefenceContainer):
         return passed
 
     def _def_state3(self, adv, pred_adv, passed):
+        """
+        Filtering the inputs based on k nearest neighbours with entire training set
+        """
+        indices = np.arange(len(adv))
+        passed_indices = np.where(passed == 1)[0]
+        passed_adv = adv[passed_indices]
+        passed_pred = pred_adv[passed_indices]
+        model = self._s3_model
+        k2 = self.params['k2']
+        knn_pred = model.predict(passed_adv)
+        not_match_indices = np.where(np.not_equal(knn_pred, passed_pred))[0]
+        blocked_indices = indices[passed_indices][not_match_indices]
+        passed[blocked_indices] = 0
         return passed
 
     @staticmethod

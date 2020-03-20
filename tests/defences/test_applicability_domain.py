@@ -47,8 +47,7 @@ class TestApplicabilityDomain(unittest.TestCase):
         # test defence with testset
         adv = self.dc.data_test_np
         x_passed, blocked_indices = self.ad.defence(adv)
-        print(x_passed)
-        print(blocked_indices)
+        print('Blocked {} inputs'.format(len(blocked_indices)))
 
 
 if __name__ == '__main__':
