@@ -75,13 +75,13 @@ class TestDataContainer(unittest.TestCase):
         train_np = dc.data_train_np
         self.assertEqual(train_np.shape, p['train_shape'])
         y_np = dc.label_train_np
-        self.assertEqual(y_np.shape, (p['train_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
         self.assertEqual(len(train_loader.dataset), p['train_shape'][0])
         x_pt, y_pt = next(iter(train_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = train_np[:8]
         x2 = swap_image_channel(x_pt.cpu().detach().numpy())
         np.testing.assert_equal(x1, x2)
@@ -93,13 +93,13 @@ class TestDataContainer(unittest.TestCase):
         test_np = dc.data_test_np
         self.assertEqual(test_np.shape, p['test_shape'])
         y_np = dc.label_test_np
-        self.assertEqual(y_np.shape, (p['test_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['test_shape'][0],))
         test_loader = dc.get_dataloader(
             batch_size=8, is_train=False, shuffle=False)
         self.assertEqual(len(test_loader.dataset), p['test_shape'][0])
         x_pt, y_pt = next(iter(test_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = test_np[:8]
         x2 = swap_image_channel(x_pt.cpu().detach().numpy())
         np.testing.assert_equal(x1, x2)
@@ -132,13 +132,13 @@ class TestDataContainer(unittest.TestCase):
         train_np = dc.data_train_np
         self.assertEqual(train_np.shape, p['train_shape'])
         y_np = dc.label_train_np
-        self.assertEqual(y_np.shape, (p['train_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
         self.assertEqual(len(train_loader.dataset), p['train_shape'][0])
         x_pt, y_pt = next(iter(train_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = train_np[:8]
         x2 = swap_image_channel(x_pt.cpu().detach().numpy())
         np.testing.assert_equal(x1, x2)
@@ -150,13 +150,13 @@ class TestDataContainer(unittest.TestCase):
         test_np = dc.data_test_np
         self.assertEqual(test_np.shape, p['test_shape'])
         y_np = dc.label_test_np
-        self.assertEqual(y_np.shape, (p['test_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['test_shape'][0],))
         test_loader = dc.get_dataloader(
             batch_size=8, is_train=False, shuffle=False)
         self.assertEqual(len(test_loader.dataset), p['test_shape'][0])
         x_pt, y_pt = next(iter(test_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = test_np[:8]
         x2 = swap_image_channel(x_pt.cpu().detach().numpy())
         np.testing.assert_equal(x1, x2)
@@ -183,13 +183,13 @@ class TestDataContainer(unittest.TestCase):
         train_np = dc.data_train_np
         self.assertEqual(train_np.shape, p['train_shape'])
         y_np = dc.label_train_np
-        self.assertEqual(y_np.shape, (p['train_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
         self.assertEqual(len(train_loader.dataset), p['train_shape'][0])
         x_pt, y_pt = next(iter(train_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = train_np[:8]
         x2 = swap_image_channel(x_pt.cpu().detach().numpy())
         np.testing.assert_equal(x1, x2)
@@ -205,7 +205,7 @@ class TestDataContainer(unittest.TestCase):
                 [6.82480001, 12.95160007, 17.92740059, 2.44950008]],
             'num_classes': 2,
             'type': 'quantitative',
-            'dim': (4, ),
+            'dim': (4,),
             'mean': [0.67082083, 0.67537272, 0.26181248, 0.67141819],
             'std': [0.14560266, 0.19260927, 0.14039186, 0.19495234],
             'train_shape': (686, 4),
@@ -234,13 +234,13 @@ class TestDataContainer(unittest.TestCase):
         train_np = dc.data_train_np
         self.assertEqual(train_np.shape, p['train_shape'])
         y_np = dc.label_train_np
-        self.assertEqual(y_np.shape, (p['train_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
         self.assertEqual(len(train_loader.dataset), p['train_shape'][0])
         x_pt, y_pt = next(iter(train_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = train_np[:8]
         x2 = x_pt.cpu().detach().numpy()
         np.testing.assert_equal(x1, x2)
@@ -252,13 +252,13 @@ class TestDataContainer(unittest.TestCase):
         test_np = dc.data_test_np
         self.assertEqual(test_np.shape, p['test_shape'])
         y_np = dc.label_test_np
-        self.assertEqual(y_np.shape, (p['test_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['test_shape'][0],))
         test_loader = dc.get_dataloader(
             batch_size=8, is_train=False, shuffle=False)
         self.assertEqual(len(test_loader.dataset), p['test_shape'][0])
         x_pt, y_pt = next(iter(test_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = test_np[:8]
         x2 = x_pt.cpu().detach().numpy()
         np.testing.assert_equal(x1, x2)
@@ -269,7 +269,7 @@ class TestDataContainer(unittest.TestCase):
     def test_DataContainer_BreastCancerWisconsin(self):
         dataname = 'BreastCancerWisconsin'
         p = {
-            'dim': (30, ),
+            'dim': (30,),
             'train_shape': (284, 30),
             'test_shape': (285, 30),
         }
@@ -280,13 +280,13 @@ class TestDataContainer(unittest.TestCase):
         train_np = dc.data_train_np
         self.assertEqual(train_np.shape, p['train_shape'])
         y_np = dc.label_train_np
-        self.assertEqual(y_np.shape, (p['train_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
         self.assertEqual(len(train_loader.dataset), p['train_shape'][0])
         x_pt, y_pt = next(iter(train_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = train_np[:8]
         x2 = x_pt.cpu().detach().numpy()
         np.testing.assert_equal(x1, x2)
@@ -298,13 +298,13 @@ class TestDataContainer(unittest.TestCase):
         test_np = dc.data_test_np
         self.assertEqual(test_np.shape, p['test_shape'])
         y_np = dc.label_test_np
-        self.assertEqual(y_np.shape, (p['test_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['test_shape'][0],))
         test_loader = dc.get_dataloader(
             batch_size=8, is_train=False, shuffle=False)
         self.assertEqual(len(test_loader.dataset), p['test_shape'][0])
         x_pt, y_pt = next(iter(test_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = test_np[:8]
         x2 = x_pt.cpu().detach().numpy()
         np.testing.assert_equal(x1, x2)
@@ -315,7 +315,7 @@ class TestDataContainer(unittest.TestCase):
     def test_DataContainer_HTRU2(self):
         dataname = 'HTRU2'
         p = {
-            'dim': (8, ),
+            'dim': (8,),
             'train_shape': (8949, 8),
             'test_shape': (8949, 8),
         }
@@ -326,13 +326,13 @@ class TestDataContainer(unittest.TestCase):
         train_np = dc.data_train_np
         self.assertEqual(train_np.shape, p['train_shape'])
         y_np = dc.label_train_np
-        self.assertEqual(y_np.shape, (p['train_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
         self.assertEqual(len(train_loader.dataset), p['train_shape'][0])
         x_pt, y_pt = next(iter(train_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = train_np[:8]
         x2 = x_pt.cpu().detach().numpy()
         np.testing.assert_equal(x1, x2)
@@ -344,13 +344,13 @@ class TestDataContainer(unittest.TestCase):
         test_np = dc.data_test_np
         self.assertEqual(test_np.shape, p['test_shape'])
         y_np = dc.label_test_np
-        self.assertEqual(y_np.shape, (p['test_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['test_shape'][0],))
         test_loader = dc.get_dataloader(
             batch_size=8, is_train=False, shuffle=False)
         self.assertEqual(len(test_loader.dataset), p['test_shape'][0])
         x_pt, y_pt = next(iter(test_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = test_np[:8]
         x2 = x_pt.cpu().detach().numpy()
         np.testing.assert_equal(x1, x2)
@@ -361,7 +361,7 @@ class TestDataContainer(unittest.TestCase):
     def test_DataContainer_Iris(self):
         dataname = 'Iris'
         p = {
-            'dim': (4, ),
+            'dim': (4,),
             'train_shape': (75, 4),
             'test_shape': (75, 4),
         }
@@ -372,13 +372,13 @@ class TestDataContainer(unittest.TestCase):
         train_np = dc.data_train_np
         self.assertEqual(train_np.shape, p['train_shape'])
         y_np = dc.label_train_np
-        self.assertEqual(y_np.shape, (p['train_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
         self.assertEqual(len(train_loader.dataset), p['train_shape'][0])
         x_pt, y_pt = next(iter(train_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = train_np[:8]
         x2 = x_pt.cpu().detach().numpy()
         np.testing.assert_equal(x1, x2)
@@ -390,13 +390,13 @@ class TestDataContainer(unittest.TestCase):
         test_np = dc.data_test_np
         self.assertEqual(test_np.shape, p['test_shape'])
         y_np = dc.label_test_np
-        self.assertEqual(y_np.shape, (p['test_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['test_shape'][0],))
         test_loader = dc.get_dataloader(
             batch_size=8, is_train=False, shuffle=False)
         self.assertEqual(len(test_loader.dataset), p['test_shape'][0])
         x_pt, y_pt = next(iter(test_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = test_np[:8]
         x2 = x_pt.cpu().detach().numpy()
         np.testing.assert_equal(x1, x2)
@@ -407,7 +407,7 @@ class TestDataContainer(unittest.TestCase):
     def test_DataContainer_WheatSeed(self):
         dataname = 'WheatSeed'
         p = {
-            'dim': (7, ),
+            'dim': (7,),
             'train_shape': (105, 7),
             'test_shape': (105, 7),
         }
@@ -418,13 +418,13 @@ class TestDataContainer(unittest.TestCase):
         train_np = dc.data_train_np
         self.assertEqual(train_np.shape, p['train_shape'])
         y_np = dc.label_train_np
-        self.assertEqual(y_np.shape, (p['train_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
         self.assertEqual(len(train_loader.dataset), p['train_shape'][0])
         x_pt, y_pt = next(iter(train_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = train_np[:8]
         x2 = x_pt.cpu().detach().numpy()
         np.testing.assert_equal(x1, x2)
@@ -436,13 +436,13 @@ class TestDataContainer(unittest.TestCase):
         test_np = dc.data_test_np
         self.assertEqual(test_np.shape, p['test_shape'])
         y_np = dc.label_test_np
-        self.assertEqual(y_np.shape, (p['test_shape'][0], ))
+        self.assertEqual(y_np.shape, (p['test_shape'][0],))
         test_loader = dc.get_dataloader(
             batch_size=8, is_train=False, shuffle=False)
         self.assertEqual(len(test_loader.dataset), p['test_shape'][0])
         x_pt, y_pt = next(iter(test_loader))
         self.assertEqual(x_pt.size(), tuple([8]+list(p['dim'])))
-        self.assertEqual(y_pt.size(), (8, ))
+        self.assertEqual(y_pt.size(), (8,))
         x1 = test_np[:8]
         x2 = x_pt.cpu().detach().numpy()
         np.testing.assert_equal(x1, x2)

@@ -167,7 +167,7 @@ class DataContainer:
     def _loader_to_np(self, loader):
         n = len(loader.dataset)
         data_shape = tuple([n]+list(self.dim_data))
-        label_shape = (n, )
+        label_shape = (n,)
 
         data_np = np.zeros(data_shape, dtype=np.float32)
         label_np = -np.ones(label_shape, dtype=np.long)  # assign -1
