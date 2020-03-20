@@ -4,6 +4,7 @@ import unittest
 import numpy as np
 import torch
 
+from aad.attacks import BIMContainer
 from aad.basemodels import IrisNN, TorchModelContainer
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.defences import ApplicabilityDomainContainer
@@ -32,24 +33,49 @@ class TestApplicabilityDomain(unittest.TestCase):
 
         hidden_model = model.hidden_model
         cls.ad = ApplicabilityDomainContainer(
-            cls.mc, hidden_model=hidden_model, k1=3, k2=6, confidence=1.0)
+            cls.mc, hidden_model=hidden_model, k1=3, k2=7, confidence=.8)
+        cls.ad.fit()
 
     def setUp(self):
         master_seed(SEED)
 
-    def test_fit(self):
-        result = self.ad.fit()
-        self.assertTrue(result)
-        t = self.ad.thresholds
-        self.assertTrue((t != 0).all())
-        # TODO: all thresholds has save value?!
-
-        # test defence with testset
+    def test_fit_clean(self):
+        """
+        testing defence with testset
+        """
         adv = self.dc.data_test_np
         x_passed, blocked_indices = self.ad.defence(adv)
-        print('Blocked {} inputs'.format(len(blocked_indices)))
-    
+        self.assertEqual(len(x_passed) + len(blocked_indices), len(adv))
+        self.assertTrue(np.equal(blocked_indices, [4, 7]).all())
 
+    def test_adv(self):
+        """
+        testing defence with adversarial examples
+        """
+        attack = BIMContainer(self.mc)
+        adv, y_adv, x_clean, y_clean = attack.generate(count=30)
+        x_passed, blocked_indices = self.ad.defence(adv)
+        self.assertEqual(len(x_passed) + len(blocked_indices), len(adv))
+        print('Blocked {:2d}/{:2d} samples from adversarial examples'.format(
+            len(blocked_indices), len(adv)))
+        print(blocked_indices)
+        passed_indices = np.delete(np.arange(len(adv)), blocked_indices)
+        passed_y_clean = y_clean[passed_indices]
+        accuracy = self.mc.evaluate(x_passed, passed_y_clean)
+        print('Accuracy on passed adversarial examples: {:.4f}%'.format(
+            accuracy*100))
+
+        # test the base inputs
+        print('\nTesting on original clean samples')
+        x_passed, blocked_indices = self.ad.defence(x_clean)
+        self.assertEqual(len(x_passed) + len(blocked_indices), len(adv))
+        print('Blocked {:2d}/{:2d} samples from clean samples'.format(
+            len(blocked_indices), len(adv)))
+        print(blocked_indices)
+        passed_indices = np.delete(np.arange(len(adv)), blocked_indices)
+        passed_y_clean = y_clean[passed_indices]
+        accuracy = self.mc.evaluate(x_passed, passed_y_clean)
+        print('Accuracy on clean samples: {:.4f}%'.format(accuracy*100))
 
 
 if __name__ == '__main__':

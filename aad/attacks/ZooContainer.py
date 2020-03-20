@@ -79,7 +79,10 @@ class ZooContainer(AttackContainer):
             classifier=self.classifier, **self.attack_params)
 
         # predict the outcomes
-        adv = attack.generate(x, targets)
+        if targets is not None:
+            adv = attack.generate(x, targets)
+        else:
+            adv = attack.generate(x)
         y_adv, y_clean = self.predict(adv, x)
 
         time_elapsed = time.time() - since

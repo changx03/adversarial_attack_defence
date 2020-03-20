@@ -110,6 +110,7 @@ class ApplicabilityDomainContainer(DefenceContainer):
         return x_encoded.cpu().detach().numpy()
 
     def _fit_stage1(self):
+        # TODO: instead of using the bounding box for entire set. Each class should have it's own bounding box!
         x = self.encode_train_np
         self._x_max = np.amax(x, axis=0)
         self._x_min = np.amin(x, axis=0)
