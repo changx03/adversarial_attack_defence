@@ -32,7 +32,7 @@ class TestApplicabilityDomain(unittest.TestCase):
 
         hidden_model = model.hidden_model
         cls.ad = ApplicabilityDomainContainer(
-            cls.mc, hidden_model=hidden_model, k1=4, k2=6, confidence=0.8)
+            cls.mc, hidden_model=hidden_model, k1=3, k2=6, confidence=1.0)
 
     def setUp(self):
         master_seed(SEED)
@@ -48,6 +48,8 @@ class TestApplicabilityDomain(unittest.TestCase):
         adv = self.dc.data_test_np
         x_passed, blocked_indices = self.ad.defence(adv)
         print('Blocked {} inputs'.format(len(blocked_indices)))
+    
+
 
 
 if __name__ == '__main__':

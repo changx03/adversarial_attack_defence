@@ -30,6 +30,8 @@ class ApplicabilityDomainContainer(DefenceContainer):
 
         # placeholders for the objects used by AD
         self.num_components = 0
+        self._x_max = None
+        self._x_min = None
         self._s2_models = []
         self._s3_model = None
         self.k_means = np.zeros(self.num_classes, dtype=np.float32)
@@ -108,8 +110,9 @@ class ApplicabilityDomainContainer(DefenceContainer):
         return x_encoded.cpu().detach().numpy()
 
     def _fit_stage1(self):
-        # TODO: implement Stage 1
-        logger.warning('Stage 1 of Applicability Domain is NOT impletmented!')
+        x = self.encode_train_np
+        self._x_max = np.amax(x, axis=0)
+        self._x_min = np.amin(x, axis=0)
 
     def _fit_stage2(self):
         k1 = self.params['k1']
@@ -140,6 +143,14 @@ class ApplicabilityDomainContainer(DefenceContainer):
         self._s3_model.fit(x, y)
 
     def _def_state1(self, adv, pred_adv, passed):
+        """
+        A bounding box which uses [min, max] from traning set
+        """
+        blocked_indices = np.where(
+            np.all(
+                np.logical_or(adv > self._x_max, adv < self._x_min), axis=1)
+        )[0]
+        passed[blocked_indices] = 0
         return passed
 
     def _def_state2(self, adv, pred_adv, passed):
