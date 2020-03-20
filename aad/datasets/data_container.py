@@ -1,3 +1,7 @@
+
+"""
+This module implements the base class for DataContainer.
+"""
 import logging
 import os
 import time
@@ -12,7 +16,7 @@ from torch.utils.data import DataLoader
 from ..utils import (get_range, scale_normalize, shuffle_data,
                      swap_image_channel)
 from .dataset_list import get_sample_mean, get_sample_std
-from .NumeralDataset import NumeralDataset
+from .numerical_dataset import NumericalDataset
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +75,7 @@ class DataContainer:
             if self.type == 'image':
                 x_np = swap_image_channel(x_np)
 
-            dataset = NumeralDataset(
+            dataset = NumericalDataset(
                 torch.as_tensor(x_np),
                 torch.as_tensor(y_np))
             dataloader = DataLoader(

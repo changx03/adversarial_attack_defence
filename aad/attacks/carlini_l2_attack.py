@@ -1,26 +1,32 @@
-import logging
+"""
+This module implements the Carlini and Wagner L2 attack.
+"""
 import time
 
 import numpy as np
-from art.attacks import BasicIterativeMethod
+import torch
+from art.attacks import CarliniL2Method
 from art.classifiers import PyTorchClassifier
 
 from ..utils import swap_image_channel
-from .AttackContainer import AttackContainer
-
-logger = logging.getLogger(__name__)
+from .attack_container import AttackContainer
 
 
-class BIMContainer(AttackContainer):
-    def __init__(self, model_container, eps=.3, eps_step=0.1, max_iter=100,
-                 targeted=False, batch_size=64):
-        super(BIMContainer, self).__init__(model_container)
+class CarliniL2Container(AttackContainer):
+    def __init__(self, model_container, confidence=0.0, targeted=False,
+                 learning_rate=1e-2, binary_search_steps=10, max_iter=100,
+                 initial_const=1e-2, max_halving=5, max_doubling=10, batch_size=8):
+        super(CarliniL2Container, self).__init__(model_container)
 
         params_received = {
-            'eps': eps,
-            'eps_step': eps_step,
-            'max_iter': max_iter,
+            'confidence': confidence,
             'targeted': targeted,
+            'learning_rate': learning_rate,
+            'binary_search_steps': binary_search_steps,
+            'max_iter': max_iter,
+            'initial_const': initial_const,
+            'max_halving': max_halving,
+            'max_doubling': max_doubling,
             'batch_size': batch_size}
         self.attack_params.update(params_received)
 
@@ -66,7 +72,7 @@ class BIMContainer(AttackContainer):
             targets = targets[:len(x)]  # trancate targets
 
         self.attack_params['targeted'] = targeted
-        attack = BasicIterativeMethod(
+        attack = CarliniL2Method(
             classifier=self.classifier, **self.attack_params)
 
         # predict the outcomes
@@ -77,6 +83,6 @@ class BIMContainer(AttackContainer):
         y_adv, y_clean = self.predict(adv, x)
 
         time_elapsed = time.time() - since
-        logger.info('Time to complete training %d adversarial examples: %2.0fm %2.1fs',
-                    count, time_elapsed // 60, time_elapsed % 60)
+        print('Time to complete training {} adversarial examples: {:2.0f}m {:2.1f}s'.format(
+            count, time_elapsed // 60, time_elapsed % 60))
         return adv, y_adv, np.copy(x), y_clean

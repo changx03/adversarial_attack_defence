@@ -8,7 +8,7 @@ import sklearn.neighbors as knn
 import torch
 from torch.utils.data import DataLoader
 
-from ..datasets import NumeralDataset
+from ..datasets import NumericalDataset
 from .detector_container import DetectorContainer
 
 logger = logging.getLogger(__name__)
@@ -103,7 +103,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         return adv[passed_indices], blocked_indices
 
     def _preprocessing(self, x_np):
-        dataset = NumeralDataset(torch.as_tensor(x_np))
+        dataset = NumericalDataset(torch.as_tensor(x_np))
         dataloader = DataLoader(
             dataset,
             batch_size=128,

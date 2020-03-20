@@ -1,9 +1,12 @@
+"""
+This module implements a custom PyTorch Dataset for NumPy array
+"""
 import types
 
 import torch
 
 
-class NumeralDataset(torch.utils.data.Dataset):
+class NumericalDataset(torch.utils.data.Dataset):
     def __init__(self, data, label=None):
         assert isinstance(data, torch.Tensor) \
             and isinstance(label, (torch.Tensor, type(None)))

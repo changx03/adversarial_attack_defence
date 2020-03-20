@@ -1,3 +1,6 @@
+"""
+This module implements the ZOO attack.
+"""
 import time
 
 import numpy as np
@@ -6,7 +9,7 @@ from art.attacks import ZooAttack
 from art.classifiers import PyTorchClassifier
 
 from ..utils import swap_image_channel
-from .AttackContainer import AttackContainer
+from .attack_container import AttackContainer
 
 
 class ZooContainer(AttackContainer):

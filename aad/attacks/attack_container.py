@@ -1,3 +1,6 @@
+"""
+This module implements the base class for adversarial attack.
+"""
 import abc
 import logging
 import os
@@ -19,21 +22,25 @@ class AttackContainer(abc.ABC):
 
     @abc.abstractmethod
     def generate(self, count, use_testset=True, x=None, y=None, **kwargs):
+        """Generating adversarial examples."""
         raise NotImplementedError
 
     def set_params(self, **kwargs):
+        """Sets parameters for the attack algorithm."""
         for key, value in kwargs.items():
             if key in self.attack_params.keys():
                 self.attack_params[key] = value
         return True
 
     def predict(self, adv, x):
+        """Returns the predictions for adversarial examples and clean inputs."""
         y_adv = self.model_container.predict(adv)
         y = self.model_container.predict(x)
         return y_adv, y
 
     @staticmethod
     def save_attack(filename, x_adv, y_adv=None, x_clean=None, y_clean=None):
+        """Saving adversarial examples."""
         assert isinstance(x_adv, np.ndarray)
 
         filename_adv = name_handler(filename + 'adv', extension='npy')
@@ -59,6 +66,7 @@ class AttackContainer(abc.ABC):
 
     @staticmethod
     def get_l2_norm(x, x_adv):
+        """Computes the L2 norm between 2 samples"""
         assert isinstance(x, np.ndarray)
         assert isinstance(x_adv, np.ndarray)
         assert x.shape == x_adv.shape
@@ -70,6 +78,7 @@ class AttackContainer(abc.ABC):
 
     @staticmethod
     def randam_targets(count, num_classes, use_onehot=False, dtype=np.long):
+        """Returns randomly generated labels."""
         y_rand = np.random.choice(num_classes, count, replace=True)
         if not use_onehot:
             return y_rand

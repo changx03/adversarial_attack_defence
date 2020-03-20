@@ -1,3 +1,6 @@
+"""
+This module contains all static utility functions
+"""
 import datetime
 import logging
 import os

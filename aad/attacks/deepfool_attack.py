@@ -1,30 +1,28 @@
+"""
+This module implements the DeepFool attack.
+"""
 import time
 
 import numpy as np
 import torch
-from art.attacks import CarliniL2Method
+from art.attacks import DeepFool
 from art.classifiers import PyTorchClassifier
 
 from ..utils import swap_image_channel
-from .AttackContainer import AttackContainer
+from .attack_container import AttackContainer
 
 
-class CarliniL2Container(AttackContainer):
-    def __init__(self, model_container, confidence=0.0, targeted=False,
-                 learning_rate=1e-2, binary_search_steps=10, max_iter=100,
-                 initial_const=1e-2, max_halving=5, max_doubling=10, batch_size=8):
-        super(CarliniL2Container, self).__init__(model_container)
+class DeepFoolContainer(AttackContainer):
+    def __init__(self, model_container, max_iter=100, epsilon=1e-6,
+                 nb_grads=10, batch_size=16):
+        super(DeepFoolContainer, self).__init__(model_container,)
 
         params_received = {
-            'confidence': confidence,
-            'targeted': targeted,
-            'learning_rate': learning_rate,
-            'binary_search_steps': binary_search_steps,
             'max_iter': max_iter,
-            'initial_const': initial_const,
-            'max_halving': max_halving,
-            'max_doubling': max_doubling,
-            'batch_size': batch_size}
+            'epsilon': epsilon,
+            'nb_grads': nb_grads,
+            'batch_size': batch_size
+        }
         self.attack_params.update(params_received)
 
         # use IBM ART pytorch module wrapper
@@ -43,7 +41,7 @@ class CarliniL2Container(AttackContainer):
             input_shape=dim_data,
             nb_classes=num_classes)
 
-    def generate(self, count=1000, use_testset=True, x=None, targets=None, **kwargs):
+    def generate(self, count=1000, use_testset=True, x=None, **kwargs):
         assert use_testset or x is not None
 
         since = time.time()
@@ -62,21 +60,10 @@ class CarliniL2Container(AttackContainer):
         if data_type == 'image' and x.shape[1] not in (1, 3):
             x = swap_image_channel(x)
 
-        targeted = targets is not None
-        # handle the situation where targets are more than test set
-        if targets is not None:
-            assert len(targets) >= len(x)
-            targets = targets[:len(x)]  # trancate targets
-
-        self.attack_params['targeted'] = targeted
-        attack = CarliniL2Method(
-            classifier=self.classifier, **self.attack_params)
+        attack = DeepFool(self.classifier, **self.attack_params)
 
         # predict the outcomes
-        if targets is not None:
-            adv = attack.generate(x, targets)
-        else:
-            adv = attack.generate(x)
+        adv = attack.generate(x)
         y_adv, y_clean = self.predict(adv, x)
 
         time_elapsed = time.time() - since

@@ -46,7 +46,6 @@ class TestApplicabilityDomain(unittest.TestCase):
         adv = self.dc.data_test_np
         x_passed, blocked_indices = self.ad.detect(adv)
         self.assertEqual(len(x_passed) + len(blocked_indices), len(adv))
-        self.assertTrue(np.equal(blocked_indices, [4, 7]).all())
 
     def test_BIM_attack(self):
         """

@@ -1,3 +1,6 @@
+"""
+This module contains the lookups for avaliable datasets
+"""
 import logging
 
 logger = logging.getLogger(__name__)

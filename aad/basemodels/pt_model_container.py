@@ -1,3 +1,7 @@
+
+"""
+This module implements the base class for PyTorch model container.
+"""
 import logging
 import os
 import time

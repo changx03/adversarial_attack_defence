@@ -1,3 +1,6 @@
+"""
+This module implements the PyTorch neural network model for MNIST.
+"""
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
