@@ -75,6 +75,7 @@ def scale_unnormalize(data, xmin, xmax):
 
 
 def shuffle_data(data):
+    """Randomly permutate the input."""
     try:
         import pandas as pd
         assert isinstance(data, (np.ndarray, pd.DataFrame))
@@ -92,6 +93,8 @@ def shuffle_data(data):
 
 
 def swap_image_channel(np_arr):
+    """Swap axes between 2nd and 4th for 4D inputs, or swap 1st and 3rd for 3D.
+    """
     n = len(np_arr.shape)
     if n == 4:
         return np.swapaxes(np_arr, 1, 3)
@@ -102,6 +105,8 @@ def swap_image_channel(np_arr):
 
 
 def name_handler(filename, extension, overwrite=False):
+    """Return a new filename based on current existence and extension.
+    """
     arr = filename.split('.')
 
     if (len(arr) > 1 and arr[-1] != extension) or len(arr) == 1:
@@ -120,6 +125,7 @@ def name_handler(filename, extension, overwrite=False):
 
 
 def onehot_encoding(y, num_classes, dtype=np.long):
+    """Apply one hot encoding for given labels"""
     assert isinstance(y, np.ndarray)
     assert len(y.shape) == 1  # should be an 1D array
 
@@ -129,6 +135,8 @@ def onehot_encoding(y, num_classes, dtype=np.long):
 
 
 def get_data_path():
+    """Get absolute path for the `\data` folder.
+    """
     path = os.path.join(os.path.dirname(__file__), os.pardir, 'data')
     logger.debug(path)
     return path
