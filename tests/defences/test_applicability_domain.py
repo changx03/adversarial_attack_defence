@@ -4,7 +4,8 @@ import unittest
 import numpy as np
 import torch
 
-from aad.attacks import BIMContainer
+from aad.attacks import (BIMContainer, CarliniL2Container, DeepFoolContainer,
+                         FGSMContainer, ZooContainer)
 from aad.basemodels import IrisNN, TorchModelContainer
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.defences import ApplicabilityDomainContainer
@@ -19,6 +20,8 @@ class TestApplicabilityDomain(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         master_seed(SEED)
+
+        cls.num_adv = 30  # number of adversarial examples will be generated
 
         NAME = 'Iris'
         logger.info('Starting %s data container...', NAME)
@@ -39,44 +42,106 @@ class TestApplicabilityDomain(unittest.TestCase):
     def setUp(self):
         master_seed(SEED)
 
-    def test_fit_clean(self):
-        """
-        testing defence with testset
-        """
-        adv = self.dc.data_test_np
-        x_passed, blocked_indices = self.ad.detect(adv)
-        self.assertEqual(len(x_passed) + len(blocked_indices), len(adv))
+    def preform_attack(self, attack, count=30):
+        adv, y_adv, x_clean, y_clean = attack.generate(count=count)
 
-    def test_BIM_attack(self):
-        """
-        testing defence with adversarial examples
-        """
-        attack = BIMContainer(self.mc)
-        adv, y_adv, x_clean, y_clean = attack.generate(count=30)
+        accuracy = self.mc.evaluate(adv, y_clean)
+        print('Accuracy on adversarial examples: {:.4f}%'.format(
+            accuracy*100))
+
         x_passed, blocked_indices = self.ad.detect(adv)
-        self.assertEqual(len(x_passed) + len(blocked_indices), len(adv))
         print('Blocked {:2d}/{:2d} samples from adversarial examples'.format(
             len(blocked_indices), len(adv)))
         print('blocked_indices', blocked_indices)
+
         matched_indices = np.where(y_adv == y_clean)[0]
         print('matched_indices', matched_indices)
+
         passed_indices = np.delete(np.arange(len(adv)), blocked_indices)
         passed_y_clean = y_clean[passed_indices]
         accuracy = self.mc.evaluate(x_passed, passed_y_clean)
         print('Accuracy on passed adversarial examples: {:.4f}%'.format(
             accuracy*100))
 
-        # test the base inputs
-        print('\nTesting on original clean samples')
-        x_passed, blocked_indices = self.ad.detect(x_clean)
-        self.assertEqual(len(x_passed) + len(blocked_indices), len(adv))
+        return blocked_indices
+
+    def test_fit_clean(self):
+        """
+        Testing defence against clean inputs (false positive case).
+        """
+        x = self.dc.data_test_np
+        print('Number of test samples: {}'.format(len(x)))
+        y = self.dc.label_test_np
+        x_passed, blocked_indices = self.ad.detect(x)
+        self.assertEqual(len(x_passed) + len(blocked_indices), len(x))
         print('Blocked {:2d}/{:2d} samples from clean samples'.format(
-            len(blocked_indices), len(adv)))
+            len(blocked_indices), len(x)))
         print(blocked_indices)
-        passed_indices = np.delete(np.arange(len(adv)), blocked_indices)
-        passed_y_clean = y_clean[passed_indices]
+        passed_indices = np.delete(np.arange(len(x)), blocked_indices)
+        passed_y_clean = y[passed_indices]
         accuracy = self.mc.evaluate(x_passed, passed_y_clean)
         print('Accuracy on clean samples: {:.4f}%'.format(accuracy*100))
+
+    def test_fgsm_attack(self):
+        """
+        Testing defence against FGSM attack.
+        NOTE: The block rate is low due to low success rate for the attack
+        """
+        attack = FGSMContainer(
+            self.mc,
+            norm=np.inf,
+            eps=0.3,
+            eps_step=0.1,
+            minimal=True)
+        blocked_indices = self.preform_attack(attack, count=self.num_adv)
+        blocked_rate = len(blocked_indices) / self.num_adv
+        self.assertGreater(blocked_rate, 0.35)
+
+    def test_bim_attack(self):
+        """
+        Testing defence against BIM attack.
+        """
+        attack = BIMContainer(
+            self.mc,
+            eps=0.3,
+            eps_step=0.1,
+            max_iter=100,
+            targeted=False)
+        blocked_indices = self.preform_attack(attack, count=self.num_adv)
+        blocked_rate = len(blocked_indices) / self.num_adv
+        self.assertGreater(blocked_rate, 0.5)
+
+    def test_deepfool_attack(self):
+        """
+        Testing defence against DeepFool attack.
+        """
+        attack = DeepFoolContainer(
+            self.mc,
+            max_iter=100,
+            epsilon=1e-6,
+            nb_grads=10)
+        blocked_indices = self.preform_attack(attack, count=self.num_adv)
+        blocked_rate = len(blocked_indices) / self.num_adv
+        self.assertGreater(blocked_rate, 0.5)
+
+    def test_carlini_l2_attack(self):
+        """
+        Testing defence against Carlini & Wagner L2 attack
+        """
+        attack = CarliniL2Container(
+            self.mc,
+            confidence=0.0,
+            targeted=False,
+            learning_rate=1e-2,
+            binary_search_steps=10,
+            max_iter=100,
+            initial_const=1e-2,
+            max_halving=5,
+            max_doubling=10,
+            batch_size=8)
+        blocked_indices = self.preform_attack(attack, count=self.num_adv)
+        blocked_rate = len(blocked_indices) / self.num_adv
+        self.assertGreater(blocked_rate, 0.5)
 
 
 if __name__ == '__main__':

@@ -4,7 +4,6 @@ import sys
 import numpy as np
 import torch
 
-from aad.attacks import AttackContainer
 from aad.basemodels import BCNN, IrisNN, MnistCnnCW, TorchModelContainer
 from aad.datasets import DATASET_LIST, DataContainer
 
