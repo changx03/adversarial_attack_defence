@@ -34,8 +34,7 @@ class DataContainer:
         self.train_std = None
         self.data_train_np, self.label_train_np = None, None
         self.data_test_np, self.label_test_np = None, None
-        # required for cross validation
-        self.data_all_np, self.label_all_np = None, None
+        self.data_all_np, self.label_all_np = None, None  # for cross validation
         self.dataframe = None
         self.data_range = None
         self.cross_valid_fold = 0
@@ -51,7 +50,7 @@ class DataContainer:
         """
         assert cross_validation_fold == 0 or cross_validation_fold in range(
             3, 11)
-        
+
         print('Loading data...')
         since = time.time()
         if self.type == 'image':
@@ -63,7 +62,7 @@ class DataContainer:
                 shuffle, normalize, size_train)
             self.train_mean = self.data_train_np.mean(axis=0)
             self.train_std = self.data_train_np.std(axis=0)
-        
+
         if cross_validation_fold != 0:
             self.cross_valid_fold = cross_validation_fold
             self._prepare_cross_valid()

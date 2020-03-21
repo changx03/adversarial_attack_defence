@@ -4,7 +4,6 @@ This module implements the Fast Gradient Sign Method attack.
 import time
 
 import numpy as np
-import torch
 from art.attacks import FastGradientMethod
 from art.classifiers import PyTorchClassifier
 

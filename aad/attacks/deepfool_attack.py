@@ -4,7 +4,6 @@ This module implements the DeepFool attack.
 import time
 
 import numpy as np
-import torch
 from art.attacks import DeepFool
 from art.classifiers import PyTorchClassifier
 

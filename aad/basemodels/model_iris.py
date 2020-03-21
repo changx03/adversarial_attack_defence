@@ -3,7 +3,6 @@ This module implements the PyTorch neural network model for Iris.
 """
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 LOSS_FN = nn.CrossEntropyLoss()
 OPTIMIZER = torch.optim.SGD

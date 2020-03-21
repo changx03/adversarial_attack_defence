@@ -4,7 +4,6 @@ This module implements the ZOO attack.
 import time
 
 import numpy as np
-import torch
 from art.attacks import ZooAttack
 from art.classifiers import PyTorchClassifier
 

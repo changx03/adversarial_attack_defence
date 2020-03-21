@@ -1,10 +1,7 @@
 import os
 import sys
 
-import numpy as np
-import torch
-
-from aad.basemodels import BCNN, IrisNN, MnistCnnCW, TorchModelContainer
+from aad.basemodels import MnistCnnCW, TorchModelContainer
 from aad.datasets import DATASET_LIST, DataContainer
 
 

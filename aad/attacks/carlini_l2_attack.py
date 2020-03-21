@@ -4,7 +4,6 @@ This module implements the Carlini and Wagner L2 attack.
 import time
 
 import numpy as np
-import torch
 from art.attacks import CarliniL2Method
 from art.classifiers import PyTorchClassifier
 

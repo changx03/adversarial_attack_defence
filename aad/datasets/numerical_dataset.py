@@ -1,8 +1,6 @@
 """
 This module implements a custom PyTorch Dataset for NumPy array
 """
-import types
-
 import torch
 
 

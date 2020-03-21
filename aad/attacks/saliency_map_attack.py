@@ -4,7 +4,6 @@ This module implements the Jacobian Saliency Map attack.
 import time
 
 import numpy as np
-import torch
 from art.attacks import SaliencyMapMethod
 from art.classifiers import PyTorchClassifier
 

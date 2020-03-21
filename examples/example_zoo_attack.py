@@ -1,9 +1,5 @@
 import logging
 import os
-import sys
-
-import numpy as np
-import torch
 
 from aad.attacks import ZooContainer
 from aad.basemodels import MnistCnnCW, TorchModelContainer

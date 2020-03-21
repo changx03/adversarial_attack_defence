@@ -196,7 +196,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         for model, threshold, c in zip(models, self.thresholds, classes):
             inclass_indices = np.where(passed_pred == c)[0]
             x = passed_adv[inclass_indices]
-            neigh_dist, neigh_ind = model.kneighbors(
+            neigh_dist, _ = model.kneighbors(
                 x, n_neighbors=k1, return_distance=True)
             mean = np.mean(neigh_dist, axis=1)
             sub_blocked_indices = np.where(mean > threshold)[0]
@@ -214,7 +214,6 @@ class ApplicabilityDomainContainer(DetectorContainer):
         passed_adv = adv[passed_indices]
         passed_pred = pred_adv[passed_indices]
         model = self._s3_model
-        k2 = self.params['k2']
         knn_pred = model.predict(passed_adv)
         not_match_indices = np.where(np.not_equal(knn_pred, passed_pred))[0]
         blocked_indices = indices[passed_indices][not_match_indices]
@@ -222,8 +221,8 @@ class ApplicabilityDomainContainer(DetectorContainer):
         return passed
 
     @staticmethod
-    def dummy_model(x):
+    def dummy_model(inputs):
         """
         Return the input.Use this method when we don't need a hidden layer encoding.
         """
-        return x
+        return inputs

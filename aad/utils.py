@@ -138,7 +138,7 @@ def onehot_encoding(y, num_classes, dtype=np.long):
 
 
 def get_data_path():
-    """Get absolute path for the `\data` folder.
+    """Get absolute path for the `data` folder.
     """
     path = os.path.join(os.path.dirname(__file__), os.pardir, 'data')
     logger.debug(path)
