@@ -39,6 +39,7 @@ def main():
 
     model_filename = f'example-mnist-e{EPOCHS}.pt'
     file_path = os.path.join('save', model_filename)
+
     if not os.path.exists(file_path):
         mc.fit(epochs=EPOCHS, batch_size=BATCH_SIZE)
         mc.save(model_filename, overwrite=True)
@@ -50,6 +51,7 @@ def main():
     print(f'Accuracy on random test set: {acc*100:.4f}%')
 
     # Step 3: attack the model
+    # TODO: Unable to generate adversarial examples successfully!
     attack = ZooContainer(
         mc,
         targeted=False,
@@ -60,8 +62,8 @@ def main():
         use_resize=False,
         use_importance=False)
 
-    adv, y_adv, x_clean, y_clean = attack.generate(count=100)
-    accuracy = self.mc.evaluate(adv, y_clean)
+    adv, y_adv, x_clean, y_clean = attack.generate(count=30)
+    accuracy = mc.evaluate(adv, y_clean)
     print('Accuracy on adversarial examples: {:.4f}%'.format(
         accuracy*100))
 
