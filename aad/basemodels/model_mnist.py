@@ -5,9 +5,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-LOSS_FN = nn.NLLLoss()
+LOSS_FN = nn.CrossEntropyLoss()
 OPTIMIZER = torch.optim.SGD
-OPTIM_PARAMS = {'lr': 0.1, 'momentum': 0}
+OPTIM_PARAMS = {'lr': 0.01, 'momentum': 0.9}
 SCHEDULER = None
 SCHEDULER_PARAMS = None
 
@@ -46,9 +46,7 @@ class MnistCnnCW(nn.Module):
         super(MnistCnnCW, self).__init__()
 
         self.model_hidden = MnistCnnCW_hidden()
-        self.model_no_softmax = nn.Sequential(
-            self.model_hidden,
-            torch.nn.Linear(128, 10))
+        self.fn = nn.Linear(128, 10)
 
         self.loss_fn = loss_fn
         self.optimizer = optimizer
@@ -57,6 +55,6 @@ class MnistCnnCW(nn.Module):
         self.scheduler_params = scheduler_params
 
     def forward(self, x):
-        x = self.model_no_softmax(x)
-        x = F.log_softmax(x, dim=1)
+        x = self.model_hidden(x)
+        x = self.fn(x)
         return x

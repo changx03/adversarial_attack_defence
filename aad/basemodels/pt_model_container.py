@@ -129,7 +129,7 @@ class TorchModelContainer:
                 scheduler.step()
 
             time_elapsed = time.time() - time_start
-            logger.info(('[{:2d}/{:d}]{:2.0f}m{:2.1f}s: Train Loss: {:.4f} Acc: {:.2f}% - Test Loss: {:.4f} Acc: {:.2f}%').format(
+            logger.info(('[{:2d}/{:d}]{:2.0f}m{:2.1f}s: Train Loss:{:.4f} Acc:{:.2f}% - Test Loss:{:.4f} Acc:{:.2f}%').format(
                 epoch+1, epochs,
                 time_elapsed // 60, time_elapsed % 60,
                 tr_loss, tr_acc*100, va_loss, va_acc*100))
