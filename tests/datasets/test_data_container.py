@@ -18,8 +18,7 @@ class TestDataContainer(unittest.TestCase):
         x = DATASET_LIST[name]
         path = get_data_path()
         dc = DataContainer(x, path)
-        dc(shuffle=False, normalize=True, size_train=0.5,
-            enable_cross_validation=False)
+        dc(shuffle=False, normalize=True, size_train=0.5)
         return dc
 
     def setUp(self):
@@ -449,6 +448,25 @@ class TestDataContainer(unittest.TestCase):
         y1 = y_np[:8]
         y2 = y_pt[:8].cpu().detach().numpy()
         np.testing.assert_equal(y1, y2)
+
+    def test_cross_validation(self):
+        dataname = 'Iris'
+        data_lookup = DATASET_LIST[dataname]
+        path = get_data_path()
+        dc = DataContainer(data_lookup, path)
+        num_fold = 4
+        dc(shuffle=False, normalize=True, cross_validation_fold=num_fold)
+        part_size = 150 // num_fold
+
+        x0, y0 = dc.get_one_fold_np(0)
+        self.assertEqual(x0.shape, (part_size, 4))
+        self.assertEqual(y0.shape, (part_size,))
+
+        x3, y3 = dc.get_one_fold_np(3)
+        self.assertEqual(x3.shape, (39, 4))
+        self.assertEqual(y3.shape, (39,))
+
+        self.assertTrue(not np.equal(x0[:10], x3[:10]).all())
 
 
 if __name__ == '__main__':

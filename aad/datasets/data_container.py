@@ -34,22 +34,24 @@ class DataContainer:
         self.train_std = None
         self.data_train_np, self.label_train_np = None, None
         self.data_test_np, self.label_test_np = None, None
+        # required for cross validation
+        self.data_all_np, self.label_all_np = None, None
         self.dataframe = None
         self.data_range = None
+        self.cross_valid_fold = 0
 
     def __len__(self):
         # total length = train + test
         return len(self.data_train_np) + len(self.data_test_np)
 
     def __call__(self, shuffle=True, normalize=False,
-                 size_train=0.8, enable_cross_validation=False):
-        """Load data and prepare for numpy arrays. `normalize` and `size_train` 
+                 size_train=0.8, cross_validation_fold=0):
+        """Load data and prepare for numpy arrays. `normalize` and `size_train`
         are not used in image datasets
         """
-        # TODO: implement cross_validation
-        assert enable_cross_validation == False, \
-            'cross validation is not supported'
-
+        assert cross_validation_fold == 0 or cross_validation_fold in range(
+            3, 11)
+        
         print('Loading data...')
         since = time.time()
         if self.type == 'image':
@@ -61,6 +63,10 @@ class DataContainer:
                 shuffle, normalize, size_train)
             self.train_mean = self.data_train_np.mean(axis=0)
             self.train_std = self.data_train_np.std(axis=0)
+        
+        if cross_validation_fold != 0:
+            self.cross_valid_fold = cross_validation_fold
+            self._prepare_cross_valid()
 
         time_elapsed = time.time() - since
 
@@ -68,10 +74,42 @@ class DataContainer:
             time_elapsed // 60,
             time_elapsed % 60))
 
-    def get_dataloader(self, batch_size=64, is_train=True, shuffle=True, num_workers=0):
+    def get_one_fold_np(self, fold):
+        """
+        Returns the selected fold of ndarray.
+        """
+        assert fold < self.cross_valid_fold, \
+            'Expecting fold is between 0 and {}. Got: {}'.format(
+                self.cross_valid_fold-1, fold)
+
+        partition_size = len(self.label_all_np) // self.cross_valid_fold
+        start = fold * partition_size
+        end = fold * partition_size + partition_size
+        # handle last batch
+        if fold == self.cross_valid_fold - 1:
+            end = len(self.label_all_np)
+        x_np = self.data_all_np[start: end]
+        y_np = self.label_all_np[start: end]
+        return x_np, y_np
+
+    def get_dataloader(self,
+                       batch_size=64,
+                       is_train=True,
+                       fold=-1,
+                       shuffle=True,
+                       num_workers=0):
+        """
+        Returns a PyTorch DataLoader.
+        If use parameter `fold`  for cross validation, parameter `is_train` will
+        be ignored.
+        """
         try:
-            x_np = self.data_train_np if is_train else self.data_test_np
-            y_np = self.label_train_np if is_train else self.label_test_np
+            if fold != -1:
+                x_np, y_np = self.get_one_fold_np(fold)
+            else:
+                x_np = self.data_train_np if is_train else self.data_test_np
+                y_np = self.label_train_np if is_train else self.label_test_np
+
             if self.type == 'image':
                 x_np = swap_image_channel(x_np)
 
@@ -184,6 +222,22 @@ class DataContainer:
                 label_np[start: start + batch_size] = y.numpy()
                 start = start+batch_size
         return data_np, label_np
+
+    def _prepare_cross_valid(self):
+        """
+        stack train and test together
+        """
+        assert self.data_train_np is not None \
+            and self.data_test_np is not None \
+            and self.label_train_np is not None \
+            and self.label_test_np is not None
+
+        self.data_all_np = np.concatenate(
+            (self.data_train_np, self.data_test_np),
+            axis=0)
+        self.label_all_np = np.concatenate(
+            (self.label_train_np, self.label_test_np),
+            axis=0)
 
     def _split_dataframe2np(self, size_train):
         assert isinstance(size_train, (int, float))
