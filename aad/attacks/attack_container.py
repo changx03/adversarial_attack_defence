@@ -43,7 +43,7 @@ class AttackContainer(abc.ABC):
         """Saving adversarial examples."""
         assert isinstance(x_adv, np.ndarray)
 
-        filename_adv = name_handler(filename + 'adv', extension='npy')
+        filename_adv = name_handler(filename + '.adv', extension='npy')
         filename_adv = os.path.join('save', filename_adv)
 
         x_adv.astype(np.float32).tofile(filename_adv)
