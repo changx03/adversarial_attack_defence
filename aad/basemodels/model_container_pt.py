@@ -16,7 +16,7 @@ from ..utils import name_handler, swap_image_channel
 logger = logging.getLogger(__name__)
 
 
-class TorchModelContainer:
+class ModelContainerPT:
     def __init__(self, model, data_container):
         assert isinstance(model, nn.Module), \
             f'Expecting a Torch Module, got {type(model)}'

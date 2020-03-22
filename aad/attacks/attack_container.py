@@ -7,7 +7,7 @@ import os
 
 import numpy as np
 
-from ..basemodels import TorchModelContainer
+from ..basemodels import ModelContainerPT
 from ..utils import name_handler, onehot_encoding
 
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ class AttackContainer(abc.ABC):
     attack_params = dict()
 
     def __init__(self, model_containter):
-        assert isinstance(model_containter, TorchModelContainer)
+        assert isinstance(model_containter, ModelContainerPT)
         self.model_container = model_containter
 
     @abc.abstractmethod

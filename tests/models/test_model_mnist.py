@@ -5,7 +5,7 @@ import unittest
 import numpy as np
 import torch
 
-from aad.basemodels import MnistCnnCW, TorchModelContainer
+from aad.basemodels import MnistCnnCW, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.utils import get_data_path, master_seed, swap_image_channel
 
@@ -30,12 +30,12 @@ class TestModelMNIST(unittest.TestCase):
         model = MnistCnnCW()
         model_name = model.__class__.__name__
         logger.info('Using model: %s', model_name)
-        cls.mc = TorchModelContainer(model, cls.dc)
+        cls.mc = ModelContainerPT(model, cls.dc)
         cls.mc.fit(epochs=2, batch_size=BATCH_SIZE)
 
         # for comparison
         model2 = MnistCnnCW()
-        cls.mc2 = TorchModelContainer(model2, cls.dc)
+        cls.mc2 = ModelContainerPT(model2, cls.dc)
 
         # inputs for testing
         cls.x = np.copy(cls.dc.data_test_np[:5])

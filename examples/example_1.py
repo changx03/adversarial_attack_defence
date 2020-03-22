@@ -1,7 +1,7 @@
 import os
 import sys
 
-from aad.basemodels import MnistCnnCW, TorchModelContainer
+from aad.basemodels import MnistCnnCW, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 
 
@@ -31,7 +31,7 @@ def main():
     model_name = model.__class__.__name__
     print('Using model:', model_name)
 
-    mc = TorchModelContainer(model, dc)
+    mc = ModelContainerPT(model, dc)
     mc.fit(epochs=3, batch_size=BATCH_SIZE)  # for image
     # mc.fit(epochs=200, batch_size=BATCH_SIZE)
     print('Test acc:', mc.accuracy_test)

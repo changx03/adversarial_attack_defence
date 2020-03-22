@@ -2,7 +2,7 @@ import logging
 import os
 
 from aad.attacks import ZooContainer
-from aad.basemodels import MnistCnnCW, TorchModelContainer
+from aad.basemodels import MnistCnnCW, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ def main():
     model_name = model.__class__.__name__
     print('Using model:', model_name)
 
-    mc = TorchModelContainer(model, dc)
+    mc = ModelContainerPT(model, dc)
 
     model_filename = f'example-mnist-e{EPOCHS}.pt'
     file_path = os.path.join('save', model_filename)
@@ -50,23 +50,28 @@ def main():
     # TODO: Unable to generate adversarial examples successfully!
     attack = ZooContainer(
         mc,
+        confidence=0.5,
         targeted=False,
-        learning_rate=1e-2,
-        max_iter=10,
-        binary_search_steps=3,
-        abort_early=False,
+        learning_rate=1e-1,
+        max_iter=200,
+        binary_search_steps=100,
+        initial_const=1e-1,
+        abort_early=True,
         use_resize=False,
-        use_importance=False)
+        use_importance=False,
+        nb_parallel=250,
+        batch_size=1,
+        variable_h=0.01,
+    )
 
-    adv, y_adv, x_clean, y_clean = attack.generate(count=30)
+    adv, y_adv, x_clean, y_clean = attack.generate(count=5)
     accuracy = mc.evaluate(adv, y_clean)
     print('Accuracy on adversarial examples: {:.4f}%'.format(
         accuracy*100))
 
-    attack.save_attack(
-        f'example-mnist-e{EPOCHS}', adv, y_adv, x_clean, y_clean)
+    # attack.save_attack(
+    #     f'example-mnist-e{EPOCHS}', adv, y_adv, x_clean, y_clean)
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
     main()

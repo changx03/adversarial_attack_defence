@@ -5,7 +5,7 @@ import abc
 import logging
 import time
 
-from ..basemodels import TorchModelContainer
+from ..basemodels import ModelContainerPT
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ class DetectorContainer(abc.ABC):
     params = dict()
 
     def __init__(self, model_container):
-        assert isinstance(model_container, TorchModelContainer)
+        assert isinstance(model_container, ModelContainerPT)
         self.model_container = model_container
         self._since = 0.0
 

@@ -6,7 +6,7 @@ import torch
 
 from aad.attacks import (BIMContainer, CarliniL2Container, DeepFoolContainer,
                          FGSMContainer, ZooContainer)
-from aad.basemodels import IrisNN, TorchModelContainer
+from aad.basemodels import IrisNN, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.defences import ApplicabilityDomainContainer
 from aad.utils import get_data_path, master_seed
@@ -31,7 +31,7 @@ class TestApplicabilityDomain(unittest.TestCase):
         model = IrisNN(hidden_nodes=10)
         model_name = model.__class__.__name__
         logger.info('Using model: %s', model_name)
-        cls.mc = TorchModelContainer(model, cls.dc)
+        cls.mc = ModelContainerPT(model, cls.dc)
         cls.mc.fit(epochs=120, batch_size=BATCH_SIZE)
 
         hidden_model = model.hidden_model
