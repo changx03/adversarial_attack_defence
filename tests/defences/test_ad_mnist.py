@@ -5,7 +5,7 @@ import os
 import numpy as np
 
 from aad.attacks import (BIMContainer, CarliniL2Container, DeepFoolContainer,
-                         FGSMContainer, JacobianSaliencyContainer, ZooContainer)
+                         FGSMContainer, SaliencyContainer, ZooContainer)
 from aad.basemodels import MnistCnnCW, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.defences import ApplicabilityDomainContainer

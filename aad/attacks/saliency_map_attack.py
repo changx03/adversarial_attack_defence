@@ -11,9 +11,9 @@ from ..utils import swap_image_channel
 from .attack_container import AttackContainer
 
 
-class JacobianSaliencyContainer(AttackContainer):
+class SaliencyContainer(AttackContainer):
     def __init__(self, model_container, theta=0.1, gamma=1.0, batch_size=16):
-        super(JacobianSaliencyContainer, self).__init__(model_container)
+        super(SaliencyContainer, self).__init__(model_container)
 
         dim_data = model_container.data_container.dim_data
         assert len(dim_data) == 3, \

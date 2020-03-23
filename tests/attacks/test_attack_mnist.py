@@ -5,7 +5,7 @@ import os
 import numpy as np
 
 from aad.attacks import (BIMContainer, CarliniL2Container, DeepFoolContainer,
-                         FGSMContainer, JacobianSaliencyContainer, ZooContainer)
+                         FGSMContainer, SaliencyContainer, ZooContainer)
 from aad.basemodels import MnistCnnCW, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.utils import get_data_path, master_seed, get_l2_norm
@@ -132,9 +132,9 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
     def test_deepfool(self):
         attack = DeepFoolContainer(
             self.mc,
-            max_iter=100, 
+            max_iter=100,
             epsilon=1e-6,
-            nb_grads=10, 
+            nb_grads=10,
             batch_size=16
         )
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
@@ -148,7 +148,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             (y_adv != y_clean).sum() / x_clean.shape[0], 0.65)
         self.assertLessEqual(np.max(adv), 1.0 + 1e6)
         self.assertGreaterEqual(np.min(adv), 0 - 1e6)
-        l2 = get_l2_norm(adv, x_clean)
+        l2 = np.average(get_l2_norm(adv, x_clean))
         print(l2)
 
     def test_saliency(self):
