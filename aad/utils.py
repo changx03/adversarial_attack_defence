@@ -114,17 +114,17 @@ def name_handler(filename, extension, overwrite=False):
 
     if (len(arr) > 1 and arr[-1] != extension) or len(arr) == 1:
         arr.append(extension)
-    filename = '.'.join(arr)
+    new_name = '.'.join(arr)
 
     # handle existing file
-    if not overwrite and os.path.exists(filename):
+    if not overwrite and os.path.exists(new_name):
         arr = filename.split('.')
         time_str = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         arr.insert(-1, time_str)  # already fixed extension
-        output_name = '.'.join(arr)
+        new_name = '.'.join(arr)
         logger.info('File %s already exists. Save new file as %s',
-                    filename, output_name)
-    return output_name
+                    filename, new_name)
+    return new_name
 
 
 def onehot_encoding(y, num_classes, dtype=np.long):
