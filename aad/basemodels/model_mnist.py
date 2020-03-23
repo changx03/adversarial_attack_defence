@@ -22,8 +22,7 @@ class MnistCnnCW_hidden(nn.Module):
         self.conv2 = nn.Conv2d(32, 32, 3)
         self.conv3 = nn.Conv2d(32, 64, 3)
         self.conv4 = nn.Conv2d(64, 64, 3)
-        self.fc1 = nn.Linear(1024, 200)
-        self.fc2 = nn.Linear(200, 128)
+        
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
@@ -33,8 +32,6 @@ class MnistCnnCW_hidden(nn.Module):
         x = F.relu(self.conv4(x))
         x = F.max_pool2d(x, 2)
         x = torch.flatten(x, 1)
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
         return x
 
 
@@ -53,6 +50,8 @@ class MnistCnnCW(nn.Module):
         super(MnistCnnCW, self).__init__()
 
         self.hidden_model = MnistCnnCW_hidden()
+        self.fc1 = nn.Linear(1024, 200)
+        self.fc2 = nn.Linear(200, 128)
         self.fn = nn.Linear(128, 10)
 
         self.loss_fn = loss_fn
@@ -63,5 +62,7 @@ class MnistCnnCW(nn.Module):
 
     def forward(self, x):
         x = self.hidden_model(x)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
         x = self.fn(x)
         return x

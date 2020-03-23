@@ -105,8 +105,8 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             eps=0.3,
             eps_step=0.1,
             minimal=True)
-        blocked_indices = self.preform_attack(attack, count=self.num_adv)
-        blocked_rate = len(blocked_indices) / self.num_adv
+        blocked_indices = self.preform_attack(attack, count=NUM_ADV)
+        blocked_rate = len(blocked_indices) / NUM_ADV
         self.assertGreater(blocked_rate, 0.35)
 
     def test_bim_attack(self):
@@ -119,8 +119,8 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             eps_step=0.1,
             max_iter=100,
             targeted=False)
-        blocked_indices = self.preform_attack(attack, count=self.num_adv)
-        blocked_rate = len(blocked_indices) / self.num_adv
+        blocked_indices = self.preform_attack(attack, count=NUM_ADV)
+        blocked_rate = len(blocked_indices) / NUM_ADV
         self.assertGreater(blocked_rate, 0.5)
 
     def test_deepfool_attack(self):
@@ -132,8 +132,8 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             max_iter=100,
             epsilon=1e-6,
             nb_grads=10)
-        blocked_indices = self.preform_attack(attack, count=self.num_adv)
-        blocked_rate = len(blocked_indices) / self.num_adv
+        blocked_indices = self.preform_attack(attack, count=NUM_ADV)
+        blocked_rate = len(blocked_indices) / NUM_ADV
         self.assertGreater(blocked_rate, 0.5)
 
     def test_carlini_l2_attack(self):
@@ -151,8 +151,8 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             max_halving=5,
             max_doubling=10,
             batch_size=8)
-        blocked_indices = self.preform_attack(attack, count=self.num_adv)
-        blocked_rate = len(blocked_indices) / self.num_adv
+        blocked_indices = self.preform_attack(attack, count=NUM_ADV)
+        blocked_rate = len(blocked_indices) / NUM_ADV
         self.assertGreater(blocked_rate, 0.5)
 
 

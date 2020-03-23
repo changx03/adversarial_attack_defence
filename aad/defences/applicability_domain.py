@@ -9,6 +9,7 @@ import torch
 from torch.utils.data import DataLoader
 
 from ..datasets import NumericalDataset
+from ..utils import swap_image_channel
 from .detector_container import DetectorContainer
 
 logger = logging.getLogger(__name__)
@@ -31,6 +32,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         self.params = params_received
         self.device = model_container.device
         self.num_classes = model_container.data_container.num_classes
+        self.data_type = model_container.data_container.data_type
 
         if hidden_model is not None:
             self.hidden_model = hidden_model
@@ -67,6 +69,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         self.encode_train_np = self._preprocessing(x_train_np)
         self.y_train_np = dc.label_train_np
         self.num_components = self.encode_train_np.shape[1]
+        logger.debug('Number of input attributes: %i', self.num_components)
 
         self._fit_stage1()
         self._fit_stage2()
@@ -103,6 +106,9 @@ class ApplicabilityDomainContainer(DetectorContainer):
         return adv[passed_indices], blocked_indices
 
     def _preprocessing(self, x_np):
+        if self.data_type == 'image':
+            x_np = swap_image_channel(x_np)
+
         dataset = NumericalDataset(torch.as_tensor(x_np))
         dataloader = DataLoader(
             dataset,
@@ -164,7 +170,8 @@ class ApplicabilityDomainContainer(DetectorContainer):
         self._s3_model = knn.KNeighborsClassifier(
             n_neighbors=k2,
             n_jobs=-1,
-            weights='distance')
+            # weights='distance',
+        )
         self._s3_model.fit(x, y)
 
     def _def_state1(self, adv, pred_adv, passed):
