@@ -13,6 +13,9 @@ SCHEDULER_PARAMS = None
 
 
 class MnistCnnCW_hidden(nn.Module):
+    """
+    The neural network for MNIST, but without log(Softmax(x)) function
+    """
     def __init__(self):
         super(MnistCnnCW_hidden, self).__init__()
         self.conv1 = nn.Conv2d(1, 32, 3)
@@ -36,6 +39,10 @@ class MnistCnnCW_hidden(nn.Module):
 
 
 class MnistCnnCW(nn.Module):
+    """
+    A convolutional neural network for MNIST. The same structure was used in
+    Carlini and Wagner attack
+    """
     def __init__(
             self,
             loss_fn=LOSS_FN,

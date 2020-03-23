@@ -3,3 +3,9 @@
 # system, and so shouldn't trigger E1101 when accessed. Python regular
 # expressions are accepted.
 generated-members=numpy.*,torch.*
+
+[LOGGING]
+
+# Format style used to check logging format string. `old` means using %
+# formatting, `new` is for `{}` formatting,and `fstr` is for f-strings.
+logging-format-style=fstr

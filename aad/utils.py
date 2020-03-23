@@ -143,3 +143,15 @@ def get_data_path():
     path = os.path.join(os.path.dirname(__file__), os.pardir, 'data')
     logger.debug(path)
     return path
+
+
+def get_l2_norm(a, b):
+    """Computes the L2 norm between 2 samples"""
+    assert isinstance(a, np.ndarray)
+    assert isinstance(b, np.ndarray)
+    assert a.shape == b.shape
+    assert len(a.shape) in (2, 4)
+
+    n = len(a)
+    l2 = np.sum(np.square(a.reshape(n, -1) - b.reshape(n, -1)), axis=1)
+    return np.sqrt(l2)

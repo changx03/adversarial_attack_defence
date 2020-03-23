@@ -90,13 +90,13 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
         passed = self._def_state1(encoded_adv, pred_adv, passed)
         blocked = len(passed[passed == 0])
-        logger.info('Stage 1: blocked %d inputs', blocked)
+        logger.info('Stage 1: blocked %d inputs' % blocked)
         passed = self._def_state2(encoded_adv, pred_adv, passed)
         blocked = len(passed[passed == 0]) - blocked
-        logger.info('Stage 2: blocked %d inputs', blocked)
+        logger.info('Stage 2: blocked %d inputs' % blocked)
         passed = self._def_state3(encoded_adv, pred_adv, passed)
         blocked = len(passed[passed == 0]) - blocked
-        logger.info('Stage 3: blocked %d inputs', blocked)
+        logger.info('Stage 3: blocked %d inputs'% blocked)
 
         passed_indices = np.nonzero(passed)
         blocked_indices = np.delete(np.arange(n), passed_indices)

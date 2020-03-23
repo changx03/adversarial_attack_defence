@@ -87,12 +87,12 @@ STD_LOOKUP = {
 def get_sample_mean(dataset_name):
     if dataset_name in MEAN_LOOKUP.keys():
         return MEAN_LOOKUP[dataset_name]
-    logger.warning('"%s" is not in the lookup', dataset_name)
+    logger.warning('"{}" is not in the lookup'.format(dataset_name))
     return [0.]
 
 
 def get_sample_std(dataset_name):
     if dataset_name in MEAN_LOOKUP.keys():
         return STD_LOOKUP[dataset_name]
-    logger.warning('"%s" is not in the lookup', dataset_name)
+    logger.warning('"{}" is not in the lookup'.format(dataset_name))
     return [1.]

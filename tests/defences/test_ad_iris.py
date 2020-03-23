@@ -16,7 +16,7 @@ SEED = 4096  # 2**12 = 4096
 BATCH_SIZE = 128
 
 
-class TestApplicabilityDomain(unittest.TestCase):
+class TestApplicabilityDomainIris(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         master_seed(SEED)
@@ -24,13 +24,13 @@ class TestApplicabilityDomain(unittest.TestCase):
         cls.num_adv = 30  # number of adversarial examples will be generated
 
         NAME = 'Iris'
-        logger.info('Starting %s data container...', NAME)
+        logger.info('Starting %s data container...' % NAME)
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
         cls.dc(shuffle=True, normalize=False)
 
         model = IrisNN(hidden_nodes=10)
         model_name = model.__class__.__name__
-        logger.info('Using model: %s', model_name)
+        logger.info('Using model: %s' % model_name)
         cls.mc = ModelContainerPT(model, cls.dc)
         cls.mc.fit(epochs=120, batch_size=BATCH_SIZE)
 

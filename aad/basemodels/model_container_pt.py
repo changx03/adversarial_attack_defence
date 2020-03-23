@@ -28,7 +28,7 @@ class ModelContainerPT:
         self.device = torch.device(
             'cuda:0' if torch.cuda.is_available() else 'cpu')
         self.model.to(self.device)
-        logger.debug('Using device: %s', self.device)
+        logger.debug('Using device: %s' % self.device)
 
         # to allow the model train multiple times
         self.loss_train = []
@@ -42,7 +42,7 @@ class ModelContainerPT:
         self._fit_torch(epochs, batch_size)
 
         time_elapsed = time.time() - since
-        print('Time to complete training: {:2.0f}m {:2.1f}s'.format(
+        logger.info('Time to complete training: {:2.0f}m {:2.1f}s'.format(
             time_elapsed // 60, time_elapsed % 60))
 
     def save(self, filename, overwrite=False):
@@ -51,13 +51,13 @@ class ModelContainerPT:
 
         torch.save(self.model.state_dict(), filename)
 
-        print(f'Successfully saved model to "{filename}"')
+        logger.info('Successfully saved model to "{}"'.format(filename))
 
     def load(self, filename):
         self.model.load_state_dict(torch.load(
             filename, map_location=self.device))
 
-        print(f'Successfully loaded model from "{filename}"')
+        logger.info('Successfully loaded model from "{}"'.format(filename))
 
     def score(self, x):
         if not isinstance(x, torch.Tensor):
@@ -113,7 +113,6 @@ class ModelContainerPT:
         # parameters are passed as dict, so it allows different optimizer
         params = self.model.optim_params
         optimizer = self.model.optimizer(self.model.parameters(), **params)
-        print(params)
 
         # scheduler is optional
         if self.model.scheduler:
@@ -129,10 +128,11 @@ class ModelContainerPT:
                 scheduler.step()
 
             time_elapsed = time.time() - time_start
-            logger.info(('[{:2d}/{:d}]{:2.0f}m{:2.1f}s: Train Loss:{:.4f} Acc:{:.2f}% - Test Loss:{:.4f} Acc:{:.2f}%').format(
-                epoch+1, epochs,
-                time_elapsed // 60, time_elapsed % 60,
-                tr_loss, tr_acc*100, va_loss, va_acc*100))
+            logger.debug(
+                '[{:2d}/{:d}]{:2.0f}m{:2.1f}s: Train Loss:{:.4f} Acc:{:.2f}% - Test Loss:{:.4f} Acc:{:.2f}%'.format(
+                    epoch+1, epochs,
+                    time_elapsed // 60, time_elapsed % 60,
+                    tr_loss, tr_acc*100, va_loss, va_acc*100))
 
             # save logs
             self.loss_train.append(tr_loss)
@@ -142,8 +142,9 @@ class ModelContainerPT:
 
             # early stopping
             if tr_acc >= 0.999 and va_acc >= 0.999:
-                print(
-                    'Satisfied the accuracy threshold. Abort at {} epoch!'.format(epoch))
+                logger.debug(
+                    'Satisfied the accuracy threshold. Abort at {} epoch!'.format(
+                        epoch))
                 break
 
     def _train_torch(self, optimizer, loader):
