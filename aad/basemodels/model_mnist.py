@@ -52,7 +52,7 @@ class MnistCnnCW(nn.Module):
             scheduler_params=SCHEDULER_PARAMS):
         super(MnistCnnCW, self).__init__()
 
-        self.model_hidden = MnistCnnCW_hidden()
+        self.hidden_model = MnistCnnCW_hidden()
         self.fn = nn.Linear(128, 10)
 
         self.loss_fn = loss_fn
@@ -62,6 +62,6 @@ class MnistCnnCW(nn.Module):
         self.scheduler_params = scheduler_params
 
     def forward(self, x):
-        x = self.model_hidden(x)
+        x = self.hidden_model(x)
         x = self.fn(x)
         return x

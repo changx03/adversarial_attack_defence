@@ -5,37 +5,38 @@ import unittest
 import numpy as np
 
 from aad.attacks import (BIMContainer, CarliniL2Container, DeepFoolContainer,
-                         FGSMContainer, SaliencyContainer, ZooContainer)
-from aad.basemodels import MnistCnnCW, ModelContainerPT
+                         FGSMContainer)
+from aad.basemodels import IrisNN, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.utils import get_data_path, get_l2_norm, master_seed
 
 logger = logging.getLogger(__name__)
 
-SEED = 4096
-BATCH_SIZE = 128
-NUM_ADV = 100  # number of adversarial examples will be generated
-NAME = 'MNIST'
-FILE_NAME = 'example-mnist-e30.pt'
+SEED = 4096  # 2**12 = 4096
+BATCH_SIZE = 256  # Train the entire set in one batch
+NUM_ADV = 30  # number of adversarial examples will be generated
+NAME = 'Iris'
+FILE_NAME = 'example-iris-e200.pt'
 
 
-class TestAttackMNIST(unittest.TestCase):
+class TestAttackIris(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         master_seed(SEED)
 
         logger.info('Starting %s data container...', NAME)
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
-        cls.dc(shuffle=False)
+        # ordered by labels, it requires shuffle!
+        cls.dc(shuffle=True, normalize=False)
 
-        model = MnistCnnCW()
+        model = IrisNN(hidden_nodes=12)
         logger.info('Using model: %s', model.__class__.__name__)
 
         cls.mc = ModelContainerPT(model, cls.dc)
 
         file_path = os.path.join('save', FILE_NAME)
         if not os.path.exists(file_path):
-            cls.mc.fit(epochs=30, batch_size=BATCH_SIZE)
+            cls.mc.fit(epochs=200, batch_size=BATCH_SIZE)
             cls.mc.save(FILE_NAME, overwrite=True)
         else:
             logger.info('Use saved parameters from %s', FILE_NAME)
@@ -53,17 +54,16 @@ class TestAttackMNIST(unittest.TestCase):
             norm=np.inf,
             eps=0.3,
             eps_step=0.1,
-            minimal=True
-        )
+            minimal=True)
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adversarial examples: %f', accuracy)
 
         # At least made some change from clean images
         self.assertFalse((adv == x_clean).all())
-        # Expect above 28% success rate
+        # Expect above 26% success rate
         self.assertGreaterEqual(
-            (y_adv != y_clean).sum() / x_clean.shape[0], 0.28)
+            (y_adv != y_clean).sum() / x_clean.shape[0], 0.26)
         # Check the max perturbation
         dif = np.max(np.abs(adv - x_clean))
         self.assertLessEqual(dif, 0.3)
@@ -79,16 +79,15 @@ class TestAttackMNIST(unittest.TestCase):
             eps=0.3,
             eps_step=0.1,
             max_iter=100,
-            targeted=False
-        )
+            targeted=False)
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adversarial examples: %f', accuracy)
 
         self.assertFalse((adv == x_clean).all())
-        # Expect above 90% success rate
+        # Expect above 46% success rate
         self.assertGreaterEqual(
-            (y_adv != y_clean).sum() / x_clean.shape[0], 0.9)
+            (y_adv != y_clean).sum() / x_clean.shape[0], 0.46)
         # Check the max perturbation. The result is slightly higher than 0.3
         dif = np.max(np.abs(adv - x_clean))
         self.assertLessEqual(dif, 0.3 + 1e6)
@@ -98,11 +97,6 @@ class TestAttackMNIST(unittest.TestCase):
         logger.info('L2 norm = %f', l2)
 
     def test_carlini(self):
-        """
-        Carlini and Wagner attack uses a greedy search method. The success rate
-        can be 100%. However the algorithm try to match the target with minimal 
-        perturbations, but there is no l2 threshold during generation.
-        """
         attack = CarliniL2Container(
             self.mc,
             confidence=0.0,
@@ -113,10 +107,8 @@ class TestAttackMNIST(unittest.TestCase):
             initial_const=1e-2,
             max_halving=5,
             max_doubling=10,
-            batch_size=8,
-        )
-        # Slow algorithm, only test 10 samples
-        adv, y_adv, x_clean, y_clean = attack.generate(count=10)
+            batch_size=8)
+        adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adversarial examples: %f', accuracy)
 
@@ -134,66 +126,15 @@ class TestAttackMNIST(unittest.TestCase):
             self.mc,
             max_iter=100,
             epsilon=1e-6,
-            nb_grads=10,
-            batch_size=16
-        )
+            nb_grads=10)
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adversarial examples: %f', accuracy)
 
         self.assertFalse((adv == x_clean).all())
-        # Expect above 65% success rate
+        # Expect above 86% success rate
         self.assertGreaterEqual(
-            (y_adv != y_clean).sum() / x_clean.shape[0], 0.65)
-        self.assertLessEqual(np.max(adv), 1.0 + 1e6)
-        self.assertGreaterEqual(np.min(adv), 0 - 1e6)
-        l2 = np.max(get_l2_norm(adv, x_clean))
-        logger.info('L2 norm = %f', l2)
-
-    def test_saliency(self):
-        attack = SaliencyContainer(
-            self.mc,
-            theta=0.1,
-            gamma=1.0,
-            batch_size=16
-        )
-        adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
-        accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: %f', accuracy)
-
-        self.assertFalse((adv == x_clean).all())
-        success_rate = (y_adv != y_clean).sum() / x_clean.shape[0]
-        # Expect above 95% success rate
-        self.assertGreaterEqual(success_rate, 0.95)
-        self.assertLessEqual(np.max(adv), 1.0 + 1e6)
-        self.assertGreaterEqual(np.min(adv), 0 - 1e6)
-        l2 = np.max(get_l2_norm(adv, x_clean))
-        logger.info('L2 norm = %f', l2)
-
-    def test_zoo(self):
-        """
-        NOTE: This is a CPU only implementation. Extremely slow and has low 
-        success rate.
-        """
-        attack = ZooContainer(
-            self.mc,
-            targeted=False,
-            learning_rate=1e-2,
-            max_iter=15,
-            binary_search_steps=5,
-            abort_early=True,
-            use_resize=False,
-            use_importance=False,
-        )
-        # Slow algorithm, only test 3 samples
-        adv, y_adv, x_clean, y_clean = attack.generate(count=3)
-        accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: %f', accuracy)
-
-        # self.assertFalse((adv == x_clean).all())
-        # NOTE: Success rate closes to 0
-        # self.assertGreaterEqual(
-        #     (y_adv != y_clean).sum() / x_clean.shape[0], 0.9)
+            (y_adv != y_clean).sum() / x_clean.shape[0], 0.86)
         self.assertLessEqual(np.max(adv), 1.0 + 1e6)
         self.assertGreaterEqual(np.min(adv), 0 - 1e6)
         l2 = np.max(get_l2_norm(adv, x_clean))

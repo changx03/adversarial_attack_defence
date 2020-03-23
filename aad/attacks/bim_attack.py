@@ -58,7 +58,7 @@ class BIMContainer(AttackContainer):
         x = np.copy(dc.data_test_np[:count]) if use_testset else np.copy(x)
 
         # handle (h, w, c) to (c, h, w)
-        data_type = self.model_container.data_container.type
+        data_type = self.model_container.data_container.data_type
         if data_type == 'image' and x.shape[1] not in (1, 3):
             x = swap_image_channel(x)
 

@@ -24,8 +24,8 @@ logger = logging.getLogger(__name__)
 class DataContainer:
     def __init__(self, dataset_dict, path):
         self.name = dataset_dict['name']
-        self.type = dataset_dict['type']
-        assert self.type in ('image', 'quantitative')
+        self.data_type = dataset_dict['type']
+        assert self.data_type in ('image', 'quantitative')
         self.num_classes = int(dataset_dict['num_classes'])
         self.dim_data = dataset_dict['dim_data']
         self.path = path
@@ -52,7 +52,7 @@ class DataContainer:
             3, 11)
 
         since = time.time()
-        if self.type == 'image':
+        if self.data_type == 'image':
             self._prepare_image_data(shuffle, num_workers=0)
             self.train_mean = get_sample_mean(self.name)
             self.train_std = get_sample_std(self.name)
@@ -107,7 +107,7 @@ class DataContainer:
                 x_np = self.data_train_np if is_train else self.data_test_np
                 y_np = self.label_train_np if is_train else self.label_test_np
 
-            if self.type == 'image':
+            if self.data_type == 'image':
                 x_np = swap_image_channel(x_np)
 
             dataset = NumericalDataset(

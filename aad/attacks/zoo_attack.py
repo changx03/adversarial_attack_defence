@@ -15,6 +15,11 @@ logger = logging.getLogger(__name__)
 
 
 class ZooContainer(AttackContainer):
+    """
+    Zeroth-Order Optimization attack (Zoo) is a black-box attack. This attack 
+    is a variant of the Carlini and Wagner attack which uses ADAM coordinate 
+    descent to perform numerical estimation of gradients.
+    """
     def __init__(
             self,
             model_container,
@@ -79,7 +84,7 @@ class ZooContainer(AttackContainer):
         x = np.copy(dc.data_test_np[:count]) if use_testset else np.copy(x)
 
         # handle (h, w, c) to (c, h, w)
-        data_type = self.model_container.data_container.type
+        data_type = self.model_container.data_container.data_type
         if data_type == 'image' and x.shape[1] not in (1, 3):
             x = swap_image_channel(x)
 

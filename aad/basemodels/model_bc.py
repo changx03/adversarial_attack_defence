@@ -30,7 +30,7 @@ class BCNN(nn.Module):
             scheduler_params=SCHEDULER_PARAMS):
         super(BCNN, self).__init__()
 
-        self.model_inner = nn.Sequential(
+        self.hidden_model = nn.Sequential(
             nn.Linear(num_features, 128),
             nn.ReLU(),
             nn.Linear(128, 128),
@@ -46,5 +46,5 @@ class BCNN(nn.Module):
         self.scheduler_params = scheduler_params
 
     def forward(self, x):
-        x = self.model_inner(x)
+        x = self.hidden_model(x)
         return x

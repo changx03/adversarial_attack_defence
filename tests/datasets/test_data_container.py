@@ -61,7 +61,7 @@ class TestDataContainer(unittest.TestCase):
         self.assertEqual(name, dataname)
         m = dc.num_classes
         self.assertEqual(m, p['num_classes'])
-        dtype = dc.type
+        dtype = dc.data_type
         self.assertEqual(dtype, p['type'])
         dim = dc.dim_data
         self.assertEqual(dim, p['dim'])
@@ -220,7 +220,7 @@ class TestDataContainer(unittest.TestCase):
         self.assertEqual(name, dataname)
         m = dc.num_classes
         self.assertEqual(m, p['num_classes'])
-        dtype = dc.type
+        dtype = dc.data_type
         self.assertEqual(dtype, p['type'])
         dim = dc.dim_data
         self.assertEqual(dim, p['dim'])
