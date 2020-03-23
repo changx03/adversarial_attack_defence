@@ -72,6 +72,18 @@ class TestModelIris(unittest.TestCase):
         # p2 = self.mc.predict(self.x)
         acc = self.mc.evaluate(self.x, [1, 0, 1, 2, 2])
         self.assertEqual(acc, 1.0)
+    
+    def test_predict_none(self):
+        x = np.array([])
+        p = self.mc.predict(x)
+        self.assertTrue((p == []).all())
+
+        p = self.mc.predict_one(x)
+        self.assertTrue((p == []).all())
+    
+    def test_evaluate_none(self):
+        acc = self.mc.evaluate(np.array([], dtype=np.float32), [])
+        self.assertEqual(acc, 0.0)
 
 
 if __name__ == '__main__':

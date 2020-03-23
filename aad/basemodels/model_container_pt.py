@@ -69,23 +69,26 @@ class ModelContainerPT:
         return self.model(x).cpu().detach().numpy()
 
     def predict(self, x, require_score=False):
+        if len(x) == 0:
+            return np.array([], dtype=np.int64)
+
         if not isinstance(x, torch.Tensor):
             # only swap the channel when it is wrong!
             if self.data_container.data_type == 'image' and x.shape[1] not in (1, 3):
                 x = swap_image_channel(x)
             x = torch.from_numpy(x)
         x = x.float().to(self.device)
-        outputs = self.model(x)
-        predictions = outputs.max(1, keepdim=True)[1]
-        predictions = predictions.cpu().detach().numpy().squeeze()
+        outputs = self.model(x).cpu().detach().numpy()
+        predictions = np.argmax(outputs, axis=1)
 
         if require_score:
-            outputs = outputs.cpu().detach().numpy()
             return predictions, outputs
-        else:
-            return predictions
+        return predictions
 
     def predict_one(self, x, require_score=False):
+        if len(x) == 0:
+            return np.array([], dtype=np.int64)
+
         if isinstance(x, np.ndarray):
             x = np.expand_dims(x, axis=0)
         elif isinstance(x, torch.Tensor):
@@ -99,6 +102,9 @@ class ModelContainerPT:
             return prediction.squeeze()
 
     def evaluate(self, x, labels):
+        if len(x) == 0:
+            return 0.0
+        
         predictions = self.predict(x)
         accuracy = np.sum(np.equal(predictions, labels)) / len(labels)
         return accuracy
