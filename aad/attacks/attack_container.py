@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class AttackContainer(abc.ABC):
-    attack_params = dict()
+    attack_params = dict()  # Override this in child class
 
     def __init__(self, model_containter):
         assert isinstance(model_containter, ModelContainerPT)

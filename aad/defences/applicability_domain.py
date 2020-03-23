@@ -28,7 +28,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
             'k1': k1,
             'k2': k2,
             'confidence': confidence}
-        self.params.update(params_received)
+        self.params = params_received
         self.device = model_container.device
         self.num_classes = model_container.data_container.num_classes
 

@@ -14,7 +14,7 @@ class DetectorContainer(abc.ABC):
     """
     Class performing adversarial detection
     """
-    params = dict()
+    params = dict()  # Override this in child class
 
     def __init__(self, model_container):
         assert isinstance(model_container, ModelContainerPT)
