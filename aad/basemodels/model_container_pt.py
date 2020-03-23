@@ -28,7 +28,7 @@ class ModelContainerPT:
         self.device = torch.device(
             'cuda:0' if torch.cuda.is_available() else 'cpu')
         self.model.to(self.device)
-        logger.debug('Using device: %s' % self.device)
+        logger.debug('Using device: %s', self.device)
 
         # to allow the model train multiple times
         self.loss_train = []
@@ -42,8 +42,8 @@ class ModelContainerPT:
         self._fit_torch(epochs, batch_size)
 
         time_elapsed = time.time() - since
-        logger.info('Time to complete training: {:2.0f}m {:2.1f}s'.format(
-            time_elapsed // 60, time_elapsed % 60))
+        logger.info('Time to complete training: %im %.3fs',
+                    int(time_elapsed // 60), time_elapsed % 60)
 
     def save(self, filename, overwrite=False):
         filename = name_handler(filename, 'pt', overwrite)
@@ -51,13 +51,13 @@ class ModelContainerPT:
 
         torch.save(self.model.state_dict(), filename)
 
-        logger.info('Successfully saved model to "{}"'.format(filename))
+        logger.info('Successfully saved model to %s', filename)
 
     def load(self, filename):
         self.model.load_state_dict(torch.load(
             filename, map_location=self.device))
 
-        logger.info('Successfully loaded model from "{}"'.format(filename))
+        logger.info('Successfully loaded model from %s', filename)
 
     def score(self, x):
         if not isinstance(x, torch.Tensor):
@@ -129,10 +129,10 @@ class ModelContainerPT:
 
             time_elapsed = time.time() - time_start
             logger.debug(
-                '[{:2d}/{:d}]{:2.0f}m{:2.1f}s: Train Loss:{:.4f} Acc:{:.2f}% - Test Loss:{:.4f} Acc:{:.2f}%'.format(
-                    epoch+1, epochs,
-                    time_elapsed // 60, time_elapsed % 60,
-                    tr_loss, tr_acc*100, va_loss, va_acc*100))
+                '[%i/%i]%im %.3fs: Train loss: %f acc: %f - Test loss: %f acc: %f',
+                epoch+1, epochs,
+                int(time_elapsed // 60), time_elapsed % 60,
+                tr_loss, tr_acc, va_loss, va_acc)
 
             # save logs
             self.loss_train.append(tr_loss)
@@ -143,8 +143,8 @@ class ModelContainerPT:
             # early stopping
             if tr_acc >= 0.999 and va_acc >= 0.999:
                 logger.debug(
-                    'Satisfied the accuracy threshold. Abort at {} epoch!'.format(
-                        epoch))
+                    'Satisfied the accuracy threshold. Abort at %i epoch!',
+                    epoch)
                 break
 
     def _train_torch(self, optimizer, loader):

@@ -121,10 +121,10 @@ def name_handler(filename, extension, overwrite=False):
         arr = filename.split('.')
         time_str = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         arr.insert(-1, time_str)  # already fixed extension
-        print('File {:s} already exists. Save new file as "{:s}"'.format(
-            filename, '.'.join(arr)))
-
-    return '.'.join(arr)
+        output_name = '.'.join(arr)
+        logger.info('File %s already exists. Save new file as %s',
+                    filename, output_name)
+    return output_name
 
 
 def onehot_encoding(y, num_classes, dtype=np.long):

@@ -11,7 +11,6 @@ from aad.datasets import DATASET_LIST, DataContainer
 from aad.utils import get_data_path, master_seed, get_l2_norm
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
 
 SEED = 4096
 BATCH_SIZE = 128
@@ -25,12 +24,12 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
     def setUpClass(cls):
         master_seed(SEED)
 
-        logger.info('Starting {} data container...'.format(NAME))
+        logger.info('Starting %s data container...', NAME)
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
         cls.dc(shuffle=False)
 
         model = MnistCnnCW()
-        logger.info('Using model: {}'.format(model.__class__.__name__))
+        logger.info('Using model: %s', model.__class__.__name__)
 
         cls.mc = ModelContainerPT(model, cls.dc)
 
@@ -42,8 +41,8 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             logger.info('Use saved parameters from {}'.format(FILE_NAME))
             cls.mc.load(file_path)
 
-        acc = cls.mc.evaluate(cls.dc.data_test_np, cls.dc.label_test_np)
-        logger.info('Accuracy on test set: {:.4f}%'.format(acc*100))
+        accuracy = cls.mc.evaluate(cls.dc.data_test_np, cls.dc.label_test_np)
+        logger.info('Accuracy on test set: %f', accuracy)
 
     def setUp(self):
         master_seed(SEED)
@@ -56,11 +55,9 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             eps_step=0.1,
             minimal=True
         )
-        print(attack)
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: {:.4f}%'.format(
-            accuracy*100))
+        logger.info('Accuracy on adversarial examples: %f', accuracy)
 
         # At least made some change from clean images
         self.assertFalse((adv == x_clean).all())
@@ -73,6 +70,8 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         # Check bounding box
         self.assertLessEqual(np.max(adv), 1.0 + 1e6)
         self.assertGreaterEqual(np.min(adv), 0 - 1e6)
+        l2 = np.max(get_l2_norm(adv, x_clean))
+        logger.info('L2 norm = %f', l2)
 
     def test_bim(self):
         attack = BIMContainer(
@@ -82,11 +81,9 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             max_iter=100,
             targeted=False
         )
-        print(attack)
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: {:.4f}%'.format(
-            accuracy*100))
+        logger.info('Accuracy on adversarial examples: %f', accuracy)
 
         self.assertFalse((adv == x_clean).all())
         # Expect above 90% success rate
@@ -97,6 +94,8 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         self.assertLessEqual(dif, 0.3 + 1e6)
         self.assertLessEqual(np.max(adv), 1.0 + 1e6)
         self.assertGreaterEqual(np.min(adv), 0 - 1e6)
+        l2 = np.max(get_l2_norm(adv, x_clean))
+        logger.info('L2 norm = %f', l2)
 
     def test_carlini(self):
         """
@@ -116,11 +115,10 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             max_doubling=10,
             batch_size=8,
         )
-        # Slow algorithm, only test 30 samples
-        adv, y_adv, x_clean, y_clean = attack.generate(count=30)
+        # Slow algorithm, only test 10 samples
+        adv, y_adv, x_clean, y_clean = attack.generate(count=10)
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: {:.4f}%'.format(
-            accuracy*100))
+        logger.info('Accuracy on adversarial examples: %f', accuracy)
 
         self.assertFalse((adv == x_clean).all())
         # Expect above 90% success rate
@@ -128,6 +126,8 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             (y_adv != y_clean).sum() / x_clean.shape[0], 0.9)
         self.assertLessEqual(np.max(adv), 1.0 + 1e6)
         self.assertGreaterEqual(np.min(adv), 0 - 1e6)
+        l2 = np.max(get_l2_norm(adv, x_clean))
+        logger.info('L2 norm = %f', l2)
 
     def test_deepfool(self):
         attack = DeepFoolContainer(
@@ -139,8 +139,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         )
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: {:.4f}%'.format(
-            accuracy*100))
+        logger.info('Accuracy on adversarial examples: %f', accuracy)
 
         self.assertFalse((adv == x_clean).all())
         # Expect above 65% success rate
@@ -148,14 +147,53 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             (y_adv != y_clean).sum() / x_clean.shape[0], 0.65)
         self.assertLessEqual(np.max(adv), 1.0 + 1e6)
         self.assertGreaterEqual(np.min(adv), 0 - 1e6)
-        l2 = np.average(get_l2_norm(adv, x_clean))
-        print(l2)
+        l2 = np.max(get_l2_norm(adv, x_clean))
+        logger.info('L2 norm = %f', l2)
 
     def test_saliency(self):
-        pass
+        attack = SaliencyContainer(
+            self.mc,
+            theta=0.1,
+            gamma=1.0,
+            batch_size=16
+        )
+        adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
+        accuracy = self.mc.evaluate(adv, y_clean)
+        logger.info('Accuracy on adversarial examples: %f', accuracy)
+
+        self.assertFalse((adv == x_clean).all())
+        success_rate = (y_adv != y_clean).sum() / x_clean.shape[0]
+        # Expect above 95% success rate
+        self.assertGreaterEqual(success_rate, 0.95)
+        self.assertLessEqual(np.max(adv), 1.0 + 1e6)
+        self.assertGreaterEqual(np.min(adv), 0 - 1e6)
+        l2 = np.max(get_l2_norm(adv, x_clean))
+        logger.info('L2 norm = %f', l2)
 
     def test_zoo(self):
-        pass
+        attack = ZooContainer(
+            self.mc,
+            targeted=False,
+            learning_rate=1e-2,
+            max_iter=20,
+            binary_search_steps=5,
+            abort_early=False,
+            use_resize=False,
+            use_importance=False,
+        )
+        # Slow algorithm, only test 10 samples
+        adv, y_adv, x_clean, y_clean = attack.generate(count=10)
+        accuracy = self.mc.evaluate(adv, y_clean)
+        logger.info('Accuracy on adversarial examples: %f', accuracy)
+
+        self.assertFalse((adv == x_clean).all())
+        # NOTE: Success rate closes to 0
+        # self.assertGreaterEqual(
+        #     (y_adv != y_clean).sum() / x_clean.shape[0], 0.9)
+        self.assertLessEqual(np.max(adv), 1.0 + 1e6)
+        self.assertGreaterEqual(np.min(adv), 0 - 1e6)
+        l2 = np.max(get_l2_norm(adv, x_clean))
+        logger.info('L2 norm = %f', l2)
 
 
 if __name__ == '__main__':

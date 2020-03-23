@@ -24,12 +24,12 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
     def setUpClass(cls):
         master_seed(SEED)
 
-        logger.info('Starting {} data container...'.format(NAME))
+        logger.info('Starting %s data container...', NAME)
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
         cls.dc(shuffle=False)
 
         model = MnistCnnCW()
-        logger.info('Using model: {}'.format(model.__class__.__name__))
+        logger.info('Using model: %s', model.__class__.__name__)
 
         cls.mc = ModelContainerPT(model, cls.dc)
 
@@ -38,11 +38,11 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             cls.mc.fit(epochs=30, batch_size=BATCH_SIZE)
             cls.mc.save(FILE_NAME, overwrite=True)
         else:
-            logger.info('Use saved parameters from {}'.format(FILE_NAME))
+            logger.info('Use saved parameters from %s', FILE_NAME)
             cls.mc.load(file_path)
 
         acc = cls.mc.evaluate(cls.dc.data_test_np, cls.dc.label_test_np)
-        logger.info('Accuracy on test set: {:.4f}%'.format(acc*100))
+        logger.info('Accuracy on test set: %f', acc)
 
     def setUp(self):
         master_seed(SEED)

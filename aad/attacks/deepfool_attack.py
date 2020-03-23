@@ -1,6 +1,7 @@
 """
 This module implements the DeepFool attack.
 """
+import logging
 import time
 
 import numpy as np
@@ -9,6 +10,8 @@ from art.classifiers import PyTorchClassifier
 
 from ..utils import swap_image_channel
 from .attack_container import AttackContainer
+
+logger = logging.getLogger(__name__)
 
 
 class DeepFoolContainer(AttackContainer):
@@ -66,6 +69,6 @@ class DeepFoolContainer(AttackContainer):
         y_adv, y_clean = self.predict(adv, x)
 
         time_elapsed = time.time() - since
-        print('Time to complete training {} adversarial examples: {:2.0f}m {:2.1f}s'.format(
-            count, time_elapsed // 60, time_elapsed % 60))
+        logger.info('Time to complete training %i adversarial examples: %im %.3fs',
+                    count, int(time_elapsed // 60), time_elapsed % 60)
         return adv, y_adv, np.copy(x), y_clean

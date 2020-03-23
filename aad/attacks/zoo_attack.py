@@ -1,6 +1,7 @@
 """
 This module implements the ZOO attack.
 """
+import logging
 import time
 
 import numpy as np
@@ -10,13 +11,25 @@ from art.classifiers import PyTorchClassifier
 from ..utils import swap_image_channel
 from .attack_container import AttackContainer
 
+logger = logging.getLogger(__name__)
+
 
 class ZooContainer(AttackContainer):
-    def __init__(self, model_container, confidence=0.0, targeted=False,
-                 learning_rate=0.01, max_iter=10, binary_search_steps=1,
-                 initial_const=1e-3, abort_early=True, use_resize=True,
-                 use_importance=True, nb_parallel=128, batch_size=1,
-                 variable_h=1e-4):
+    def __init__(
+            self,
+            model_container,
+            confidence=0.0,
+            targeted=False,
+            learning_rate=1e-2,
+            max_iter=10,
+            binary_search_steps=1,
+            initial_const=1e-3,
+            abort_early=True,
+            use_resize=True,
+            use_importance=True,
+            nb_parallel=128,
+            batch_size=1,
+            variable_h=1e-4):
         super(ZooContainer, self).__init__(model_container)
 
         params_received = {
@@ -88,6 +101,6 @@ class ZooContainer(AttackContainer):
         y_adv, y_clean = self.predict(adv, x)
 
         time_elapsed = time.time() - since
-        print('Time to complete training {} adversarial examples: {:2.0f}m {:2.1f}s'.format(
-            count, time_elapsed // 60, time_elapsed % 60))
+        logger.info('Time to complete training %i adversarial examples: %im %.3fs',
+                    count, int(time_elapsed // 60), time_elapsed % 60)
         return adv, y_adv, np.copy(x), y_clean

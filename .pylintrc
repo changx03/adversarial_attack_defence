@@ -4,8 +4,10 @@
 # expressions are accepted.
 generated-members=numpy.*,torch.*
 
+
 [LOGGING]
 
 # Format style used to check logging format string. `old` means using %
 # formatting, `new` is for `{}` formatting,and `fstr` is for f-strings.
-logging-format-style=fstr
+logging-format-style=old
+logging-modules=logging

@@ -1,6 +1,7 @@
 """
 This module implements the Jacobian Saliency Map attack.
 """
+import logging
 import time
 
 import numpy as np
@@ -9,6 +10,8 @@ from art.classifiers import PyTorchClassifier
 
 from ..utils import swap_image_channel
 from .attack_container import AttackContainer
+
+logger = logging.getLogger(__name__)
 
 
 class SaliencyContainer(AttackContainer):
@@ -33,7 +36,8 @@ class SaliencyContainer(AttackContainer):
         optimizer = self.model_container.model.optimizer
         num_classes = self.model_container.data_container.num_classes
         dim_data = self.model_container.data_container.dim_data
-        print(clip_values)
+        logger.debug('clip_values = %s', str(clip_values))
+
         self.classifier = PyTorchClassifier(
             model=model,
             clip_values=clip_values,
@@ -74,6 +78,6 @@ class SaliencyContainer(AttackContainer):
         y_adv, y_clean = self.predict(adv, x)
 
         time_elapsed = time.time() - since
-        print('Time to complete training {} adversarial examples: {:2.0f}m {:2.1f}s'.format(
-            count, time_elapsed // 60, time_elapsed % 60))
+        logger.info('Time to complete training %i adversarial examples: %im %.3fs',
+                    count, int(time_elapsed // 60), time_elapsed % 60)
         return adv, y_adv, np.copy(x), y_clean

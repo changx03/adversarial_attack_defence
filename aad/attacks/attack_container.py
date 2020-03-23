@@ -62,7 +62,7 @@ class AttackContainer(abc.ABC):
                 and len(y_clean) == len(x_adv)
             filename_y = filename_adv.replace('.adv', '.y')
             y_clean.astype(np.int64).tofile(filename_y)
-        print(f'Successfully saved model to "{filename_adv}"')
+        logger.info('Successfully saved model to %s', filename_adv)
 
     @staticmethod
     def randam_targets(count, num_classes, use_onehot=False, dtype=np.long):

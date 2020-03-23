@@ -51,7 +51,6 @@ class DataContainer:
         assert cross_validation_fold == 0 or cross_validation_fold in range(
             3, 11)
 
-        print('Loading data...')
         since = time.time()
         if self.type == 'image':
             self._prepare_image_data(shuffle, num_workers=0)
@@ -69,9 +68,8 @@ class DataContainer:
 
         time_elapsed = time.time() - since
 
-        print('Successfully load data! Time to complete: {:2.0f}m {:3.1f}s'.format(
-            time_elapsed // 60,
-            time_elapsed % 60))
+        logger.info('Successfully load data. Time to complete: %im %.3fs',
+                    int(time_elapsed // 60), time_elapsed % 60)
 
     def get_one_fold_np(self, fold):
         """
@@ -126,7 +124,6 @@ class DataContainer:
 
     def _prepare_image_data(self, shuffle, num_workers):
         # for images, we prepare dataloader first, and then convert it to numpy array.
-        print('Preparing DataLoaders...')
         dataset_train = self._get_dataset(train=True)
         dataset_test = self._get_dataset(train=False)
 
@@ -143,7 +140,6 @@ class DataContainer:
             shuffle=shuffle,
             num_workers=num_workers)
 
-        print('Preparing numpy arrays...')
         self.data_train_np, self.label_train_np = self._loader_to_np(
             dataloader_train)
         self.data_test_np, self.label_test_np = self._loader_to_np(
@@ -157,13 +153,11 @@ class DataContainer:
     def _prepare_quantitative_data(self, shuffle, normalize, size_train):
         # for quantitative, starts with a Pandas dataframe, and then
         # populate numpy array and then pytorch DataLoader
-        print('Preparing DataFrame...')
         self.dataframe = self._get_dataframe()
         m = self.dataframe.shape[1] - 1  # the label is also in the frame
 
         self.data_range = get_range(self.dataframe.values[:, :m])
 
-        print('Spliting train/test sets into numpy arrays...')
         if shuffle:
             self.dataframe = shuffle_data(self.dataframe)
 
@@ -264,7 +258,7 @@ class DataContainer:
         return x_train, y_train, x_test, y_test
 
     def _check_file(self, file):
-        print(f'Reading from {file}')
+        logger.debug('Reading file %s', file)
         assert os.path.exists(file), f'{file} does NOT exist!'
 
     def _get_dataframe(self):
