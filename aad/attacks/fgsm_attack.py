@@ -27,7 +27,7 @@ class FGSMContainer(AttackContainer):
             'num_random_init': num_random_init,
             'batch_size': batch_size,
             'minimal': minimal}
-        self.attack_params.update(params_received)
+        self.attack_params = params_received
 
         # use IBM ART pytorch module wrapper
         # the model used here should be already trained

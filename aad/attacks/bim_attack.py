@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class BIMContainer(AttackContainer):
-    def __init__(self, model_container, eps=.3, eps_step=0.1, max_iter=100,
+    def __init__(self, model_container, eps=0.3, eps_step=0.1, max_iter=100,
                  targeted=False, batch_size=64):
         super(BIMContainer, self).__init__(model_container)
 
@@ -25,7 +25,7 @@ class BIMContainer(AttackContainer):
             'max_iter': max_iter,
             'targeted': targeted,
             'batch_size': batch_size}
-        self.attack_params.update(params_received)
+        self.attack_params = params_received
 
         # use IBM ART pytorch module wrapper
         # the model used here should be already trained
@@ -80,6 +80,7 @@ class BIMContainer(AttackContainer):
         y_adv, y_clean = self.predict(adv, x)
 
         time_elapsed = time.time() - since
-        logger.info('Time to complete training %d adversarial examples: %2.0fm %2.1fs',
-                    count, time_elapsed // 60, time_elapsed % 60)
+        logger.info(
+            'Time to complete training {} adversarial examples: {:2.0f}m {:2.1f}s'.format(
+                count, time_elapsed // 60, time_elapsed % 60))
         return adv, y_adv, np.copy(x), y_clean

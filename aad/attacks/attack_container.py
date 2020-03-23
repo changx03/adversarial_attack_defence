@@ -65,18 +65,6 @@ class AttackContainer(abc.ABC):
         print(f'Successfully saved model to "{filename_adv}"')
 
     @staticmethod
-    def get_l2_norm(x, x_adv):
-        """Computes the L2 norm between 2 samples"""
-        assert isinstance(x, np.ndarray)
-        assert isinstance(x_adv, np.ndarray)
-        assert x.shape == x_adv.shape
-        assert len(x.shape) in (2, 4)
-
-        n = len(x)
-        l2 = np.sum(np.square(x.reshape(n, -1) - x_adv.reshape(n, -1)), axis=1)
-        return np.sqrt(l2)
-
-    @staticmethod
     def randam_targets(count, num_classes, use_onehot=False, dtype=np.long):
         """Returns randomly generated labels."""
         y_rand = np.random.choice(num_classes, count, replace=True)

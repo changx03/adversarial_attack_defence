@@ -33,7 +33,7 @@ class ZooContainer(AttackContainer):
             'batch_size': batch_size,
             'variable_h': variable_h
         }
-        self.attack_params.update(params_received)
+        self.attack_params = params_received
 
         # use IBM ART pytorch module wrapper
         # the model used here should be already trained

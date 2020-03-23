@@ -27,7 +27,7 @@ class CarliniL2Container(AttackContainer):
             'max_halving': max_halving,
             'max_doubling': max_doubling,
             'batch_size': batch_size}
-        self.attack_params.update(params_received)
+        self.attack_params = params_received
 
         # use IBM ART pytorch module wrapper
         # the model used here should be already trained
