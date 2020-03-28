@@ -5,6 +5,7 @@ import logging
 
 import numpy as np
 import sklearn.neighbors as knn
+from scipy import stats
 import torch
 from torch.utils.data import DataLoader
 
@@ -20,15 +21,40 @@ class ApplicabilityDomainContainer(DetectorContainer):
     Class performs adversarial detection based on Applicability Domain.
     """
 
-    def __init__(self, model_container, hidden_model=None, k1=9, k2=12, confidence=0.8):
+    def __init__(self,
+                 model_container,
+                 hidden_model=None,
+                 k1=9,
+                 reliability=0.8,
+                 sample_ratio=1.0,
+                 confidence=0.9,
+                 kappa=6):
         """Create a class `ApplicabilityDomainContainer` instance.
+
+        :param model_container: A trained model
+        :type model_container: `ModelContainerPT`
+        :param hidden_model: To compute output from certain hidden layer
+        :type hidden_model: `torch.nn.Module`
+        :param k1: Number of nearest neighbours for Stage 2
+        :type k1: `int`
+        :param reliability: The parameter for confidence interval in Stage 2
+        :type reliability: `float`
+        :param sample_ratio: The percentage of train sample will be used in Stage 3. Expected to be in range (0, 1]
+        :type sample_ratio: `float`
+        :param confidence: The number of samples will be used to compute neighbours in Stage 3. k = num_classes * kappa
+        :type confidence: `float`
+        :param kappa: The number of samples will be used to compute neighbours in Stage 3. k = num_classes * kappa
+        :type kappa: `float`
         """
         super(ApplicabilityDomainContainer, self).__init__(model_container)
 
         params_received = {
             'k1': k1,
-            'k2': k2,
-            'confidence': confidence}
+            'reliability': reliability,
+            'sample_ratio': sample_ratio,
+            'confidence': confidence,
+            'kappa': kappa,
+        }
         self.params = params_received
         self.device = model_container.device
         self.num_classes = model_container.data_container.num_classes
@@ -51,6 +77,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         self.thresholds = np.zeros_like(self.k_means)
         self.encode_train_np = None
         self.y_train_np = None
+        self.mu_likelihood = None
 
     def fit(self):
         """
@@ -97,7 +124,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         passed = self._def_state2(encoded_adv, pred_adv, passed)
         blocked = len(passed[passed == 0]) - blocked
         logger.debug('Stage 2: blocked %d inputs', blocked)
-        passed = self._def_state3(encoded_adv, pred_adv, passed)
+        passed = self._def_state3_v2(encoded_adv, passed)
         blocked = len(passed[passed == 0]) - blocked
         logger.debug('Stage 3: blocked %d inputs', blocked)
 
@@ -106,7 +133,8 @@ class ApplicabilityDomainContainer(DetectorContainer):
         return adv[passed_indices], blocked_indices
 
     def _preprocessing(self, x_np):
-        if self.data_type == 'image':
+        logger.debug('x_np: %s', str(x_np.shape))
+        if self.data_type == 'image' and x_np.shape[1] > x_np.shape[-1]:
             x_np = swap_image_channel(x_np)
 
         dataset = NumericalDataset(torch.as_tensor(x_np))
@@ -120,7 +148,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         x, _ = next(iter(dataloader))
         x = x.to(self.device)
         outputs = self.hidden_model(x[:1])
-        num_components = outputs.size()[1]  # number of hidden components
+        num_components = outputs.size(1)  # number of hidden components
 
         x_encoded = torch.zeros(len(x_np), num_components)
 
@@ -147,7 +175,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
     def _fit_stage2(self):
         self._s2_models = []
         k1 = self.params['k1']
-        zeta = self.params['confidence']
+        zeta = self.params['reliability']
         for i in range(self.num_classes):
             indices = np.where(self.y_train_np == i)[0]
             x = self.encode_train_np[indices]
@@ -166,18 +194,43 @@ class ApplicabilityDomainContainer(DetectorContainer):
     def _fit_stage3(self):
         x = self.encode_train_np
         y = self.y_train_np
-        k2 = self.params['k2']
+        kappa = self.params['kappa']
+        k = int(self.num_classes * kappa)
+        sample_ratio = self.params['sample_ratio']
+
         self._s3_model = knn.KNeighborsClassifier(
-            n_neighbors=k2,
+            n_neighbors=k,
             n_jobs=-1,
-            # weights='distance',
         )
         self._s3_model.fit(x, y)
+
+        # compute the likelihood
+        sample_size = int(np.floor(len(x) * sample_ratio))
+        x_sub = x[np.random.permutation(len(x))[:sample_size]]
+        neigh_indices = self._s3_model.kneighbors(
+            x_sub,
+            n_neighbors=k,
+            return_distance=False)
+        neigh_labels = np.array(
+            [self.y_train_np[n_i] for n_i in neigh_indices], dtype=np.int16)
+        bins = np.zeros((sample_size, self.num_classes), dtype=np.float32)
+        # Is there any vectorization way to compute the histogram?
+        for i in range(sample_size):
+            bins[i] = stats.relfreq(
+                neigh_labels[i],
+                numbins=self.num_classes,
+                defaultreallimits=(0, self.num_classes-1)
+            )[0]
+        self.mu_likelihood = np.mean(np.amax(bins, axis=1))
+        logger.debug('Train set likelihood = %f', self.mu_likelihood)
 
     def _def_state1(self, adv, pred_adv, passed):
         """
         A bounding box which uses [min, max] from traning set
         """
+        if len(np.where(passed == 1)[0]) == 0:
+            return passed
+
         for i in range(self.num_classes):
             indices = np.where(pred_adv == i)[0]
             x = adv[indices]
@@ -186,45 +239,94 @@ class ApplicabilityDomainContainer(DetectorContainer):
             blocked_indices = np.where(
                 np.all(np.logical_or(x < i_min, x > i_max), axis=1)
             )[0]
-            passed[blocked_indices] = 0
+            if len(blocked_indices) > 0:
+                passed[blocked_indices] = 0
         return passed
 
     def _def_state2(self, adv, pred_adv, passed):
         """
         Filtering the inputs based on in-class k nearest neighbours.
         """
-        indices = np.arange(len(adv))
         passed_indices = np.where(passed == 1)[0]
+        if len(passed_indices) == 0:
+            return passed
+
+        indices = np.arange(len(adv))
         passed_adv = adv[passed_indices]
         passed_pred = pred_adv[passed_indices]
         models = self._s2_models
         classes = np.arange(self.num_classes)
         k1 = self.params['k1']
+
         for model, threshold, c in zip(models, self.thresholds, classes):
             inclass_indices = np.where(passed_pred == c)[0]
             x = passed_adv[inclass_indices]
-            neigh_dist, _ = model.kneighbors(
-                x, n_neighbors=k1, return_distance=True)
+            neigh_dist, _ = model.kneighbors(x, n_neighbors=k1, return_distance=True)
             mean = np.mean(neigh_dist, axis=1)
             sub_blocked_indices = np.where(mean > threshold)[0]
             # trace back the original indices from input adversarial examples
             blocked_indices = indices[passed_indices][inclass_indices][sub_blocked_indices]
-            passed[blocked_indices] = 0
+
+            if len(blocked_indices) > 0:
+                passed[blocked_indices] = 0
+
         return passed
 
     def _def_state3(self, adv, pred_adv, passed):
         """
+        NOTE: Deprecated!
         Filtering the inputs based on k nearest neighbours with entire training set
         """
-        indices = np.arange(len(adv))
         passed_indices = np.where(passed == 1)[0]
+        if len(passed_indices) == 0:
+            return passed
+
+        indices = np.arange(len(adv))
         passed_adv = adv[passed_indices]
         passed_pred = pred_adv[passed_indices]
         model = self._s3_model
         knn_pred = model.predict(passed_adv)
         not_match_indices = np.where(np.not_equal(knn_pred, passed_pred))[0]
         blocked_indices = indices[passed_indices][not_match_indices]
+
+        if len(blocked_indices) > 0:
+                passed[blocked_indices] = 0
+
+        return passed
+
+    def _def_state3_v2(self, adv, passed):
+        """
+        Checking the class distribution of k nearest neighbours without predicting
+        the inputs. Compute the likelihood using one-against-all approach. 
+        """
+        passed_indices = np.where(passed == 1)[0]
+        if len(passed_indices) == 0:
+            return passed
+
+        x = adv[passed_indices]
+        kappa = self.params['kappa']
+        k = self.num_classes * kappa
+        confidence = self.params['confidence']
+
+        model = self._s3_model  # KNeighborsClassifier for entire train set
+        neigh_indices = model.kneighbors(
+            x, n_neighbors=k, return_distance=False)
+        neigh_labels = np.array(
+            [self.y_train_np[n_i] for n_i in neigh_indices], dtype=np.int16)
+        bins = np.zeros((len(x), self.num_classes), dtype=np.float32)
+
+        for i in range(len(x)):
+            bins[i] = stats.relfreq(
+                neigh_labels[i],
+                numbins=self.num_classes,
+                defaultreallimits=(0, self.num_classes-1)
+            )[0]
+
+        likelihood = np.amax(bins, axis=1)
+        threshold = self.mu_likelihood * confidence
+        blocked_indices = np.where(likelihood < threshold)[0]
         passed[blocked_indices] = 0
+
         return passed
 
     @staticmethod

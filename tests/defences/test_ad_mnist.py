@@ -18,6 +18,7 @@ BATCH_SIZE = 128
 NUM_ADV = 100  # number of adversarial examples will be generated
 NAME = 'MNIST'
 FILE_NAME = 'example-mnist-e20.pt'
+SAMPLE_RATIO = 1000 / 6e4
 
 
 class TestApplicabilityDomainMNIST(unittest.TestCase):
@@ -45,35 +46,68 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         accuracy = cls.mc.evaluate(cls.dc.data_test_np, cls.dc.label_test_np)
         logger.info('Accuracy on test set: %f', accuracy)
 
-        cls.hidden_model = model.hidden_model
+        hidden_model = model.hidden_model
+
+        logger.info('sample_ratio: %f', SAMPLE_RATIO)
+        cls.ad = ApplicabilityDomainContainer(
+            cls.mc,
+            hidden_model=hidden_model,
+            k1=9,
+            reliability=0.8,
+            sample_ratio=SAMPLE_RATIO,
+            confidence=0.9,
+            kappa=10,
+        )
+        cls.ad.fit()
 
     def setUp(self):
         master_seed(SEED)
 
-    def test_search_params(self):
-        # best k2 = 24
-        min_blocked = np.inf
-        best_k2 = -1
-        lookup_list = np.arange(0, 31) * 2
-        lookup_list[0] = 1
-        logger.debug(str(lookup_list))
-        for k in lookup_list:
-            logger.debug('Current k = %i', k)
-            ad = ApplicabilityDomainContainer(
-                self.mc,
-                hidden_model=self.hidden_model,
-                k1=4,
-                k2=k,
-                confidence=1.8)
-            ad.fit()
+    def preform_attack(self, attack, count=100):
+        adv, y_adv, x_clean, y_clean = attack.generate(count=count)
 
-            x = self.dc.data_test_np
-            x_passed, blocked_indices = ad.detect(x)
-            num_blocked = len(blocked_indices)
-            if min_blocked > num_blocked:
-                best_k2 = k
-                min_blocked = num_blocked
-        print(f'Best k2 = {best_k2}, Blocked: {min_blocked}')
+        accuracy = self.mc.evaluate(adv, y_clean)
+        print('Accuracy on adversarial examples: {:.4f}%'.format(
+            accuracy*100))
+
+        x_passed, blocked_indices = self.ad.detect(adv)
+        print('Blocked {:2d}/{:2d} samples from adversarial examples'.format(
+            len(blocked_indices), len(adv)))
+        print('blocked_indices', blocked_indices)
+
+        matched_indices = np.where(y_adv == y_clean)[0]
+        print('matched_indices', matched_indices)
+
+        passed_indices = np.delete(np.arange(len(adv)), blocked_indices)
+        passed_y_clean = y_clean[passed_indices]
+        accuracy = self.mc.evaluate(x_passed, passed_y_clean)
+        print('Accuracy on passed adversarial examples: {:.4f}%'.format(
+            accuracy*100))
+        return blocked_indices
+
+    def test_fit_clean_small(self):
+        x = self.dc.data_test_np[:5]
+        x_passed, blocked_indices = self.ad.detect(x)
+        print(f'# of blocked: {len(blocked_indices)}')
+        self.assertGreaterEqual(len(x_passed)/len(x), 0.8)
+
+    def test_fit_clean(self):
+        x = self.dc.data_test_np
+        x_passed, blocked_indices = self.ad.detect(x)
+        print('Blocked {:2d}/{:2d} samples from clean samples'.format(
+            len(blocked_indices), len(x)))
+        self.assertGreaterEqual(len(x_passed)/len(x), 0.95)
+
+    def test_fgsm_attack(self):
+        attack = FGSMContainer(
+            self.mc,
+            norm=np.inf,
+            eps=0.3,
+            eps_step=0.1,
+            minimal=True)
+        blocked_indices = self.preform_attack(attack, count=NUM_ADV)
+        blocked_rate = len(blocked_indices) / NUM_ADV
+        self.assertGreater(blocked_rate, 0.35)
 
 
 if __name__ == '__main__':

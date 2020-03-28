@@ -26,8 +26,10 @@ class ModelContainerPT:
         self.data_container = data_container
 
         self.device = torch.device(
-            'cuda:0' if torch.cuda.is_available() else 'cpu')
+            'cuda' if torch.cuda.is_available() else 'cpu')
         self.model.to(self.device)
+        if self.device == 'cpu':
+            logger.warning('GPU is not supported!')
         logger.debug('Using device: %s', self.device)
 
         # to allow the model train multiple times
