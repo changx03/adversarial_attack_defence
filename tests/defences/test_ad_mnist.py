@@ -120,7 +120,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         dummy_attack = DummyAttack(self.mc)
         blocked_indices = self.preform_attack(dummy_attack)
         block_rate = len(blocked_indices) / NUM_ADV
-        self.assertLessEqual(block_rate, 0.15)
+        self.assertLessEqual(block_rate, 0.12)
         logger.info('Block rate: %f', block_rate)
 
     def test_fit_train(self):
@@ -170,7 +170,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             nb_grads=10)
         blocked_indices = self.preform_attack(attack)
         blocked_rate = len(blocked_indices) / NUM_ADV
-        self.assertGreater(blocked_rate, 0.5)
+        self.assertGreater(blocked_rate, 0.53)
 
     def test_carlini_l2_attack(self):
         n = 100
@@ -187,7 +187,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             batch_size=16)
         blocked_indices = self.preform_attack(attack, count=n)
         blocked_rate = len(blocked_indices) / n
-        self.assertGreater(blocked_rate, 0.5)
+        self.assertGreater(blocked_rate, 0.7)
 
 
 if __name__ == '__main__':
