@@ -5,8 +5,8 @@ import logging
 
 import numpy as np
 import sklearn.neighbors as knn
-from scipy import stats
 import torch
+from scipy import stats
 from torch.utils.data import DataLoader
 
 from ..datasets import NumericalDataset
@@ -67,17 +67,17 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
         # placeholders for the objects used by AD
         self.num_components = 0  # number of hidden components
+        self.encode_train_np = None
+        self.y_train_np = None
         # keep track max for each class, size: [num_classes, num_components]
         self._x_max = None
         self._x_min = None
         self._s2_models = []  # in-class KNN models
         self._s3_model = None  # KNN models using training set
-        self.k_means = np.zeros(self.num_classes, dtype=np.float32)
-        self.k_stds = np.zeros_like(self.k_means)
-        self.thresholds = np.zeros_like(self.k_means)
-        self.encode_train_np = None
-        self.y_train_np = None
-        self.mu_likelihood = None
+        self._s2_means = np.zeros(self.num_classes, dtype=np.float32)
+        self._s2_stds = np.zeros_like(self._s2_means)
+        self._s2_thresholds = np.zeros_like(self._s2_means)
+        self._s3_likelihood = None
 
     def fit(self):
         """
@@ -99,10 +99,14 @@ class ApplicabilityDomainContainer(DetectorContainer):
         logger.debug('Number of input attributes: %i', self.num_components)
 
         self._fit_stage1()
+        self._log_time_end('AD Stage 1')
+        self._log_time_start()
         self._fit_stage2()
+        self._log_time_end('AD Stage 2')
+        self._log_time_start()
         self._fit_stage3()
+        self._log_time_end('AD Stage 3')
 
-        self._log_time_end('train AD')
         return True
 
     def detect(self, adv):
@@ -133,14 +137,15 @@ class ApplicabilityDomainContainer(DetectorContainer):
         return adv[passed_indices], blocked_indices
 
     def _preprocessing(self, x_np):
-        logger.debug('x_np: %s', str(x_np.shape))
+        # the # of channels should alway smaller than the size of image
         if self.data_type == 'image' and x_np.shape[1] > x_np.shape[-1]:
+            logger.debug('Before swap channel: x_np: %s', str(x_np.shape))
             x_np = swap_image_channel(x_np)
 
         dataset = NumericalDataset(torch.as_tensor(x_np))
         dataloader = DataLoader(
             dataset,
-            batch_size=128,
+            batch_size=256,
             shuffle=False,
             num_workers=0)
 
@@ -150,8 +155,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         outputs = self.hidden_model(x[:1])
         num_components = outputs.size(1)  # number of hidden components
 
-        x_encoded = torch.zeros(len(x_np), num_components)
-
+        x_encoded = -999 * torch.ones(len(x_np), num_components)
         start = 0
         with torch.no_grad():
             for x, _ in dataloader:
@@ -159,6 +163,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
                 batch_size = len(x)
                 x_out = self.hidden_model(x).view(batch_size, -1)  # flatten
                 x_encoded[start: start+batch_size] = x_out
+                start = start + batch_size
         return x_encoded.cpu().detach().numpy()
 
     def _fit_stage1(self):
@@ -187,9 +192,10 @@ class ApplicabilityDomainContainer(DetectorContainer):
             # number of neighbours is k + 1, since it will return the node itself
             dist, _ = model.kneighbors(x, n_neighbors=k1+1)
             avg_dist = np.sum(dist, axis=1) / float(k1)
-            self.k_means[i] = np.mean(avg_dist)
-            self.k_stds[i] = np.std(avg_dist)
-            self.thresholds[i] = self.k_means[i] + zeta * self.k_stds[i]
+            self._s2_means[i] = np.mean(avg_dist)
+            self._s2_stds[i] = np.std(avg_dist)
+            self._s2_thresholds[i] = self._s2_means[i] + \
+                zeta * self._s2_stds[i]
 
     def _fit_stage3(self):
         x = self.encode_train_np
@@ -197,6 +203,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         kappa = self.params['kappa']
         k = int(self.num_classes * kappa)
         sample_ratio = self.params['sample_ratio']
+        logger.debug('k for Stage 3: %i', k)
 
         self._s3_model = knn.KNeighborsClassifier(
             n_neighbors=k,
@@ -206,7 +213,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
         # compute the likelihood
         sample_size = int(np.floor(len(x) * sample_ratio))
-        x_sub = x[np.random.permutation(len(x))[:sample_size]]
+        x_sub = np.random.permutation(x)[:sample_size]
         neigh_indices = self._s3_model.kneighbors(
             x_sub,
             n_neighbors=k,
@@ -221,8 +228,8 @@ class ApplicabilityDomainContainer(DetectorContainer):
                 numbins=self.num_classes,
                 defaultreallimits=(0, self.num_classes-1)
             )[0]
-        self.mu_likelihood = np.mean(np.amax(bins, axis=1))
-        logger.debug('Train set likelihood = %f', self.mu_likelihood)
+        self._s3_likelihood = np.mean(np.amax(bins, axis=1))
+        logger.debug('Train set likelihood = %f', self._s3_likelihood)
 
     def _def_state1(self, adv, pred_adv, passed):
         """
@@ -258,10 +265,14 @@ class ApplicabilityDomainContainer(DetectorContainer):
         classes = np.arange(self.num_classes)
         k1 = self.params['k1']
 
-        for model, threshold, c in zip(models, self.thresholds, classes):
+        for model, threshold, c in zip(models, self._s2_thresholds, classes):
             inclass_indices = np.where(passed_pred == c)[0]
+            if len(inclass_indices) == 0:
+                continue
+
             x = passed_adv[inclass_indices]
-            neigh_dist, _ = model.kneighbors(x, n_neighbors=k1, return_distance=True)
+            neigh_dist, neigh_indices = model.kneighbors(
+                x, n_neighbors=k1, return_distance=True)
             mean = np.mean(neigh_dist, axis=1)
             sub_blocked_indices = np.where(mean > threshold)[0]
             # trace back the original indices from input adversarial examples
@@ -290,7 +301,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         blocked_indices = indices[passed_indices][not_match_indices]
 
         if len(blocked_indices) > 0:
-                passed[blocked_indices] = 0
+            passed[blocked_indices] = 0
 
         return passed
 
@@ -323,7 +334,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
             )[0]
 
         likelihood = np.amax(bins, axis=1)
-        threshold = self.mu_likelihood * confidence
+        threshold = self._s3_likelihood * confidence
         blocked_indices = np.where(likelihood < threshold)[0]
         passed[blocked_indices] = 0
 

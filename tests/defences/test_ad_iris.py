@@ -12,12 +12,14 @@ from aad.defences import ApplicabilityDomainContainer
 from aad.utils import get_data_path, master_seed
 
 logger = logging.getLogger(__name__)
+logging.getLogger('carlini').setLevel(logging.INFO)
 
 SEED = 4096  # 2**12 = 4096
 BATCH_SIZE = 256  # Train the entire set in one batch
 NUM_ADV = 30  # number of adversarial examples will be generated
 NAME = 'Iris'
 FILE_NAME = 'example-iris-e200.pt'
+SAMPLE_RATIO = 1.0
 
 
 class TestApplicabilityDomainIris(unittest.TestCase):
@@ -48,7 +50,14 @@ class TestApplicabilityDomainIris(unittest.TestCase):
 
         hidden_model = model.hidden_model
         cls.ad = ApplicabilityDomainContainer(
-            cls.mc, hidden_model=hidden_model, k1=3, k2=7, confidence=.8)
+            cls.mc, 
+            hidden_model=hidden_model,
+            k1=6,
+            reliability=1.6,
+            sample_ratio=SAMPLE_RATIO,
+            confidence=0.9,
+            kappa=10,
+        )
         cls.ad.fit()
 
     def setUp(self):
@@ -77,7 +86,7 @@ class TestApplicabilityDomainIris(unittest.TestCase):
 
         return blocked_indices
 
-    def test_fit_clean(self):
+    def test_fit_test(self):
         """
         Testing defence against clean inputs (false positive case).
         """
@@ -140,6 +149,7 @@ class TestApplicabilityDomainIris(unittest.TestCase):
         """
         Testing defence against Carlini & Wagner L2 attack
         """
+        n = NUM_ADV
         attack = CarliniL2Container(
             self.mc,
             confidence=0.0,
@@ -150,9 +160,9 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             initial_const=1e-2,
             max_halving=5,
             max_doubling=10,
-            batch_size=8)
-        blocked_indices = self.preform_attack(attack, count=NUM_ADV)
-        blocked_rate = len(blocked_indices) / NUM_ADV
+            batch_size=n)
+        blocked_indices = self.preform_attack(attack, count=n)
+        blocked_rate = len(blocked_indices) / n
         self.assertGreater(blocked_rate, 0.5)
 
 

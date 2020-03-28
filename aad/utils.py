@@ -84,9 +84,7 @@ def shuffle_data(data):
         assert isinstance(data, (np.ndarray, pd.DataFrame))
 
         if isinstance(data, np.ndarray):
-            n = len(data)
-            shuffled_indices = np.random.permutation(n)
-            return data[shuffled_indices]
+            return np.random.permutation(data)
         else:
             n = len(data.index)
             shuffled_indices = np.random.permutation(n)
