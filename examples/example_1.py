@@ -1,13 +1,15 @@
 import os
 import sys
 
+import numpy as np
+
 from aad.basemodels import MnistCnnCW, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 
 
 def main():
     DATA_ROOT = 'data'
-    BATCH_SIZE = 64
+    BATCH_SIZE = 128
 
     # image datasets: {'MNIST', 'CIFAR10', 'SVHN'}
     # quantitative datasets: {'BankNote', 'BreastCancerWisconsin', 'HTRU2', 'Iris', 'WheatSeed'}
@@ -31,8 +33,10 @@ def main():
     model_name = model.__class__.__name__
     print('Using model:', model_name)
 
+    print('Expected initial loss: {}'.format(np.log(10)))
+
     mc = ModelContainerPT(model, dc)
-    mc.fit(epochs=3, batch_size=BATCH_SIZE)  # for image
+    mc.fit(epochs=10, batch_size=BATCH_SIZE)  # for image
     # mc.fit(epochs=200, batch_size=BATCH_SIZE)
     print('Test acc:', mc.accuracy_test)
 

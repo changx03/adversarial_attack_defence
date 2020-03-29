@@ -9,6 +9,7 @@ import time
 import numpy as np
 import torch
 import torch.nn as nn
+from torch.utils.data import DataLoader, TensorDataset
 
 from ..datasets import DataContainer
 from ..utils import name_handler, swap_image_channel
@@ -61,30 +62,67 @@ class ModelContainerPT:
 
         logger.info('Successfully loaded model from %s', filename)
 
-    def score(self, x):
-        if not isinstance(x, torch.Tensor):
-            # only swap the channel when it is wrong!
-            if self.data_container.data_type == 'image' and x.shape[1] not in (1, 3):
-                x = swap_image_channel(x)
-            x = torch.from_numpy(x)
-        x = x.float().to(self.device)
-        return self.model(x).cpu().detach().numpy()
+    def get_score(self, x, batch_size=128):
+        if len(x) == 0:
+            return np.array([], dtype=np.int64)
 
-    def predict(self, x, require_score=False):
+        if not isinstance(x, torch.Tensor):
+            if (self.data_container.data_type == 'image'
+                    and x.shape[1] not in (1, 3)):
+                x = swap_image_channel(x)
+            x = torch.from_numpy(x).float()
+
+        # DataLoader is required to avoid overload the memory in GPU
+        dataset = TensorDataset(x)
+        dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
+        num_classes = self.data_container.num_classes
+        scores = np.zeros((len(x), num_classes), dtype=np.float32)
+
+        start = 0
+        self.model.eval()
+        with torch.no_grad():
+            for data in dataloader:
+                xx = data[0].to(self.device)
+                n = len(xx)
+                score = self.model(xx).cpu().detach().numpy()
+                scores[start: start+n] = score
+                start += n
+        return scores
+
+    def predict(self, x, require_score=False, batch_size=128):
         if len(x) == 0:
             return np.array([], dtype=np.int64)
 
         if not isinstance(x, torch.Tensor):
             # only swap the channel when it is wrong!
-            if self.data_container.data_type == 'image' and x.shape[1] not in (1, 3):
+            if (self.data_container.data_type == 'image'
+                    and x.shape[1] not in (1, 3)):
                 x = swap_image_channel(x)
-            x = torch.from_numpy(x)
-        x = x.float().to(self.device)
-        outputs = self.model(x).cpu().detach().numpy()
-        predictions = np.argmax(outputs, axis=1)
+            x = torch.from_numpy(x).float()
+
+        # DataLoader is required to avoid overload the memory in GPU
+        dataset = TensorDataset(x)
+        dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
+        num_classes = self.data_container.num_classes
+        scores = np.zeros((len(x), num_classes), dtype=np.float32)
+        predictions = -np.ones((len(x)), dtype=np.int64)
+
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
+        start = 0
+        self.model.eval()
+        with torch.no_grad():
+            for data in dataloader:
+                xx = data[0].to(self.device)
+                n = len(xx)
+                score = self.model(xx).cpu().detach().numpy()
+                scores[start: start+n] = score
+                predictions[start: start+n] = np.argmax(score, axis=1)
+                start += n
 
         if require_score:
-            return predictions, outputs
+            return predictions, scores
         return predictions
 
     def predict_one(self, x, require_score=False):
@@ -106,13 +144,12 @@ class ModelContainerPT:
     def evaluate(self, x, labels):
         if len(x) == 0:
             return 0.0
-        
+
         predictions = self.predict(x)
         accuracy = np.sum(np.equal(predictions, labels)) / len(labels)
         return accuracy
 
     def _fit_torch(self, epochs, batch_size):
-
         train_loader = self.data_container.get_dataloader(
             batch_size, is_train=True)
         test_loader = self.data_container.get_dataloader(
@@ -126,6 +163,9 @@ class ModelContainerPT:
         if self.model.scheduler:
             scheduler_params = self.model.scheduler_params
             scheduler = self.model.scheduler(optimizer, **scheduler_params)
+
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
         for epoch in range(epochs):
             time_start = time.time()
@@ -174,9 +214,9 @@ class ModelContainerPT:
             optimizer.step()
 
             # for logging
-            total_loss += loss.item() * batch_size
-            predictions = output.max(1, keepdim=True)[1]
-            corrects += predictions.eq(y.view_as(predictions)).sum().item()
+            total_loss += loss.cpu().item() * batch_size
+            pred = output.max(1, keepdim=True)[1]
+            corrects += pred.eq(y.view_as(pred)).sum().cpu().item()
 
         n = len(loader.dataset)
         total_loss = total_loss / n
@@ -196,9 +236,9 @@ class ModelContainerPT:
                 batch_size = x.size(0)
                 output = self.model(x)
                 loss = loss_fn(output, y)
-                total_loss += loss.item() * batch_size
-                predictions = output.max(1, keepdim=True)[1]
-                corrects += predictions.eq(y.view_as(predictions)).sum().item()
+                total_loss += loss.cpu().item() * batch_size
+                pred = output.max(1, keepdim=True)[1]
+                corrects += pred.eq(y.view_as(pred)).sum().cpu().item()
 
         n = len(loader.dataset)
         total_loss = total_loss / n

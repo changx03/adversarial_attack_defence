@@ -205,7 +205,7 @@ class DataContainer:
         label_shape = (n,)
 
         data_np = np.zeros(data_shape, dtype=np.float32)
-        label_np = -np.ones(label_shape, dtype=np.long)  # assign -1
+        label_np = -np.ones(label_shape, dtype=np.int64)  # assign -1
 
         start = 0
         with torch.no_grad():
