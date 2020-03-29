@@ -138,7 +138,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
     def _preprocessing(self, x_np):
         # the # of channels should alway smaller than the size of image
-        if self.data_type == 'image' and x_np.shape[1] > x_np.shape[-1]:
+        if self.data_type == 'image' and x_np.shape[1] not in (1, 3):
             logger.debug('Before swap channel: x_np: %s', str(x_np.shape))
             x_np = swap_image_channel(x_np)
 

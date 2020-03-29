@@ -4,6 +4,7 @@ This module contains all static utility functions
 import datetime
 import logging
 import os
+import time
 
 import numpy as np
 
@@ -125,7 +126,7 @@ def name_handler(filename, extension, overwrite=False):
     return new_name
 
 
-def onehot_encoding(y, num_classes, dtype=np.long):
+def onehot_encoding(y, num_classes, dtype=np.int64):
     """Apply one hot encoding for given labels"""
     assert isinstance(y, np.ndarray)
     assert len(y.shape) == 1  # should be an 1D array
@@ -153,3 +154,9 @@ def get_l2_norm(a, b):
     n = len(a)
     l2 = np.sum(np.square(a.reshape(n, -1) - b.reshape(n, -1)), axis=1)
     return np.sqrt(l2)
+
+
+def get_time_str():
+    """Return formated local time in YYYYmmddHHMM
+    """
+    return time.strftime('%Y%m%d%H%M', time.localtime(time.time()))

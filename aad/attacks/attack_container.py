@@ -65,7 +65,7 @@ class AttackContainer(abc.ABC):
         logger.info('Successfully saved model to %s', filename_adv)
 
     @staticmethod
-    def randam_targets(count, num_classes, use_onehot=False, dtype=np.long):
+    def randam_targets(count, num_classes, use_onehot=False, dtype=np.int64):
         """Returns randomly generated labels."""
         y_rand = np.random.choice(num_classes, count, replace=True)
         if not use_onehot:
