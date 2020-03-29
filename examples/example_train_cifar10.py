@@ -5,18 +5,14 @@ import numpy as np
 
 from aad.basemodels import CifarCnn, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
-from aad.utils import get_data_path, master_seed
+from aad.utils import get_data_path, get_pt_model_filename, master_seed
 
 logger = logging.getLogger(__name__)
 
 SEED = 4096
 BATCH_SIZE = 128
 NAME = 'CIFAR10'
-MAX_EPOCHS = 60
-
-
-def get_filename(model_name, dataset, epochs):
-    return '{}_{}_e{}.pt'.format(model_name, dataset, epochs)
+MAX_EPOCHS = 50
 
 
 def main():
@@ -26,7 +22,7 @@ def main():
     dc = DataContainer(DATASET_LIST[NAME], get_data_path())
     dc(shuffle=True)
 
-    filename = get_filename(CifarCnn.__name__, NAME, MAX_EPOCHS)
+    filename = get_pt_model_filename(CifarCnn.__name__, NAME, MAX_EPOCHS)
     logger.debug('File name: %s', filename)
 
     model = CifarCnn()

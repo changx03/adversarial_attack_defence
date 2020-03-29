@@ -44,8 +44,7 @@ def master_seed(seed):
 
 
 def get_range(data, is_image=False):
-    """return (min, max) of a numpy array
-    """
+    """Returns (min, max) of a numpy array."""
     assert type(data) == np.ndarray
 
     axis = None if is_image else 0
@@ -55,8 +54,7 @@ def get_range(data, is_image=False):
 
 
 def scale_normalize(data, xmin, xmax):
-    """ scaling normalization puts data in range between 0 and 1
-    """
+    """Applies scaling and puts data in range between 0 and 1."""
     assert (type(data) == np.ndarray and
             type(xmax) == np.ndarray and
             type(xmin) == np.ndarray)
@@ -66,8 +64,7 @@ def scale_normalize(data, xmin, xmax):
 
 
 def scale_unnormalize(data, xmin, xmax):
-    """rescaling the normalized data back to raw
-    """
+    """Rescales the normalized data back to raw."""
     assert (type(data) == np.ndarray and
             type(xmax) == np.ndarray and
             type(xmin) == np.ndarray)
@@ -118,7 +115,7 @@ def name_handler(filename, extension, overwrite=False):
     # handle existing file
     if not overwrite and os.path.exists(new_name):
         arr = filename.split('.')
-        time_str = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+        time_str = datetime.datetime.now().strftime('%Y%m%d%H%M')
         arr.insert(-1, time_str)  # already fixed extension
         new_name = '.'.join(arr)
         logger.info('File %s already exists. Save new file as %s',
@@ -137,8 +134,7 @@ def onehot_encoding(y, num_classes, dtype=np.int64):
 
 
 def get_data_path():
-    """Get absolute path for the `data` folder.
-    """
+    """Get absolute path for the `data` folder."""
     path = os.path.join(os.path.dirname(__file__), os.pardir, 'data')
     logger.debug(path)
     return path
@@ -157,6 +153,10 @@ def get_l2_norm(a, b):
 
 
 def get_time_str():
-    """Return formated local time in YYYYmmddHHMM
-    """
+    """Returns the formated local time in [YearMonthDateHourMinus]"""
     return time.strftime('%Y%m%d%H%M', time.localtime(time.time()))
+
+
+def get_pt_model_filename(model_name, dataset, epochs):
+    """Return the filename for PyTorch model"""
+    return '{}_{}_e{}.pt'.format(model_name, dataset, epochs)

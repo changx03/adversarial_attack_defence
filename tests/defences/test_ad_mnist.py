@@ -5,11 +5,12 @@ import unittest
 import numpy as np
 
 from aad.attacks import (BIMContainer, CarliniL2Container, DeepFoolContainer,
-                         FGSMContainer, SaliencyContainer, ZooContainer)
+                         DummyAttack, FGSMContainer, SaliencyContainer,
+                         ZooContainer)
 from aad.basemodels import MnistCnnCW, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.defences import ApplicabilityDomainContainer
-from aad.utils import get_data_path, master_seed
+from aad.utils import get_data_path, get_pt_model_filename, master_seed
 
 logger = logging.getLogger(__name__)
 
@@ -17,31 +18,8 @@ SEED = 4096
 BATCH_SIZE = 128
 NUM_ADV = 1000  # number of adversarial examples will be generated
 NAME = 'MNIST'
-FILE_NAME = 'example-mnist-e20.pt'
 SAMPLE_RATIO = 1000 / 6e4
-
-
-class DummyAttack:
-    """
-    Do nothing. This returns test set from a DataContainer.
-    """
-
-    def __init__(self, model_container, shuffle=True):
-        self.mc = model_container
-        self.dc = model_container.data_container
-        self.shuffle = shuffle
-
-    def generate(self, count='all'):
-        n = len(self.dc.data_test_np)
-        if count is not 'all':
-            shuffled_indices = np.random.permutation(n)[:count]
-            x = self.dc.data_test_np[shuffled_indices]
-            y = self.dc.label_test_np[shuffled_indices]
-        else:
-            x = self.dc.data_test_np
-            y = self.dc.label_test_np
-        pred = self.mc.predict(x)
-        return x, pred, x, y
+MAX_EPOCHS = 50
 
 
 class TestApplicabilityDomainMNIST(unittest.TestCase):
@@ -58,12 +36,13 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
 
         cls.mc = ModelContainerPT(model, cls.dc)
 
-        file_path = os.path.join('save', FILE_NAME)
+        filename = get_pt_model_filename(MnistCnnCW.__name__, NAME, MAX_EPOCHS)
+        file_path = os.path.join('save', filename)
         if not os.path.exists(file_path):
-            cls.mc.fit(epochs=20, batch_size=BATCH_SIZE)
-            cls.mc.save(FILE_NAME, overwrite=True)
+            cls.mc.fit(epochs=MAX_EPOCHS, batch_size=BATCH_SIZE)
+            cls.mc.save(filename, overwrite=True)
         else:
-            logger.info('Use saved parameters from %s', FILE_NAME)
+            logger.info('Use saved parameters from %s', filename)
             cls.mc.load(file_path)
 
         accuracy = cls.mc.evaluate(cls.dc.data_test_np, cls.dc.label_test_np)

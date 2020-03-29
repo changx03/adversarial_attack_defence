@@ -334,6 +334,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
             )[0]
 
         likelihood = np.amax(bins, axis=1)
+        logger.debug('Mean likelihood on adv: %f', likelihood.mean())
         threshold = self._s3_likelihood * confidence
         blocked_indices = np.where(likelihood < threshold)[0]
         passed[blocked_indices] = 0

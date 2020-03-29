@@ -45,9 +45,11 @@ class CifarCnn(nn.Module):
             ('relu4', nn.ReLU()),
             ('pool2', nn.MaxPool2d(2)),
             ('flat1', nn.Flatten()),
+            ('fc1', nn.Linear(3200, 512)),
+            ('relu5', nn.ReLU()),
+            ('fc2', nn.Linear(512, 512)),
+            ('relu6', nn.ReLU()),
         ]))
-        self.fc1 = nn.Linear(3200, 512)
-        self.fc2 = nn.Linear(512, 512)
         self.fn = nn.Linear(512, 10)
         
         self.loss_fn = loss_fn
@@ -58,7 +60,5 @@ class CifarCnn(nn.Module):
 
     def forward(self, x):
         x = self.hidden_model(x)
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
         x = self.fn(x)
         return x
