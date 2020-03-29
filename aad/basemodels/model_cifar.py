@@ -46,9 +46,9 @@ class CifarCnn(nn.Module):
             ('pool2', nn.MaxPool2d(2)),
             ('flat1', nn.Flatten()),
         ]))
-        self.fc1 = nn.Linear(3200, 256)
-        self.fc2 = nn.Linear(256, 256)
-        self.fn = nn.Linear(256, 10)
+        self.fc1 = nn.Linear(3200, 512)
+        self.fc2 = nn.Linear(512, 512)
+        self.fn = nn.Linear(512, 10)
         
         self.loss_fn = loss_fn
         self.optimizer = optimizer

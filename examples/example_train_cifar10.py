@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 SEED = 4096
 BATCH_SIZE = 128
 NAME = 'CIFAR10'
-MAX_EPOCHS = 100
+MAX_EPOCHS = 60
 
 
 def get_filename(model_name, dataset, epochs):
