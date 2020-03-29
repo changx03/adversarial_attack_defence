@@ -12,7 +12,6 @@ from aad.defences import ApplicabilityDomainContainer
 from aad.utils import get_data_path, master_seed
 
 logger = logging.getLogger(__name__)
-logging.getLogger('carlini').setLevel(logging.INFO)
 
 SEED = 4096  # 2**12 = 4096
 BATCH_SIZE = 256  # Train the entire set in one batch
