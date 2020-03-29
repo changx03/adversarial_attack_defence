@@ -57,8 +57,8 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             k1=6,
             reliability=1.6,
             sample_ratio=SAMPLE_RATIO,
-            confidence=0.8,
-            kappa=6,
+            confidence=0.9,
+            kappa=10,
         )
         cls.ad.fit()
 
@@ -111,30 +111,31 @@ class TestApplicabilityDomainIris(unittest.TestCase):
         logger.info('Block rate: %f', block_rate)
 
     def test_fgsm_attack(self):
-        """
-        Testing defence against FGSM attack.
-        NOTE: The block rate is low due to low success rate for the attack
-        """
         attack = FGSMContainer(
             self.mc,
             norm=np.inf,
-            eps=0.4,
+            eps=0.3,
             eps_step=0.01,
             minimal=True)
         blocked_indices, adv_success_rate = self.preform_attack(attack, count=NUM_ADV)
-        blocked_rate = len(blocked_indices) / NUM_ADV
-        self.assertGreater(blocked_rate, adv_success_rate * 0.8)
+        block_rate = len(blocked_indices) / NUM_ADV
+        self.assertGreater(block_rate, adv_success_rate * 0.8)
+        logger.info('[%s] Block rate: %f', FGSMContainer.__name__, block_rate)
 
     def test_bim_attack(self):
+        """
+        NOTE: Unable to pass the test
+        """
         attack = BIMContainer(
             self.mc,
-            eps=0.4,
+            eps=0.3,
             eps_step=0.01,
-            max_iter=1000,
+            max_iter=100,
             targeted=False)
         blocked_indices, adv_success_rate = self.preform_attack(attack, count=NUM_ADV)
-        blocked_rate = len(blocked_indices) / NUM_ADV
-        self.assertGreater(blocked_rate, adv_success_rate * 0.8)
+        block_rate = len(blocked_indices) / NUM_ADV
+        self.assertGreater(block_rate, adv_success_rate * 0.8)
+        logger.info('[%s] Block rate: %f', BIMContainer.__name__, block_rate)
 
     def test_deepfool_attack(self):
         attack = DeepFoolContainer(
@@ -143,8 +144,10 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             epsilon=1e-6,
             nb_grads=10)
         blocked_indices, adv_success_rate = self.preform_attack(attack, count=NUM_ADV)
-        blocked_rate = len(blocked_indices) / NUM_ADV
-        self.assertGreater(blocked_rate, adv_success_rate * 0.8)
+        block_rate = len(blocked_indices) / NUM_ADV
+        self.assertGreater(block_rate, adv_success_rate * 0.8)
+        logger.info('[%s] Block rate: %f',
+                    DeepFoolContainer.__name__, block_rate)
 
     def test_carlini_l2_attack(self):
         """
@@ -164,8 +167,10 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             max_doubling=10,
             batch_size=n)
         blocked_indices, adv_success_rate = self.preform_attack(attack, count=n)
-        blocked_rate = len(blocked_indices) / n
-        self.assertGreater(blocked_rate, adv_success_rate * 0.8)
+        block_rate = len(blocked_indices) / n
+        self.assertGreater(block_rate, adv_success_rate * 0.8)
+        logger.info('[%s] Block rate: %f',
+                    CarliniL2Container.__name__, block_rate)
 
 
 if __name__ == '__main__':

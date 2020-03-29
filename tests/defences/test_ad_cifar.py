@@ -114,6 +114,9 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         logger.info('Block rate: %f', block_rate)
 
     def test_fgsm_attack(self):
+        """
+        NOTE: Fail: 0.351 not greater than or equal to 0.49
+        """
         attack = FGSMContainer(
             self.mc,
             norm=np.inf,
@@ -169,6 +172,9 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
                     CarliniL2Container.__name__, block_rate)
 
     def test_saliency_attack(self):
+        """
+        NOTE: Fail: 0.77 not greater than 0.79
+        """
         n = 100
         attack = SaliencyContainer(
             self.mc,

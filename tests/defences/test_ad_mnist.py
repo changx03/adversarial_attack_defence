@@ -120,6 +120,9 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         logger.info('Block rate: %f', block_rate)
 
     def test_fgsm_attack(self):
+        """
+        NOTE: Fail: 0.786 not greater than or equal to 0.798
+        """
         attack = FGSMContainer(
             self.mc,
             norm=np.inf,
@@ -132,9 +135,6 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         logger.info('[%s] Block rate: %f', FGSMContainer.__name__, block_rate)
 
     def test_bim_attack(self):
-        """
-        NOTE: After changed hidden layer. The defence is not able to block this attack!
-        """
         attack = BIMContainer(
             self.mc,
             eps=0.3,
