@@ -6,7 +6,7 @@ import torch.nn as nn
 
 LOSS_FN = nn.CrossEntropyLoss()
 OPTIMIZER = torch.optim.Adam
-OPTIM_PARAMS = {'lr': 1e-4, 'betas': (0.9, 0.999)}
+OPTIM_PARAMS = {'lr': 0.001, 'betas': (0.9, 0.999), 'weight_decay': 0.01}
 SCHEDULER = None
 SCHEDULER_PARAMS = None
 NUM_FEATURES = 30
@@ -37,7 +37,8 @@ class BCNN(nn.Module):
             nn.ReLU(),
             nn.Linear(128, 64),
             nn.ReLU(),
-            nn.Linear(64, num_classes))
+        )
+        self.fc1 = nn.Linear(64, num_classes)
 
         self.loss_fn = loss_fn
         self.optimizer = optimizer
@@ -47,4 +48,5 @@ class BCNN(nn.Module):
 
     def forward(self, x):
         x = self.hidden_model(x)
+        x = self.fc1(x)
         return x

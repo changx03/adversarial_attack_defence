@@ -2,6 +2,7 @@
 """
 This module implements the base class for PyTorch model container.
 """
+import copy
 import logging
 import os
 import time
@@ -155,6 +156,10 @@ class ModelContainerPT:
         test_loader = self.data_container.get_dataloader(
             batch_size, is_train=False)
 
+        # save temporary state
+        best_model_state = copy.deepcopy(self.model.state_dict())
+        best_acc = 0.0
+
         # parameters are passed as dict, so it allows different optimizer
         params = self.model.optim_params
         optimizer = self.model.optimizer(self.model.parameters(), **params)
@@ -182,6 +187,11 @@ class ModelContainerPT:
                 int(time_elapsed // 60), time_elapsed % 60,
                 tr_loss, tr_acc, va_loss, va_acc)
 
+            # save best state
+            if va_acc >= best_acc:
+                best_acc = va_acc
+                best_model_state = copy.deepcopy(self.model.state_dict())
+
             # save logs
             self.loss_train.append(tr_loss)
             self.loss_test.append(va_loss)
@@ -194,6 +204,8 @@ class ModelContainerPT:
                     'Satisfied the accuracy threshold. Abort at %i epoch!',
                     epoch)
                 break
+
+        self.model.load_state_dict(best_model_state)
 
     def _train_torch(self, optimizer, loader):
         self.model.train()

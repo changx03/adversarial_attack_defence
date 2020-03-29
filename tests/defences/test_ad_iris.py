@@ -29,7 +29,7 @@ class TestApplicabilityDomainIris(unittest.TestCase):
         logger.info('Starting %s data container...', NAME)
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
         # ordered by labels, it requires shuffle!
-        cls.dc(shuffle=True, normalize=False)
+        cls.dc(shuffle=True, normalize=True)
 
         model = IrisNN(hidden_nodes=12)
         logger.info('Using model: %s', model.__class__.__name__)
@@ -85,7 +85,7 @@ class TestApplicabilityDomainIris(unittest.TestCase):
 
         return blocked_indices
 
-    def test_fit_test(self):
+    def test_block_clean(self):
         """
         Testing defence against clean inputs (false positive case).
         """

@@ -68,6 +68,8 @@ class DataContainer:
 
         time_elapsed = time.time() - since
 
+        logger.info('Train size: %d - Test size: %d', 
+            len(self.label_train_np), len(self.label_test_np))
         logger.info('Successfully load data. Time to complete: %im %.3fs',
                     int(time_elapsed // 60), time_elapsed % 60)
 
@@ -165,8 +167,9 @@ class DataContainer:
 
         if normalize:
             (xmin, xmax) = self.data_range
-            x_train = scale_normalize(x_train, xmin, xmax)
-            x_test = scale_normalize(x_test, xmin, xmax)
+            mean = self.train_mean
+            x_train = scale_normalize(x_train, xmin, xmax, mean)
+            x_test = scale_normalize(x_test, xmin, xmax, mean)
 
         # to numpy array
         # NOTE: Only handle numeral data

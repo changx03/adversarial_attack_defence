@@ -5,9 +5,8 @@ import unittest
 import numpy as np
 
 from aad.attacks import (BIMContainer, CarliniL2Container, DeepFoolContainer,
-                         DummyAttack, FGSMContainer, SaliencyContainer,
-                         ZooContainer)
-from aad.basemodels import MnistCnnCW, ModelContainerPT
+                         DummyAttack, FGSMContainer, SaliencyContainer)
+from aad.basemodels import MnistCnn_v2, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.defences import ApplicabilityDomainContainer
 from aad.utils import get_data_path, get_pt_model_filename, master_seed
@@ -23,20 +22,24 @@ MAX_EPOCHS = 50
 
 
 class TestApplicabilityDomainMNIST(unittest.TestCase):
+    """
+    NOTE: 2020/03/29 Switch from using the hidden layer after conv layer to the 
+    hidden layer before output layer. 
+    """
     @classmethod
     def setUpClass(cls):
         master_seed(SEED)
 
         logger.info('Starting %s data container...', NAME)
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
-        cls.dc(shuffle=False)
+        cls.dc(shuffle=True)
 
-        model = MnistCnnCW()
+        model = MnistCnn_v2()
         logger.info('Using model: %s', model.__class__.__name__)
 
         cls.mc = ModelContainerPT(model, cls.dc)
 
-        filename = get_pt_model_filename(MnistCnnCW.__name__, NAME, MAX_EPOCHS)
+        filename = get_pt_model_filename(MnistCnn_v2.__name__, NAME, MAX_EPOCHS)
         file_path = os.path.join('save', filename)
         if not os.path.exists(file_path):
             cls.mc.fit(epochs=MAX_EPOCHS, batch_size=BATCH_SIZE)
@@ -94,14 +97,14 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         logger.info('Accuracy on passed adversarial examples: %f', accuracy)
         return blocked_indices
 
-    def test_fit_test(self):
+    def test_block_clean(self):
         dummy_attack = DummyAttack(self.mc)
         blocked_indices = self.preform_attack(dummy_attack)
         block_rate = len(blocked_indices) / NUM_ADV
-        self.assertLessEqual(block_rate, 0.12)
+        self.assertLessEqual(block_rate, 0.069)
         logger.info('Block rate: %f', block_rate)
 
-    def test_fit_train(self):
+    def test_block_train(self):
         n = NUM_ADV
         x = self.dc.data_train_np
         y = self.dc.label_train_np
@@ -113,7 +116,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         print(f'# of blocked: {len(blocked_indices)}')
         self.assertEqual(len(x_passed) + len(blocked_indices), n)
         block_rate = len(blocked_indices) / n
-        self.assertLessEqual(block_rate, 0.12)
+        self.assertLessEqual(block_rate, 0.045)
         logger.info('Block rate: %f', block_rate)
 
     def test_fgsm_attack(self):
@@ -125,10 +128,13 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             minimal=True)
         blocked_indices = self.preform_attack(attack)
         block_rate = len(blocked_indices) / NUM_ADV
-        self.assertGreaterEqual(block_rate, 0.42)
-        logger.info('Block rate: %f', block_rate)
+        self.assertGreaterEqual(block_rate, 0.798)
+        logger.info('[%s] Block rate: %f', FGSMContainer.__name__, block_rate)
 
     def test_bim_attack(self):
+        """
+        NOTE: After changed hidden layer. The defence is not able to block this attack!
+        """
         attack = BIMContainer(
             self.mc,
             eps=0.3,
@@ -138,7 +144,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         blocked_indices = self.preform_attack(attack)
         block_rate = len(blocked_indices) / NUM_ADV
         self.assertGreaterEqual(block_rate, 0.64)
-        logger.info('Block rate: %f', block_rate)
+        logger.info('[%s] Block rate: %f', BIMContainer.__name__, block_rate)
 
     def test_deepfool_attack(self):
         attack = DeepFoolContainer(
@@ -147,8 +153,10 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             epsilon=1e-6,
             nb_grads=10)
         blocked_indices = self.preform_attack(attack)
-        blocked_rate = len(blocked_indices) / NUM_ADV
-        self.assertGreater(blocked_rate, 0.53)
+        block_rate = len(blocked_indices) / NUM_ADV
+        self.assertGreater(block_rate, 0.53)
+        logger.info('[%s] Block rate: %f',
+            DeepFoolContainer.__name__, block_rate)
 
     def test_carlini_l2_attack(self):
         n = 100
@@ -164,8 +172,10 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             max_doubling=10,
             batch_size=16)
         blocked_indices = self.preform_attack(attack, count=n)
-        blocked_rate = len(blocked_indices) / n
-        self.assertGreater(blocked_rate, 0.7)
+        block_rate = len(blocked_indices) / n
+        self.assertGreater(block_rate, 0.7)
+        logger.info('[%s] Block rate: %f',
+                    CarliniL2Container.__name__, block_rate)
 
     # def test_zoo_attack(self):
     #     """
@@ -191,9 +201,11 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             self.mc,
         )
         blocked_indices = self.preform_attack(attack, count=n)
-        blocked_rate = len(blocked_indices) / n
+        block_rate = len(blocked_indices) / n
         # tested block rate 80%
-        self.assertGreater(blocked_rate, 0.79)
+        self.assertGreater(block_rate, 0.79)
+        logger.info('[%s] Block rate: %f',
+            SaliencyContainer.__name__, block_rate)
 
 
 if __name__ == '__main__':

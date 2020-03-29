@@ -53,25 +53,35 @@ def get_range(data, is_image=False):
     return (x_min, x_max)
 
 
-def scale_normalize(data, xmin, xmax):
-    """Applies scaling and puts data in range between 0 and 1."""
-    assert (type(data) == np.ndarray and
-            type(xmax) == np.ndarray and
-            type(xmin) == np.ndarray)
+def scale_normalize(data, xmin, xmax, mean=None):
+    """
+    Applies scaling. If mean is not none, set output to zero mean. Otherwise,
+    it scales data to [0, 1]
+
+    """
+    assert isinstance(data, np.ndarray) \
+        and isinstance(xmin, np.ndarray) \
+        and isinstance(xmax, np.ndarray) \
+        and isinstance(mean, (type(None), np.ndarray))
     assert data.shape[1] == len(xmax) and data.shape[1] == len(xmin)
 
+    if mean is not None:
+        return (data - mean) / (xmax - xmin)
     return (data - xmin) / (xmax - xmin)
 
 
-def scale_unnormalize(data, xmin, xmax):
+def scale_unnormalize(data, xmin, xmax, mean=None):
     """Rescales the normalized data back to raw."""
-    assert (type(data) == np.ndarray and
-            type(xmax) == np.ndarray and
-            type(xmin) == np.ndarray)
-    assert data.shape[1] == len(xmax) and data.shape[1] == len(xmin)
-    assert np.all(np.max(data, axis=0) <= 1)
-    assert np.all(np.min(data, axis=0) >= 0)
+    assert isinstance(data, np.ndarray) \
+        and isinstance(xmin, np.ndarray) \
+        and isinstance(xmax, np.ndarray) \
+        and isinstance(mean, (type(None), np.ndarray))
+    assert data.shape[1] == len(xmax) \
+        and data.shape[1] == len(xmin)
 
+    if mean is not None:
+        assert data.shape[1] == len(mean)
+        return data * (xmax - xmin) + mean
     return data * (xmax - xmin) + xmin
 
 

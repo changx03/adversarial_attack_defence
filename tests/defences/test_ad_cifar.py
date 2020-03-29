@@ -5,8 +5,7 @@ import unittest
 import numpy as np
 
 from aad.attacks import (BIMContainer, CarliniL2Container, DeepFoolContainer,
-                         DummyAttack, FGSMContainer, SaliencyContainer,
-                         ZooContainer)
+                         DummyAttack, FGSMContainer, SaliencyContainer)
 from aad.basemodels import CifarCnn, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.defences import ApplicabilityDomainContainer
@@ -29,7 +28,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
 
         logger.info('Starting %s data container...', NAME)
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
-        cls.dc(shuffle=False)
+        cls.dc(shuffle=True)
 
         model = CifarCnn()
         logger.info('Using model: %s', model.__class__.__name__)
@@ -92,14 +91,14 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         logger.info('Accuracy on passed adversarial examples: %f', accuracy)
         return blocked_indices
 
-    def test_fit_test(self):
+    def test_block_clean(self):
         dummy_attack = DummyAttack(self.mc)
         blocked_indices = self.preform_attack(dummy_attack)
         block_rate = len(blocked_indices) / NUM_ADV
         self.assertLessEqual(block_rate, 0.25)
         logger.info('Block rate: %f', block_rate)
 
-    def test_fit_train(self):
+    def test_block_train(self):
         n = NUM_ADV
         x = self.dc.data_train_np
         y = self.dc.label_train_np

@@ -59,6 +59,12 @@ class TestUtils(unittest.TestCase):
         x_unnorm = scale_unnormalize(x_norm, xmin, xmax)
         np.testing.assert_almost_equal(x, x_unnorm)
 
+        mean = x.mean(axis=0)
+        x_norm = scale_normalize(x, xmin, xmax, mean)
+        self.assertTupleEqual(x_norm.shape, x.shape)
+        x_unnorm = scale_unnormalize(x_norm, xmin, xmax, mean)
+        np.testing.assert_almost_equal(x, x_unnorm)
+
     def test_shuffle_data(self):
         x = np.random.rand(3)
         out = shuffle_data(x)
