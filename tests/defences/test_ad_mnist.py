@@ -189,6 +189,34 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         blocked_rate = len(blocked_indices) / n
         self.assertGreater(blocked_rate, 0.7)
 
+    # def test_zoo_attack(self):
+    #     """
+    #     The attack algorithm has los success rate
+    #     """
+    #     n = 100
+    #     attack = ZooContainer(
+    #         self.mc,
+    #         targeted=False,
+    #         max_iter=10,
+    #         binary_search_steps=3,
+    #         abort_early=False,
+    #         use_resize=False,
+    #         use_importance=False,
+    #     )
+    #     blocked_indices = self.preform_attack(attack, count=n)
+    #     blocked_rate = len(blocked_indices) / n
+    #     self.assertGreater(blocked_rate, 0.5)
+
+    def test_saliency_attack(self):
+        n = 100
+        attack = SaliencyContainer(
+            self.mc,
+        )
+        blocked_indices = self.preform_attack(attack, count=n)
+        blocked_rate = len(blocked_indices) / n
+        # tested block rate 80%
+        self.assertGreater(blocked_rate, 0.79)
+
 
 if __name__ == '__main__':
     unittest.main()
