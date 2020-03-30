@@ -5,7 +5,7 @@ import argparse as ap
 import logging
 import os
 
-from aad.basemodels import (BCNN, CifarCnn, IrisNN, MnistCnn_v2,
+from aad.basemodels import (BCNN, CifarCnn, IrisNN, MnistCnnV2,
                             ModelContainerPT, get_model)
 from aad.datasets import get_dataset_list
 from aad.utils import get_pt_model_filename, get_time_str, master_seed
@@ -18,7 +18,7 @@ AVALIABLE_MODELS = (
     'CifarCnn',
     'IrisNN',
     'MnistCnnCW',
-    'MnistCnn_v2',
+    'MnistCnnV2',
 )
 
 
@@ -102,7 +102,7 @@ def main():
         model = Model()
     else:
         if dname == 'MNIST':
-            model = MnistCnn_v2()
+            model = MnistCnnV2()
         elif dname == 'CIFAR10':
             model = CifarCnn()
         elif dname == 'BreastCancerWisconsin':

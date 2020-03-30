@@ -6,7 +6,7 @@ import numpy as np
 
 from aad.attacks import (BIMContainer, CarliniL2Container, DeepFoolContainer,
                          DummyAttack, FGSMContainer, SaliencyContainer)
-from aad.basemodels import MnistCnn_v2, ModelContainerPT
+from aad.basemodels import MnistCnnV2, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.defences import ApplicabilityDomainContainer
 from aad.utils import get_data_path, get_pt_model_filename, master_seed
@@ -34,12 +34,12 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
         cls.dc(shuffle=True)
 
-        model = MnistCnn_v2()
+        model = MnistCnnV2()
         logger.info('Using model: %s', model.__class__.__name__)
 
         cls.mc = ModelContainerPT(model, cls.dc)
 
-        filename = get_pt_model_filename(MnistCnn_v2.__name__, NAME, MAX_EPOCHS)
+        filename = get_pt_model_filename(MnistCnnV2.__name__, NAME, MAX_EPOCHS)
         file_path = os.path.join('save', filename)
         if not os.path.exists(file_path):
             cls.mc.fit(epochs=MAX_EPOCHS, batch_size=BATCH_SIZE)

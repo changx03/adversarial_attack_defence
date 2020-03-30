@@ -3,7 +3,7 @@ import os
 
 import numpy as np
 
-from aad.basemodels import MnistCnn_v2, ModelContainerPT
+from aad.basemodels import MnistCnnV2, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.utils import get_data_path, get_pt_model_filename, master_seed
 
@@ -22,8 +22,8 @@ def main():
     dc = DataContainer(DATASET_LIST[NAME], get_data_path())
     dc(shuffle=True)
 
-    model = MnistCnn_v2()
-    filename = get_pt_model_filename(MnistCnn_v2.__name__, NAME, MAX_EPOCHS)
+    model = MnistCnnV2()
+    filename = get_pt_model_filename(MnistCnnV2.__name__, NAME, MAX_EPOCHS)
     logger.debug('File name: %s', filename)
 
     mc = ModelContainerPT(model, dc)

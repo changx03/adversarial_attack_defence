@@ -3,7 +3,7 @@ from .model_cifar import CifarCnn
 from .model_container_pt import ModelContainerPT
 from .model_iris import IrisNN
 from .model_mnist import MnistCnnCW, MnistCnnCW_hidden
-from .model_mnist_v2 import MnistCnn_v2
+from .model_mnist_v2 import MnistCnnV2
 
 
 def get_model(name):
@@ -16,7 +16,7 @@ def get_model(name):
         return IrisNN
     elif name == 'MnistCnnCW':
         return MnistCnnCW
-    elif name == 'MnistCnn_v2':
-        return MnistCnn_v2
+    elif name == 'MnistCnnV2':
+        return MnistCnnV2
     else:
         raise AttributeError('Received unknown model "{}"'.format(name))

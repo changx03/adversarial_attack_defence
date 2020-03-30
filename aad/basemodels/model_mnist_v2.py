@@ -18,7 +18,7 @@ SCHEDULER = None
 SCHEDULER_PARAMS = None
 
 
-class MnistCnn_v2(nn.Module):
+class MnistCnnV2(nn.Module):
     """
     A convolutional neural network for MNIST. The same structure was used in
     Carlini and Wagner attack
@@ -31,7 +31,7 @@ class MnistCnn_v2(nn.Module):
             optim_params=OPTIM_PARAMS,
             scheduler=SCHEDULER,
             scheduler_params=SCHEDULER_PARAMS):
-        super(MnistCnn_v2, self).__init__()
+        super(MnistCnnV2, self).__init__()
 
         self.hidden_model = nn.Sequential(OrderedDict([
             ('conv1', nn.Conv2d(1, 32, 3)),
