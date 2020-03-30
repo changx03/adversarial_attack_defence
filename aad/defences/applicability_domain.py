@@ -57,8 +57,9 @@ class ApplicabilityDomainContainer(DetectorContainer):
         }
         self.params = params_received
         self.device = model_container.device
-        self.num_classes = model_container.data_container.num_classes
-        self.data_type = model_container.data_container.data_type
+        dc = model_container.data_container
+        self.num_classes = dc.num_classes
+        self.data_type = dc.data_type
 
         if hidden_model is not None:
             self.hidden_model = hidden_model
@@ -109,14 +110,15 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
         return True
 
-    def detect(self, adv):
+    def detect(self, adv, pred_adv=None):
         n = len(adv)
         # 1: passed test, 0: blocked by AD
         passed = np.ones(n, dtype=np.int8)
 
         # The defence does NOT know the true class of adversarial examples. It
         # computes predictions instead.
-        pred_adv = self.model_container.predict(adv)
+        if pred_adv is None:
+            pred_adv = self.model_container.predict(adv)
 
         # The adversarial examples exist in image/data space. The KNN model runs
         # in hidden layer (encoded space)

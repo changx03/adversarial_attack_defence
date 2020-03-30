@@ -76,7 +76,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adversarial examples: %f', accuracy)
 
-        x_passed, blocked_indices = self.ad.detect(adv)
+        x_passed, blocked_indices = self.ad.detect(adv, y_adv)
         logger.info('Blocked %d/%d samples from adversarial examples',
                     len(blocked_indices), len(adv))
 
