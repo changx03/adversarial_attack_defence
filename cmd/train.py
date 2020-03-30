@@ -7,9 +7,9 @@ import os
 
 from aad.basemodels import (BCNN, CifarCnn, IrisNN, MnistCnn_v2,
                             ModelContainerPT, get_model)
-from aad.datasets import DATASET_LIST, DataContainer, get_dataset_list
-from aad.utils import (get_data_path, get_pt_model_filename, get_time_str,
-                       master_seed)
+from aad.datasets import get_dataset_list
+from aad.utils import get_pt_model_filename, get_time_str, master_seed
+from cmd_utils import get_data_container, set_logging
 
 logger = logging.getLogger('train')
 
@@ -69,21 +69,10 @@ def main():
     overwrite = args.overwrite
 
     # set logging config. Run this before logging anything!
-    log_lvl = logging.DEBUG if verbose else logging.INFO
-    time_str = get_time_str()
-    if save_log:
-        log_filename = f'train_{dname}_{time_str}.log'
-        if not os.path.exists('log'):
-            os.makedirs('log')
-        logging.basicConfig(
-            filename=os.path.join('log', log_filename),
-            format='%(asctime)s:%(levelname)s:%(module)s:%(message)s',
-            level=log_lvl)
-    else:
-        logging.basicConfig(level=log_lvl)
+    set_logging(dname, verbose, save_log)
 
     # show parameters
-    logger.info('Start at: %s', time_str)
+    logger.info('Start at: %s', get_time_str())
     logger.info('RECEIVED PARAMETERS:')
     logger.info('dataset       :%s', dname)
     logger.info('filename      :%s', filename)
@@ -97,17 +86,14 @@ def main():
     logger.info('save_log      :%r', save_log)
     logger.info('overwrite     :%r', overwrite)
 
+    master_seed(seed)
+
     # set DataContainer
-    dataset = DATASET_LIST[dname]
-    dc = DataContainer(dataset, get_data_path())
-    if dname in ('MNIST', 'CIFAR10', 'SVHN'):
-        dc(shuffle=use_shuffle)
-    elif dname == 'Iris':
-        dc(shuffle=use_shuffle, normalize=use_normalize, size_train=0.6)
-    elif dname in ('BankNote', 'BreastCancerWisconsin', 'HTRU2', 'WheatSeed'):
-        dc(shuffle=use_shuffle, normalize=use_normalize)
-    else:
-        raise AttributeError('Received unknown dataset "{}"'.format(dname))
+    dc = get_data_container(
+        dname,
+        use_shuffle=use_shuffle,
+        use_normalize=use_normalize,
+    )
 
     # select a model
     model = None
@@ -122,8 +108,8 @@ def main():
         elif dname == 'BreastCancerWisconsin':
             model = BCNN()
         elif dname in ('BankNote', 'HTRU2', 'Iris', 'WheatSeed'):
-            num_classes = dataset['num_classes']
-            num_features = dataset['dim_data'][0]
+            num_classes = dc.num_classes
+            num_features = dc.dim_data[0]
             model = IrisNN(
                 num_features=num_features,
                 hidden_nodes=num_features*4,
@@ -135,7 +121,6 @@ def main():
     logger.info('Select %s model', modelname)
 
     # set ModelContainer and train the model
-    master_seed(seed)
     mc = ModelContainerPT(model, dc)
     mc.fit(epochs=max_epochs, batch_size=batch_size)
 
