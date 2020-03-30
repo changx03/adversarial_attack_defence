@@ -164,6 +164,6 @@ if __name__ == "__main__":
     $ python ./cmd/train.py -d BankNote -e 200 -vO
     $ python ./cmd/train.py -d HTRU2 -e 200 -vO
     $ python ./cmd/train.py -d Iris -e 200 -vO
-    $ python ./cmd/train.py -d WheatSeed -e 200 -vO
+    $ python ./cmd/train.py -d WheatSeed -e 300 -vO
     """
     main()
