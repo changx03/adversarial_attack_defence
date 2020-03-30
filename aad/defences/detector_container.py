@@ -43,5 +43,5 @@ class DetectorContainer(abc.ABC):
         time_elapsed = time.time() - self._since
         title = ' [' + title + ']' if title else ''
         logger.debug(
-            'Time to complete%s: %im %.3fs',
+            'Time to complete%s: %dm %.3fs',
             title, int(time_elapsed // 60), time_elapsed % 60)

@@ -80,6 +80,6 @@ class BIMContainer(AttackContainer):
         y_adv, y_clean = self.predict(adv, x)
 
         time_elapsed = time.time() - since
-        logger.info('Time to complete training %i adversarial examples: %im %.3fs',
+        logger.info('Time to complete training %d adversarial examples: %dm %.3fs',
                     count, int(time_elapsed // 60), time_elapsed % 60)
         return adv, y_adv, np.copy(x), y_clean

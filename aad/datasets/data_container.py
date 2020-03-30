@@ -70,7 +70,7 @@ class DataContainer:
 
         logger.info('Train size: %d - Test size: %d', 
             len(self.label_train_np), len(self.label_test_np))
-        logger.info('Successfully load data. Time to complete: %im %.3fs',
+        logger.info('Successfully load data. Time to complete: %dm %.3fs',
                     int(time_elapsed // 60), time_elapsed % 60)
 
     def get_one_fold_np(self, fold):

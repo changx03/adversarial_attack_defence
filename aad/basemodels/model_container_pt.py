@@ -46,7 +46,7 @@ class ModelContainerPT:
         self._fit_torch(epochs, batch_size)
 
         time_elapsed = time.time() - since
-        logger.info('Time to complete training: %im %.3fs',
+        logger.info('Time to complete training: %dm %.3fs',
                     int(time_elapsed // 60), time_elapsed % 60)
 
     def save(self, filename, overwrite=False):
@@ -182,7 +182,7 @@ class ModelContainerPT:
 
             time_elapsed = time.time() - time_start
             logger.debug(
-                '[%i/%i]%im %.3fs: Train loss: %f acc: %f - Test loss: %f acc: %f',
+                '[%d/%d]%dm %.3fs: Train loss: %f acc: %f - Test loss: %f acc: %f',
                 epoch+1, epochs,
                 int(time_elapsed // 60), time_elapsed % 60,
                 tr_loss, tr_acc, va_loss, va_acc)
@@ -201,7 +201,7 @@ class ModelContainerPT:
             # early stopping
             if tr_acc >= 0.999 and va_acc >= 0.999:
                 logger.debug(
-                    'Satisfied the accuracy threshold. Abort at %i epoch!',
+                    'Satisfied the accuracy threshold. Abort at %d epoch!',
                     epoch)
                 break
 

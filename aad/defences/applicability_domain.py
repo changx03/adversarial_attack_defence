@@ -96,7 +96,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         self.encode_train_np = self._preprocessing(x_train_np)
         self.y_train_np = dc.label_train_np
         self.num_components = self.encode_train_np.shape[1]
-        logger.debug('Number of input attributes: %i', self.num_components)
+        logger.debug('Number of input attributes: %d', self.num_components)
 
         self._fit_stage1()
         self._log_time_end('AD Stage 1')
@@ -203,7 +203,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         kappa = self.params['kappa']
         k = int(self.num_classes * kappa)
         sample_ratio = self.params['sample_ratio']
-        logger.debug('k for Stage 3: %i', k)
+        logger.debug('k for Stage 3: %d', k)
 
         self._s3_model = knn.KNeighborsClassifier(
             n_neighbors=k,

@@ -71,7 +71,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         shuffled_indices = np.random.permutation(len(x_test))[:NUM_ADV]
         cls.x = x_test[shuffled_indices]
         cls.y = y_test[shuffled_indices]
-        logger.info('# of test set: %i', len(cls.x))
+        logger.info('# of test set: %d', len(cls.x))
 
     def setUp(self):
         master_seed(SEED)
@@ -83,12 +83,12 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         logger.info('Accuracy on adversarial examples: %f', accuracy)
 
         x_passed, blocked_indices = self.ad.detect(adv)
-        logger.info('Blocked %i/%d samples from adversarial examples',
+        logger.info('Blocked %d/%d samples from adversarial examples',
                     len(blocked_indices), len(adv))
 
         missed_indices = np.where(y_adv != y_clean)[0]
         intersect = np.intersect1d(blocked_indices, missed_indices)
-        logger.info('# of blocked successful adversarial examples: %i',
+        logger.info('# of blocked successful adversarial examples: %d',
                     len(intersect))
 
         passed_indices = np.delete(np.arange(len(adv)), blocked_indices)
