@@ -1,7 +1,6 @@
 """
 This module contains all static utility functions
 """
-import datetime
 import logging
 import os
 import time
@@ -125,8 +124,8 @@ def name_handler(filename, extension, overwrite=False):
     # handle existing file
     if not overwrite and os.path.exists(new_name):
         arr = filename.split('.')
-        time_str = datetime.datetime.now().strftime('%Y%m%d%H%M')
-        arr.insert(-1, time_str)  # already fixed extension
+        time_str = get_time_str()
+        arr[-2] += '_' + time_str  # already fixed extension
         new_name = '.'.join(arr)
         logger.info('File %s already exists. Save new file as %s',
                     filename, new_name)
@@ -163,8 +162,8 @@ def get_l2_norm(a, b):
 
 
 def get_time_str():
-    """Returns the formated local time in [YearMonthDateHourMinus]"""
-    return time.strftime('%Y%m%d%H%M', time.localtime(time.time()))
+    """Returns the formated local time in [YearMonthDateHourMinSec]"""
+    return time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
 
 
 def get_pt_model_filename(model_name, dataset, epochs):

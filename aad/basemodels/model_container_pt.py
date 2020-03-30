@@ -50,9 +50,9 @@ class ModelContainerPT:
                     int(time_elapsed // 60), time_elapsed % 60)
 
     def save(self, filename, overwrite=False):
-        filename = name_handler(filename, 'pt', overwrite)
         filename = os.path.join('save', filename)
-
+        filename = name_handler(filename, 'pt', overwrite)
+        
         torch.save(self.model.state_dict(), filename)
 
         logger.info('Successfully saved model to %s', filename)
