@@ -34,3 +34,15 @@ def get_data_container(dname, use_shuffle=True, use_normalize=True):
     else:
         raise AttributeError('Received unknown dataset "{}"'.format(dname))
     return dc
+
+
+def parse_model_filename(filename):
+    """
+    Parses the filename of a trained model. The filename should in
+    "<model>_<dataset>_e<max epochs>[_<date>].pt" format'.
+    """
+    dirname = os.path.split(filename)
+    arr = dirname[-1].split('_')
+    model_name = arr[0]
+    dataset_name = arr[1]
+    return model_name, dataset_name

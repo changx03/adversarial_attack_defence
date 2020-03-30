@@ -9,21 +9,9 @@ import numpy as np
 from aad.attacks import get_attack
 from aad.basemodels import ModelContainerPT, get_model
 from aad.utils import get_time_str, master_seed
-from cmd_utils import get_data_container, set_logging
+from cmd_utils import get_data_container, parse_model_filename, set_logging
 
 logger = logging.getLogger('attack')
-
-
-def parse_model_filename(filename):
-    """
-    Parses the filename of a trained model. The filename should in
-    "<model>_<dataset>_e<max epochs>[_<date>].pt" format'.
-    """
-    dirname = os.path.split(filename)
-    arr = dirname[-1].split('_')
-    model_name = arr[0]
-    dataset_name = arr[1]
-    return model_name, dataset_name
 
 
 def run_attacks(model_container,
@@ -34,21 +22,21 @@ def run_attacks(model_container,
                 overwrite):
     """Run selected adversarial attacks"""
     for att_name in selected_attacks:
+        adv_filename = filename + '_' + att_name
         Attack = get_attack(att_name)
         kwargs = params[att_name]
         logger.debug('%s params: %s', att_name, str(kwargs))
         attack = Attack(model_container, **kwargs)
         adv, y_adv, x_clean, y_clean = attack.generate(count=count)
-        logger.info('# of adv created from %s: %d',
-                    filename, len(adv))
+        logger.info('# of adv created from %s: %d', filename, len(adv))
         not_match = y_adv != y_clean
         success_rate = len(not_match[not_match == True]) / len(adv)
         accuracy = model_container.evaluate(adv, y_clean)
         logger.info('Success rate of %s: %f', att_name, success_rate)
         logger.info('Accuracy on %s: %f', att_name, accuracy)
-        filename = filename + '_' + att_name
-        logger.debug('Save adversarial attack results into: %s', filename)
-        attack.save_attack(filename, adv, y_adv, x_clean, y_clean, overwrite)
+        logger.debug('Save adversarial attack results into: %s', adv_filename)
+        attack.save_attack(adv_filename, adv, y_adv,
+                           x_clean, y_clean, overwrite)
 
 
 def main():
@@ -155,7 +143,7 @@ def main():
         kwargs = {
             'num_features': num_features,
             'hidden_nodes': num_features*4,
-            'num_classes':num_classes,
+            'num_classes': num_classes,
         }
         model = Model(**kwargs)
     else:
