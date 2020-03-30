@@ -24,7 +24,7 @@ class ModelContainerPT:
             f'Expecting a Torch Module, got {type(model)}'
         self.model = model
         assert isinstance(data_container, DataContainer), \
-            f'Expectiong a DataContainer, got {type(data_container)}'
+            f'Expecting a DataContainer, got {type(data_container)}'
         self.data_container = data_container
 
         self.device = torch.device(
@@ -55,13 +55,13 @@ class ModelContainerPT:
         
         torch.save(self.model.state_dict(), filename)
 
-        logger.info('Successfully saved model to %s', filename)
+        logger.info('Saved model to %s', filename)
 
     def load(self, filename):
         self.model.load_state_dict(torch.load(
             filename, map_location=self.device))
 
-        logger.info('Successfully loaded model from %s', filename)
+        logger.info('Loaded model from %s', filename)
 
     def get_score(self, x, batch_size=128):
         if len(x) == 0:
@@ -199,7 +199,7 @@ class ModelContainerPT:
             self.accuracy_test.append(va_acc)
 
             # early stopping
-            if tr_acc >= 0.999 and va_acc >= 0.999:
+            if (tr_acc >= 0.999 and va_acc >= 0.999) or tr_loss < 1e-4:
                 logger.debug(
                     'Satisfied the accuracy threshold. Abort at %d epoch!',
                     epoch)

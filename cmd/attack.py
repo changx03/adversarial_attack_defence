@@ -36,15 +36,15 @@ def run_attacks(model_container,
     for att_name in selected_attacks:
         Attack = get_attack(att_name)
         kwargs = params[att_name]
+        logger.debug('%s params: %s', att_name, str(kwargs))
         attack = Attack(model_container, **kwargs)
         adv, y_adv, x_clean, y_clean = attack.generate(count=count)
-        logger.info('# of adv examples created from %s: %d',
+        logger.info('# of adv created from %s: %d',
                     filename, len(adv))
         not_match = y_adv != y_clean
         success_rate = len(not_match[not_match == True]) / len(adv)
         accuracy = model_container.evaluate(adv, y_clean)
-        logger.info('Success rate of generating %s: %f',
-                    att_name, success_rate)
+        logger.info('Success rate of %s: %f', att_name, success_rate)
         logger.info('Accuracy on %s: %f', att_name, accuracy)
         filename = filename + '_' + att_name
         logger.debug('Save adversarial attack results into: %s', filename)
@@ -147,10 +147,20 @@ def main():
 
     # set DataContainer and ModelContainer
     dc = get_data_container(dname)
-    # TODO: Model size miss match!
     Model = get_model(model_name)
-    model = Model()
-    logger.info('Select %s model', model.__class__.__name__)
+    # there models require extra keyword arguments
+    if dname in ('BankNote', 'HTRU2', 'Iris', 'WheatSeed'):
+        num_classes = dc.num_classes
+        num_features = dc.dim_data[0]
+        kwargs = {
+            'num_features': num_features,
+            'hidden_nodes': num_features*4,
+            'num_classes':num_classes,
+        }
+        model = Model(**kwargs)
+    else:
+        model = Model()
+    logger.info('Use %s model', model.__class__.__name__)
     mc = ModelContainerPT(model, dc)
     mc.load(model_file)
     accuracy = mc.evaluate(dc.data_test_np, dc.label_test_np)
@@ -167,12 +177,12 @@ def main():
 if __name__ == '__main__':
     """
     Examples:
-    $ python ./cmd/attack.py -m ./save/BCNN_BreastCancerWisconsin_e200.pt -p ./cmd/attack_params.json -F
-    $ python ./cmd/attack.py -m ./save/CifarCnn_CIFAR10_e50.pt -p ./cmd/attack_params.json -F
-    $ python ./cmd/attack.py -m ./save/IrisNN_BankNote_e200.pt -p ./cmd/attack_params.json -F
-    $ python ./cmd/attack.py -m ./save/IrisNN_HTRU2_e200.pt -p ./cmd/attack_params.json -F
-    $ python ./cmd/attack.py -m ./save/IrisNN_Iris_e200.pt -p ./cmd/attack_params.json -F
-    $ python ./cmd/attack.py -m ./save/IrisNN_WheatSeed_e300.pt -p ./cmd/attack_params.json -F
-    $ python ./cmd/attack.py -m ./save/MnistCnnV2_MNIST_e50.pt -p ./cmd/attack_params.json -F
+    $ python ./cmd/attack.py -m ./save/BCNN_BreastCancerWisconsin_e200.pt -p ./cmd/attack_params.json -lvw -FD
+    $ python ./cmd/attack.py -m ./save/CifarCnn_CIFAR10_e50.pt -p ./cmd/attack_params.json -vw -FD
+    $ python ./cmd/attack.py -m ./save/IrisNN_BankNote_e200.pt -p ./cmd/attack_params.json -vw -FD
+    $ python ./cmd/attack.py -m ./save/IrisNN_HTRU2_e200.pt -p ./cmd/attack_params.json -vw -FD
+    $ python ./cmd/attack.py -m ./save/IrisNN_Iris_e200.pt -p ./cmd/attack_params.json -vw -FD
+    $ python ./cmd/attack.py -m ./save/IrisNN_WheatSeed_e300.pt -p ./cmd/attack_params.json -vw -FD
+    $ python ./cmd/attack.py -m ./save/MnistCnnV2_MNIST_e50.pt -p ./cmd/attack_params.json -vw -FD
     """
     main()

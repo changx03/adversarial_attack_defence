@@ -143,7 +143,7 @@ def main():
 if __name__ == "__main__":
     """
     Examples:
-    $ python ./cmd/train.py -d MNIST -e 50 -vw
+    $ python ./cmd/train.py -d MNIST -e 50 -lvw
     $ python ./cmd/train.py -d CIFAR10 -e 50 -vw
     $ python ./cmd/train.py -d BreastCancerWisconsin -e 200 -vw
     $ python ./cmd/train.py -d BankNote -e 200 -vw
