@@ -39,28 +39,34 @@ class AttackContainer(abc.ABC):
         return y_adv, y
 
     @staticmethod
-    def save_attack(filename, x_adv, y_adv=None, x_clean=None, y_clean=None):
+    def save_attack(filename,
+                    x_adv,
+                    y_adv=None,
+                    x_clean=None,
+                    y_clean=None,
+                    overwrite=False):
         """Saving adversarial examples."""
         assert isinstance(x_adv, np.ndarray)
 
-        filename_adv = name_handler(filename + '.adv', extension='npy')
-        filename_adv = os.path.join('save', filename_adv)
+        filename = os.path.join('save', filename)
+        filename = name_handler(filename + '_[ph]', 'npy', overwrite)
+        filename_adv = filename.replace('[ph]', 'adv')
 
         x_adv.astype(np.float32).tofile(filename_adv)
         if y_adv is not None:
             assert isinstance(y_adv, np.ndarray) \
                 and len(y_adv) == len(x_adv)
-            filename_y_adv = filename_adv.replace('.adv', '.y_adv')
+            filename_y_adv = filename.replace('[ph]', 'pred')
             y_adv.astype(np.int64).tofile(filename_y_adv)
         if x_clean is not None:
             assert isinstance(x_clean, np.ndarray) \
                 and x_adv.shape == x_clean.shape
-            filename_raw = filename_adv.replace('.adv', '.x_raw')
+            filename_raw = filename.replace('[ph]', 'x')
             x_clean.astype(np.float32).tofile(filename_raw)
         if y_clean is not None:
             assert isinstance(y_clean, np.ndarray) \
                 and len(y_clean) == len(x_adv)
-            filename_y = filename_adv.replace('.adv', '.y')
+            filename_y = filename.replace('[ph]', 'y')
             y_clean.astype(np.int64).tofile(filename_y)
         logger.info('Successfully saved model to %s', filename_adv)
 

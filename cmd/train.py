@@ -53,7 +53,7 @@ def main():
         '-l', '--savelog', action='store_true', default=False,
         help='save logging file')
     parser.add_argument(
-        '-O', '--overwrite', action='store_true', default=False,
+        '-w', '--overwrite', action='store_true', default=False,
         help='overwrite the existing file')
     args = parser.parse_args()
     dname = args.dataset
@@ -69,10 +69,10 @@ def main():
     overwrite = args.overwrite
 
     # set logging config. Run this before logging anything!
-    set_logging(dname, verbose, save_log)
+    set_logging('train', dname, verbose, save_log)
 
     # show parameters
-    logger.info('Start at: %s', get_time_str())
+    logger.info('Start at      : %s', get_time_str())
     logger.info('RECEIVED PARAMETERS:')
     logger.info('dataset       :%s', dname)
     logger.info('filename      :%s', filename)
@@ -143,12 +143,12 @@ def main():
 if __name__ == "__main__":
     """
     Examples:
-    $ python ./cmd/train.py -d MNIST -e 50 -vO
-    $ python ./cmd/train.py -d CIFAR10 -e 50 -vO
-    $ python ./cmd/train.py -d BreastCancerWisconsin -e 200 -vO
-    $ python ./cmd/train.py -d BankNote -e 200 -vO
-    $ python ./cmd/train.py -d HTRU2 -e 200 -vO
-    $ python ./cmd/train.py -d Iris -e 200 -vO
-    $ python ./cmd/train.py -d WheatSeed -e 300 -vO
+    $ python ./cmd/train.py -d MNIST -e 50 -vw
+    $ python ./cmd/train.py -d CIFAR10 -e 50 -vw
+    $ python ./cmd/train.py -d BreastCancerWisconsin -e 200 -vw
+    $ python ./cmd/train.py -d BankNote -e 200 -vw
+    $ python ./cmd/train.py -d HTRU2 -e 200 -vw
+    $ python ./cmd/train.py -d Iris -e 200 -vw
+    $ python ./cmd/train.py -d WheatSeed -e 300 -vw
     """
     main()

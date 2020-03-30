@@ -1,15 +1,16 @@
 import logging
 import os
 
-from aad.utils import get_time_str, get_data_path
 from aad.datasets import DATASET_LIST, DataContainer
+from aad.utils import get_data_path, get_time_str
 
-def set_logging(dname, verbose, save_log):
+
+def set_logging(headername, dname, verbose, save_log):
     """Setting the logging configuration"""
     log_lvl = logging.DEBUG if verbose else logging.INFO
     time_str = get_time_str()
     if save_log:
-        log_filename = f'train_{dname}_{time_str}.log'
+        log_filename = f'{headername}_{dname}_{time_str}.log'
         if not os.path.exists('log'):
             os.makedirs('log')
         logging.basicConfig(
@@ -18,6 +19,7 @@ def set_logging(dname, verbose, save_log):
             level=log_lvl)
     else:
         logging.basicConfig(level=log_lvl)
+
 
 def get_data_container(dname, use_shuffle=True, use_normalize=True):
     """Returns a DataContainer based on given name"""

@@ -30,13 +30,16 @@ def run_attacks(model_container,
                 selected_attacks,
                 params,
                 count,
-                filename):
+                filename,
+                overwrite):
     """Run selected adversarial attacks"""
     for att_name in selected_attacks:
         Attack = get_attack(att_name)
         kwargs = params[att_name]
         attack = Attack(model_container, **kwargs)
         adv, y_adv, x_clean, y_clean = attack.generate(count=count)
+        logger.info('# of adv examples created from %s: %d',
+                    filename, len(adv))
         not_match = y_adv != y_clean
         success_rate = len(not_match[not_match == True]) / len(adv)
         accuracy = model_container.evaluate(adv, y_clean)
@@ -45,7 +48,7 @@ def run_attacks(model_container,
         logger.info('Accuracy on %s: %f', att_name, accuracy)
         filename = filename + '_' + att_name
         logger.debug('Save adversarial attack results into: %s', filename)
-        attack.save_attack(filename, adv, y_adv, x_clean, y_clean)
+        attack.save_attack(filename, adv, y_adv, x_clean, y_clean, overwrite)
 
 
 def main():
@@ -69,7 +72,7 @@ def main():
         '-l', '--savelog', action='store_true', default=False,
         help='save logging file')
     parser.add_argument(
-        '-O', '--overwrite', action='store_true', default=False,
+        '-w', '--overwrite', action='store_true', default=False,
         help='overwrite the existing file')
     parser.add_argument(
         '-F', '--fgsm', action='store_true', default=False,
@@ -118,10 +121,10 @@ def main():
         att_params = json.load(param_json)
 
     # set logging config. Run this before logging anything!
-    set_logging(dname, verbose, save_log)
+    set_logging('attack', dname, verbose, save_log)
 
     # show parameters
-    logger.info('Start at: %s', get_time_str())
+    logger.info('Start at   : %s', get_time_str())
     logger.info('RECEIVED PARAMETERS:')
     logger.info('model file :%s', model_file)
     logger.info('model      :%s', model_name)
@@ -144,6 +147,7 @@ def main():
 
     # set DataContainer and ModelContainer
     dc = get_data_container(dname)
+    # TODO: Model size miss match!
     Model = get_model(model_name)
     model = Model()
     logger.info('Select %s model', model.__class__.__name__)
@@ -156,7 +160,8 @@ def main():
                 selected_attacks,
                 att_params,
                 num_adv,
-                os.path.join(dirname, model_name + '_' + dname))
+                model_name + '_' + dname,
+                overwrite)
 
 
 if __name__ == '__main__':

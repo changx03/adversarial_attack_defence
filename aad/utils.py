@@ -112,7 +112,7 @@ def swap_image_channel(np_arr):
         return np_arr  # not a image, do nothing
 
 
-def name_handler(filename, extension, overwrite=False):
+def name_handler(filename, extension, overwrite):
     """Return a new filename based on current existence and extension.
     """
     arr = filename.split('.')
@@ -121,9 +121,12 @@ def name_handler(filename, extension, overwrite=False):
         arr.append(extension)
     new_name = '.'.join(arr)
 
+    # handle adv name postfix
+    temp_name = new_name.replace('[ph]', 'adv')
+
     # handle existing file
-    if not overwrite and os.path.exists(new_name):
-        arr = filename.split('.')
+    if not overwrite and os.path.exists(temp_name):
+        arr = new_name.split('.')
         time_str = get_time_str()
         arr[-2] += '_' + time_str  # already fixed extension
         new_name = '.'.join(arr)
