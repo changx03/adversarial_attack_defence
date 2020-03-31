@@ -1,0 +1,35 @@
+2020-03-31 14:21:10,307:INFO:defend_ad:Start at    : 20200331142110
+2020-03-31 14:21:10,307:INFO:defend_ad:RECEIVED PARAMETERS:
+2020-03-31 14:21:10,307:INFO:defend_ad:model file  :None
+2020-03-31 14:21:10,308:INFO:defend_ad:adv file    :./save/BCNN_BreastCancerWisconsin_DeepFool_adv.npy
+2020-03-31 14:21:10,308:INFO:defend_ad:model       :BCNN
+2020-03-31 14:21:10,308:INFO:defend_ad:dataset     :BreastCancerWisconsin
+2020-03-31 14:21:10,308:INFO:defend_ad:param file  :./cmd/ad_params.json
+2020-03-31 14:21:10,308:INFO:defend_ad:seed        :4096
+2020-03-31 14:21:10,308:INFO:defend_ad:verbose     :True
+2020-03-31 14:21:10,308:INFO:defend_ad:save_log    :True
+2020-03-31 14:21:10,308:INFO:defend_ad:check_clean :True
+2020-03-31 14:21:10,308:DEBUG:defend_ad:params     : {'k1': 9, 'reliability': 1.6, 'sample_ratio': 1.0, 'confidence': 0.9, 'kappa': 10}
+2020-03-31 14:21:10,308:DEBUG:utils:Setting random seed for PyTorch.
+2020-03-31 14:21:10,334:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-03-31 14:21:10,334:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/BreastCancerWisconsin.csv
+2020-03-31 14:21:10,344:INFO:data_container:Train size: 455 - Test size: 114
+2020-03-31 14:21:10,344:INFO:data_container:Successfully load data. Time to complete: 0m 0.010s
+2020-03-31 14:21:10,344:INFO:defend_ad:Use BCNN model
+2020-03-31 14:21:12,624:DEBUG:model_container_pt:Using device: cuda
+2020-03-31 14:21:12,625:WARNING:defend_ad:The model is not trained! The accuracy for the model in invalid.
+2020-03-31 14:21:12,646:DEBUG:applicability_domain:Number of input attributes: 30
+2020-03-31 14:21:12,646:DEBUG:detector_container:Time to complete [AD Stage 1]: 0m 0.022s
+2020-03-31 14:21:12,857:DEBUG:detector_container:Time to complete [AD Stage 2]: 0m 0.211s
+2020-03-31 14:21:12,857:DEBUG:applicability_domain:k for Stage 3: 20
+2020-03-31 14:21:13,054:DEBUG:applicability_domain:Train set likelihood = 0.941538
+2020-03-31 14:21:13,054:DEBUG:detector_container:Time to complete [AD Stage 3]: 0m 0.197s
+2020-03-31 14:21:13,055:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-03-31 14:21:13,262:DEBUG:applicability_domain:Stage 2: blocked 6 inputs
+2020-03-31 14:21:13,380:DEBUG:applicability_domain:Mean likelihood on adv: 0.932979
+2020-03-31 14:21:13,380:DEBUG:applicability_domain:Stage 3: blocked 14 inputs
+2020-03-31 14:21:13,380:INFO:defend_ad:Blocked 20/100 samples on clean samples
+2020-03-31 14:21:13,382:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-03-31 14:21:13,484:DEBUG:applicability_domain:Stage 2: blocked 100 inputs
+2020-03-31 14:21:13,484:DEBUG:applicability_domain:Stage 3: blocked 0 inputs
+2020-03-31 14:21:13,484:INFO:defend_ad:Blocked 100/100 samples on adv. examples
