@@ -5,6 +5,12 @@ venv/
 *.egg-info
 
 # ignore downloadable and generated files
-data/
+data/cifar-10-batches-py/
+data/cifar-10-python.tar.gz
+data/MNIST/
+data/test_32x32.mat
+data/train_32x32.mat
+data/HTRU2.zip
+
 checkpoint.pt
 save/test/
