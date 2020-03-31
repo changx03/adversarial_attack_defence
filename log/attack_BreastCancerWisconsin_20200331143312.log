@@ -1,0 +1,36 @@
+2020-03-31 14:33:12,031:INFO:defend_ad:Start at    : 20200331143312
+2020-03-31 14:33:12,032:INFO:defend_ad:RECEIVED PARAMETERS:
+2020-03-31 14:33:12,032:INFO:defend_ad:model file  :./save/BCNN_BreastCancerWisconsin_e200.pt
+2020-03-31 14:33:12,032:INFO:defend_ad:adv file    :./save/BCNN_BreastCancerWisconsin_DeepFool_adv.npy
+2020-03-31 14:33:12,032:INFO:defend_ad:model       :BCNN
+2020-03-31 14:33:12,032:INFO:defend_ad:dataset     :BreastCancerWisconsin
+2020-03-31 14:33:12,032:INFO:defend_ad:param file  :./cmd/ad_params.json
+2020-03-31 14:33:12,032:INFO:defend_ad:seed        :4096
+2020-03-31 14:33:12,032:INFO:defend_ad:verbose     :True
+2020-03-31 14:33:12,032:INFO:defend_ad:save_log    :True
+2020-03-31 14:33:12,032:INFO:defend_ad:check_clean :True
+2020-03-31 14:33:12,032:DEBUG:defend_ad:params     : {'k1': 9, 'reliability': 1.6, 'sample_ratio': 1.0, 'confidence': 0.9, 'kappa': 10}
+2020-03-31 14:33:12,032:DEBUG:utils:Setting random seed for PyTorch.
+2020-03-31 14:33:12,058:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-03-31 14:33:12,058:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/BreastCancerWisconsin.csv
+2020-03-31 14:33:12,067:INFO:data_container:Train size: 455 - Test size: 114
+2020-03-31 14:33:12,068:INFO:data_container:Successfully load data. Time to complete: 0m 0.010s
+2020-03-31 14:33:12,068:INFO:defend_ad:Use BCNN model
+2020-03-31 14:33:14,344:DEBUG:model_container_pt:Using device: cuda
+2020-03-31 14:33:14,345:INFO:model_container_pt:Loaded model from ./save/BCNN_BreastCancerWisconsin_e200.pt
+2020-03-31 14:33:14,367:INFO:defend_ad:Accuracy on test set: 0.991228
+2020-03-31 14:33:14,376:DEBUG:applicability_domain:Number of input attributes: 64
+2020-03-31 14:33:14,376:DEBUG:detector_container:Time to complete [AD Stage 1]: 0m 0.009s
+2020-03-31 14:33:14,590:DEBUG:detector_container:Time to complete [AD Stage 2]: 0m 0.214s
+2020-03-31 14:33:14,590:DEBUG:applicability_domain:k for Stage 3: 20
+2020-03-31 14:33:14,742:DEBUG:applicability_domain:Train set likelihood = 0.980769
+2020-03-31 14:33:14,742:DEBUG:detector_container:Time to complete [AD Stage 3]: 0m 0.152s
+2020-03-31 14:33:14,744:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-03-31 14:33:14,951:DEBUG:applicability_domain:Stage 2: blocked 5 inputs
+2020-03-31 14:33:15,070:DEBUG:applicability_domain:Mean likelihood on adv: 0.989474
+2020-03-31 14:33:15,070:DEBUG:applicability_domain:Stage 3: blocked 1 inputs
+2020-03-31 14:33:15,077:INFO:defend_ad:Blocked 6/100 samples on clean samples
+2020-03-31 14:33:15,078:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-03-31 14:33:15,180:DEBUG:applicability_domain:Stage 2: blocked 100 inputs
+2020-03-31 14:33:15,181:DEBUG:applicability_domain:Stage 3: blocked 0 inputs
+2020-03-31 14:33:15,181:INFO:defend_ad:Blocked 100/100 samples on adv. examples
