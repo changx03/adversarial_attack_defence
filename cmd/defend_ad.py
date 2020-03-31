@@ -29,7 +29,7 @@ def main():
         '-p', '--param', type=str, required=True,
         help='a JSON config file which contains the parameters for the attacks')
     parser.add_argument(
-        '-m', '--model', type=str,
+        '-m', '--model', type=str, required=True,
         help='a file which contains a pretrained model. The filename should in "<model>_<dataset>_e<max epochs>[_<date>].pt" format')
     parser.add_argument(
         '-s', '--seed', type=int, default=4096,
@@ -107,16 +107,12 @@ def main():
     logger.info('Use %s model', model.__class__.__name__)
     mc = ModelContainerPT(model, dc)
 
-    if model_file is not None:
-        mc.load(model_file)
-        accuracy = mc.evaluate(dc.data_test_np, dc.label_test_np)
-        logger.info('Accuracy on test set: %f', accuracy)
-    else:
-        logger.warning(
-            'The model is not trained! The accuracy for the model in invalid.')
+    mc.load(model_file)
+    accuracy = mc.evaluate(dc.data_test_np, dc.label_test_np)
+    logger.info('Accuracy on test set: %f', accuracy)
 
     # preform defence
-    ad = ApplicabilityDomainContainer(mc, **params)
+    ad = ApplicabilityDomainContainer(mc, hidden_model=model.hidden_model, **params)
     ad.fit()
 
     # check clean
@@ -134,12 +130,13 @@ def main():
 if __name__ == '__main__':
     """
     Examples:
-    $ python ./cmd/defend_ad.py \
+    $ python ./cmd/defend_ad.py -v \
         -a ./save/BCNN_BreastCancerWisconsin_FGSM_adv.npy \
-        -p ./cmd/ad_params.json -v \
+        -p ./cmd/ad_params.json \
         -m ./save/BCNN_BreastCancerWisconsin_e200.pt
-    $ python ./cmd/defend_ad.py \
+    $ python ./cmd/defend_ad.py -v \
         -a ./save/BCNN_BreastCancerWisconsin_DeepFool_adv.npy \
-        -p ./cmd/ad_params.json -v
+        -p ./cmd/ad_params.json \
+        -m ./save/BCNN_BreastCancerWisconsin_e200.pt
     """
     main()
