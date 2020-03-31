@@ -34,7 +34,7 @@ def run_attacks(model_container,
         accuracy = model_container.evaluate(adv, y_clean)
         logger.info('Success rate of %s: %f', att_name, success_rate)
         logger.info('Accuracy on %s: %f', att_name, accuracy)
-        logger.debug('Save adversarial attack results into: %s', adv_filename)
+        logger.debug('Save adv. attack results into: %s', adv_filename)
         attack.save_attack(adv_filename, adv, y_adv,
                            x_clean, y_clean, overwrite)
 
@@ -49,7 +49,7 @@ def main():
         help='a JSON config file which contains the parameters for the attacks')
     parser.add_argument(
         '-n', '--number', type=int, default=100,
-        help='the number of adversarial examples want to generate. (if more than test set, it uses all test examples.)')
+        help='the number of adv. examples want to generate. (if more than test set, it uses all test examples.)')
     parser.add_argument(
         '-s', '--seed', type=int, default=4096,
         help='the seed for random number generator')

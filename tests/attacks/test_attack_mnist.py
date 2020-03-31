@@ -57,7 +57,7 @@ class TestAttackMNIST(unittest.TestCase):
         )
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: %f', accuracy)
+        logger.info('Accuracy on adv. examples: %f', accuracy)
 
         # At least made some change from clean images
         self.assertFalse((adv == x_clean).all())
@@ -83,7 +83,7 @@ class TestAttackMNIST(unittest.TestCase):
         )
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: %f', accuracy)
+        logger.info('Accuracy on adv. examples: %f', accuracy)
 
         self.assertFalse((adv == x_clean).all())
         # Expect above 90% success rate
@@ -118,7 +118,7 @@ class TestAttackMNIST(unittest.TestCase):
         # Slow algorithm, only test 10 samples
         adv, y_adv, x_clean, y_clean = attack.generate(count=10)
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: %f', accuracy)
+        logger.info('Accuracy on adv. examples: %f', accuracy)
 
         self.assertFalse((adv == x_clean).all())
         # Expect above 90% success rate
@@ -139,7 +139,7 @@ class TestAttackMNIST(unittest.TestCase):
         )
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: %f', accuracy)
+        logger.info('Accuracy on adv. examples: %f', accuracy)
 
         self.assertFalse((adv == x_clean).all())
         # Expect above 65% success rate
@@ -159,7 +159,7 @@ class TestAttackMNIST(unittest.TestCase):
         )
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: %f', accuracy)
+        logger.info('Accuracy on adv. examples: %f', accuracy)
 
         self.assertFalse((adv == x_clean).all())
         success_rate = (y_adv != y_clean).sum() / x_clean.shape[0]
@@ -188,7 +188,7 @@ class TestAttackMNIST(unittest.TestCase):
         # Slow algorithm, only test 3 samples
         adv, y_adv, x_clean, y_clean = attack.generate(count=3)
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: %f', accuracy)
+        logger.info('Accuracy on adv. examples: %f', accuracy)
 
         # self.assertFalse((adv == x_clean).all())
         # NOTE: Success rate closes to 0

@@ -69,7 +69,7 @@ def main():
 
     adv, y_adv, x_clean, y_clean = attack.generate(count=5)
     accuracy = mc.evaluate(adv, y_clean)
-    print('Accuracy on adversarial examples: {:.4f}%'.format(
+    print('Accuracy on adv. examples: {:.4f}%'.format(
         accuracy*100))
 
     # attack.save_attack(

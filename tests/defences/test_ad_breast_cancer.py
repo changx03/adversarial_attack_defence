@@ -71,21 +71,21 @@ class TestApplicabilityDomainIris(unittest.TestCase):
         adv_success_rate = len(not_match[not_match==True]) / len(adv)
 
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: %f', accuracy)
+        logger.info('Accuracy on adv. examples: %f', accuracy)
 
         x_passed, blocked_indices = self.ad.detect(adv, y_adv)
-        logger.info('Blocked %d/%d samples from adversarial examples',
+        logger.info('Blocked %d/%d samples from adv. examples',
                     len(blocked_indices), len(adv))
 
         missed_indices = np.where(y_adv != y_clean)[0]
         intersect = np.intersect1d(blocked_indices, missed_indices)
-        logger.info('# of blocked successful adversarial examples: %d',
+        logger.info('# of blocked successful adv. examples: %d',
                     len(intersect))
 
         passed_indices = np.delete(np.arange(len(adv)), blocked_indices)
         passed_y_clean = y_clean[passed_indices]
         accuracy = self.mc.evaluate(x_passed, passed_y_clean)
-        logger.info('Accuracy on passed adversarial examples: %f', accuracy)
+        logger.info('Accuracy on passed adv. examples: %f', accuracy)
         return blocked_indices, adv_success_rate
 
     def test_block_clean(self):

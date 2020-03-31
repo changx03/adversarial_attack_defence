@@ -57,7 +57,7 @@ class TestAttackIris(unittest.TestCase):
             minimal=True)
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: %f', accuracy)
+        logger.info('Accuracy on adv. examples: %f', accuracy)
 
         # At least made some change from clean images
         self.assertFalse((adv == x_clean).all())
@@ -82,7 +82,7 @@ class TestAttackIris(unittest.TestCase):
             targeted=False)
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: %f', accuracy)
+        logger.info('Accuracy on adv. examples: %f', accuracy)
 
         self.assertFalse((adv == x_clean).all())
         # Expect above 46% success rate
@@ -110,7 +110,7 @@ class TestAttackIris(unittest.TestCase):
             batch_size=8)
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: %f', accuracy)
+        logger.info('Accuracy on adv. examples: %f', accuracy)
 
         self.assertFalse((adv == x_clean).all())
         # Expect above 90% success rate
@@ -129,7 +129,7 @@ class TestAttackIris(unittest.TestCase):
             nb_grads=10)
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
         accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adversarial examples: %f', accuracy)
+        logger.info('Accuracy on adv. examples: %f', accuracy)
 
         self.assertFalse((adv == x_clean).all())
         # Expect above 86% success rate
