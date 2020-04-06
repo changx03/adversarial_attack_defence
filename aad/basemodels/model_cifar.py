@@ -5,11 +5,10 @@ from collections import OrderedDict
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 LOSS_FN = nn.CrossEntropyLoss()
 OPTIMIZER = torch.optim.Adam
-OPTIM_PARAMS = {'lr':0.001, 'betas':(0.9, 0.999), 'weight_decay': 0.001}
+OPTIM_PARAMS = {'lr': 0.001, 'betas': (0.9, 0.999), 'weight_decay': 0.001}
 SCHEDULER = None
 SCHEDULER_PARAMS = None
 
@@ -51,7 +50,7 @@ class CifarCnn(nn.Module):
             ('relu6', nn.ReLU()),
         ]))
         self.fn = nn.Linear(512, 10)
-        
+
         self.loss_fn = loss_fn
         self.optimizer = optimizer
         self.optim_params = optim_params
