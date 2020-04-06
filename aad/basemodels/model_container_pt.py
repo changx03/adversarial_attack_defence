@@ -52,7 +52,7 @@ class ModelContainerPT:
     def save(self, filename, overwrite=False):
         filename = os.path.join('save', filename)
         filename = name_handler(filename, 'pt', overwrite)
-        
+
         torch.save(self.model.state_dict(), filename)
 
         logger.info('Saved model to %s', filename)

@@ -14,3 +14,4 @@ data/HTRU2.zip
 
 checkpoint.pt
 save/test/
+save/CifarResnet50_*.pt

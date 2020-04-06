@@ -1,7 +1,6 @@
 """
 This module implements fine-tune a pretrained ResNet50 for CIFAR10
 """
-import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchvision as tv
@@ -15,7 +14,8 @@ SCHEDULER_PARAMS = {'step_size': 10, 'gamma': 0.5}
 
 class CifarResnet50(nn.Module):
     """
-    A fine-tune model for CIFAR10 dataset. It uses pretrained ResNet-50 from PyTorch. 
+    A fine-tune model for CIFAR10 dataset and SVHN dataset. It uses the pre-trained
+    ResNet-50 from PyTorch.
     """
 
     def __init__(

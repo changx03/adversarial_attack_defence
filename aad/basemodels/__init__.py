@@ -6,20 +6,28 @@ from .model_mnist import MnistCnnCW, MnistCnnCW_hidden
 from .model_mnist_v2 import MnistCnnV2
 from .model_resnet_cifar import CifarResnet50
 
+AVALIABLE_MODELS = (
+    'BCNN',
+    'CifarCnn',
+    'CifarResnet',
+    'IrisNN',
+    'MnistCnnCW',
+    'MnistCnnV2',
+)
 
 def get_model(name):
     """Returns a model based on the given name."""
-    if name == 'BCNN':
+    if name == AVALIABLE_MODELS[0]:
         return BCNN
-    elif name == 'CifarCnn':
+    elif name == AVALIABLE_MODELS[1]:
         return CifarCnn
-    elif name == 'CifarResnet':
+    elif name == AVALIABLE_MODELS[2]:
         return CifarResnet50
-    elif name == 'IrisNN':
+    elif name == AVALIABLE_MODELS[3]:
         return IrisNN
-    elif name == 'MnistCnnCW':
+    elif name == AVALIABLE_MODELS[4]:
         return MnistCnnCW
-    elif name == 'MnistCnnV2':
+    elif name == AVALIABLE_MODELS[5]:
         return MnistCnnV2
     else:
         raise AttributeError('Received unknown model "{}"'.format(name))

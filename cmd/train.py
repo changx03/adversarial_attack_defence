@@ -5,21 +5,13 @@ import argparse as ap
 import logging
 import os
 
-from aad.basemodels import (BCNN, CifarCnn, IrisNN, MnistCnnV2,
-                            ModelContainerPT, get_model)
+import aad.basemodels as models
+from aad.basemodels import AVALIABLE_MODELS
 from aad.datasets import get_dataset_list
 from aad.utils import get_pt_model_filename, get_time_str, master_seed
 from cmd_utils import get_data_container, set_logging
 
 logger = logging.getLogger('train')
-
-AVALIABLE_MODELS = (
-    'BCNN',
-    'CifarCnn',
-    'IrisNN',
-    'MnistCnnCW',
-    'MnistCnnV2',
-)
 
 
 def main():
@@ -98,19 +90,19 @@ def main():
     # select a model
     model = None
     if model_name is not None:
-        Model = get_model(model_name)
+        Model = models.get_model(model_name)
         model = Model()
     else:
         if dname == 'MNIST':
-            model = MnistCnnV2()
+            model = models.MnistCnnV2()
         elif dname == 'CIFAR10':
-            model = CifarCnn()
+            model = models.CifarCnn()
         elif dname == 'BreastCancerWisconsin':
-            model = BCNN()
+            model = models.BCNN()
         elif dname in ('BankNote', 'HTRU2', 'Iris', 'WheatSeed'):
             num_classes = dc.num_classes
             num_features = dc.dim_data[0]
-            model = IrisNN(
+            model = models.IrisNN(
                 num_features=num_features,
                 hidden_nodes=num_features*4,
                 num_classes=num_classes)
@@ -118,10 +110,10 @@ def main():
     if model is None:
         raise AttributeError('Cannot find model!')
     modelname = model.__class__.__name__
-    logger.info('Select %s model', modelname)
+    logger.info('Selected %s model', modelname)
 
     # set ModelContainer and train the model
-    mc = ModelContainerPT(model, dc)
+    mc = models.ModelContainerPT(model, dc)
     mc.fit(epochs=max_epochs, batch_size=batch_size)
 
     # save
@@ -150,5 +142,7 @@ if __name__ == "__main__":
     $ python ./cmd/train.py -d HTRU2 -e 200 -vw
     $ python ./cmd/train.py -d Iris -e 200 -vw
     $ python ./cmd/train.py -d WheatSeed -e 300 -vw
+    $ python ./cmd/train.py -d CIFAR10 -m CifarResnet -e 30 -vw
+    $ python ./cmd/train.py -d SVHN -m CifarResnet -e 30 -vw
     """
     main()
