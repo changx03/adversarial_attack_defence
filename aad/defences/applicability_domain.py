@@ -28,7 +28,8 @@ class ApplicabilityDomainContainer(DetectorContainer):
                  reliability=0.8,
                  sample_ratio=1.0,
                  confidence=0.9,
-                 kappa=6):
+                 kappa=6,
+                 disable_s2=False):
         """Create a class `ApplicabilityDomainContainer` instance.
 
         :param model_container: A trained model
@@ -45,6 +46,8 @@ class ApplicabilityDomainContainer(DetectorContainer):
         :type confidence: `float`
         :param kappa: The number of samples will be used to compute neighbours in Stage 3. k = num_classes * kappa
         :type kappa: `float`
+        :param disable_s2: To disable Stage 2 defence. (For testing the robustness Stage 3)
+        :type disable_s2: `bool`
         """
         super(ApplicabilityDomainContainer, self).__init__(model_container)
 
@@ -54,6 +57,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
             'sample_ratio': sample_ratio,
             'confidence': confidence,
             'kappa': kappa,
+            'disable_s2': disable_s2,
         }
         self.params = params_received
         self.device = model_container.device
@@ -89,6 +93,8 @@ class ApplicabilityDomainContainer(DetectorContainer):
                 'You cannot call fit() method multiple times! Please start a new instance')
             return False
 
+        disable_s2 = self.params['disable_s2']
+
         self._log_time_start()
 
         # Step 1: compute hidden layer outputs from inputs
@@ -99,11 +105,15 @@ class ApplicabilityDomainContainer(DetectorContainer):
         self.num_components = self.encode_train_np.shape[1]
         logger.debug('Number of input attributes: %d', self.num_components)
 
+        # Stage 1
         self._fit_stage1()
         self._log_time_end('AD Stage 1')
-        self._log_time_start()
-        self._fit_stage2()
-        self._log_time_end('AD Stage 2')
+        # Stage 2
+        if disable_s2 is False:
+            self._log_time_start()
+            self._fit_stage2()
+            self._log_time_end('AD Stage 2')
+        # Stage 3
         self._log_time_start()
         self._fit_stage3()
         self._log_time_end('AD Stage 3')
@@ -124,19 +134,29 @@ class ApplicabilityDomainContainer(DetectorContainer):
         # in hidden layer (encoded space)
         encoded_adv = self._preprocessing(adv)
 
+        disable_s2 = self.params['disable_s2']
+
+        # Stage 1
         passed = self._def_state1(encoded_adv, pred_adv, passed)
         blocked = len(passed[passed == 0])
         logger.debug('Stage 1: blocked %d inputs', blocked)
-        passed = self._def_state2(encoded_adv, pred_adv, passed)
-        blocked = len(passed[passed == 0]) - blocked
-        logger.debug('Stage 2: blocked %d inputs', blocked)
+        blocked_s1 = blocked
+        # Stage 2
+        blocked_s2 = 0
+        if disable_s2 is False:
+            passed = self._def_state2(encoded_adv, pred_adv, passed)
+            blocked = len(passed[passed == 0]) - blocked
+            logger.debug('Stage 2: blocked %d inputs', blocked)
+            blocked_s2 = blocked
+        # Stage 3
         passed = self._def_state3_v2(encoded_adv, passed)
         blocked = len(passed[passed == 0]) - blocked
         logger.debug('Stage 3: blocked %d inputs', blocked)
+        blocked_s3 = blocked
 
         passed_indices = np.nonzero(passed)
         blocked_indices = np.delete(np.arange(n), passed_indices)
-        return adv[passed_indices], blocked_indices
+        return adv[passed_indices], blocked_indices, [blocked_s1, blocked_s2, blocked_s3]
 
     def _preprocessing(self, x_np):
         # the # of channels should alway smaller than the size of image
@@ -215,6 +235,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
         # compute the likelihood
         sample_size = int(np.floor(len(x) * sample_ratio))
+        logger.debug('[AD Stage 3]: Size of train set: %d', sample_size)
         x_sub = np.random.permutation(x)[:sample_size]
         neigh_indices = self._s3_model.kneighbors(
             x_sub,

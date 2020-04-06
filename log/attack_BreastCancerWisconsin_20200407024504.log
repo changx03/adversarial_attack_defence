@@ -1,0 +1,39 @@
+2020-04-07 02:45:04,152:INFO:defend_ad:Start at    : 20200407024504
+2020-04-07 02:45:04,153:INFO:defend_ad:RECEIVED PARAMETERS:
+2020-04-07 02:45:04,153:INFO:defend_ad:model file  :./save/BCNN_BreastCancerWisconsin_e200.pt
+2020-04-07 02:45:04,153:INFO:defend_ad:adv file    :./save/BCNN_BreastCancerWisconsin_FGSM_adv.npy
+2020-04-07 02:45:04,153:INFO:defend_ad:model       :BCNN
+2020-04-07 02:45:04,153:INFO:defend_ad:dataset     :BreastCancerWisconsin
+2020-04-07 02:45:04,153:INFO:defend_ad:param file  :./cmd/AdParams.json
+2020-04-07 02:45:04,153:INFO:defend_ad:seed        :4096
+2020-04-07 02:45:04,153:INFO:defend_ad:verbose     :True
+2020-04-07 02:45:04,153:INFO:defend_ad:save_log    :True
+2020-04-07 02:45:04,153:INFO:defend_ad:check_clean :True
+2020-04-07 02:45:04,153:DEBUG:defend_ad:params     : {'k1': 9, 'reliability': 1.6, 'sample_ratio': 1.0, 'confidence': 0.9, 'kappa': 10, 'disable_s2': False}
+2020-04-07 02:45:04,153:DEBUG:utils:Setting random seed for PyTorch.
+2020-04-07 02:45:04,178:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-04-07 02:45:04,178:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/BreastCancerWisconsin.csv
+2020-04-07 02:45:04,188:INFO:data_container:Train size: 455 - Test size: 114
+2020-04-07 02:45:04,188:INFO:data_container:Successfully load data. Time to complete: 0m 0.010s
+2020-04-07 02:45:04,189:INFO:defend_ad:Use BCNN model
+2020-04-07 02:45:06,512:DEBUG:model_container_pt:Using device: cuda
+2020-04-07 02:45:06,513:INFO:model_container_pt:Loaded model from ./save/BCNN_BreastCancerWisconsin_e200.pt
+2020-04-07 02:45:06,534:INFO:defend_ad:Accuracy on test set: 0.991228
+2020-04-07 02:45:06,538:DEBUG:applicability_domain:Number of input attributes: 64
+2020-04-07 02:45:06,538:DEBUG:detector_container:Time to complete [AD Stage 1]: 0m 0.003s
+2020-04-07 02:45:06,749:DEBUG:detector_container:Time to complete [AD Stage 2]: 0m 0.211s
+2020-04-07 02:45:06,749:DEBUG:applicability_domain:k for Stage 3: 20
+2020-04-07 02:45:06,753:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 455
+2020-04-07 02:45:06,912:DEBUG:applicability_domain:Train set likelihood = 0.980769
+2020-04-07 02:45:06,912:DEBUG:detector_container:Time to complete [AD Stage 3]: 0m 0.163s
+2020-04-07 02:45:06,914:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-04-07 02:45:07,117:DEBUG:applicability_domain:Stage 2: blocked 5 inputs
+2020-04-07 02:45:07,257:DEBUG:applicability_domain:Mean likelihood on adv: 0.989474
+2020-04-07 02:45:07,257:DEBUG:applicability_domain:Stage 3: blocked 1 inputs
+2020-04-07 02:45:07,257:INFO:defend_ad:Blocked 6/100 samples on clean samples
+2020-04-07 02:45:07,261:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-04-07 02:45:07,363:DEBUG:applicability_domain:Stage 2: blocked 100 inputs
+2020-04-07 02:45:07,363:DEBUG:applicability_domain:Stage 3: blocked 0 inputs
+2020-04-07 02:45:07,363:INFO:defend_ad:Blocked 100/100 samples on adv. examples
+2020-04-07 02:45:07,364:INFO:defend_ad:[result]./save/BCNN_BreastCancerWisconsin_e200.pt,./save/BCNN_BreastCancerWisconsin_FGSM_adv.npy,9,1.6,1.0,0.9,10,False,clean,0,5,1
+2020-04-07 02:45:07,364:INFO:defend_ad:[result]./save/BCNN_BreastCancerWisconsin_e200.pt,./save/BCNN_BreastCancerWisconsin_FGSM_adv.npy,9,1.6,1.0,0.9,10,False,adv,0,100,0

@@ -9,7 +9,7 @@ from .model_resnet_cifar import CifarResnet50
 AVALIABLE_MODELS = (
     'BCNN',
     'CifarCnn',
-    'CifarResnet',
+    'CifarResnet50',
     'IrisNN',
     'MnistCnnCW',
     'MnistCnnV2',

@@ -165,12 +165,16 @@ def main():
 if __name__ == '__main__':
     """
     Examples:
-    $ python ./cmd/attack.py -m ./save/BCNN_BreastCancerWisconsin_e200.pt -p ./cmd/attack_params.json -lvw -FD
-    $ python ./cmd/attack.py -m ./save/CifarCnn_CIFAR10_e50.pt -p ./cmd/attack_params.json -vw -FD
-    $ python ./cmd/attack.py -m ./save/IrisNN_BankNote_e200.pt -p ./cmd/attack_params.json -vw -FD
-    $ python ./cmd/attack.py -m ./save/IrisNN_HTRU2_e200.pt -p ./cmd/attack_params.json -vw -FD
-    $ python ./cmd/attack.py -m ./save/IrisNN_Iris_e200.pt -p ./cmd/attack_params.json -vw -FD
-    $ python ./cmd/attack.py -m ./save/IrisNN_WheatSeed_e300.pt -p ./cmd/attack_params.json -vw -FD
-    $ python ./cmd/attack.py -m ./save/MnistCnnV2_MNIST_e50.pt -p ./cmd/attack_params.json -vw -FD
+    $ python ./cmd/attack.py -m ./save/BCNN_BreastCancerWisconsin_e200.pt -p ./cmd/AttackParams.json -lvw -FD
+    $ python ./cmd/attack.py -m ./save/CifarCnn_CIFAR10_e50.pt -p ./cmd/AttackParams.json -vw -FD
+    $ python ./cmd/attack.py -m ./save/IrisNN_BankNote_e200.pt -p ./cmd/AttackParams.json -vw -FD
+    $ python ./cmd/attack.py -m ./save/IrisNN_HTRU2_e200.pt -p ./cmd/AttackParams.json -vw -FD
+    $ python ./cmd/attack.py -m ./save/IrisNN_Iris_e200.pt -p ./cmd/AttackParams.json -vw -FD
+    $ python ./cmd/attack.py -m ./save/IrisNN_WheatSeed_e300.pt -p ./cmd/AttackParams.json -vw -FD
+    $ python ./cmd/attack.py -m ./save/MnistCnnV2_MNIST_e50.pt -p ./cmd/AttackParams.json -vw -FD
+    $ python ./cmd/attack.py -m ./save/CifarResnet50_SVHN_e30.pt -p ./cmd/AttackParams.json -vw -F
+    $ python ./cmd/attack.py -m ./save/CifarResnet50_SVHN_e30.pt -p ./cmd/AttackParams.json -vw -D
+    $ python ./cmd/attack.py -m ./save/CifarResnet50_SVHN_e30.pt -p ./cmd/AttackParams.json -w -C
     """
     main()
+    print('[attack] Task completed!')

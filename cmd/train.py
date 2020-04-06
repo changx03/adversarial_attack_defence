@@ -142,7 +142,8 @@ if __name__ == "__main__":
     $ python ./cmd/train.py -d HTRU2 -e 200 -vw
     $ python ./cmd/train.py -d Iris -e 200 -vw
     $ python ./cmd/train.py -d WheatSeed -e 300 -vw
-    $ python ./cmd/train.py -d CIFAR10 -m CifarResnet -e 30 -vw
-    $ python ./cmd/train.py -d SVHN -m CifarResnet -e 30 -vw
+    $ python ./cmd/train.py -d CIFAR10 -m CifarResnet50 -e 30 -vw
+    $ python ./cmd/train.py -d SVHN -m CifarResnet50 -e 30 -vw
     """
     main()
+    print('[train] Task completed!')

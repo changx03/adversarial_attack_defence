@@ -14,10 +14,10 @@ logger = logging.getLogger('defence')
 
 
 def detect(detector, set_name, x, y):
-    x_passed, blocked_indices = detector.detect(x, y)
+    x_passed, blocked_indices, blocked_counts = detector.detect(x, y)
     logger.info('Blocked %d/%d samples on %s',
                 len(blocked_indices), len(x), set_name)
-    return x_passed, blocked_indices
+    return x_passed, blocked_indices, blocked_counts
 
 
 def main():
@@ -41,7 +41,7 @@ def main():
         '-l', '--savelog', action='store_true', default=False,
         help='save logging file')
     args = parser.parse_args()
-    filename = args.adv
+    adv_file = args.adv
     param_file = args.param
     model_file = args.model
     seed = args.seed
@@ -51,8 +51,8 @@ def main():
 
     # build filenames from the root file
     postfix = ['adv', 'pred', 'x', 'y']
-    data_files = [filename.replace('_adv', '_' + s) for s in postfix]
-    model_name, dname = parse_model_filename(filename)
+    data_files = [adv_file.replace('_adv', '_' + s) for s in postfix]
+    model_name, dname = parse_model_filename(adv_file)
 
     # set logging config. Run this before logging anything!
     set_logging('attack', dname, verbose, save_log)
@@ -67,7 +67,7 @@ def main():
             logger.warning(
                 'Cannot load files for clean samples. Skip checking clean set.')
             check_clean = False
-    dirname = os.path.dirname(filename)
+    dirname = os.path.dirname(adv_file)
 
     with open(param_file) as param_json:
         params = json.load(param_json)
@@ -76,7 +76,7 @@ def main():
     logger.info('Start at    : %s', get_time_str())
     logger.info('RECEIVED PARAMETERS:')
     logger.info('model file  :%s', model_file)
-    logger.info('adv file    :%s', filename)
+    logger.info('adv file    :%s', adv_file)
     logger.info('model       :%s', model_name)
     logger.info('dataset     :%s', dname)
     logger.info('param file  :%s', param_file)
@@ -115,28 +115,54 @@ def main():
     ad = ApplicabilityDomainContainer(mc, hidden_model=model.hidden_model, **params)
     ad.fit()
 
+    result_prefix = [model_file] \
+            + [adv_file] \
+            + [params['k1']] \
+            + [params['reliability']] \
+            + [params['sample_ratio']] \
+            + [params['confidence']] \
+            + [params['kappa']] \
+            + [params['disable_s2']]
+
     # check clean
     if check_clean:
         x = np.load(data_files[2], allow_pickle=False)
         y = np.load(data_files[3], allow_pickle=False)
-        x_passed, blk_idx = detect(ad, 'clean samples', x, y)
+        x_passed, blk_idx, blocked_counts = detect(ad, 'clean samples', x, y)
+        result = result_prefix + ['clean'] + blocked_counts
+        result_clean = '[result]' + ','.join([str(r) for r in result])
 
     # check adversarial examples
     adv = np.load(data_files[0], allow_pickle=False)
     pred = np.load(data_files[1], allow_pickle=False)
-    adv_passed, adv_blk_idx = detect(ad, 'adv. examples', adv, pred)
+    adv_passed, adv_blk_idx, blocked_counts = detect(ad, 'adv. examples', adv, pred)
+    result = result_prefix + ['adv'] + blocked_counts
+    result = '[result]' + ','.join([str(r) for r in result])
+    if check_clean:
+        logger.info(result_clean)
+    logger.info(result)
+
+
+
 
 
 if __name__ == '__main__':
     """
     Examples:
-    $ python ./cmd/defend_ad.py -v \
-        -a ./save/BCNN_BreastCancerWisconsin_FGSM_adv.npy \
-        -p ./cmd/ad_params.json \
-        -m ./save/BCNN_BreastCancerWisconsin_e200.pt
-    $ python ./cmd/defend_ad.py -v \
-        -a ./save/BCNN_BreastCancerWisconsin_DeepFool_adv.npy \
-        -p ./cmd/ad_params.json \
-        -m ./save/BCNN_BreastCancerWisconsin_e200.pt
+    $ python ./cmd/defend_ad.py -vl -a ./save/BCNN_BreastCancerWisconsin_FGSM_adv.npy -p ./cmd/AdParams.json -m ./save/BCNN_BreastCancerWisconsin_e200.pt
+    $ python ./cmd/defend_ad.py -vl -a ./save/BCNN_BreastCancerWisconsin_FGSM_adv.npy -p ./cmd/AdParamsNoS2.json -m ./save/BCNN_BreastCancerWisconsin_e200.pt
+
+    $ python ./cmd/defend_ad.py -vl -a ./save/BCNN_BreastCancerWisconsin_DeepFool_adv.npy -p ./cmd/AdParams.json -m ./save/BCNN_BreastCancerWisconsin_e200.pt
+    $ python ./cmd/defend_ad.py -vl -a ./save/BCNN_BreastCancerWisconsin_DeepFool_adv.npy -p ./cmd/AdParamsNoS2.json -m ./save/BCNN_BreastCancerWisconsin_e200.pt
+
+    $ python ./cmd/defend_ad.py -vl -a ./save/CifarResnet50_SVHN_Carlini_adv.npy -p ./cmd/AdParamsLarge.json -m ./save/CifarResnet50_SVHN_e30.pt
+    $ python ./cmd/defend_ad.py -vl -a ./save/CifarResnet50_SVHN_Carlini_adv.npy -p ./cmd/AdParamsLargeNoS2.json -m ./save/CifarResnet50_SVHN_e30.pt
+
+    $ python ./cmd/defend_ad.py -vl -a ./save/CifarResnet50_SVHN_DeepFool_adv.npy -p ./cmd/AdParamsLarge.json -m ./save/CifarResnet50_SVHN_e30.pt
+    $ python ./cmd/defend_ad.py -vl -a ./save/CifarResnet50_SVHN_DeepFool_adv.npy -p ./cmd/AdParamsLargeNoS2.json -m ./save/CifarResnet50_SVHN_e30.pt
+
+    $ python ./cmd/defend_ad.py -vl -a ./save/CifarResnet50_SVHN_FGSM_adv.npy -p ./cmd/AdParamsLarge.json -m ./save/CifarResnet50_SVHN_e30.pt
+    $ python ./cmd/defend_ad.py -vl -a ./save/CifarResnet50_SVHN_FGSM_adv.npy -p ./cmd/AdParamsLargeNoS2.json -m ./save/CifarResnet50_SVHN_e30.pt
     """
     main()
+    print('[defend_ad] Task completed!')
