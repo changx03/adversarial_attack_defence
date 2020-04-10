@@ -43,6 +43,7 @@ class ModelContainerPT:
         self.accuracy_test = []
 
     def fit(self, max_epochs=5, batch_size=128):
+        """Train the classification model."""
         since = time.time()
 
         self._fit_torch(max_epochs, batch_size)
@@ -52,6 +53,7 @@ class ModelContainerPT:
                     int(time_elapsed // 60), time_elapsed % 60)
 
     def save(self, filename, overwrite=False):
+        """Save trained parameters."""
         filename = os.path.join('save', filename)
         filename = name_handler(filename, 'pt', overwrite)
 
@@ -60,6 +62,7 @@ class ModelContainerPT:
         logger.info('Saved model to %s', filename)
 
     def load(self, filename):
+        """Load pre-trained parameters."""
         self.model.load_state_dict(torch.load(
             filename, map_location=self.device))
 

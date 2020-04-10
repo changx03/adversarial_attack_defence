@@ -22,23 +22,33 @@ class DistillationContainer(DetectorContainer):
     Implements the Defensive Distillation method.
     """
 
-    def __init__(self, model_container, temperature=10.0):
+    def __init__(self,
+                 model_container,
+                 distillation_model,
+                 temperature=10.0,
+                 pretrained=False):
         """
         Create an instance of Distillation Container.
 
         :param model_container: A trained model.
         :type model_container: `ModelContainerPT`
-        :param batch_size: Size of batches.
-        :type batch_size: `int`
-        :param nb_epochs: Number of epochs to use for training.
-        :type nb_epochs: `int`
+        :param distillation_model: The distillation model has same architecture as the classifier model.
+        :type distillation_model: `torch.nn.Module`
+        :param temperature: It controls the smoothness of the softmax function.
+        :type temperature: `float`
+        :param pretrained: For testing only. Load the pre-trained parameters. The accuracy on train set will become 100%.
+        :type pretrained: `bool`
         """
         super(DistillationContainer, self).__init__(model_container)
 
         self.temperature = temperature
+        self.pretrained = pretrained
 
         # check if the model produces probability outputs
         dc = self.model_container.data_container
+        accuracy = self.model_container.evaluate(
+            dc.data_test_np, dc.label_test_np)
+        logger.debug('Test set accuracy on pre-trained model: %f', accuracy)
         score_train = self.model_container.get_score(dc.data_train_np)
         are_probability = np.all([is_probability(yy) for yy in score_train])
         # We do NOT need soft label for test set.
@@ -49,20 +59,34 @@ class DistillationContainer(DetectorContainer):
         else:
             prob_train = score_train
 
-        # smooth model
-        Model = self.model_container.model.__class__
-        smooth_model = Model(from_logits=True)
-
-        # load pre-trained parameters
-        state_dict = copy.deepcopy(self.model_container.model.state_dict())
-        smooth_model.load_state_dict(state_dict)
+        labels = np.argmax(prob_train, axis=1)
+        correct = len(np.where(labels == dc.label_train_np)[0])
+        logger.debug('Accuracy of smooth labels: %f',
+                     correct / len(dc.label_train_np))
 
         # create new data container and replace the label to smooth probability
         dataset_name = dc.name
         dc = DataContainer(DATASET_LIST[dataset_name], get_data_path())
-        dc()
+        dc(shuffle=False)
+        # prevent the train set permutate.
+        dc.data_train_np = self.model_container.data_container.data_train_np
         dc.label_train_np = prob_train
+
+        # smooth model
+        smooth_model = distillation_model
+
+        # load pre-trained parameters
+        if pretrained:
+            state_dict = copy.deepcopy(self.model_container.model.state_dict())
+            smooth_model.load_state_dict(state_dict)
+
+        # model container for distillation
         self.smooth_mc = ModelContainerPT(smooth_model, dc)
+
+        accuracy = self.smooth_mc.evaluate(dc.data_train_np, labels)
+        logger.debug('Train set accuracy on distillation model: %f', accuracy)
+        accuracy = self.smooth_mc.evaluate(dc.data_test_np, dc.label_test_np)
+        logger.debug('Test set accuracy on distillation model: %f', accuracy)
 
         # to allow the model train multiple times
         self.loss_train = []
@@ -71,9 +95,10 @@ class DistillationContainer(DetectorContainer):
         self.accuracy_test = []
 
     def fit(self, max_epochs=10, batch_size=128):
+        """Train the distillation model."""
         mc = self.smooth_mc
         dc = mc.data_container
-        # Train set: y is soft-labels
+        # Train set: y is soft probabilities
         train_loader = dc.get_dataloader(batch_size, is_train=True)
         # Test set: y is hard-labels
         test_loader = dc.get_dataloader(batch_size, is_train=False)
@@ -135,11 +160,27 @@ class DistillationContainer(DetectorContainer):
 
         model.load_state_dict(best_model_state)
 
+    def save(self, filename, overwrite=False):
+        """Save trained parameters."""
+        self.smooth_mc.save(filename, overwrite)
+
+    def load(self, filename):
+        """Load pre-trained parameters."""
+        self.smooth_mc.load(filename)
+
     def detect(self, adv, pred=None):
-        pass
+        """
+        Compare the prediction with original model, and block all unmatched results.
+        """
+        if pred is None:
+            pred = self.model_container.predict(adv)
+
+        distill_pred = self.smooth_mc.predict(adv)
+        blocked_indices = np.where(distill_pred != pred)
+        return blocked_indices
 
     def get_def_model_container(self):
-        """Get defence model container"""
+        """Get the defence model container."""
         return self.smooth_mc
 
     def _train(self, optimizer, loader):
@@ -149,6 +190,7 @@ class DistillationContainer(DetectorContainer):
         model.train()
         total_loss = 0.0
         corrects = 0.0
+        loss_fn = self.smooth_nlloss
 
         for x, y in loader:
             x = x.to(device)
@@ -156,18 +198,18 @@ class DistillationContainer(DetectorContainer):
             batch_size = x.size(0)
 
             optimizer.zero_grad()
-            output = model(x)
-            loss = self.smooth_nlloss(output, y)
+            score = model(x)
+            loss = loss_fn(score, y)
 
             loss.backward()
             optimizer.step()
 
             # for logging
             total_loss += loss.cpu().item() * batch_size
-            pred = output.max(1, keepdim=True)[1]
+            pred = score.max(1, keepdim=True)[1]
 
-            y = y.max(1, keepdim=True)[1]
-            corrects += pred.eq(y.view_as(pred)).sum().cpu().item()
+            labels = y.max(1, keepdim=True)[1]
+            corrects += pred.eq(labels).sum().cpu().item()
 
         n = len(loader.dataset)
         total_loss = total_loss / n
@@ -188,10 +230,10 @@ class DistillationContainer(DetectorContainer):
                 x = x.to(device)
                 y = y.to(device)
                 batch_size = x.size(0)
-                output = model(x)
-                loss = loss_fn(output, y)
+                score = model(x)
+                loss = loss_fn(score, y)
                 total_loss += loss.cpu().item() * batch_size
-                pred = output.max(1, keepdim=True)[1]
+                pred = score.max(1, keepdim=True)[1]
                 corrects += pred.eq(y.view_as(pred)).sum().cpu().item()
 
         n = len(loader.dataset)
@@ -200,9 +242,15 @@ class DistillationContainer(DetectorContainer):
         return total_loss, accuracy
 
     @staticmethod
-    def smooth_nlloss(inputs, targets):
-        n = inputs.size(0)
+    def smooth_nlloss(score, targets):
+        """
+        The loss function for distillation. It's a modified negative log
+        likelihood loss.
+        """
         logsoftmax = nn.LogSoftmax(dim=1)
-        outputs = logsoftmax(inputs)
-        loss = - (targets * outputs).sum() / n
+        score = logsoftmax(score)
+        n = score.size(0)
+        loss = - (targets * score).sum() / n
+        # targets = targets.max(1, keepdim=True)[1]
+        # loss = nn.functional.nll_loss(score, targets.squeeze())
         return loss
