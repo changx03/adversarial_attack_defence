@@ -176,7 +176,7 @@ class DistillationContainer(DetectorContainer):
             pred = self.model_container.predict(adv)
 
         distill_pred = self.smooth_mc.predict(adv)
-        blocked_indices = np.where(distill_pred != pred)
+        blocked_indices = np.where(distill_pred != pred)[0]
         return blocked_indices
 
     def get_def_model_container(self):
