@@ -120,7 +120,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
         return True
 
-    def detect(self, adv, pred_adv=None):
+    def detect(self, adv, pred=None):
         n = len(adv)
         # 1: passed test, 0: blocked by AD
         passed = np.ones(n, dtype=np.int8)

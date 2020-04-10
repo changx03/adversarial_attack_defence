@@ -11,8 +11,10 @@ import torch
 import torch.nn as nn
 
 LOSS_FN = nn.CrossEntropyLoss()
-OPTIMIZER = torch.optim.Adam
-OPTIM_PARAMS = {'lr': 0.001, 'betas': (0.9, 0.999), 'weight_decay': 0.001}
+# OPTIMIZER = torch.optim.Adam
+# OPTIM_PARAMS = {'lr': 0.001, 'betas': (0.9, 0.999), 'weight_decay': 0.001}
+OPTIMIZER = torch.optim.SGD
+OPTIM_PARAMS = {'lr': 0.001, 'momentum': 0.9}
 SCHEDULER = None
 SCHEDULER_PARAMS = None
 
@@ -29,7 +31,8 @@ class MnistCnnV2(nn.Module):
             optimizer=OPTIMIZER,
             optim_params=OPTIM_PARAMS,
             scheduler=SCHEDULER,
-            scheduler_params=SCHEDULER_PARAMS):
+            scheduler_params=SCHEDULER_PARAMS,
+            from_logits=True):
         super(MnistCnnV2, self).__init__()
 
         self.hidden_model = nn.Sequential(OrderedDict([
@@ -56,8 +59,11 @@ class MnistCnnV2(nn.Module):
         self.optim_params = optim_params
         self.scheduler = scheduler
         self.scheduler_params = scheduler_params
+        self.from_logits = from_logits
 
     def forward(self, x):
         x = self.hidden_model(x)
         x = self.fn(x)
+        if not self.from_logits:
+            x = torch.softmax(x, dim=1)
         return x

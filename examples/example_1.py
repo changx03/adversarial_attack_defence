@@ -36,8 +36,8 @@ def main():
     print('Expected initial loss: {}'.format(np.log(10)))
 
     mc = ModelContainerPT(model, dc)
-    mc.fit(epochs=10, batch_size=BATCH_SIZE)  # for image
-    # mc.fit(epochs=200, batch_size=BATCH_SIZE)
+    mc.fit(max_epochs=10, batch_size=BATCH_SIZE)  # for image
+    # mc.fit(max_epochs=200, batch_size=BATCH_SIZE)
     print('Test acc:', mc.accuracy_test)
 
     mc.save(f'{NAME}-{model_name}')

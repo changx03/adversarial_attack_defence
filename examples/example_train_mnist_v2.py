@@ -31,7 +31,7 @@ def main():
     file_path = os.path.join('save', filename)
     if not os.path.exists(file_path):
         logger.debug('Expected initial loss: %f', np.log(10))
-        mc.fit(epochs=MAX_EPOCHS, batch_size=BATCH_SIZE)
+        mc.fit(max_epochs=MAX_EPOCHS, batch_size=BATCH_SIZE)
         mc.save(filename, overwrite=True)
     else:
         logger.info('Use saved parameters from %s', filename)

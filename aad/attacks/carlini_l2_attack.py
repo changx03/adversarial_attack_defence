@@ -35,11 +35,12 @@ class CarliniL2Container(AttackContainer):
         # use IBM ART pytorch module wrapper
         # the model used here should be already trained
         model = self.model_container.model
-        loss_fn = self.model_container.model.loss_fn
-        clip_values = self.model_container.data_container.data_range
-        optimizer = self.model_container.model.optimizer
-        num_classes = self.model_container.data_container.num_classes
-        dim_data = self.model_container.data_container.dim_data
+        dc = self.model_container.data_container
+        loss_fn = model.loss_fn
+        clip_values = dc.data_range
+        optimizer = model.optimizer
+        num_classes = dc.num_classes
+        dim_data = dc.dim_data
         self.classifier = PyTorchClassifier(
             model=model,
             clip_values=clip_values,

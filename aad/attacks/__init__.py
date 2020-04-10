@@ -1,3 +1,6 @@
+"""
+Module for adversarial attacks.
+"""
 from .attack_container import AttackContainer
 from .bim_attack import BIMContainer
 from .carlini_l2_attack import CarliniL2Container

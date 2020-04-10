@@ -39,7 +39,7 @@ class TestApplicabilityDomainIris(unittest.TestCase):
         filename = get_pt_model_filename(IrisNN.__name__, NAME, MAX_EPOCHS)
         file_path = os.path.join('save', filename)
         if not os.path.exists(file_path):
-            cls.mc.fit(epochs=MAX_EPOCHS, batch_size=BATCH_SIZE)
+            cls.mc.fit(max_epochs=MAX_EPOCHS, batch_size=BATCH_SIZE)
             cls.mc.save(filename, overwrite=True)
         else:
             logger.info('Use saved parameters from %s', filename)

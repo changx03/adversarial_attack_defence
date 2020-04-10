@@ -31,7 +31,7 @@ class TestModelIris(unittest.TestCase):
         model_name = model.__class__.__name__
         logger.info('Using model: %s', model_name)
         cls.mc = ModelContainerPT(model, cls.dc)
-        cls.mc.fit(epochs=100, batch_size=BATCH_SIZE)
+        cls.mc.fit(max_epochs=100, batch_size=BATCH_SIZE)
 
         # for comparison
         model2 = IrisNN()
@@ -49,7 +49,7 @@ class TestModelIris(unittest.TestCase):
         logger.info('Test acc: %f', acc0)
 
         # continue training
-        self.mc.fit(epochs=50, batch_size=BATCH_SIZE)
+        self.mc.fit(max_epochs=50, batch_size=BATCH_SIZE)
         acc1 = self.mc.accuracy_test[-1]
         self.assertGreaterEqual(acc1, acc0)
         logger.info('Test acc: %f', acc1)

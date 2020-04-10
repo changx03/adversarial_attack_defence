@@ -31,7 +31,7 @@ class TestModelMNIST(unittest.TestCase):
         model_name = model.__class__.__name__
         logger.info('Using model: %s', model_name)
         cls.mc = ModelContainerPT(model, cls.dc)
-        cls.mc.fit(epochs=2, batch_size=BATCH_SIZE)
+        cls.mc.fit(max_epochs=2, batch_size=BATCH_SIZE)
 
         # for comparison
         model2 = MnistCnnCW()
@@ -45,12 +45,12 @@ class TestModelMNIST(unittest.TestCase):
         master_seed(SEED)
 
     def test_train(self):
-        self.mc.fit(epochs=2, batch_size=BATCH_SIZE)
+        self.mc.fit(max_epochs=2, batch_size=BATCH_SIZE)
         acc0 = self.mc.accuracy_test[-1]
         logger.debug('Test acc: %f', acc0)
 
         # continue training
-        self.mc.fit(epochs=2, batch_size=BATCH_SIZE)
+        self.mc.fit(max_epochs=2, batch_size=BATCH_SIZE)
         acc1 = self.mc.accuracy_test[-1]
         self.assertGreaterEqual(acc1, acc0)
         logger.debug('Test acc: %f', acc1)

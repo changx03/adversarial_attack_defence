@@ -34,16 +34,18 @@ class ModelContainerPT:
             logger.warning('GPU is not supported!')
         logger.debug('Using device: %s', self.device)
 
+        self.output_logits = model.from_logits
+
         # to allow the model train multiple times
         self.loss_train = []
         self.loss_test = []
         self.accuracy_train = []
         self.accuracy_test = []
 
-    def fit(self, epochs=5, batch_size=64):
+    def fit(self, max_epochs=5, batch_size=128):
         since = time.time()
 
-        self._fit_torch(epochs, batch_size)
+        self._fit_torch(max_epochs, batch_size)
 
         time_elapsed = time.time() - since
         logger.info('Time to complete training: %dm %.3fs',
@@ -150,7 +152,7 @@ class ModelContainerPT:
         accuracy = np.sum(np.equal(predictions, labels)) / len(labels)
         return accuracy
 
-    def _fit_torch(self, epochs, batch_size):
+    def _fit_torch(self, max_epochs, batch_size):
         train_loader = self.data_container.get_dataloader(
             batch_size, is_train=True)
         test_loader = self.data_container.get_dataloader(
@@ -172,7 +174,7 @@ class ModelContainerPT:
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
 
-        for epoch in range(epochs):
+        for epoch in range(max_epochs):
             time_start = time.time()
 
             tr_loss, tr_acc = self._train_torch(optimizer, train_loader)
@@ -183,7 +185,7 @@ class ModelContainerPT:
             time_elapsed = time.time() - time_start
             logger.debug(
                 '[%d/%d]%dm %.3fs: Train loss: %f acc: %f - Test loss: %f acc: %f',
-                epoch+1, epochs,
+                epoch+1, max_epochs,
                 int(time_elapsed // 60), time_elapsed % 60,
                 tr_loss, tr_acc, va_loss, va_acc)
 
@@ -204,13 +206,19 @@ class ModelContainerPT:
                     'Satisfied the accuracy threshold. Abort at %d epoch!',
                     epoch)
                 break
+            if len(self.loss_train) - 5 >= 0 \
+                    and self.loss_train[-5] <= self.loss_train[-1]:
+                logger.debug(
+                    'No improvement in the last 5 epochs. Abort at %d epoch!',
+                    epoch)
+                break
 
         self.model.load_state_dict(best_model_state)
 
     def _train_torch(self, optimizer, loader):
         self.model.train()
-        total_loss = 0.
-        corrects = 0.
+        total_loss = 0.0
+        corrects = 0.0
         loss_fn = self.model.loss_fn
 
         for x, y in loader:
@@ -228,6 +236,8 @@ class ModelContainerPT:
             # for logging
             total_loss += loss.cpu().item() * batch_size
             pred = output.max(1, keepdim=True)[1]
+            if not self.output_logits:
+                y = y.max(1, keepdim=True)[1]
             corrects += pred.eq(y.view_as(pred)).sum().cpu().item()
 
         n = len(loader.dataset)
@@ -237,8 +247,8 @@ class ModelContainerPT:
 
     def _validate_torch(self, loader):
         self.model.eval()
-        total_loss = 0.
-        corrects = 0
+        total_loss = 0.0
+        corrects = 0.0
         loss_fn = self.model.loss_fn
 
         with torch.no_grad():
@@ -250,6 +260,8 @@ class ModelContainerPT:
                 loss = loss_fn(output, y)
                 total_loss += loss.cpu().item() * batch_size
                 pred = output.max(1, keepdim=True)[1]
+                if not self.output_logits:
+                    y = y.max(1, keepdim=True)[1]
                 corrects += pred.eq(y.view_as(pred)).sum().cpu().item()
 
         n = len(loader.dataset)

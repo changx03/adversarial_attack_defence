@@ -4,6 +4,7 @@ This module contains all static utility functions
 import logging
 import os
 import time
+import math
 
 import numpy as np
 
@@ -172,3 +173,11 @@ def get_time_str():
 def get_pt_model_filename(model_name, dataset, epochs):
     """Return the filename for PyTorch model"""
     return '{}_{}_e{}.pt'.format(model_name, dataset, epochs)
+
+def is_probability(vector):
+    """Check if the score add up to 1."""
+    assert isinstance(vector, np.ndarray) and len(vector.shape) == 1
+    sum_to_1 = math.isclose(vector.sum(), 1.0, rel_tol=1e-3)
+    smaller_than_1 = np.amax(vector) <= 1.0
+    larger_than_0 = np.all(vector >= 0.0)
+    return sum_to_1 and smaller_than_1 and larger_than_0

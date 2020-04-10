@@ -1,6 +1,7 @@
 """
 This module implements fine-tune a pretrained ResNet50 for CIFAR10
 """
+import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchvision as tv
@@ -24,7 +25,8 @@ class CifarResnet50(nn.Module):
             optimizer=OPTIMIZER,
             optim_params=OPTIM_PARAMS,
             scheduler=SCHEDULER,
-            scheduler_params=SCHEDULER_PARAMS):
+            scheduler_params=SCHEDULER_PARAMS,
+            from_logits=True):
         super(CifarResnet50, self).__init__()
 
         resnet = tv.models.resnet50(pretrained=True, progress=False)
@@ -49,6 +51,10 @@ class CifarResnet50(nn.Module):
         self.optim_params = optim_params
         self.scheduler = scheduler
         self.scheduler_params = scheduler_params
+        self.from_logits = from_logits
 
     def forward(self, x):
-        return self.resnet(x)
+        x = self.resnet(x)
+        if not self.from_logits:
+            x = torch.softmax(x, dim=1)
+        return x

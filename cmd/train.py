@@ -114,7 +114,7 @@ def main():
 
     # set ModelContainer and train the model
     mc = models.ModelContainerPT(model, dc)
-    mc.fit(epochs=max_epochs, batch_size=batch_size)
+    mc.fit(max_epochs=max_epochs, batch_size=batch_size)
 
     # save
     if not os.path.exists('save'):

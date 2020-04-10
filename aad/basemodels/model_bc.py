@@ -27,7 +27,8 @@ class BCNN(nn.Module):
             optimizer=OPTIMIZER,
             optim_params=OPTIM_PARAMS,
             scheduler=SCHEDULER,
-            scheduler_params=SCHEDULER_PARAMS):
+            scheduler_params=SCHEDULER_PARAMS,
+            from_logits=True):
         super(BCNN, self).__init__()
 
         self.hidden_model = nn.Sequential(
@@ -45,8 +46,11 @@ class BCNN(nn.Module):
         self.optim_params = optim_params
         self.scheduler = scheduler
         self.scheduler_params = scheduler_params
+        self.from_logits = from_logits
 
     def forward(self, x):
         x = self.hidden_model(x)
         x = self.fc1(x)
+        if not self.from_logits:
+            x = torch.softmax(x, dim=1)
         return x

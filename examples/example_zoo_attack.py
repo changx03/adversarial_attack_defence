@@ -40,7 +40,7 @@ def main():
     file_path = os.path.join('save', model_filename)
 
     if not os.path.exists(file_path):
-        mc.fit(epochs=EPOCHS, batch_size=BATCH_SIZE)
+        mc.fit(max_epochs=EPOCHS, batch_size=BATCH_SIZE)
         mc.save(model_filename, overwrite=True)
     else:
         print('Found saved model!')

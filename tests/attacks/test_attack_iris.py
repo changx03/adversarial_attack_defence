@@ -36,7 +36,7 @@ class TestAttackIris(unittest.TestCase):
 
         file_path = os.path.join('save', FILE_NAME)
         if not os.path.exists(file_path):
-            cls.mc.fit(epochs=200, batch_size=BATCH_SIZE)
+            cls.mc.fit(max_epochs=200, batch_size=BATCH_SIZE)
             cls.mc.save(FILE_NAME, overwrite=True)
         else:
             logger.info('Use saved parameters from %s', FILE_NAME)
