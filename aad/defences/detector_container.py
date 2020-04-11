@@ -32,6 +32,16 @@ class DetectorContainer(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
+    def save(self, filename, overwrite=False):
+        """Save the defence"""
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def load(self, filename):
+        """Load the defence"""
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def detect(self, adv, pred):
         """Detect adversarial examples."""
         raise NotImplementedError

@@ -119,6 +119,19 @@ class ApplicabilityDomainContainer(DetectorContainer):
         self._log_time_end('AD Stage 3')
 
         return True
+    
+    def save(self, filename, overwrite=False):
+        """
+        The parameters to save for Applicability Domain. Consider save the constants
+        in a JSON file.
+        """
+        pass
+
+    def load(self, filename):
+        """
+        This method does not support load parameters.
+        """
+        pass
 
     def detect(self, adv, pred=None):
         n = len(adv)
