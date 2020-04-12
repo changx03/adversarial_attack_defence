@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class DistillationContainer(DetectorContainer):
     """
-    Implements the Defensive Distillation method.
+    Class preforms Defensive Distillation Model.
     """
 
     def __init__(self,
@@ -88,12 +88,6 @@ class DistillationContainer(DetectorContainer):
         accuracy = self.smooth_mc.evaluate(dc.data_test_np, dc.label_test_np)
         logger.debug('Test set accuracy on distillation model: %f', accuracy)
 
-        # to allow the model train multiple times
-        self.loss_train = []
-        self.loss_test = []
-        self.accuracy_train = []
-        self.accuracy_test = []
-
     def fit(self, max_epochs=10, batch_size=128):
         """Train the distillation model."""
         mc = self.smooth_mc
@@ -123,7 +117,7 @@ class DistillationContainer(DetectorContainer):
             time_start = time.time()
 
             tr_loss, tr_acc = self._train(optimizer, train_loader)
-            va_loss, va_acc = self._validate(test_loader)
+            va_loss, va_acc = mc._validate_torch(test_loader)
             if model.scheduler:
                 scheduler.step()
 
@@ -140,10 +134,10 @@ class DistillationContainer(DetectorContainer):
                 best_model_state = copy.deepcopy(model.state_dict())
 
             # save logs
-            self.loss_train.append(tr_loss)
-            self.loss_test.append(va_loss)
-            self.accuracy_train.append(tr_acc)
-            self.accuracy_test.append(va_acc)
+            mc.loss_train.append(tr_loss)
+            mc.loss_test.append(va_loss)
+            mc.accuracy_train.append(tr_acc)
+            mc.accuracy_test.append(va_acc)
 
             # early stopping
             if (tr_acc >= 0.999 and va_acc >= 0.999) or tr_loss < 1e-4:
@@ -151,8 +145,8 @@ class DistillationContainer(DetectorContainer):
                     'Satisfied the accuracy threshold. Abort at %d epoch!',
                     epoch)
                 break
-            if len(self.loss_train) - 5 >= 0 \
-                    and self.loss_train[-5] <= self.loss_train[-1]:
+            if len(mc.loss_train) - 5 >= 0 \
+                    and mc.loss_train[-5] <= mc.loss_train[-1]:
                 logger.debug(
                     'No improvement in the last 5 epochs. Abort at %d epoch!',
                     epoch)
@@ -170,7 +164,8 @@ class DistillationContainer(DetectorContainer):
 
     def detect(self, adv, pred=None):
         """
-        Compare the prediction with original model, and block all unmatched results.
+        Compare the predictions between distillation model and original model, 
+        and block all unmatched results.
         """
         if pred is None:
             pred = self.model_container.predict(adv)
@@ -215,31 +210,6 @@ class DistillationContainer(DetectorContainer):
         total_loss = total_loss / n
         acc = corrects / n
         return total_loss, acc
-
-    def _validate(self, loader):
-        mc = self.smooth_mc
-        device = mc.device
-        model = mc.model
-        model.eval()
-        total_loss = 0.0
-        corrects = 0.0
-        loss_fn = model.loss_fn
-
-        with torch.no_grad():
-            for x, y in loader:
-                x = x.to(device)
-                y = y.to(device)
-                batch_size = x.size(0)
-                score = model(x)
-                loss = loss_fn(score, y)
-                total_loss += loss.cpu().item() * batch_size
-                pred = score.max(1, keepdim=True)[1]
-                corrects += pred.eq(y.view_as(pred)).sum().cpu().item()
-
-        n = len(loader.dataset)
-        total_loss = total_loss / n
-        accuracy = corrects / n
-        return total_loss, accuracy
 
     @staticmethod
     def smooth_nlloss(score, targets):

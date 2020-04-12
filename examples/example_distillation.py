@@ -26,7 +26,7 @@ def main():
         mc, Model(), temperature=1.0, pretrained=False)
 
     print('Expected initial loss = -log(1/num_classes) = 2.3025850929940455')
-    distillation.fit(max_epochs=10, batch_size=128)
+    distillation.fit(max_epochs=8, batch_size=128)
 
     smooth_mc = distillation.get_def_model_container()
     accuracy = smooth_mc.evaluate(dc.data_test_np, dc.label_test_np)
