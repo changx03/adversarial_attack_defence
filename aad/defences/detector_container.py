@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class DetectorContainer(abc.ABC):
     """
-    Class performing adversarial detection
+    Base class for adversarial detection class
     """
     params = dict()  # Override this in child class
 
