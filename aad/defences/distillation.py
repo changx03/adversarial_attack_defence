@@ -162,16 +162,22 @@ class DistillationContainer(DetectorContainer):
         """Load pre-trained parameters."""
         self.smooth_mc.load(filename)
 
-    def detect(self, adv, pred=None):
+    def detect(self, adv, pred=None, return_passed_x=True):
         """
-        Compare the predictions between distillation model and original model, 
+        Compare the predictions between distillation model and original model,
         and block all unmatched results.
         """
+        # TODO: detect method blocks too many clean inputs
         if pred is None:
             pred = self.model_container.predict(adv)
 
         distill_pred = self.smooth_mc.predict(adv)
         blocked_indices = np.where(distill_pred != pred)[0]
+
+        if return_passed_x:
+            passed_indices = np.where(
+                np.isin(np.arange(len(adv)), blocked_indices) == False)[0]
+            return blocked_indices, adv[passed_indices]
         return blocked_indices
 
     def get_def_model_container(self):

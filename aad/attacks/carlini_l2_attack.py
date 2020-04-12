@@ -8,7 +8,7 @@ import numpy as np
 from art.attacks import CarliniL2Method
 from art.classifiers import PyTorchClassifier
 
-from ..utils import swap_image_channel
+from ..utils import get_range, swap_image_channel
 from .attack_container import AttackContainer
 
 logger = logging.getLogger(__name__)
@@ -37,7 +37,8 @@ class CarliniL2Container(AttackContainer):
         model = self.model_container.model
         dc = self.model_container.data_container
         loss_fn = model.loss_fn
-        clip_values = dc.data_range
+        dc = self.model_container.data_container
+        clip_values = get_range(dc.data_train_np, dc.data_type == 'image')
         optimizer = model.optimizer
         num_classes = dc.num_classes
         dim_data = dc.dim_data
@@ -61,12 +62,14 @@ class CarliniL2Container(AttackContainer):
         if use_testset and len(dc.data_test_np) < count:
             count = len(dc.data_test_np)
 
-        xx = np.copy(dc.data_test_np[:count]) if use_testset else np.copy(x)
+        x = np.copy(dc.data_test_np[:count]) if use_testset else np.copy(x)
 
         # handle (h, w, c) to (c, h, w)
         data_type = self.model_container.data_container.data_type
-        if data_type == 'image' and xx.shape[1] not in (1, 3):
+        if data_type == 'image' and x.shape[1] not in (1, 3):
             xx = swap_image_channel(x)
+        else:
+            xx = x
 
         adv = self._generate(xx)
         y_adv, y_clean = self.predict(adv, xx)
@@ -77,7 +80,7 @@ class CarliniL2Container(AttackContainer):
         time_elapsed = time.time() - since
         logger.info('Time to complete training %d adv. examples: %dm %.3fs',
                     count, int(time_elapsed // 60), time_elapsed % 60)
-        return adv, y_adv, np.copy(x), y_clean
+        return adv, y_adv, x, y_clean
 
     def _generate(self, x, targets=None):
         targeted = targets is not None

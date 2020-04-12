@@ -14,10 +14,11 @@ logger = logging.getLogger('defence')
 
 
 def detect(detector, set_name, x, y):
-    x_passed, blocked_indices, blocked_counts = detector.detect(x, y)
+    blocked_indices, x_passed = detector.detect(x, y, return_passed_x=True)
+    blocked_counts = detector.blocked_by_stages
     logger.info('Blocked %d/%d samples on %s',
                 len(blocked_indices), len(x), set_name)
-    return x_passed, blocked_indices, blocked_counts
+    return x_passed, blocked_indices, blocked_counts.tolist()
 
 
 def main():

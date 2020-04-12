@@ -9,6 +9,8 @@ from aad.utils import (get_range, master_seed, name_handler, onehot_encoding,
                        swap_image_channel)
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
+
 SEED = 4096
 
 

@@ -8,6 +8,7 @@ from aad.attacks import AttackContainer
 from aad.utils import master_seed
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 SEED = 4096  # 2**12 = 4096
 

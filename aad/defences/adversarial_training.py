@@ -7,13 +7,12 @@ import time
 
 import numpy as np
 import torch
-import torch.nn as nn
 from torch.utils.data import DataLoader
 
 from ..attacks import AttackContainer
 from ..basemodels import ModelContainerPT
-from ..datasets import DATASET_LIST, DataContainer, NumericalDataset
-from ..utils import get_data_path, is_probability, swap_image_channel
+from ..datasets import NumericalDataset
+from ..utils import swap_image_channel
 from .detector_container import DetectorContainer
 
 logger = logging.getLogger(__name__)
@@ -97,16 +96,22 @@ class AdversarialTraining(DetectorContainer):
         """Load pre-trained parameters."""
         self.discriminator.load(filename)
 
-    def detect(self, adv, pred=None):
+    def detect(self, adv, pred=None, return_passed_x=True):
         """
         Compare the predictions between adv. training model and original model, 
         and block all unmatched results.
         """
+        # TODO: detect method blocks too many clean inputs
         if pred is None:
             pred = self.model_container.predict(adv)
 
         robust_pred = self.discriminator.predict(adv)
         blocked_indices = np.where(robust_pred != pred)[0]
+
+        if return_passed_x:
+            passed_indices = np.where(
+                np.isin(np.arange(len(adv)), blocked_indices) == False)[0]
+            return blocked_indices, adv[passed_indices]
         return blocked_indices
 
     def fit_discriminator(self, x_train, y_train, max_epochs, batch_size):

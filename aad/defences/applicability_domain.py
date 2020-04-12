@@ -73,6 +73,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         # placeholders for the objects used by AD
         self.num_components = 0  # number of hidden components
         self.encode_train_np = None
+        self.blocked_by_stages = np.zeros(3, dtype=np.int)
         self.y_train_np = None
         # keep track max for each class, size: [num_classes, num_components]
         self._x_max = None
@@ -119,7 +120,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         self._log_time_end('AD Stage 3')
 
         return True
-    
+
     def save(self, filename, overwrite=False):
         """
         The parameters to save for Applicability Domain. Consider save the constants
@@ -133,15 +134,15 @@ class ApplicabilityDomainContainer(DetectorContainer):
         """
         pass
 
-    def detect(self, adv, pred=None):
+    def detect(self, adv, pred=None, return_passed_x=True):
         n = len(adv)
         # 1: passed test, 0: blocked by AD
         passed = np.ones(n, dtype=np.int8)
 
         # The defence does NOT know the true class of adversarial examples. It
         # computes predictions instead.
-        if pred_adv is None:
-            pred_adv = self.model_container.predict(adv)
+        if pred is None:
+            pred = self.model_container.predict(adv)
 
         # The adversarial examples exist in image/data space. The KNN model runs
         # in hidden layer (encoded space)
@@ -150,26 +151,28 @@ class ApplicabilityDomainContainer(DetectorContainer):
         disable_s2 = self.params['disable_s2']
 
         # Stage 1
-        passed = self._def_state1(encoded_adv, pred_adv, passed)
+        passed = self._def_state1(encoded_adv, pred, passed)
         blocked = len(passed[passed == 0])
         logger.debug('Stage 1: blocked %d inputs', blocked)
-        blocked_s1 = blocked
+        self.blocked_by_stages[0] = blocked
         # Stage 2
-        blocked_s2 = 0
         if disable_s2 is False:
-            passed = self._def_state2(encoded_adv, pred_adv, passed)
+            passed = self._def_state2(encoded_adv, pred, passed)
             blocked = len(passed[passed == 0]) - blocked
             logger.debug('Stage 2: blocked %d inputs', blocked)
-            blocked_s2 = blocked
+            self.blocked_by_stages[1] = blocked
         # Stage 3
         passed = self._def_state3_v2(encoded_adv, passed)
         blocked = len(passed[passed == 0]) - blocked
         logger.debug('Stage 3: blocked %d inputs', blocked)
-        blocked_s3 = blocked
+        self.blocked_by_stages[2] = blocked
 
         passed_indices = np.nonzero(passed)
         blocked_indices = np.delete(np.arange(n), passed_indices)
-        return adv[passed_indices], blocked_indices, [blocked_s1, blocked_s2, blocked_s3]
+
+        if return_passed_x:
+            return blocked_indices, adv[passed_indices]
+        return blocked_indices
 
     def _preprocessing(self, x_np):
         # the # of channels should alway smaller than the size of image
@@ -344,7 +347,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
     def _def_state3_v2(self, adv, passed):
         """
         Checking the class distribution of k nearest neighbours without predicting
-        the inputs. Compute the likelihood using one-against-all approach. 
+        the inputs. Compute the likelihood using one-against-all approach.
         """
         passed_indices = np.where(passed == 1)[0]
         if len(passed_indices) == 0:

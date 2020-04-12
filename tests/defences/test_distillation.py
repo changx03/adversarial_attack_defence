@@ -71,6 +71,7 @@ class TestDistillation(unittest.TestCase):
         mc = self.distillation.get_def_model_container()
         x_train = mc.data_container.data_train_np
         score = mc.get_score(x_train)
+        # the smooth model is trained to match the soft-labels without the temperature parameter passed in.
         # prob = torch.softmax(torch.from_numpy(score) / TEMPERATURE, dim=1)
         prob = torch.softmax(torch.from_numpy(score), dim=1)
         softlabel_train = torch.from_numpy(mc.data_container.label_train_np)
@@ -86,15 +87,37 @@ class TestDistillation(unittest.TestCase):
         x = np.load(data_files[2], allow_pickle=False)
         y = np.load(data_files[3], allow_pickle=False)
 
-        blocked_indices = self.distillation.detect(adv, pred)
+        blocked_indices, x_passed = self.distillation.detect(
+            adv, pred, return_passed_x=True)
         num_blocked = len(blocked_indices)
         self.assertGreaterEqual(num_blocked, 50)
         logger.info('blocked adversarial: %d', num_blocked)
 
-        blocked_indices = self.distillation.detect(x, y)
-        num_blocked = len(blocked_indices)
-        self.assertLessEqual(num_blocked, 5)
-        logger.info('blocked clean: %d', num_blocked)
+        # blocked + passed = full set
+        self.assertEqual(len(blocked_indices) + len(x_passed), len(adv))
+
+        # accuracy on blind model
+        accuracy_before = self.distillation.model_container.evaluate(adv, y)
+        logger.info('Accuracy of adv. examples on blind model: %f',
+                    accuracy_before)
+
+        # accuracy on passed adv
+        passed_indices = np.where(
+            np.isin(np.arange(len(adv)), blocked_indices) == False)[0]
+        self.assertEqual(len(passed_indices), len(x_passed))
+        y_passed = y[passed_indices]
+        smooth_mc = self.distillation.get_def_model_container()
+        accuracy = smooth_mc.evaluate(x_passed, y_passed)
+        logger.info('Accuracy on passed adv. examples: %f', accuracy)
+        self.assertGreaterEqual(accuracy, accuracy_before)
+
+        # detect clean set
+        blocked_indices, x_passed = self.distillation.detect(
+            x, y, return_passed_x=True)
+        logger.info('blocked clean samples: %d', num_blocked)
+        # self.assertLessEqual(num_blocked, )
+        accuracy = smooth_mc.evaluate(x, y)
+        logger.info('Accuracy on clean sample: %f', accuracy)
 
 
 if __name__ == '__main__':

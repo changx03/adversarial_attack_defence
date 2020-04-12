@@ -11,12 +11,14 @@ from aad.datasets import DATASET_LIST, DataContainer
 from aad.utils import get_data_path, get_l2_norm, master_seed
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 SEED = 4096
 BATCH_SIZE = 128
 NUM_ADV = 100  # number of adversarial examples will be generated
 NAME = 'MNIST'
-FILE_NAME = 'example-mnist-e30.pt'
+MAX_EPOCHS = 30
+FILE_NAME = os.path.join('test', 'test-mnist-e30.pt')
 
 
 class TestAttackMNIST(unittest.TestCase):
@@ -35,7 +37,7 @@ class TestAttackMNIST(unittest.TestCase):
 
         file_path = os.path.join('save', FILE_NAME)
         if not os.path.exists(file_path):
-            cls.mc.fit(max_epochs=30, batch_size=BATCH_SIZE)
+            cls.mc.fit(max_epochs=MAX_EPOCHS, batch_size=BATCH_SIZE)
             cls.mc.save(FILE_NAME, overwrite=True)
         else:
             logger.info('Use saved parameters from %s', FILE_NAME)
@@ -56,20 +58,32 @@ class TestAttackMNIST(unittest.TestCase):
             minimal=True
         )
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
-        accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adv. examples: %f', accuracy)
 
         # At least made some change from clean images
         self.assertFalse((adv == x_clean).all())
-        # Expect above 28% success rate
-        self.assertGreaterEqual(
-            (y_adv != y_clean).sum() / x_clean.shape[0], 0.28)
+
+        # test accuracy
+        accuracy = self.mc.evaluate(adv, y_clean)
+        logger.info('Accuracy on adv. examples: %f', accuracy)
+        self.assertLessEqual(accuracy, 0.53)
+
+        # test success rate
+        success_rate = (y_adv != y_clean).sum() / len(y_adv)
+        logger.info('Success rate of adv. attack: %f', success_rate)
+        self.assertGreaterEqual(success_rate, 0.47)
+
+        # sum success rate (missclassified) and accuracy (correctly classified)
+        self.assertAlmostEqual(success_rate + accuracy, 1.0, places=4)
+
         # Check the max perturbation
         dif = np.max(np.abs(adv - x_clean))
-        self.assertLessEqual(dif, 0.3)
+        logger.info('Max perturbation (L1-norm): %f', dif)
+        self.assertLessEqual(dif, 0.3 + 1e-4)
+
         # Check bounding box
-        self.assertLessEqual(np.max(adv), 1.0 + 1e6)
-        self.assertGreaterEqual(np.min(adv), 0 - 1e6)
+        self.assertLessEqual(np.max(adv), 1.0 + 1e-4)
+        self.assertGreaterEqual(np.min(adv), 0 - 1e-4)
+
         l2 = np.max(get_l2_norm(adv, x_clean))
         logger.info('L2 norm = %f', l2)
 
@@ -82,18 +96,32 @@ class TestAttackMNIST(unittest.TestCase):
             targeted=False
         )
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
+
+        # At least made some change from clean images
+        self.assertFalse((adv == x_clean).all())
+
+        # test accuracy
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adv. examples: %f', accuracy)
+        self.assertLessEqual(accuracy, 0.1)
 
-        self.assertFalse((adv == x_clean).all())
-        # Expect above 90% success rate
-        self.assertGreaterEqual(
-            (y_adv != y_clean).sum() / x_clean.shape[0], 0.9)
-        # Check the max perturbation. The result is slightly higher than 0.3
+        # test success rate
+        success_rate = (y_adv != y_clean).sum() / len(y_adv)
+        logger.info('Success rate of adv. attack: %f', success_rate)
+        self.assertGreaterEqual(success_rate, 0.9)
+
+        # sum success rate (missclassified) and accuracy (correctly classified)
+        self.assertAlmostEqual(success_rate + accuracy, 1.0, places=4)
+
+        # Check the max perturbation
         dif = np.max(np.abs(adv - x_clean))
-        self.assertLessEqual(dif, 0.3 + 1e6)
-        self.assertLessEqual(np.max(adv), 1.0 + 1e6)
-        self.assertGreaterEqual(np.min(adv), 0 - 1e6)
+        logger.info('Max perturbation (L1-norm): %f', dif)
+        self.assertLessEqual(dif, 0.3 + 1e-4)
+
+        # Check bounding box
+        self.assertLessEqual(np.max(adv), 1.0 + 1e-4)
+        self.assertGreaterEqual(np.min(adv), 0 - 1e-4)
+
         l2 = np.max(get_l2_norm(adv, x_clean))
         logger.info('L2 norm = %f', l2)
 
@@ -117,15 +145,32 @@ class TestAttackMNIST(unittest.TestCase):
         )
         # Slow algorithm, only test 10 samples
         adv, y_adv, x_clean, y_clean = attack.generate(count=10)
+
+        # At least made some change from clean images
+        self.assertFalse((adv == x_clean).all())
+
+        # test accuracy
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adv. examples: %f', accuracy)
+        self.assertLessEqual(accuracy, 0.1)
 
-        self.assertFalse((adv == x_clean).all())
-        # Expect above 90% success rate
-        self.assertGreaterEqual(
-            (y_adv != y_clean).sum() / x_clean.shape[0], 0.9)
-        self.assertLessEqual(np.max(adv), 1.0 + 1e6)
-        self.assertGreaterEqual(np.min(adv), 0 - 1e6)
+        # test success rate
+        success_rate = (y_adv != y_clean).sum() / len(y_adv)
+        logger.info('Success rate of adv. attack: %f', success_rate)
+        self.assertGreaterEqual(success_rate, 0.9)
+
+        # sum success rate (missclassified) and accuracy (correctly classified)
+        self.assertAlmostEqual(success_rate + accuracy, 1.0, places=4)
+
+        # Check the max perturbation
+        dif = np.max(np.abs(adv - x_clean))
+        logger.info('Max perturbation (L1-norm): %f', dif)
+        self.assertLessEqual(dif, 1.0 + 1e-4)
+
+        # Check bounding box
+        self.assertLessEqual(np.max(adv), 1.0 + 1e-4)
+        self.assertGreaterEqual(np.min(adv), 0 - 1e-4)
+
         l2 = np.max(get_l2_norm(adv, x_clean))
         logger.info('L2 norm = %f', l2)
 
@@ -138,15 +183,32 @@ class TestAttackMNIST(unittest.TestCase):
             batch_size=16
         )
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
+
+        # At least made some change from clean images
+        self.assertFalse((adv == x_clean).all())
+
+        # test accuracy
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adv. examples: %f', accuracy)
+        self.assertLessEqual(accuracy, 0.60)
 
-        self.assertFalse((adv == x_clean).all())
-        # Expect above 65% success rate
-        self.assertGreaterEqual(
-            (y_adv != y_clean).sum() / x_clean.shape[0], 0.65)
-        self.assertLessEqual(np.max(adv), 1.0 + 1e6)
-        self.assertGreaterEqual(np.min(adv), 0 - 1e6)
+        # test success rate
+        success_rate = (y_adv != y_clean).sum() / len(y_adv)
+        logger.info('Success rate of adv. attack: %f', success_rate)
+        self.assertGreaterEqual(success_rate, 0.40)
+
+        # sum success rate (missclassified) and accuracy (correctly classified)
+        self.assertAlmostEqual(success_rate + accuracy, 1.0, places=4)
+
+        # Check the max perturbation
+        dif = np.max(np.abs(adv - x_clean))
+        logger.info('Max perturbation (L1-norm): %f', dif)
+        self.assertLessEqual(dif, 1.0 + 1e-4)
+
+        # Check bounding box
+        self.assertLessEqual(np.max(adv), 1.0 + 1e-4)
+        self.assertGreaterEqual(np.min(adv), 0 - 1e-4)
+
         l2 = np.max(get_l2_norm(adv, x_clean))
         logger.info('L2 norm = %f', l2)
 
@@ -158,46 +220,63 @@ class TestAttackMNIST(unittest.TestCase):
             batch_size=16
         )
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
-        accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adv. examples: %f', accuracy)
 
+        # At least made some change from clean images
         self.assertFalse((adv == x_clean).all())
-        success_rate = (y_adv != y_clean).sum() / x_clean.shape[0]
-        # Expect above 95% success rate
-        self.assertGreaterEqual(success_rate, 0.95)
-        self.assertLessEqual(np.max(adv), 1.0 + 1e6)
-        self.assertGreaterEqual(np.min(adv), 0 - 1e6)
-        l2 = np.max(get_l2_norm(adv, x_clean))
-        logger.info('L2 norm = %f', l2)
 
-    def test_zoo(self):
-        """
-        NOTE: This is a CPU only implementation. Extremely slow and has low 
-        success rate.
-        """
-        attack = ZooContainer(
-            self.mc,
-            targeted=False,
-            learning_rate=1e-2,
-            max_iter=15,
-            binary_search_steps=5,
-            abort_early=True,
-            use_resize=False,
-            use_importance=False,
-        )
-        # Slow algorithm, only test 3 samples
-        adv, y_adv, x_clean, y_clean = attack.generate(count=3)
+        # test accuracy
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adv. examples: %f', accuracy)
+        self.assertLessEqual(accuracy, 0.1)
 
-        # self.assertFalse((adv == x_clean).all())
-        # NOTE: Success rate closes to 0
-        # self.assertGreaterEqual(
-        #     (y_adv != y_clean).sum() / x_clean.shape[0], 0.9)
-        self.assertLessEqual(np.max(adv), 1.0 + 1e6)
-        self.assertGreaterEqual(np.min(adv), 0 - 1e6)
+        # test success rate
+        success_rate = (y_adv != y_clean).sum() / len(y_adv)
+        logger.info('Success rate of adv. attack: %f', success_rate)
+        self.assertGreaterEqual(success_rate, 0.9)
+
+        # sum success rate (missclassified) and accuracy (correctly classified)
+        self.assertAlmostEqual(success_rate + accuracy, 1.0, places=4)
+
+        # Check the max perturbation
+        dif = np.max(np.abs(adv - x_clean))
+        logger.info('Max perturbation (L1-norm): %f', dif)
+        self.assertLessEqual(dif, 1.0 + 1e-4)
+
+        # Check bounding box
+        self.assertLessEqual(np.max(adv), 1.0 + 1e-4)
+        self.assertGreaterEqual(np.min(adv), 0 - 1e-4)
+
         l2 = np.max(get_l2_norm(adv, x_clean))
         logger.info('L2 norm = %f', l2)
+
+    # def test_zoo(self):
+    #     """
+    #     NOTE: This is a CPU only implementation. Extremely slow and has low
+    #     success rate.
+    #     """
+    #     attack = ZooContainer(
+    #         self.mc,
+    #         targeted=False,
+    #         learning_rate=1e-2,
+    #         max_iter=15,
+    #         binary_search_steps=5,
+    #         abort_early=True,
+    #         use_resize=False,
+    #         use_importance=False,
+    #     )
+    #     # Slow algorithm, only test 3 samples
+    #     adv, y_adv, x_clean, y_clean = attack.generate(count=3)
+    #     accuracy = self.mc.evaluate(adv, y_clean)
+    #     logger.info('Accuracy on adv. examples: %f', accuracy)
+
+    #     # self.assertFalse((adv == x_clean).all())
+    #     # NOTE: Success rate closes to 0
+    #     # self.assertGreaterEqual(
+    #     #     (y_adv != y_clean).sum() / x_clean.shape[0], 0.9)
+    #     self.assertLessEqual(np.max(adv), 1.0 + 1e-4)
+    #     self.assertGreaterEqual(np.min(adv), 0 - 1e-4)
+    #     l2 = np.max(get_l2_norm(adv, x_clean))
+    #     logger.info('L2 norm = %f', l2)
 
 
 if __name__ == '__main__':

@@ -9,6 +9,8 @@ from aad.datasets import (DATASET_LIST, DataContainer, get_sample_mean,
 from aad.utils import get_data_path, master_seed, swap_image_channel
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
+
 SEED = 4096
 
 

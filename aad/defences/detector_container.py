@@ -42,7 +42,7 @@ class DetectorContainer(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def detect(self, adv, pred):
+    def detect(self, adv, pred, return_passed_x):
         """Detect adversarial examples."""
         raise NotImplementedError
 

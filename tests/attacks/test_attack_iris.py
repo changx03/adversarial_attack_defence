@@ -11,12 +11,14 @@ from aad.datasets import DATASET_LIST, DataContainer
 from aad.utils import get_data_path, get_l2_norm, master_seed
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 SEED = 4096  # 2**12 = 4096
 BATCH_SIZE = 256  # Train the entire set in one batch
 NUM_ADV = 30  # number of adversarial examples will be generated
 NAME = 'Iris'
-FILE_NAME = 'example-iris-e200.pt'
+MAX_EPOCHS = 200
+FILE_NAME = os.path.join('test', 'test-iris-e200.pt')
 
 
 class TestAttackIris(unittest.TestCase):
@@ -27,7 +29,7 @@ class TestAttackIris(unittest.TestCase):
         logger.info('Starting %s data container...', NAME)
         cls.dc = DataContainer(DATASET_LIST[NAME], get_data_path())
         # ordered by labels, it requires shuffle!
-        cls.dc(shuffle=True, normalize=False)
+        cls.dc(shuffle=True, normalize=True)
 
         model = IrisNN(hidden_nodes=12)
         logger.info('Using model: %s', model.__class__.__name__)
@@ -36,7 +38,7 @@ class TestAttackIris(unittest.TestCase):
 
         file_path = os.path.join('save', FILE_NAME)
         if not os.path.exists(file_path):
-            cls.mc.fit(max_epochs=200, batch_size=BATCH_SIZE)
+            cls.mc.fit(max_epochs=MAX_EPOCHS, batch_size=BATCH_SIZE)
             cls.mc.save(FILE_NAME, overwrite=True)
         else:
             logger.info('Use saved parameters from %s', FILE_NAME)
@@ -56,20 +58,32 @@ class TestAttackIris(unittest.TestCase):
             eps_step=0.1,
             minimal=True)
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
-        accuracy = self.mc.evaluate(adv, y_clean)
-        logger.info('Accuracy on adv. examples: %f', accuracy)
 
         # At least made some change from clean images
         self.assertFalse((adv == x_clean).all())
-        # Expect above 26% success rate
-        self.assertGreaterEqual(
-            (y_adv != y_clean).sum() / x_clean.shape[0], 0.26)
+
+        # test accuracy
+        accuracy = self.mc.evaluate(adv, y_clean)
+        logger.info('Accuracy on adv. examples: %f', accuracy)
+        self.assertLessEqual(accuracy, 0.74)
+
+        # test success rate
+        success_rate = (y_adv != y_clean).sum() / len(y_adv)
+        logger.info('Success rate of adv. attack: %f', success_rate)
+        self.assertGreaterEqual(success_rate, 0.26)
+
+        # sum success rate (missclassified) and accuracy (correctly classified)
+        self.assertAlmostEqual(success_rate + accuracy, 1.0, places=4)
+
         # Check the max perturbation
         dif = np.max(np.abs(adv - x_clean))
-        self.assertLessEqual(dif, 0.3)
+        logger.info('Max perturbation (L1-norm): %f', dif)
+        self.assertLessEqual(dif, 0.2 + 1e-4)
+
         # Check bounding box
-        self.assertLessEqual(np.max(adv), 1.0 + 1e6)
-        self.assertGreaterEqual(np.min(adv), 0 - 1e6)
+        self.assertLessEqual(np.max(adv), 1.0 + 1e-4)
+        self.assertGreaterEqual(np.min(adv), 0 - 1e-4)
+
         l2 = np.max(get_l2_norm(adv, x_clean))
         logger.info('L2 norm = %f', l2)
 
@@ -81,18 +95,32 @@ class TestAttackIris(unittest.TestCase):
             max_iter=100,
             targeted=False)
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
+        
+        # At least made some change from clean images
+        self.assertFalse((adv == x_clean).all())
+
+        # test accuracy
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adv. examples: %f', accuracy)
+        self.assertLessEqual(accuracy, 0.2)
 
-        self.assertFalse((adv == x_clean).all())
-        # Expect above 46% success rate
-        self.assertGreaterEqual(
-            (y_adv != y_clean).sum() / x_clean.shape[0], 0.46)
-        # Check the max perturbation. The result is slightly higher than 0.3
+        # test success rate
+        success_rate = (y_adv != y_clean).sum() / len(y_adv)
+        logger.info('Success rate of adv. attack: %f', success_rate)
+        self.assertGreaterEqual(success_rate, 0.8)
+
+        # sum success rate (missclassified) and accuracy (correctly classified)
+        self.assertAlmostEqual(success_rate + accuracy, 1.0, places=4)
+
+        # Check the max perturbation
         dif = np.max(np.abs(adv - x_clean))
-        self.assertLessEqual(dif, 0.3 + 1e6)
-        self.assertLessEqual(np.max(adv), 1.0 + 1e6)
-        self.assertGreaterEqual(np.min(adv), 0 - 1e6)
+        logger.info('Max perturbation (L1-norm): %f', dif)
+        self.assertLessEqual(dif, 0.3 + 1e-4)
+
+        # Check bounding box
+        self.assertLessEqual(np.max(adv), 1.0 + 1e-4)
+        self.assertGreaterEqual(np.min(adv), 0 - 1e-4)
+
         l2 = np.max(get_l2_norm(adv, x_clean))
         logger.info('L2 norm = %f', l2)
 
@@ -109,15 +137,32 @@ class TestAttackIris(unittest.TestCase):
             max_doubling=10,
             batch_size=8)
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
+
+        # At least made some change from clean images
+        self.assertFalse((adv == x_clean).all())
+
+        # test accuracy
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adv. examples: %f', accuracy)
+        self.assertLessEqual(accuracy, 0.2)
 
-        self.assertFalse((adv == x_clean).all())
-        # Expect above 90% success rate
-        self.assertGreaterEqual(
-            (y_adv != y_clean).sum() / x_clean.shape[0], 0.9)
-        self.assertLessEqual(np.max(adv), 1.0 + 1e6)
-        self.assertGreaterEqual(np.min(adv), 0 - 1e6)
+        # test success rate
+        success_rate = (y_adv != y_clean).sum() / len(y_adv)
+        logger.info('Success rate of adv. attack: %f', success_rate)
+        self.assertGreaterEqual(success_rate, 0.8)
+
+        # sum success rate (missclassified) and accuracy (correctly classified)
+        self.assertAlmostEqual(success_rate + accuracy, 1.0, places=4)
+
+        # Check the max perturbation
+        dif = np.max(np.abs(adv - x_clean))
+        logger.info('Max perturbation (L1-norm): %f', dif)
+        self.assertLessEqual(dif, 1.0 + 1e-4)
+
+        # Check bounding box
+        self.assertLessEqual(np.max(adv), 1.0 + 1e-4)
+        self.assertGreaterEqual(np.min(adv), 0 - 1e-4)
+
         l2 = np.max(get_l2_norm(adv, x_clean))
         logger.info('L2 norm = %f', l2)
 
@@ -128,15 +173,32 @@ class TestAttackIris(unittest.TestCase):
             epsilon=1e-6,
             nb_grads=10)
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
+        
+        # At least made some change from clean images
+        self.assertFalse((adv == x_clean).all())
+
+        # test accuracy
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adv. examples: %f', accuracy)
+        self.assertLessEqual(accuracy, 0.2)
 
-        self.assertFalse((adv == x_clean).all())
-        # Expect above 86% success rate
-        self.assertGreaterEqual(
-            (y_adv != y_clean).sum() / x_clean.shape[0], 0.86)
-        self.assertLessEqual(np.max(adv), 1.0 + 1e6)
-        self.assertGreaterEqual(np.min(adv), 0 - 1e6)
+        # test success rate
+        success_rate = (y_adv != y_clean).sum() / len(y_adv)
+        logger.info('Success rate of adv. attack: %f', success_rate)
+        self.assertGreaterEqual(success_rate, 0.8)
+
+        # sum success rate (missclassified) and accuracy (correctly classified)
+        self.assertAlmostEqual(success_rate + accuracy, 1.0, places=4)
+
+        # Check the max perturbation
+        dif = np.max(np.abs(adv - x_clean))
+        logger.info('Max perturbation (L1-norm): %f', dif)
+        self.assertLessEqual(dif, 1.0 + 1e-4)
+
+        # Check bounding box
+        self.assertLessEqual(np.max(adv), 1.0 + 1e-4)
+        self.assertGreaterEqual(np.min(adv), 0 - 1e-4)
+
         l2 = np.max(get_l2_norm(adv, x_clean))
         logger.info('L2 norm = %f', l2)
 

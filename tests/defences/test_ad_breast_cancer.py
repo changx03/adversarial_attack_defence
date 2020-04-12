@@ -12,6 +12,7 @@ from aad.defences import ApplicabilityDomainContainer
 from aad.utils import get_data_path, get_pt_model_filename, master_seed
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 SEED = 4096  # 2**12 = 4096
 BATCH_SIZE = 256  # Train the entire set in one batch
@@ -68,12 +69,13 @@ class TestApplicabilityDomainIris(unittest.TestCase):
     def preform_attack(self, attack, count=NUM_ADV):
         adv, y_adv, x_clean, y_clean = attack.generate(count=count)
         not_match = y_adv != y_clean
-        adv_success_rate = len(not_match[not_match==True]) / len(adv)
+        adv_success_rate = len(not_match[not_match == True]) / len(adv)
 
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adv. examples: %f', accuracy)
 
-        x_passed, blocked_indices = self.ad.detect(adv, y_adv)
+        blocked_indices, x_passed = self.ad.detect(
+            adv, y_adv, return_passed_x=True)
         logger.info('Blocked %d/%d samples from adv. examples',
                     len(blocked_indices), len(adv))
 
@@ -103,7 +105,7 @@ class TestApplicabilityDomainIris(unittest.TestCase):
         x = x[shuffled_indices]
         y = y[shuffled_indices]
 
-        x_passed, blocked_indices = self.ad.detect(x)
+        blocked_indices, x_passed = self.ad.detect(x)
         print(f'# of blocked: {len(blocked_indices)}')
         self.assertEqual(len(x_passed) + len(blocked_indices), n)
         block_rate = len(blocked_indices) / n
@@ -117,7 +119,8 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             eps=0.3,
             eps_step=0.01,
             minimal=True)
-        blocked_indices, adv_success_rate = self.preform_attack(attack, count=NUM_ADV)
+        blocked_indices, adv_success_rate = self.preform_attack(
+            attack, count=NUM_ADV)
         block_rate = len(blocked_indices) / NUM_ADV
         self.assertGreater(block_rate, adv_success_rate * 0.8)
         logger.info('[%s] Block rate: %f', FGSMContainer.__name__, block_rate)
@@ -132,7 +135,8 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             eps_step=0.01,
             max_iter=100,
             targeted=False)
-        blocked_indices, adv_success_rate = self.preform_attack(attack, count=NUM_ADV)
+        blocked_indices, adv_success_rate = self.preform_attack(
+            attack, count=NUM_ADV)
         block_rate = len(blocked_indices) / NUM_ADV
         self.assertGreater(block_rate, adv_success_rate * 0.8)
         logger.info('[%s] Block rate: %f', BIMContainer.__name__, block_rate)
@@ -143,7 +147,8 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             max_iter=100,
             epsilon=1e-6,
             nb_grads=10)
-        blocked_indices, adv_success_rate = self.preform_attack(attack, count=NUM_ADV)
+        blocked_indices, adv_success_rate = self.preform_attack(
+            attack, count=NUM_ADV)
         block_rate = len(blocked_indices) / NUM_ADV
         self.assertGreater(block_rate, adv_success_rate * 0.8)
         logger.info('[%s] Block rate: %f',
@@ -166,7 +171,8 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             max_halving=5,
             max_doubling=10,
             batch_size=n)
-        blocked_indices, adv_success_rate = self.preform_attack(attack, count=n)
+        blocked_indices, adv_success_rate = self.preform_attack(
+            attack, count=n)
         block_rate = len(blocked_indices) / n
         self.assertGreater(block_rate, adv_success_rate * 0.8)
         logger.info('[%s] Block rate: %f',

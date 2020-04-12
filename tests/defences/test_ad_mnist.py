@@ -12,6 +12,7 @@ from aad.defences import ApplicabilityDomainContainer
 from aad.utils import get_data_path, get_pt_model_filename, master_seed
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 SEED = 4096
 BATCH_SIZE = 128
@@ -82,7 +83,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adv. examples: %f', accuracy)
 
-        x_passed, blocked_indices = self.ad.detect(adv, y_adv)
+        blocked_indices, x_passed = self.ad.detect(adv, y_adv)
         logger.info('Blocked %d/%d samples from adv. examples',
                     len(blocked_indices), len(adv))
 
@@ -112,7 +113,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         x = x[shuffled_indices]
         y = y[shuffled_indices]
 
-        x_passed, blocked_indices = self.ad.detect(x)
+        blocked_indices, x_passed = self.ad.detect(x)
         print(f'# of blocked: {len(blocked_indices)}')
         self.assertEqual(len(x_passed) + len(blocked_indices), n)
         block_rate = len(blocked_indices) / n

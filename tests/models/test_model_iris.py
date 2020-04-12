@@ -10,6 +10,8 @@ from aad.datasets import DATASET_LIST, DataContainer
 from aad.utils import get_data_path, master_seed, swap_image_channel
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
+
 SEED = 4096  # 2**12 = 4096
 BATCH_SIZE = 128
 
