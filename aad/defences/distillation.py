@@ -167,7 +167,6 @@ class DistillationContainer(DetectorContainer):
         Compare the predictions between distillation model and original model,
         and block all unmatched results.
         """
-        # TODO: detect method blocks too many clean inputs
         if pred is None:
             pred = self.model_container.predict(adv)
 

@@ -133,9 +133,8 @@ class TestDistillation(unittest.TestCase):
         adv, y_adv, x, y = attack.generate(count=1000, use_testset=True)
         blocked_indices, x_passed = adv_trainer.detect(
             adv, y_adv, return_passed_x=True)
-        num_blocked = len(blocked_indices)
-        self.assertGreaterEqual(num_blocked, 700)
-        logger.info('blocked adversarial: %d', num_blocked)
+        self.assertGreaterEqual(len(blocked_indices), 700)
+        logger.info('blocked adversarial: %d', len(blocked_indices))
 
         # blocked + passed = full set
         self.assertEqual(len(blocked_indices) + len(x_passed), len(adv))
@@ -157,10 +156,15 @@ class TestDistillation(unittest.TestCase):
         # detect clean set
         blocked_indices, x_passed = adv_trainer.detect(
             x, y, return_passed_x=True)
-        logger.info('blocked clean samples: %d', num_blocked)
-        # self.assertLessEqual(num_blocked, )
-        accuracy = robust_model.evaluate(x, y)
-        logger.info('Accuracy on clean sample: %f', accuracy)
+        logger.info('blocked clean samples: %d', len(blocked_indices))
+        self.assertLessEqual(len(blocked_indices), len(adv) * 0.1)
+
+        # comparison between accuracy on robust model and accuracy on blind model
+        accuracy_robust = robust_model.evaluate(x, y)
+        logger.info('Accuracy of clean samples from robust model: %f', accuracy_robust)
+        accuracy_blind = self.mc.evaluate(x, y)
+        logger.info('Accuracy of clean samples from blind model: %f', accuracy_blind)
+        self.assertGreater(accuracy_robust, accuracy_blind * 0.95)
 
 
 if __name__ == '__main__':
