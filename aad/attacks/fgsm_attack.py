@@ -54,25 +54,31 @@ class FGSMContainer(AttackContainer):
         since = time.time()
         # parameters should able to set before training
         self.set_params(**kwargs)
+
         dc = self.model_container.data_container
-        if len(dc.data_test_np) < count:
+        # handle the situation where testset has less samples than we want
+        if use_testset and len(dc.data_test_np) < count:
             count = len(dc.data_test_np)
 
-        x = np.copy(dc.data_test_np[:count]) if use_testset else np.copy(x)
+        xx = np.copy(dc.data_test_np[:count]) if use_testset else np.copy(x)
 
         # handle (h, w, c) to (c, h, w)
         data_type = self.model_container.data_container.data_type
-        if data_type == 'image' and x.shape[1] not in (1, 3):
-            x = swap_image_channel(x)
-
-        self.set_params(**kwargs)
-        attack = FastGradientMethod(self.classifier, **self.attack_params)
+        if data_type == 'image' and xx.shape[1] not in (1, 3):
+            xx = swap_image_channel(x)
 
         # predict the outcomes
-        adv = attack.generate(x)
-        y_adv, y_clean = self.predict(adv, x)
+        adv = self._generate(xx)
+        y_adv, y_clean = self.predict(adv, xx)
 
+        # ensure the outputs and inputs have same shape
+        if x.shape != adv.shape:
+            adv = swap_image_channel(adv)
         time_elapsed = time.time() - since
         logger.info('Time to complete training %d adv. examples: %dm %.3fs',
                     count, int(time_elapsed // 60), time_elapsed % 60)
         return adv, y_adv, np.copy(x), y_clean
+
+    def _generate(self, x):
+        attack = FastGradientMethod(self.classifier, **self.attack_params)
+        return attack.generate(x)
