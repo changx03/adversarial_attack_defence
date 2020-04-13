@@ -14,7 +14,7 @@ class DetectorContainer(abc.ABC):
     """
     Base class for adversarial detection class
     """
-    params = dict()  # Override this in child class
+    _params = dict()  # Override this in child class
 
     def __init__(self, model_container):
         assert isinstance(model_container, ModelContainerPT)
@@ -23,8 +23,12 @@ class DetectorContainer(abc.ABC):
 
     def set_params(self, **kwargs):
         for key, value in kwargs.items():
-            if key in self.params.keys():
-                self.params[key] = value
+            if key in self._params.keys():
+                self._params[key] = value
+
+    @property
+    def params(self):
+        return self._params
 
     @abc.abstractmethod
     def fit(self):

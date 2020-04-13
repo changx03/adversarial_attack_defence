@@ -35,7 +35,7 @@ class AdversarialTraining(DetectorContainer):
         :type attacks: `list(AttackContainer)`
         """
         super(AdversarialTraining, self).__init__(model_container)
-        self.attacks = attacks
+        self._attacks = attacks
 
         if not isinstance(model_container, ModelContainerPT):
             raise ValueError(
@@ -43,16 +43,30 @@ class AdversarialTraining(DetectorContainer):
         if not np.all([isinstance(att, AttackContainer) for att in attacks]):
             raise ValueError('attacks is not a list of AttackContainer.')
 
-        self.discriminator = copy.deepcopy(model_container)
+        self._discriminator = copy.deepcopy(model_container)
+
+        # place holder for parameters
+        self._params = {
+            'max_epochs': 0,
+            'batch_size': None,
+            'ratio': None,
+        }
+
+    @property
+    def attacks(self):
+        return self._attacks
 
     def fit(self, max_epochs=10, batch_size=128, ratio=0.2):
         """
         Train the classifier with adversarial examples.
         """
-        if len(self.attacks) == 0:
+        if len(self._attacks) == 0:
             logger.warning(
                 'No adversarial attack is available. Consider call fit_discriminator instead.')
             return
+
+        params = {'ratio': ratio}
+        self.set_params(**params)
 
         # generate adversarial examples
         dc = self.model_container.data_container
@@ -64,18 +78,18 @@ class AdversarialTraining(DetectorContainer):
             list(range(num_train)),
             num_adv,
             replace=False)
-        pool_size = num_adv // len(self.attacks)
+        pool_size = num_adv // len(self._attacks)
 
         self._log_time_start()
         start = 0
-        for i in range(len(self.attacks)):
+        for i in range(len(self._attacks)):
             end = start + pool_size
-            if i == len(self.attacks) - 1:
+            if i == len(self._attacks) - 1:
                 end = num_adv
             indices = adv_indices[start: end]
 
             x = x_train[indices]
-            attack = self.attacks[i]
+            attack = self._attacks[i]
             logger.debug('Generate %d adv. examples using [%s]',
                          end-start, attack.__class__.__name__,)
             adv, y_adv, x_clean, y_clean = attack.generate(
@@ -90,11 +104,11 @@ class AdversarialTraining(DetectorContainer):
 
     def save(self, filename, overwrite=False):
         """Save trained parameters."""
-        self.discriminator.save(filename, overwrite)
+        self._discriminator.save(filename, overwrite)
 
     def load(self, filename):
         """Load pre-trained parameters."""
-        self.discriminator.load(filename)
+        self._discriminator.load(filename)
 
     def detect(self, adv, pred=None, return_passed_x=True):
         """
@@ -104,7 +118,7 @@ class AdversarialTraining(DetectorContainer):
         if pred is None:
             pred = self.model_container.predict(adv)
 
-        robust_pred = self.discriminator.predict(adv)
+        robust_pred = self._discriminator.predict(adv)
         blocked_indices = np.where(robust_pred != pred)[0]
 
         if return_passed_x:
@@ -114,7 +128,7 @@ class AdversarialTraining(DetectorContainer):
         return blocked_indices
 
     def fit_discriminator(self, x_train, y_train, max_epochs, batch_size):
-        mc = self.discriminator
+        mc = self._discriminator
         dc = mc.data_container
         test_loader = dc.get_dataloader(batch_size, is_train=False)
         model = mc.model
@@ -190,4 +204,4 @@ class AdversarialTraining(DetectorContainer):
 
     def get_def_model_container(self):
         """Get the discriminator model container."""
-        return self.discriminator
+        return self._discriminator

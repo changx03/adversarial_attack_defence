@@ -51,7 +51,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         """
         super(ApplicabilityDomainContainer, self).__init__(model_container)
 
-        params_received = {
+        self._params = {
             'k1': k1,
             'reliability': reliability,
             'sample_ratio': sample_ratio,
@@ -59,7 +59,6 @@ class ApplicabilityDomainContainer(DetectorContainer):
             'kappa': kappa,
             'disable_s2': disable_s2,
         }
-        self.params = params_received
         self.device = model_container.device
         dc = model_container.data_container
         self.num_classes = dc.num_classes
@@ -94,7 +93,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
                 'You cannot call fit() method multiple times! Please start a new instance')
             return False
 
-        disable_s2 = self.params['disable_s2']
+        disable_s2 = self._params['disable_s2']
 
         self._log_time_start()
 
@@ -148,7 +147,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         # in hidden layer (encoded space)
         encoded_adv = self._preprocessing(adv)
 
-        disable_s2 = self.params['disable_s2']
+        disable_s2 = self._params['disable_s2']
 
         # Stage 1
         passed = self._def_state1(encoded_adv, pred, passed)
@@ -217,8 +216,8 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
     def _fit_stage2(self):
         self._s2_models = []
-        k1 = self.params['k1']
-        zeta = self.params['reliability']
+        k1 = self._params['k1']
+        zeta = self._params['reliability']
         for i in range(self.num_classes):
             indices = np.where(self.y_train_np == i)[0]
             x = self.encode_train_np[indices]
@@ -238,9 +237,9 @@ class ApplicabilityDomainContainer(DetectorContainer):
     def _fit_stage3(self):
         x = self.encode_train_np
         y = self.y_train_np
-        kappa = self.params['kappa']
+        kappa = self._params['kappa']
         k = int(self.num_classes * kappa)
-        sample_ratio = self.params['sample_ratio']
+        sample_ratio = self._params['sample_ratio']
         logger.debug('k for Stage 3: %d', k)
 
         self._s3_model = knn.KNeighborsClassifier(
@@ -302,7 +301,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         passed_pred = pred_adv[passed_indices]
         models = self._s2_models
         classes = np.arange(self.num_classes)
-        k1 = self.params['k1']
+        k1 = self._params['k1']
 
         for model, threshold, c in zip(models, self._s2_thresholds, classes):
             inclass_indices = np.where(passed_pred == c)[0]
@@ -354,9 +353,9 @@ class ApplicabilityDomainContainer(DetectorContainer):
             return passed
 
         x = adv[passed_indices]
-        kappa = self.params['kappa']
+        kappa = self._params['kappa']
         k = self.num_classes * kappa
-        confidence = self.params['confidence']
+        confidence = self._params['confidence']
 
         model = self._s3_model  # KNeighborsClassifier for entire train set
         neigh_indices = model.kneighbors(

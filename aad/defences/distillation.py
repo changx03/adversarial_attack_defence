@@ -41,8 +41,10 @@ class DistillationContainer(DetectorContainer):
         """
         super(DistillationContainer, self).__init__(model_container)
 
-        self.temperature = temperature
-        self.pretrained = pretrained
+        self._params = {
+            'temperature': temperature,
+            'pretrained': pretrained,
+        }
 
         # check if the model produces probability outputs
         dc = self.model_container.data_container
@@ -72,25 +74,23 @@ class DistillationContainer(DetectorContainer):
         dc.data_train_np = self.model_container.data_container.data_train_np
         dc.label_train_np = prob_train
 
-        # smooth model
-        smooth_model = distillation_model
-
         # load pre-trained parameters
         if pretrained:
             state_dict = copy.deepcopy(self.model_container.model.state_dict())
-            smooth_model.load_state_dict(state_dict)
+            distillation_model.load_state_dict(state_dict)
 
         # model container for distillation
-        self.smooth_mc = ModelContainerPT(smooth_model, dc)
+        self._distillation_mc = ModelContainerPT(distillation_model, dc)
 
-        accuracy = self.smooth_mc.evaluate(dc.data_train_np, labels)
+        accuracy = self._distillation_mc.evaluate(dc.data_train_np, labels)
         logger.debug('Train set accuracy on distillation model: %f', accuracy)
-        accuracy = self.smooth_mc.evaluate(dc.data_test_np, dc.label_test_np)
+        accuracy = self._distillation_mc.evaluate(
+            dc.data_test_np, dc.label_test_np)
         logger.debug('Test set accuracy on distillation model: %f', accuracy)
 
     def fit(self, max_epochs=10, batch_size=128):
         """Train the distillation model."""
-        mc = self.smooth_mc
+        mc = self._distillation_mc
         dc = mc.data_container
         # Train set: y is soft probabilities
         train_loader = dc.get_dataloader(batch_size, is_train=True)
@@ -156,11 +156,11 @@ class DistillationContainer(DetectorContainer):
 
     def save(self, filename, overwrite=False):
         """Save trained parameters."""
-        self.smooth_mc.save(filename, overwrite)
+        self._distillation_mc.save(filename, overwrite)
 
     def load(self, filename):
         """Load pre-trained parameters."""
-        self.smooth_mc.load(filename)
+        self._distillation_mc.load(filename)
 
     def detect(self, adv, pred=None, return_passed_x=True):
         """
@@ -170,7 +170,7 @@ class DistillationContainer(DetectorContainer):
         if pred is None:
             pred = self.model_container.predict(adv)
 
-        distill_pred = self.smooth_mc.predict(adv)
+        distill_pred = self._distillation_mc.predict(adv)
         blocked_indices = np.where(distill_pred != pred)[0]
 
         if return_passed_x:
@@ -181,10 +181,10 @@ class DistillationContainer(DetectorContainer):
 
     def get_def_model_container(self):
         """Get the defence model container."""
-        return self.smooth_mc
+        return self._distillation_mc
 
     def _train(self, optimizer, loader):
-        mc = self.smooth_mc
+        mc = self._distillation_mc
         device = mc.device
         model = mc.model
         model.train()
