@@ -37,7 +37,7 @@ class TestAdversarialTraining(unittest.TestCase):
         dc()
         cls.mc = ModelContainerPT(model, dc)
         cls.mc.load(MODEL_FILE)
-        accuracy = cls.mc.evaluate(dc.data_test_np, dc.label_test_np)
+        accuracy = cls.mc.evaluate(dc.x_test, dc.y_test)
         logger.info('Accuracy on test set: %f', accuracy)
 
         cls.attack = BIMContainer(
@@ -63,8 +63,8 @@ class TestAdversarialTraining(unittest.TestCase):
         adv_trainer.load(os.path.join('save', ADV_TRAINER_FILE))
         robust_model = adv_trainer.get_def_model_container()
         dc = self.mc.data_container
-        x = dc.data_test_np
-        y = dc.label_test_np
+        x = dc.x_test
+        y = dc.y_test
         accuracy = robust_model.evaluate(x, y)
         logger.info('Accuracy on test set: %f', accuracy)
         self.assertGreaterEqual(accuracy, 0.8)
@@ -79,8 +79,8 @@ class TestAdversarialTraining(unittest.TestCase):
             targeted=False,
             batch_size=128)
         dc = self.mc.data_container
-        x_train = np.copy(dc.data_train_np)
-        y_train = dc.label_train_np
+        x_train = np.copy(dc.x_train)
+        y_train = dc.y_train
         indices = np.random.choice(
             np.arange(len(x_train)),
             int(np.floor(len(x_train) * 0.2)),

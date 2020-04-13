@@ -151,7 +151,7 @@ def main():
     logger.info('Use %s model', model.__class__.__name__)
     mc = ModelContainerPT(model, dc)
     mc.load(model_file)
-    accuracy = mc.evaluate(dc.data_test_np, dc.label_test_np)
+    accuracy = mc.evaluate(dc.x_test, dc.y_test)
     logger.info('Accuracy on test set: %f', accuracy)
 
     run_attacks(mc,

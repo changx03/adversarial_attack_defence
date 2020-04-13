@@ -109,7 +109,7 @@ def main():
     mc = ModelContainerPT(model, dc)
 
     mc.load(model_file)
-    accuracy = mc.evaluate(dc.data_test_np, dc.label_test_np)
+    accuracy = mc.evaluate(dc.x_test, dc.y_test)
     logger.info('Accuracy on test set: %f', accuracy)
 
     # preform defence

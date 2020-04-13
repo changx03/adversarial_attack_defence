@@ -20,7 +20,7 @@ def main():
     dc()
     classifier_mc = ModelContainerPT(classifier, dc)
     classifier_mc.load(MODEL_FILE)
-    accuracy = classifier_mc.evaluate(dc.data_test_np, dc.label_test_np)
+    accuracy = classifier_mc.evaluate(dc.x_test, dc.y_test)
     print(f'Accuracy on test set: {accuracy}')
 
     attack = BIMContainer(

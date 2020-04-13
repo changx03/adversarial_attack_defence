@@ -40,8 +40,8 @@ class TestModelMNIST(unittest.TestCase):
         cls.mc2 = ModelContainerPT(model2, cls.dc)
 
         # inputs for testing
-        cls.x = np.copy(cls.dc.data_test_np[:5])
-        cls.y = np.copy(cls.dc.label_test_np[:5])
+        cls.x = np.copy(cls.dc.x_test[:5])
+        cls.y = np.copy(cls.dc.y_test[:5])
 
     def setUp(self):
         master_seed(SEED)

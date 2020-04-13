@@ -24,24 +24,100 @@ logger = logging.getLogger(__name__)
 class DataContainer:
     def __init__(self, dataset_dict, path):
         self.name = dataset_dict['name']
-        self.data_type = dataset_dict['type']
-        assert self.data_type in ('image', 'quantitative')
-        self.num_classes = int(dataset_dict['num_classes'])
-        self.dim_data = dataset_dict['dim_data']
-        self.path = path
+        self._data_type = dataset_dict['type']
+        self._num_classes = int(dataset_dict['num_classes'])
+        self._dim_data = dataset_dict['dim_data']
+        self._path = path
+        self._train_mean = None
+        self._train_std = None
+        self._dataframe = None
+        self._cross_valid_fold = 0
+        self._data_range = None
+        self._x_train_np = None
+        self._y_train_np = None
+        self._x_test_np = None
+        self._y_test_np = None
+
+        # TODO: Cross validation is NOT complete!
+        self.x_cv_np = None  # for cross validation
+        self.y_cv_np = None
+
+        assert self._data_type in ('image', 'quantitative')
         assert os.path.exists(path), f'{path} does NOT exist!'
-        self.train_mean = None
-        self.train_std = None
-        self.data_train_np, self.label_train_np = None, None
-        self.data_test_np, self.label_test_np = None, None
-        self.data_all_np, self.label_all_np = None, None  # for cross validation
-        self.dataframe = None
-        self.data_range = None
-        self.cross_valid_fold = 0
+
+    @property
+    def data_type(self):
+        return self._data_type
+
+    @property
+    def num_classes(self):
+        return self._num_classes
+
+    @property
+    def dim_data(self):
+        return self._dim_data
+
+    @property
+    def path(self):
+        return self._path
+
+    @property
+    def train_mean(self):
+        return self._train_mean
+
+    @property
+    def train_std(self):
+        return self._train_std
+
+    @property
+    def dataframe(self):
+        return self._dataframe
+
+    @property
+    def cross_valid_fold(self):
+        return self._cross_valid_fold
+
+    @property
+    def data_range(self):
+        return self._data_range
+
+    @property
+    def x_train(self):
+        return self._x_train_np
+
+    @x_train.setter
+    def x_train(self, x):
+        self._x_train_np = x
+        is_image = self._data_type == 'image'
+        self._data_range = get_range(self._x_train_np, is_image=is_image)
+
+    @property
+    def y_train(self):
+        return self._y_train_np
+
+    @y_train.setter
+    def y_train(self, y):
+        self._y_train_np = y
+
+    @property
+    def x_test(self):
+        return self._x_test_np
+
+    @x_test.setter
+    def x_test(self, x):
+        self._x_test_np = x
+
+    @property
+    def y_test(self):
+        return self._y_test_np
+
+    @y_test.setter
+    def y_test(self, y):
+        self._y_test_np = y
 
     def __len__(self):
         # total length = train + test
-        return len(self.data_train_np) + len(self.data_test_np)
+        return len(self._x_train_np) + len(self._x_test_np)
 
     def __call__(self, shuffle=True, normalize=False,
                  size_train=0.8, cross_validation_fold=0):
@@ -52,24 +128,24 @@ class DataContainer:
             3, 11)
 
         since = time.time()
-        if self.data_type == 'image':
+        if self._data_type == 'image':
             self._prepare_image_data(shuffle, num_workers=0)
-            self.train_mean = get_sample_mean(self.name)
-            self.train_std = get_sample_std(self.name)
+            self._train_mean = get_sample_mean(self.name)
+            self._train_std = get_sample_std(self.name)
         else:
             self._prepare_quantitative_data(
                 shuffle, normalize, size_train)
-            self.train_mean = self.data_train_np.mean(axis=0)
-            self.train_std = self.data_train_np.std(axis=0)
+            self._train_mean = self._x_train_np.mean(axis=0)
+            self._train_std = self._x_train_np.std(axis=0)
 
         if cross_validation_fold != 0:
-            self.cross_valid_fold = cross_validation_fold
+            self._cross_valid_fold = cross_validation_fold
             self._prepare_cross_valid()
 
         time_elapsed = time.time() - since
 
-        logger.info('Train size: %d - Test size: %d', 
-            len(self.label_train_np), len(self.label_test_np))
+        logger.info('Train size: %d - Test size: %d',
+                    len(self._y_train_np), len(self._y_test_np))
         logger.info('Successfully load data. Time to complete: %dm %.3fs',
                     int(time_elapsed // 60), time_elapsed % 60)
 
@@ -77,18 +153,18 @@ class DataContainer:
         """
         Returns the selected fold of ndarray.
         """
-        assert fold < self.cross_valid_fold, \
+        assert fold < self._cross_valid_fold, \
             'Expecting fold is between 0 and {}. Got: {}'.format(
-                self.cross_valid_fold-1, fold)
+                self._cross_valid_fold-1, fold)
 
-        partition_size = len(self.label_all_np) // self.cross_valid_fold
+        partition_size = len(self.y_cv_np) // self._cross_valid_fold
         start = fold * partition_size
         end = fold * partition_size + partition_size
         # handle last batch
-        if fold == self.cross_valid_fold - 1:
-            end = len(self.label_all_np)
-        x_np = self.data_all_np[start: end]
-        y_np = self.label_all_np[start: end]
+        if fold == self._cross_valid_fold - 1:
+            end = len(self.y_cv_np)
+        x_np = self.x_cv_np[start: end]
+        y_np = self.y_cv_np[start: end]
         return x_np, y_np
 
     def get_dataloader(self,
@@ -106,10 +182,10 @@ class DataContainer:
             if fold != -1:
                 x_np, y_np = self.get_one_fold_np(fold)
             else:
-                x_np = self.data_train_np if is_train else self.data_test_np
-                y_np = self.label_train_np if is_train else self.label_test_np
+                x_np = self._x_train_np if is_train else self._x_test_np
+                y_np = self._y_train_np if is_train else self._y_test_np
 
-            if self.data_type == 'image':
+            if self._data_type == 'image':
                 x_np = swap_image_channel(x_np)
 
             dataset = NumericalDataset(
@@ -142,60 +218,60 @@ class DataContainer:
             shuffle=shuffle,
             num_workers=num_workers)
 
-        self.data_train_np, self.label_train_np = self._loader_to_np(
+        self._x_train_np, self._y_train_np = self._loader_to_np(
             dataloader_train)
-        self.data_test_np, self.label_test_np = self._loader_to_np(
+        self._x_test_np, self._y_test_np = self._loader_to_np(
             dataloader_test)
         # pytorch uses (c, h, w). numpy uses (h, w, c)
-        self.data_train_np = swap_image_channel(self.data_train_np)
-        self.data_test_np = swap_image_channel(self.data_test_np)
+        self._x_train_np = swap_image_channel(self._x_train_np)
+        self._x_test_np = swap_image_channel(self._x_test_np)
 
-        self.data_range = get_range(self.data_train_np, is_image=True)
+        self._data_range = get_range(self._x_train_np, is_image=True)
 
     def _prepare_quantitative_data(self, shuffle, normalize, size_train):
         # for quantitative, starts with a Pandas dataframe, and then
         # populate numpy array and then pytorch DataLoader
-        self.dataframe = self._get_dataframe()
-        m = self.dataframe.shape[1] - 1  # the label is also in the frame
+        self._dataframe = self._get_dataframe()
+        m = self._dataframe.shape[1] - 1  # the label is also in the frame
 
-        self.data_range = get_range(self.dataframe.values[:, :m])
+        self._data_range = get_range(self._dataframe.values[:, :m])
 
         if shuffle:
-            self.dataframe = shuffle_data(self.dataframe)
+            self._dataframe = shuffle_data(self._dataframe)
 
         x_train, y_train, x_test, y_test = self._split_dataframe2np(size_train)
 
         if normalize:
-            (xmin, xmax) = self.data_range
-            mean = self.train_mean
+            (xmin, xmax) = self._data_range
+            mean = self._train_mean
             x_train = scale_normalize(x_train, xmin, xmax, mean)
             x_test = scale_normalize(x_test, xmin, xmax, mean)
 
         # to numpy array
         # NOTE: Only handle numeral data
-        self.data_train_np = x_train.astype(np.float32)
-        self.label_train_np = y_train.astype(np.long)
-        self.data_test_np = x_test.astype(np.float32)
-        self.label_test_np = y_test.astype(np.long)
+        self._x_train_np = x_train.astype(np.float32)
+        self._y_train_np = y_train.astype(np.long)
+        self._x_test_np = x_test.astype(np.float32)
+        self._y_test_np = y_test.astype(np.long)
 
     def _get_dataset(self, train):
         transform = tv.transforms.Compose([tv.transforms.ToTensor()])
 
         if self.name == 'MNIST':
             return tv.datasets.MNIST(
-                self.path,
+                self._path,
                 train=train,
                 download=True,
                 transform=transform)
         elif self.name == 'CIFAR10':
             return tv.datasets.CIFAR10(
-                self.path,
+                self._path,
                 train=train,
                 download=True,
                 transform=transform)
         elif self.name == 'SVHN':
             return tv.datasets.SVHN(
-                self.path,
+                self._path,
                 split='train' if train else 'test',
                 download=True,
                 transform=transform)
@@ -204,7 +280,7 @@ class DataContainer:
 
     def _loader_to_np(self, loader):
         n = len(loader.dataset)
-        data_shape = tuple([n]+list(self.dim_data))
+        data_shape = tuple([n]+list(self._dim_data))
         label_shape = (n,)
 
         data_np = np.zeros(data_shape, dtype=np.float32)
@@ -223,34 +299,34 @@ class DataContainer:
         """
         stack train and test together
         """
-        assert self.data_train_np is not None \
-            and self.data_test_np is not None \
-            and self.label_train_np is not None \
-            and self.label_test_np is not None
+        assert self._x_train_np is not None \
+            and self._x_test_np is not None \
+            and self._y_train_np is not None \
+            and self._y_test_np is not None
 
-        self.data_all_np = np.concatenate(
-            (self.data_train_np, self.data_test_np),
+        self.x_cv_np = np.concatenate(
+            (self._x_train_np, self._x_test_np),
             axis=0)
-        self.label_all_np = np.concatenate(
-            (self.label_train_np, self.label_test_np),
+        self.y_cv_np = np.concatenate(
+            (self._y_train_np, self._y_test_np),
             axis=0)
 
     def _split_dataframe2np(self, size_train):
         assert isinstance(size_train, (int, float))
 
         # split train/test by ratio of fixed size of train data
-        n = len(self.dataframe.index)
+        n = len(self._dataframe.index)
         num_train = size_train
         if size_train < 1:
             num_train = int(np.round(n * size_train))
         num_test = n - num_train
-        m = self.dim_data[0]
+        m = self._dim_data[0]
 
         # these are numpy arrays
-        x_train = self.dataframe.iloc[:num_train, :m].values
-        y_train = self.dataframe.iloc[:num_train, -1].values
-        x_test = self.dataframe.iloc[-num_test:, :m].values
-        y_test = self.dataframe.iloc[-num_test:, -1].values
+        x_train = self._dataframe.iloc[:num_train, :m].values
+        y_train = self._dataframe.iloc[:num_train, -1].values
+        x_test = self._dataframe.iloc[-num_test:, :m].values
+        y_test = self._dataframe.iloc[-num_test:, -1].values
 
         # checking shapes
         assert x_train.shape == (num_train, m)
@@ -267,7 +343,7 @@ class DataContainer:
     def _get_dataframe(self):
         if self.name == 'BankNote':
             file_path = os.path.join(
-                self.path, 'data_banknote_authentication.txt')
+                self._path, 'data_banknote_authentication.txt')
             self._check_file(file_path)
             col_names = ['variance', 'skewness',
                          'curtosis', 'entropy', 'class']
@@ -281,19 +357,19 @@ class DataContainer:
             return df
 
         elif self.name == 'BreastCancerWisconsin':
-            file_path = os.path.join(self.path, 'BreastCancerWisconsin.csv')
+            file_path = os.path.join(self._path, 'BreastCancerWisconsin.csv')
             self._check_file(file_path)
             return self._handle_bc_dataframe(file_path)
         elif self.name == 'WheatSeed':
-            file_path = os.path.join(self.path, 'seeds_dataset.txt')
+            file_path = os.path.join(self._path, 'seeds_dataset.txt')
             self._check_file(file_path)
             return self._handle_wheat_seed_dataframe(file_path)
         elif self.name == 'HTRU2':
-            file_path = os.path.join(self.path, 'HTRU2', 'HTRU_2.arff')
+            file_path = os.path.join(self._path, 'HTRU2', 'HTRU_2.arff')
             self._check_file(file_path)
             return self._handle_htru2_dataframe(file_path)
         elif self.name == 'Iris':
-            file_path = os.path.join(self.path, 'iris.data')
+            file_path = os.path.join(self._path, 'iris.data')
             self._check_file(file_path)
             return self._handle_iris_dataframe(file_path)
         else:

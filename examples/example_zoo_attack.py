@@ -46,7 +46,7 @@ def main():
         print('Found saved model!')
         mc.load(file_path)
 
-    acc = mc.evaluate(dc.data_test_np, dc.label_test_np)
+    acc = mc.evaluate(dc.x_test, dc.y_test)
     print(f'Accuracy on random test set: {acc*100:.4f}%')
 
     # Step 3: attack the model

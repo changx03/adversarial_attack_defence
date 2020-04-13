@@ -75,9 +75,9 @@ class TestDataContainer(unittest.TestCase):
         np.testing.assert_array_almost_equal(std, p['std'])
 
         # train set
-        train_np = dc.data_train_np
+        train_np = dc.x_train
         self.assertEqual(train_np.shape, p['train_shape'])
-        y_np = dc.label_train_np
+        y_np = dc.y_train
         self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
@@ -93,9 +93,9 @@ class TestDataContainer(unittest.TestCase):
         np.testing.assert_equal(y1, y2)
 
         # test set
-        test_np = dc.data_test_np
+        test_np = dc.x_test
         self.assertEqual(test_np.shape, p['test_shape'])
-        y_np = dc.label_test_np
+        y_np = dc.y_test
         self.assertEqual(y_np.shape, (p['test_shape'][0],))
         test_loader = dc.get_dataloader(
             batch_size=8, is_train=False, shuffle=False)
@@ -132,9 +132,9 @@ class TestDataContainer(unittest.TestCase):
         np.testing.assert_array_almost_equal(std, p['std'])
 
         # train set
-        train_np = dc.data_train_np
+        train_np = dc.x_train
         self.assertEqual(train_np.shape, p['train_shape'])
-        y_np = dc.label_train_np
+        y_np = dc.y_train
         self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
@@ -150,9 +150,9 @@ class TestDataContainer(unittest.TestCase):
         np.testing.assert_equal(y1, y2)
 
         # test set
-        test_np = dc.data_test_np
+        test_np = dc.x_test
         self.assertEqual(test_np.shape, p['test_shape'])
-        y_np = dc.label_test_np
+        y_np = dc.y_test
         self.assertEqual(y_np.shape, (p['test_shape'][0],))
         test_loader = dc.get_dataloader(
             batch_size=8, is_train=False, shuffle=False)
@@ -183,9 +183,9 @@ class TestDataContainer(unittest.TestCase):
         dc = self.init_datacontainer(dataname)
 
         # train set
-        train_np = dc.data_train_np
+        train_np = dc.x_train
         self.assertEqual(train_np.shape, p['train_shape'])
-        y_np = dc.label_train_np
+        y_np = dc.y_train
         self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
@@ -234,9 +234,9 @@ class TestDataContainer(unittest.TestCase):
         np.testing.assert_array_almost_equal(std, p['std'])
 
         # train set
-        train_np = dc.data_train_np
+        train_np = dc.x_train
         self.assertEqual(train_np.shape, p['train_shape'])
-        y_np = dc.label_train_np
+        y_np = dc.y_train
         self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
@@ -252,9 +252,9 @@ class TestDataContainer(unittest.TestCase):
         np.testing.assert_equal(y1, y2)
 
         # test set
-        test_np = dc.data_test_np
+        test_np = dc.x_test
         self.assertEqual(test_np.shape, p['test_shape'])
-        y_np = dc.label_test_np
+        y_np = dc.y_test
         self.assertEqual(y_np.shape, (p['test_shape'][0],))
         test_loader = dc.get_dataloader(
             batch_size=8, is_train=False, shuffle=False)
@@ -280,9 +280,9 @@ class TestDataContainer(unittest.TestCase):
         dc = self.init_datacontainer(dataname)
 
         # train set
-        train_np = dc.data_train_np
+        train_np = dc.x_train
         self.assertEqual(train_np.shape, p['train_shape'])
-        y_np = dc.label_train_np
+        y_np = dc.y_train
         self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
@@ -298,9 +298,9 @@ class TestDataContainer(unittest.TestCase):
         np.testing.assert_equal(y1, y2)
 
         # test set
-        test_np = dc.data_test_np
+        test_np = dc.x_test
         self.assertEqual(test_np.shape, p['test_shape'])
-        y_np = dc.label_test_np
+        y_np = dc.y_test
         self.assertEqual(y_np.shape, (p['test_shape'][0],))
         test_loader = dc.get_dataloader(
             batch_size=8, is_train=False, shuffle=False)
@@ -326,9 +326,9 @@ class TestDataContainer(unittest.TestCase):
         dc = self.init_datacontainer(dataname)
 
         # train set
-        train_np = dc.data_train_np
+        train_np = dc.x_train
         self.assertEqual(train_np.shape, p['train_shape'])
-        y_np = dc.label_train_np
+        y_np = dc.y_train
         self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
@@ -344,9 +344,9 @@ class TestDataContainer(unittest.TestCase):
         np.testing.assert_equal(y1, y2)
 
         # test set
-        test_np = dc.data_test_np
+        test_np = dc.x_test
         self.assertEqual(test_np.shape, p['test_shape'])
-        y_np = dc.label_test_np
+        y_np = dc.y_test
         self.assertEqual(y_np.shape, (p['test_shape'][0],))
         test_loader = dc.get_dataloader(
             batch_size=8, is_train=False, shuffle=False)
@@ -372,9 +372,9 @@ class TestDataContainer(unittest.TestCase):
         dc = self.init_datacontainer(dataname)
 
         # train set
-        train_np = dc.data_train_np
+        train_np = dc.x_train
         self.assertEqual(train_np.shape, p['train_shape'])
-        y_np = dc.label_train_np
+        y_np = dc.y_train
         self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
@@ -390,9 +390,9 @@ class TestDataContainer(unittest.TestCase):
         np.testing.assert_equal(y1, y2)
 
         # test set
-        test_np = dc.data_test_np
+        test_np = dc.x_test
         self.assertEqual(test_np.shape, p['test_shape'])
-        y_np = dc.label_test_np
+        y_np = dc.y_test
         self.assertEqual(y_np.shape, (p['test_shape'][0],))
         test_loader = dc.get_dataloader(
             batch_size=8, is_train=False, shuffle=False)
@@ -418,9 +418,9 @@ class TestDataContainer(unittest.TestCase):
         dc = self.init_datacontainer(dataname)
 
         # train set
-        train_np = dc.data_train_np
+        train_np = dc.x_train
         self.assertEqual(train_np.shape, p['train_shape'])
-        y_np = dc.label_train_np
+        y_np = dc.y_train
         self.assertEqual(y_np.shape, (p['train_shape'][0],))
         train_loader = dc.get_dataloader(
             batch_size=8, is_train=True, shuffle=False)
@@ -436,9 +436,9 @@ class TestDataContainer(unittest.TestCase):
         np.testing.assert_equal(y1, y2)
 
         # test set
-        test_np = dc.data_test_np
+        test_np = dc.x_test
         self.assertEqual(test_np.shape, p['test_shape'])
-        y_np = dc.label_test_np
+        y_np = dc.y_test
         self.assertEqual(y_np.shape, (p['test_shape'][0],))
         test_loader = dc.get_dataloader(
             batch_size=8, is_train=False, shuffle=False)

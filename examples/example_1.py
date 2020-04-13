@@ -43,7 +43,7 @@ def main():
     mc.save(f'{NAME}-{model_name}')
     mc.load(os.path.join('save', f'{NAME}-{model_name}.pt'))
 
-    acc = mc.evaluate(dc.data_test_np, dc.label_test_np)
+    acc = mc.evaluate(dc.x_test, dc.y_test)
     print(f'Accuracy on random test set: {acc*100:.4f}%')
 
 

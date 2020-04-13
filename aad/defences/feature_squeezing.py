@@ -3,7 +3,11 @@ This module implements the Feature Squeezing defence.
 """
 import logging
 
+from scipy.ndimage import median_filter
+import numpy as np
+
 from .detector_container import DetectorContainer
+from ..utils import scale_normalize
 
 logger = logging.getLogger(__name__)
 
@@ -15,8 +19,8 @@ class FeatureSqueezing(DetectorContainer):
 
     def __init__(self,
                  model_container,
-                 clip_values,
-                 bit_depth):
+                 clip_values=None,
+                 bit_depth=8):
         """
         Create a FeatureSqueezing class instance.
 
@@ -29,6 +33,10 @@ class FeatureSqueezing(DetectorContainer):
         """
         super(FeatureSqueezing, self).__init__(model_container)
 
+        if clip_values is None:
+            dc = model_container.data_container
+            clip_values = dc.data_range
+
         self._params = {
             'clip_values': clip_values,
             'bit_depth': bit_depth,
@@ -38,7 +46,18 @@ class FeatureSqueezing(DetectorContainer):
         """
         Train the classifier with noisy inputs.
         """
-        raise NotImplementedError
+        mc = self.model_container
+        dc = mc.data_container
+        x = dc.x_train
+        y = dc.y_train
+        clip_values = self._params['clip_values']
+        bit_depth = self._params['bit_depth']
+
+        x_norm = scale_normalize(x, clip_values[0], clip_values[1])
+        max_val = np.rint(2 ** bit_depth - 1)
+        res = np.rint(x_norm * max_val) / max_val
+        res = res * (clip_values[1] - clip_values[0])
+        res += clip_values[0]
 
     def save(self, filename, overwrite=False):
         """Save trained parameters."""

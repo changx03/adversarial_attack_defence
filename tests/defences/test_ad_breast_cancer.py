@@ -50,7 +50,7 @@ class TestApplicabilityDomainBC(unittest.TestCase):
             logger.info('Use saved parameters from %s', filename)
             cls.mc.load(file_path)
 
-        accuracy = cls.mc.evaluate(cls.dc.data_test_np, cls.dc.label_test_np)
+        accuracy = cls.mc.evaluate(cls.dc.x_test, cls.dc.y_test)
         logger.info('Accuracy on test set: %f', accuracy)
 
         hidden_model = model.hidden_model
@@ -101,8 +101,8 @@ class TestApplicabilityDomainBC(unittest.TestCase):
 
     def test_block_train(self):
         n = NUM_ADV
-        x = self.dc.data_train_np
-        y = self.dc.label_train_np
+        x = self.dc.x_train
+        y = self.dc.y_train
         shuffled_indices = np.random.permutation(len(x))[:n]
         x = x[shuffled_indices]
         y = y[shuffled_indices]

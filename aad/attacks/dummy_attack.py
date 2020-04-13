@@ -12,13 +12,13 @@ class DummyAttack:
         self.shuffle = shuffle
 
     def generate(self, count='all'):
-        n = len(self.dc.data_test_np)
+        n = len(self.dc.x_test)
         if count is not 'all':
             shuffled_indices = np.random.permutation(n)[:count]
-            x = self.dc.data_test_np[shuffled_indices]
-            y = self.dc.label_test_np[shuffled_indices]
+            x = self.dc.x_test[shuffled_indices]
+            y = self.dc.y_test[shuffled_indices]
         else:
-            x = self.dc.data_test_np
-            y = self.dc.label_test_np
+            x = self.dc.x_test
+            y = self.dc.y_test
         pred = self.mc.predict(x)
         return x, pred, x, y

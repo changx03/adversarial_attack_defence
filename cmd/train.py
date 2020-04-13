@@ -128,7 +128,7 @@ def main():
     file_path = os.path.join('save', filename)
     logger.debug('Use saved parameters from %s', filename)
     mc.load(file_path)
-    accuracy = mc.evaluate(dc.data_test_np, dc.label_test_np)
+    accuracy = mc.evaluate(dc.x_test, dc.y_test)
     logger.info('Accuracy on test set: %f', accuracy)
 
 

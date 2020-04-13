@@ -38,7 +38,7 @@ class CarliniL2Container(AttackContainer):
         dc = self.model_container.data_container
         loss_fn = model.loss_fn
         dc = self.model_container.data_container
-        clip_values = get_range(dc.data_train_np, dc.data_type == 'image')
+        clip_values = get_range(dc.x_train, dc.data_type == 'image')
         optimizer = model.optimizer
         num_classes = dc.num_classes
         dim_data = dc.dim_data
@@ -59,10 +59,10 @@ class CarliniL2Container(AttackContainer):
 
         dc = self.model_container.data_container
         # handle the situation where testset has less samples than we want
-        if use_testset and len(dc.data_test_np) < count:
-            count = len(dc.data_test_np)
+        if use_testset and len(dc.x_test) < count:
+            count = len(dc.x_test)
 
-        x = np.copy(dc.data_test_np[:count]) if use_testset else np.copy(x)
+        x = np.copy(dc.x_test[:count]) if use_testset else np.copy(x)
 
         # handle (h, w, c) to (c, h, w)
         data_type = self.model_container.data_container.data_type

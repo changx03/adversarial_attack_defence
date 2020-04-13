@@ -19,7 +19,7 @@ def main():
     mc = ModelContainerPT(model, dc)
     mc.load(MODEL_FILE)
     # mc.fit(max_epochs=2)
-    accuracy = mc.evaluate(dc.data_test_np, dc.label_test_np)
+    accuracy = mc.evaluate(dc.x_test, dc.y_test)
     print(f'Accuracy on test set: {accuracy}')
 
     distillation = DistillationContainer(
@@ -29,7 +29,7 @@ def main():
     distillation.fit(max_epochs=8, batch_size=128)
 
     smooth_mc = distillation.get_def_model_container()
-    accuracy = smooth_mc.evaluate(dc.data_test_np, dc.label_test_np)
+    accuracy = smooth_mc.evaluate(dc.x_test, dc.y_test)
     print(f'Accuracy on test set: {accuracy}')
 
 

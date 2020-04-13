@@ -70,7 +70,7 @@ class AdversarialTraining(DetectorContainer):
 
         # generate adversarial examples
         dc = self.model_container.data_container
-        x_train = np.copy(dc.data_train_np)
+        x_train = np.copy(dc.x_train)
         num_train = len(x_train)
         # create an index pool for adversarial examples
         num_adv = int(np.floor(num_train * ratio))
@@ -99,7 +99,7 @@ class AdversarialTraining(DetectorContainer):
         self._log_time_end('Train Adv. Examples')
 
         # train
-        y_train = dc.label_train_np
+        y_train = dc.y_train
         self.fit_discriminator(x_train, y_train, max_epochs, batch_size)
 
     def save(self, filename, overwrite=False):

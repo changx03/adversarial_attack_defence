@@ -49,9 +49,9 @@ class DistillationContainer(DetectorContainer):
         # check if the model produces probability outputs
         dc = self.model_container.data_container
         accuracy = self.model_container.evaluate(
-            dc.data_test_np, dc.label_test_np)
+            dc.x_test, dc.y_test)
         logger.debug('Test set accuracy on pre-trained model: %f', accuracy)
-        score_train = self.model_container.get_score(dc.data_train_np)
+        score_train = self.model_container.get_score(dc.x_train)
         are_probability = np.all([is_probability(yy) for yy in score_train])
         # We do NOT need soft label for test set.
         # NOTE: What about missclassification?
@@ -62,17 +62,17 @@ class DistillationContainer(DetectorContainer):
             prob_train = score_train
 
         labels = np.argmax(prob_train, axis=1)
-        correct = len(np.where(labels == dc.label_train_np)[0])
+        correct = len(np.where(labels == dc.y_train)[0])
         logger.debug('Accuracy of smooth labels: %f',
-                     correct / len(dc.label_train_np))
+                     correct / len(dc.y_train))
 
         # create new data container and replace the label to smooth probability
         dataset_name = dc.name
         dc = DataContainer(DATASET_LIST[dataset_name], get_data_path())
         dc(shuffle=False)
         # prevent the train set permutate.
-        dc.data_train_np = self.model_container.data_container.data_train_np
-        dc.label_train_np = prob_train
+        dc.x_train = self.model_container.data_container.x_train
+        dc.y_train = prob_train
 
         # load pre-trained parameters
         if pretrained:
@@ -82,10 +82,10 @@ class DistillationContainer(DetectorContainer):
         # model container for distillation
         self._distillation_mc = ModelContainerPT(distillation_model, dc)
 
-        accuracy = self._distillation_mc.evaluate(dc.data_train_np, labels)
+        accuracy = self._distillation_mc.evaluate(dc.x_train, labels)
         logger.debug('Train set accuracy on distillation model: %f', accuracy)
         accuracy = self._distillation_mc.evaluate(
-            dc.data_test_np, dc.label_test_np)
+            dc.x_test, dc.y_test)
         logger.debug('Test set accuracy on distillation model: %f', accuracy)
 
     def fit(self, max_epochs=10, batch_size=128):

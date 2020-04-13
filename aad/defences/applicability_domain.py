@@ -99,9 +99,9 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
         # Step 1: compute hidden layer outputs from inputs
         dc = self.model_container.data_container
-        x_train_np = dc.data_train_np
-        self.encode_train_np = self._preprocessing(x_train_np)
-        self.y_train_np = dc.label_train_np
+        x_train = dc.x_train
+        self.encode_train_np = self._preprocessing(x_train)
+        self.y_train_np = dc.y_train
         self.num_components = self.encode_train_np.shape[1]
         logger.debug('Number of input attributes: %d', self.num_components)
 

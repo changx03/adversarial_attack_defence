@@ -46,7 +46,7 @@ class TestAttackIris(unittest.TestCase):
             logger.info('Use saved parameters from %s', FILE_NAME)
             cls.mc.load(file_path)
 
-        accuracy = cls.mc.evaluate(cls.dc.data_test_np, cls.dc.label_test_np)
+        accuracy = cls.mc.evaluate(cls.dc.x_test, cls.dc.y_test)
         logger.info('Accuracy on test set: %f', accuracy)
 
     def setUp(self):
