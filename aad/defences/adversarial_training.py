@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader
 
 from ..attacks import AttackContainer
 from ..basemodels import ModelContainerPT
-from ..datasets import NumericalDataset
+from ..datasets import GenericDataset
 from ..utils import swap_image_channel
 from .detector_container import DetectorContainer
 
@@ -130,6 +130,20 @@ class AdversarialTraining(DetectorContainer):
         return blocked_indices
 
     def fit_discriminator(self, x_train, y_train, max_epochs, batch_size):
+        """
+        Train the model with an extra train set.
+
+        Parameters
+        ----------
+        x_train : numpy.ndarray
+            Training data.
+        y_train : numpy.ndarray
+            Training labels.
+        max_epochs : int
+            Number of epochs for training.
+        batch_size : int
+            Size of a mini-batch.
+        """
         mc = self._discriminator
         dc = mc.data_container
         test_loader = dc.get_dataloader(batch_size, is_train=False)
@@ -139,9 +153,7 @@ class AdversarialTraining(DetectorContainer):
         if dc.data_type == 'image':
             x_train = swap_image_channel(x_train)
 
-        dataset = NumericalDataset(
-            torch.as_tensor(x_train),
-            torch.as_tensor(y_train))
+        dataset = GenericDataset(x_train, y_train)
         train_loader = DataLoader(
             dataset,
             batch_size,

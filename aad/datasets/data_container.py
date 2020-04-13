@@ -16,7 +16,7 @@ from torch.utils.data import DataLoader
 from ..utils import (get_range, scale_normalize, shuffle_data,
                      swap_image_channel)
 from .dataset_list import get_sample_mean, get_sample_std
-from .numerical_dataset import NumericalDataset
+from .generic_dataset import GenericDataset
 
 logger = logging.getLogger(__name__)
 
@@ -188,9 +188,7 @@ class DataContainer:
             if self._data_type == 'image':
                 x_np = swap_image_channel(x_np)
 
-            dataset = NumericalDataset(
-                torch.as_tensor(x_np),
-                torch.as_tensor(y_np))
+            dataset = GenericDataset(x_np, y_np)
             dataloader = DataLoader(
                 dataset,
                 batch_size,

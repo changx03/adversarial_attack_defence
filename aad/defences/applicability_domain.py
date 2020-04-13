@@ -9,7 +9,7 @@ import torch
 from scipy import stats
 from torch.utils.data import DataLoader
 
-from ..datasets import NumericalDataset
+from ..datasets import GenericDataset
 from ..utils import swap_image_channel
 from .detector_container import DetectorContainer
 
@@ -181,7 +181,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
             logger.debug('Before swap channel: x_np: %s', str(x_np.shape))
             x_np = swap_image_channel(x_np)
 
-        dataset = NumericalDataset(torch.as_tensor(x_np))
+        dataset = GenericDataset(x_np)
         dataloader = DataLoader(
             dataset,
             batch_size=256,
