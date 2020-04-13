@@ -61,6 +61,15 @@ class AdversarialTraining(DetectorContainer):
     def fit(self, max_epochs=10, batch_size=128, ratio=0.2):
         """
         Train the classifier with adversarial examples.
+
+        Parameters
+        ----------
+        max_epochs : int
+            Number of epochs the program will run during the training.
+        batch_size : int
+            Size of a mini-batch.
+        ratio : float
+            The percentage of train set will be used for generating adversarial examples.
         """
         if len(self._attacks) == 0:
             logger.warning(
@@ -140,7 +149,7 @@ class AdversarialTraining(DetectorContainer):
         y_train : numpy.ndarray
             Training labels.
         max_epochs : int
-            Number of epochs for training.
+            Number of epochs the program will run during the training.
         batch_size : int
             Size of a mini-batch.
         """
@@ -217,5 +226,12 @@ class AdversarialTraining(DetectorContainer):
         model.load_state_dict(best_model_state)
 
     def get_def_model_container(self):
-        """Get the discriminator model container."""
+        """
+        Get the discriminator model container.
+
+        Returns
+        -------
+        ModelContainer
+            The discriminator model container.
+        """
         return self._discriminator

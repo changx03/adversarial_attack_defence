@@ -8,7 +8,7 @@ import numpy as np
 import torch.nn as nn
 from scipy.ndimage import median_filter
 
-from ..utils import scale_normalize
+from ..utils import name_handler, scale_normalize
 from .detector_container import DetectorContainer
 
 logger = logging.getLogger(__name__)
@@ -21,10 +21,11 @@ class FeatureSqueezing(DetectorContainer):
 
     def __init__(self,
                  model_container,
+                 smoothing_methods,
                  clip_values=None,
-                 smoothing_methods=['median'],
                  bit_depth=None,
                  sigma=None,
+                 kernel_size=None,
                  pretrained=True):
         """
         Create a FeatureSqueezing class instance.
@@ -42,6 +43,8 @@ class FeatureSqueezing(DetectorContainer):
             The image color depth for input images. Pass `None` for numeral data. Required for 'binary' filter. e.g.: 8
         sigma : float, optional
             The Standard Deviation of normal distribution. Required for 'normal' filter. e.g.: 0.1
+        kernel_size: int, optional
+            The kernel size for median filter. Required for 'median' filter. e.g.: 3
         pretrained : bool
             Load the pre-trained parameters before train the smoothing models.
         """
@@ -55,6 +58,7 @@ class FeatureSqueezing(DetectorContainer):
             'clip_values': clip_values,
             'bit_depth': bit_depth,
             'sigma': sigma,
+            'kernel_size': kernel_size,
             'pretrained': pretrained,
         }
         self._smoothing_methods = smoothing_methods
@@ -64,27 +68,94 @@ class FeatureSqueezing(DetectorContainer):
         if 'normal' in smoothing_methods and sigma is None:
             raise ValueError('`sigma` cannot be `None` for normal filter.')
 
-        mc = self.model_container
-        self._base_model = copy.deepcopy(mc.model)
-        if not pretrained:
-            for param in self._base_model.parameters():
-                nn.init.uniform_(param, a=-1.0, b=1.0)
+        self._models = []
+        for method_name in smoothing_methods:
+            mc = copy.deepcopy(self.model_container)
 
-        self.models = []
-        for method in smoothing_methods:
-            self.models.append({
-                'model_container': None,
-                'method': method
+            # reset pretrained parameters
+            if not pretrained:
+                for param in mc.model.parameters():
+                    nn.init.uniform_(param, a=-1.0, b=1.0)
+            # replace train set with squeezed dataset
+            x, y = None, None
+            if method_name == 'binary':
+                x, y = self._get_binary_data()
+            elif method_name == 'normal':
+                x, y = self._get_normal_data()
+            elif method_name == 'median':
+                x, y = self._get_median_data()
+            if x is None or y is None:
+                raise ValueError('Unrecognized squeezing method!')
+            mc.data_container.x_train = x
+            mc.data_container.y_train = y
+            self._models.append({
+                'method': method_name,
+                'model_container': mc,
             })
 
     @property
     def smoothing_methods(self):
         return self._smoothing_methods
 
-    def fit(self):
+    def fit(self, max_epochs=10, batch_size=128):
         """
-        Train the smoothing models with selected filters.
+        Train the smoothing models with selected filters. Since each model uses seperated train set, we will train it
+        seperately. All models are using the same test set.
+
+        Parameters
+        ----------
+        max_epochs : int
+            Number of epochs the program will run during the training.
+        batch_size : int
+            Size of a mini-batch.
         """
+        for model in self._models:
+            self._log_time_start()
+            name = model['name']
+            logger.debug('Start training %s squeezing model...', name)
+            mc = model['model_container']
+            mc.fit(max_epochs, batch_size)
+            self._log_time_end(f'Train {name}')
+
+    def save(self, filename, overwrite=False):
+        """Save trained parameters."""
+        for model in self._models:
+            name = model['name']
+            method_filename = name_handler(filename + '_' + name, 'pt', True)
+            model['model_container'].save(method_filename, overwrite)
+
+    def load(self, filename):
+        """Load pre-trained parameters."""
+        for model in self._models:
+            name = model['name']
+            method_filename = name_handler(filename + '_' + name, 'pt', True)
+            model['model_container'].load(method_filename)
+
+    def detect(self, adv, pred, return_passed_x):
+        """
+        Compare the predictions between adv. training model and original model, and block all unmatched results.
+        """
+        raise NotImplementedError
+
+    def get_def_model_container(self, method):
+        """
+        Get the squeezing model container
+
+        Parameters
+        ----------
+        method : str
+            The name of the squeezing method.
+
+        Returns
+        -------
+        ModelContainer
+            The selected model container.
+        """
+        for model in self._models:
+            if model['name'] == method:
+                return model['model_container']
+
+    def _get_binary_data(self):
         mc = self.model_container
         dc = mc.data_container
         x = dc.x_train
@@ -97,19 +168,27 @@ class FeatureSqueezing(DetectorContainer):
         res = np.rint(x_norm * max_val) / max_val
         res = res * (clip_values[1] - clip_values[0])
         res += clip_values[0]
-        print('ph')
+        return res, y
 
-    def save(self, filename, overwrite=False):
-        """Save trained parameters."""
-        raise NotImplementedError
+    def _get_normal_data(self):
+        mc = self.model_container
+        dc = mc.data_container
+        x = dc.x_train
+        y = dc.y_train
+        sigma = self._params['sigma']
+        clip_values = self._params['clip_values']
+        shape = x.shape
 
-    def load(self, filename):
-        """Load pre-trained parameters."""
-        raise NotImplementedError
+        res = x + np.random.normal(0, scale=sigma, size=shape)
+        np.clip(res, clip_values[0], clip_values[1])
+        return res, y
 
-    def detect(self, adv, pred, return_passed_x):
-        """
-        Compare the predictions between adv. training model and original model, 
-        and block all unmatched results.
-        """
-        raise NotImplementedError
+    def _get_median_data(self):
+        mc = self.model_container
+        dc = mc.data_container
+        x = dc.x_train
+        y = dc.y_train
+        kernel_size = self._params['kernel_size']
+
+        res = median_filter(x, size=kernel_size)
+        return res, y
