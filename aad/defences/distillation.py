@@ -30,14 +30,16 @@ class DistillationContainer(DetectorContainer):
         """
         Create an instance of Distillation Container.
 
-        :param model_container: A trained model.
-        :type model_container: `ModelContainerPT`
-        :param distillation_model: The distillation model has same architecture as the classifier model.
-        :type distillation_model: `torch.nn.Module`
-        :param temperature: It controls the smoothness of the softmax function.
-        :type temperature: `float`
-        :param pretrained: For testing only. Load the pre-trained parameters. The accuracy on train set will become 100%.
-        :type pretrained: `bool`
+        Parameters
+        ----------
+        model_container : ModelContainerPT
+            A trained model.
+        distillation_model : torch.nn.Module
+            The distillation model has same architecture as the classifier model.
+        temperature : float
+            It controls the smoothness of the softmax function.
+        pretrained : bool
+            For testing only. Load the pre-trained parameters. The accuracy on train set will become 100%.
         """
         super(DistillationContainer, self).__init__(model_container)
 

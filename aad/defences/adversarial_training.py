@@ -29,10 +29,12 @@ class AdversarialTraining(DetectorContainer):
         """
         Create an AdversarialTraining class instance.
 
-        :param model_container: Pre-trained classification model.
-        :type model_container: `ModelContainerPT`
-        :param attacks: adversarial attacks for data augmentation in adversarial training.
-        :type attacks: `list(AttackContainer)`
+        Parameters
+        ----------
+        model_container : ModelContainerPT
+            Pre-trained classification model.
+        attacks : list of AttackContainer
+            The adversarial attacks for data augmentation in adversarial training.
         """
         super(AdversarialTraining, self).__init__(model_container)
         self._attacks = attacks

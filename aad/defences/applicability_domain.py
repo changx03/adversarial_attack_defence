@@ -32,22 +32,24 @@ class ApplicabilityDomainContainer(DetectorContainer):
                  disable_s2=False):
         """Create a class `ApplicabilityDomainContainer` instance.
 
-        :param model_container: A trained model
-        :type model_container: `ModelContainerPT`
-        :param hidden_model: To compute output from certain hidden layer
-        :type hidden_model: `torch.nn.Module`
-        :param k1: Number of nearest neighbours for Stage 2
-        :type k1: `int`
-        :param reliability: The parameter for confidence interval in Stage 2
-        :type reliability: `float`
-        :param sample_ratio: The percentage of train sample will be used in Stage 3. Expected to be in range (0, 1]
-        :type sample_ratio: `float`
-        :param confidence: The number of samples will be used to compute neighbours in Stage 3. k = num_classes * kappa
-        :type confidence: `float`
-        :param kappa: The number of samples will be used to compute neighbours in Stage 3. k = num_classes * kappa
-        :type kappa: `float`
-        :param disable_s2: To disable Stage 2 defence. (For testing the robustness Stage 3)
-        :type disable_s2: `bool`
+        Parameters
+        ----------
+        model_container : ModelContainerPT
+            A trained model.
+        hidden_model : torch.nn.Module
+            To compute output from a certain hidden layer.
+        k1 : int
+            Number of nearest neighbours for Stage 2.
+        reliability : float
+            The parameter for confidence interval in Stage 2.
+        sample_ratio : float
+            The percentage of train sample will be used in Stage 3. Expected to be in range (0, 1].
+        confidence : float
+            The number of samples will be used to compute neighbours in Stage 3. k = num_classes * kappa
+        kappa : float
+            The number of samples will be used to compute neighbours in Stage 3. k = num_classes * kappa
+        disable_s2 : bool
+            To disable Stage 2 defence. For testing the robustness Stage 3.
         """
         super(ApplicabilityDomainContainer, self).__init__(model_container)
 
