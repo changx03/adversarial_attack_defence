@@ -15,8 +15,11 @@ def master_seed(seed):
     """
     Set the seed for all random number generators used in the library. This 
     ensures experiments reproducibility and stable testing.
-    :param seed: The value to be seeded in the random number generators.
-    :type seed: `int`
+
+    Parameters
+    ----------
+    seed : int
+        The value to be seeded in the random number generators.
     """
     import numbers
     import random
@@ -57,13 +60,11 @@ def scale_normalize(data, xmin, xmax, mean=None):
     """
     Applies scaling. If mean is not none, set output to zero mean. Otherwise,
     it scales data to [0, 1]
-
     """
     assert isinstance(data, np.ndarray) \
-        and isinstance(xmin, np.ndarray) \
-        and isinstance(xmax, np.ndarray) \
-        and isinstance(mean, (type(None), np.ndarray))
-    assert data.shape[1] == len(xmax) and data.shape[1] == len(xmin)
+        and isinstance(xmin, (np.ndarray, np.float32, float)) \
+        and isinstance(xmax, (np.ndarray, np.float32, float)) \
+        and isinstance(mean, (type(None), np.ndarray, np.float32, float))
 
     if mean is not None:
         return (data - mean) / (xmax - xmin)
@@ -173,6 +174,7 @@ def get_time_str():
 def get_pt_model_filename(model_name, dataset, epochs):
     """Return the filename for PyTorch model"""
     return '{}_{}_e{}.pt'.format(model_name, dataset, epochs)
+
 
 def is_probability(vector):
     """Check if the score add up to 1."""
