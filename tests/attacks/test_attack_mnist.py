@@ -22,6 +22,8 @@ FILE_NAME = os.path.join('test', 'test-mnist-e30.pt')
 
 
 class TestAttackMNIST(unittest.TestCase):
+    """Test Adversarial Attacks on MNIST dataset"""
+
     @classmethod
     def setUpClass(cls):
         master_seed(SEED)

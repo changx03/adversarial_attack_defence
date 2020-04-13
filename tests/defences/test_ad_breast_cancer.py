@@ -22,7 +22,9 @@ MAX_EPOCHS = 200
 SAMPLE_RATIO = 1.0
 
 
-class TestApplicabilityDomainIris(unittest.TestCase):
+class TestApplicabilityDomainBC(unittest.TestCase):
+    """Testing Applicability Domain on Breast Cancer dataset"""
+
     @classmethod
     def setUpClass(cls):
         master_seed(SEED)
@@ -109,7 +111,7 @@ class TestApplicabilityDomainIris(unittest.TestCase):
         print(f'# of blocked: {len(blocked_indices)}')
         self.assertEqual(len(x_passed) + len(blocked_indices), n)
         block_rate = len(blocked_indices) / n
-        self.assertLessEqual(block_rate, 0.15)
+        self.assertLessEqual(block_rate, 0.1)
         logger.info('Block rate: %f', block_rate)
 
     def test_fgsm_attack(self):
@@ -122,7 +124,7 @@ class TestApplicabilityDomainIris(unittest.TestCase):
         blocked_indices, adv_success_rate = self.preform_attack(
             attack, count=NUM_ADV)
         block_rate = len(blocked_indices) / NUM_ADV
-        self.assertGreater(block_rate, adv_success_rate * 0.8)
+        self.assertGreater(block_rate, adv_success_rate * 0.6)
         logger.info('[%s] Block rate: %f', FGSMContainer.__name__, block_rate)
 
     def test_bim_attack(self):
@@ -138,7 +140,7 @@ class TestApplicabilityDomainIris(unittest.TestCase):
         blocked_indices, adv_success_rate = self.preform_attack(
             attack, count=NUM_ADV)
         block_rate = len(blocked_indices) / NUM_ADV
-        self.assertGreater(block_rate, adv_success_rate * 0.8)
+        self.assertGreater(block_rate, adv_success_rate * 0.6)
         logger.info('[%s] Block rate: %f', BIMContainer.__name__, block_rate)
 
     def test_deepfool_attack(self):
@@ -150,7 +152,7 @@ class TestApplicabilityDomainIris(unittest.TestCase):
         blocked_indices, adv_success_rate = self.preform_attack(
             attack, count=NUM_ADV)
         block_rate = len(blocked_indices) / NUM_ADV
-        self.assertGreater(block_rate, adv_success_rate * 0.8)
+        self.assertGreater(block_rate, adv_success_rate * 0.6)
         logger.info('[%s] Block rate: %f',
                     DeepFoolContainer.__name__, block_rate)
 
@@ -174,7 +176,7 @@ class TestApplicabilityDomainIris(unittest.TestCase):
         blocked_indices, adv_success_rate = self.preform_attack(
             attack, count=n)
         block_rate = len(blocked_indices) / n
-        self.assertGreater(block_rate, adv_success_rate * 0.8)
+        self.assertGreater(block_rate, adv_success_rate * 0.6)
         logger.info('[%s] Block rate: %f',
                     CarliniL2Container.__name__, block_rate)
 

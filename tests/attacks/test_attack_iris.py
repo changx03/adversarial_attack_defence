@@ -22,6 +22,8 @@ FILE_NAME = os.path.join('test', 'test-iris-e200.pt')
 
 
 class TestAttackIris(unittest.TestCase):
+    """Test Adversarial Attacks on Iris dataset"""
+
     @classmethod
     def setUpClass(cls):
         master_seed(SEED)

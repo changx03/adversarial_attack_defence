@@ -15,6 +15,8 @@ SEED = 4096
 
 
 class TestDataContainer(unittest.TestCase):
+    """Test DataContainer class"""
+
     @classmethod
     def init_datacontainer(cls, name):
         x = DATASET_LIST[name]

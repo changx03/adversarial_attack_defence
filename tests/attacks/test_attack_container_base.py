@@ -14,6 +14,8 @@ SEED = 4096  # 2**12 = 4096
 
 
 class TestAttackContainer(unittest.TestCase):
+    """Test AttackContainer class"""
+
     def setUp(self):
         master_seed(SEED)
 

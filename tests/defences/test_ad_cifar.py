@@ -22,7 +22,9 @@ FILE_NAME = 'CifarCnn_CIFAR10_e50.pt'
 SAMPLE_RATIO = 1000 / 6e4
 
 
-class TestApplicabilityDomainMNIST(unittest.TestCase):
+class TestApplicabilityDomainCIFAR(unittest.TestCase):
+    """Testing Applicability Domain on CIFAR10 dataset"""
+
     @classmethod
     def setUpClass(cls):
         master_seed(SEED)
@@ -73,6 +75,8 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
 
     def preform_attack(self, attack, count=NUM_ADV):
         adv, y_adv, x_clean, y_clean = attack.generate(count=count)
+        not_match = y_adv != y_clean
+        adv_success_rate = len(not_match[not_match == True]) / len(adv)
 
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adv. examples: %f', accuracy)
@@ -90,13 +94,13 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         passed_y_clean = y_clean[passed_indices]
         accuracy = self.mc.evaluate(x_passed, passed_y_clean)
         logger.info('Accuracy on passed adv. examples: %f', accuracy)
-        return blocked_indices
+        return blocked_indices, adv_success_rate
 
     def test_block_clean(self):
         dummy_attack = DummyAttack(self.mc)
-        blocked_indices = self.preform_attack(dummy_attack)
+        blocked_indices, adv_success_rate = self.preform_attack(dummy_attack)
         block_rate = len(blocked_indices) / NUM_ADV
-        self.assertLessEqual(block_rate, 0.25)
+        self.assertLessEqual(block_rate, 0.15)
         logger.info('Block rate: %f', block_rate)
 
     def test_block_train(self):
@@ -111,7 +115,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         print(f'# of blocked: {len(blocked_indices)}')
         self.assertEqual(len(x_passed) + len(blocked_indices), n)
         block_rate = len(blocked_indices) / n
-        self.assertLessEqual(block_rate, 0.15)
+        self.assertLessEqual(block_rate, 0.1)
         logger.info('Block rate: %f', block_rate)
 
     def test_fgsm_attack(self):
@@ -124,9 +128,9 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             eps=0.3,
             eps_step=0.1,
             minimal=True)
-        blocked_indices = self.preform_attack(attack)
+        blocked_indices, adv_success_rate = self.preform_attack(attack)
         block_rate = len(blocked_indices) / NUM_ADV
-        self.assertGreaterEqual(block_rate, 0.49)
+        self.assertGreaterEqual(block_rate, adv_success_rate * 0.6)
         logger.info('[%s] Block rate: %f', FGSMContainer.__name__, block_rate)
 
     def test_bim_attack(self):
@@ -136,9 +140,9 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             eps_step=0.1,
             max_iter=100,
             targeted=False)
-        blocked_indices = self.preform_attack(attack)
+        blocked_indices, adv_success_rate = self.preform_attack(attack)
         block_rate = len(blocked_indices) / NUM_ADV
-        self.assertGreaterEqual(block_rate, 0.9)
+        self.assertGreaterEqual(block_rate, adv_success_rate * 0.6)
         logger.info('[%s] Block rate: %f', BIMContainer.__name__, block_rate)
 
     def test_deepfool_attack(self):
@@ -147,9 +151,9 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             max_iter=100,
             epsilon=1e-6,
             nb_grads=10)
-        blocked_indices = self.preform_attack(attack)
+        blocked_indices, adv_success_rate = self.preform_attack(attack)
         block_rate = len(blocked_indices) / NUM_ADV
-        self.assertGreater(block_rate, 0.53)
+        self.assertGreater(block_rate, adv_success_rate * 0.6)
         logger.info('[%s] Block rate: %f',
                     DeepFoolContainer.__name__, block_rate)
 
@@ -166,9 +170,9 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
             max_halving=5,
             max_doubling=10,
             batch_size=16)
-        blocked_indices = self.preform_attack(attack, count=n)
+        blocked_indices, adv_success_rate = self.preform_attack(attack, count=n)
         block_rate = len(blocked_indices) / n
-        self.assertGreater(block_rate, 0.5)
+        self.assertGreater(block_rate, adv_success_rate * 0.6)
         logger.info('[%s] Block rate: %f',
                     CarliniL2Container.__name__, block_rate)
 
@@ -180,9 +184,9 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         attack = SaliencyContainer(
             self.mc,
         )
-        blocked_indices = self.preform_attack(attack, count=n)
+        blocked_indices, adv_success_rate = self.preform_attack(attack, count=n)
         block_rate = len(blocked_indices) / n
-        self.assertGreater(block_rate, 0.79)
+        self.assertGreater(block_rate, adv_success_rate * 0.6)
         logger.info('[%s] Block rate: %f',
                     SaliencyContainer.__name__, block_rate)
 
