@@ -19,7 +19,21 @@ logger = logging.getLogger(__name__)
 
 
 class ModelContainerPT:
+    """
+    This class provides additional features for the PyTorch.Module neural network model.
+    """
+
     def __init__(self, model, data_container):
+        """
+        Create a ModelContainerPT class instance
+
+        Parameters
+        ----------
+        model : torch.nn.Module
+            A PyTorch neural network model.
+        data_container : DataContainer
+            An instance of DataContainer.
+        """
         assert isinstance(model, nn.Module), \
             f'Expecting a Torch Module, got {type(model)}'
         self.model = model
@@ -42,11 +56,22 @@ class ModelContainerPT:
         self.accuracy_train = []
         self.accuracy_test = []
 
-    def fit(self, max_epochs=5, batch_size=128):
-        """Train the classification model."""
+    def fit(self, max_epochs=5, batch_size=128, early_stop=True):
+        """
+        Train the classification model.
+
+        Parameters
+        ----------
+        max_epochs : int
+            Number of epochs the program will run during the training.
+        batch_size : int
+            Size of a mini-batch.
+        early_stop : bool
+            Allows the train to abort early.
+        """
         since = time.time()
 
-        self._fit_torch(max_epochs, batch_size)
+        self._fit_torch(max_epochs, batch_size, early_stop)
 
         time_elapsed = time.time() - since
         logger.info('Time to complete training: %dm %.3fs',
@@ -69,6 +94,21 @@ class ModelContainerPT:
         logger.info('Loaded model from %s', filename)
 
     def get_score(self, x, batch_size=128):
+        """
+        Computes the forward propagation scores without predictions
+
+        Parameters
+        ----------
+        x : numpy.ndarray, torch.Tensor
+            Input data for forward propagation.
+        batch_size : int
+            Size of a mini-batch.
+
+        Returns
+        -------
+        numpy.ndarray
+            The output score.
+        """
         if len(x) == 0:
             return np.array([], dtype=np.int64)
 
@@ -96,6 +136,25 @@ class ModelContainerPT:
         return scores
 
     def predict(self, x, require_score=False, batch_size=128):
+        """
+        Predicts a list of samples.
+
+        Parameters
+        ----------
+        x : numpy.ndarray, torch.Tensor
+            Input data for forward propagation.
+        require_score : bool, optional
+            Flag for turning the score
+        batch_size : int
+            Size of a mini-batch.
+
+        Returns
+        -------
+        predictions : numpy.ndarray
+            The predicted labels.
+        scores : numpy.ndarray
+            The output score. Return this only if `require_score` is True.
+        """
         if len(x) == 0:
             return np.array([], dtype=np.int64)
 
@@ -132,6 +191,23 @@ class ModelContainerPT:
         return predictions
 
     def predict_one(self, x, require_score=False):
+        """
+        Predicts single input.
+
+        Parameters
+        ----------
+        x : numpy.ndarray, torch.Tensor
+            An input sample.
+        require_score : bool, optional
+            Flag for turning the score
+
+        Returns
+        -------
+        prediction : numpy.ndarray
+            The predicted label.
+        score : numpy.ndarray
+            The output score. Return this only if `require_score` is True.
+        """
         if len(x) == 0:
             return np.array([], dtype=np.int64)
 
@@ -148,14 +224,32 @@ class ModelContainerPT:
             return prediction.squeeze()
 
     def evaluate(self, x, labels):
+        """
+        Given a list of samples, evaluate the accuracy of the classification model.
+
+        Parameters
+        ----------
+        x : numpy.ndarray, torch.Tensor
+            Input data for evaluation.
+        labels : numpy.ndarray, torch.Tensor
+            The true labels of x.
+
+        Returns
+        -------
+        accuracy : float
+            The accuracy of the predictions.
+        """
         if len(x) == 0:
             return 0.0
+
+        if isinstance(labels, torch.Tensor):
+            labels = labels.cpu().detach().numpy()
 
         predictions = self.predict(x)
         accuracy = np.sum(np.equal(predictions, labels)) / len(labels)
         return accuracy
 
-    def _fit_torch(self, max_epochs, batch_size):
+    def _fit_torch(self, max_epochs, batch_size, early_stop):
         train_loader = self.data_container.get_dataloader(
             batch_size, is_train=True)
         test_loader = self.data_container.get_dataloader(
@@ -204,17 +298,18 @@ class ModelContainerPT:
             self.accuracy_test.append(va_acc)
 
             # early stopping
-            if (tr_acc >= 0.999 and va_acc >= 0.999) or tr_loss < 1e-4:
-                logger.debug(
-                    'Satisfied the accuracy threshold. Abort at %d epoch!',
-                    epoch)
-                break
-            if len(self.loss_train) - 5 >= 0 \
-                    and self.loss_train[-5] <= self.loss_train[-1]:
-                logger.debug(
-                    'No improvement in the last 5 epochs. Abort at %d epoch!',
-                    epoch)
-                break
+            if early_stop:
+                if (tr_acc >= 0.999 and va_acc >= 0.999) or tr_loss < 1e-4:
+                    logger.debug(
+                        'Satisfied the accuracy threshold. Abort at %d epoch!',
+                        epoch)
+                    break
+                if len(self.loss_train) - 10 >= 0 \
+                        and self.loss_train[-10] <= self.loss_train[-1]:
+                    logger.debug(
+                        'No improvement in the last 10 epochs. Abort at %d epoch!',
+                        epoch)
+                    break
 
         self.model.load_state_dict(best_model_state)
 
