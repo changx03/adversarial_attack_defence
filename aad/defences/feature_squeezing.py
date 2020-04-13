@@ -50,8 +50,8 @@ class FeatureSqueezing(DetectorContainer):
         """
         super(FeatureSqueezing, self).__init__(model_container)
 
+        dc = model_container.data_container
         if clip_values is None:
-            dc = model_container.data_container
             clip_values = dc.data_range
 
         self._params = {
@@ -62,11 +62,14 @@ class FeatureSqueezing(DetectorContainer):
             'pretrained': pretrained,
         }
         self._smoothing_methods = smoothing_methods
-
+        if 'median' in smoothing_methods and dc.data_type is not 'image':
+            raise ValueError('median filter is only avaliable for images.')
+        if 'median' in smoothing_methods and kernel_size is None:
+            raise ValueError('kernel_size is required.')
         if 'binary' in smoothing_methods and bit_depth is None:
-            raise ValueError('`bit_depth` cannot be `None` for binary filter.')
+            raise ValueError('bit_depth is required.')
         if 'normal' in smoothing_methods and sigma is None:
-            raise ValueError('`sigma` cannot be `None` for normal filter.')
+            raise ValueError('sigma is required.')
 
         self._models = []
         for method_name in smoothing_methods:
@@ -89,12 +92,13 @@ class FeatureSqueezing(DetectorContainer):
             mc.data_container.x_train = x
             mc.data_container.y_train = y
             self._models.append({
-                'method': method_name,
+                'name': method_name,
                 'model_container': mc,
             })
 
     @property
     def smoothing_methods(self):
+        """Get the name list of the squeezing methods"""
         return self._smoothing_methods
 
     def fit(self, max_epochs=10, batch_size=128):
@@ -114,7 +118,7 @@ class FeatureSqueezing(DetectorContainer):
             name = model['name']
             logger.debug('Start training %s squeezing model...', name)
             mc = model['model_container']
-            mc.fit(max_epochs, batch_size)
+            mc.fit(max_epochs, batch_size, early_stop=False)
             self._log_time_end(f'Train {name}')
 
     def save(self, filename, overwrite=False):
@@ -131,11 +135,47 @@ class FeatureSqueezing(DetectorContainer):
             method_filename = name_handler(filename + '_' + name, 'pt', True)
             model['model_container'].load(method_filename)
 
-    def detect(self, adv, pred, return_passed_x):
+    def detect(self, adv, pred=None, return_passed_x=False):
         """
-        Compare the predictions between adv. training model and original model, and block all unmatched results.
+        Compare the predictions between squeezed models and initial model. Block any mismatches.
+
+        Parameters
+        ----------
+        adv : numpy.ndarray
+            The data for evaluation.
+        pred : numpy.ndarray, optional
+            The predictions of the input data. If it is none, this method will use internal model to make prediction.
+        return_passed_x : bool
+            The flag of returning the data which are passed the test.
+
+        Returns
+        -------
+        blocked_indices : numpy.ndarray
+            List of blocked indices.
+        x_passed : numpy.ndarray
+            The data which are passed the test. This parameter will not be returns if `return_passed_x` is False.
         """
-        raise NotImplementedError
+        # use -1 as a place holder
+        results = -1 * np.ones((len(self._models) + 1,
+                                len(adv)), dtype=np.int64)
+        if pred is None:
+            mc = self.model_container
+            pred = mc.predict(adv)
+        results[0] = pred
+
+        i = 1
+        for model in self._models:
+            mc = model['model_container']
+            results[i] = mc.predict(adv)
+            i += 1
+
+        # they have same labels, if variance is 0.
+        matched = np.std(results, axis=0) == 0
+        passed_indices = np.where(matched)[0]
+        blocked_indices = np.where(np.logical_not(matched))[0]
+        if return_passed_x:
+            return blocked_indices, adv[passed_indices]
+        return blocked_indices
 
     def get_def_model_container(self, method):
         """
@@ -168,7 +208,7 @@ class FeatureSqueezing(DetectorContainer):
         res = np.rint(x_norm * max_val) / max_val
         res = res * (clip_values[1] - clip_values[0])
         res += clip_values[0]
-        return res, y
+        return res.astype(np.float32), y
 
     def _get_normal_data(self):
         mc = self.model_container
@@ -180,8 +220,8 @@ class FeatureSqueezing(DetectorContainer):
         shape = x.shape
 
         res = x + np.random.normal(0, scale=sigma, size=shape)
-        np.clip(res, clip_values[0], clip_values[1])
-        return res, y
+        res = np.clip(res, clip_values[0], clip_values[1])
+        return res.astype(np.float32), y
 
     def _get_median_data(self):
         mc = self.model_container
@@ -191,4 +231,4 @@ class FeatureSqueezing(DetectorContainer):
         kernel_size = self._params['kernel_size']
 
         res = median_filter(x, size=kernel_size)
-        return res, y
+        return res.astype(np.float32), y
