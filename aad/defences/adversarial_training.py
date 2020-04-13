@@ -121,10 +121,25 @@ class AdversarialTraining(DetectorContainer):
         """Load pre-trained parameters."""
         self._discriminator.load(filename)
 
-    def detect(self, adv, pred=None, return_passed_x=True):
+    def detect(self, adv, pred=None, return_passed_x=False):
         """
-        Compare the predictions between adv. training model and original model, 
-        and block all unmatched results.
+        Compare the predictions between adv. training model and original model and block all unmatched results.
+
+        Parameters
+        ----------
+        adv : numpy.ndarray
+            The data for evaluation.
+        pred : numpy.ndarray, optional
+            The predictions of the input data. If it is none, this method will use internal model to make prediction.
+        return_passed_x : bool
+            The flag of returning the data which are passed the test.
+
+        Returns
+        -------
+        block_indices : numpy.ndarray
+            List of blocked indices.
+        passed_x : numpy.ndarray
+            The data which are passed the test. This parameter will not be returns if `return_passed_x` is False.
         """
         if pred is None:
             pred = self.model_container.predict(adv)

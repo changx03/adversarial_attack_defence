@@ -107,7 +107,7 @@ class TestApplicabilityDomainBC(unittest.TestCase):
         x = x[shuffled_indices]
         y = y[shuffled_indices]
 
-        blocked_indices, x_passed = self.ad.detect(x)
+        blocked_indices, x_passed = self.ad.detect(x, return_passed_x=True)
         print(f'# of blocked: {len(blocked_indices)}')
         self.assertEqual(len(x_passed) + len(blocked_indices), n)
         block_rate = len(blocked_indices) / n

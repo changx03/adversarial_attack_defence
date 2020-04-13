@@ -24,7 +24,7 @@ SAMPLE_RATIO = 1.0
 
 class TestApplicabilityDomainIris(unittest.TestCase):
     """Testing Applicability Domain on Iris dataset"""
-    
+
     @classmethod
     def setUpClass(cls):
         master_seed(SEED)
@@ -74,7 +74,8 @@ class TestApplicabilityDomainIris(unittest.TestCase):
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adv. examples: %f', accuracy)
 
-        blocked_indices, x_passed = self.ad.detect(adv, y_adv)
+        blocked_indices, x_passed = self.ad.detect(
+            adv, y_adv, return_passed_x=True)
         logger.info('Blocked %d/%d samples from adv. examples',
                     len(blocked_indices), len(adv))
 
@@ -104,7 +105,7 @@ class TestApplicabilityDomainIris(unittest.TestCase):
         x = x[shuffled_indices]
         y = y[shuffled_indices]
 
-        blocked_indices, x_passed = self.ad.detect(x)
+        blocked_indices, x_passed = self.ad.detect(x, return_passed_x=True)
         print(f'# of blocked: {len(blocked_indices)}')
         self.assertEqual(len(x_passed) + len(blocked_indices), n)
         block_rate = len(blocked_indices) / n

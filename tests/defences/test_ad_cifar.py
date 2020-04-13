@@ -81,7 +81,8 @@ class TestApplicabilityDomainCIFAR(unittest.TestCase):
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adv. examples: %f', accuracy)
 
-        blocked_indices, x_passed = self.ad.detect(adv, y_adv)
+        blocked_indices, x_passed = self.ad.detect(
+            adv, y_adv, return_passed_x=True)
         logger.info('Blocked %d/%d samples from adv. examples',
                     len(blocked_indices), len(adv))
 
@@ -111,7 +112,7 @@ class TestApplicabilityDomainCIFAR(unittest.TestCase):
         x = x[shuffled_indices]
         y = y[shuffled_indices]
 
-        blocked_indices, x_passed = self.ad.detect(x)
+        blocked_indices, x_passed = self.ad.detect(x, return_passed_x=True)
         print(f'# of blocked: {len(blocked_indices)}')
         self.assertEqual(len(x_passed) + len(blocked_indices), n)
         block_rate = len(blocked_indices) / n
@@ -170,7 +171,8 @@ class TestApplicabilityDomainCIFAR(unittest.TestCase):
             max_halving=5,
             max_doubling=10,
             batch_size=16)
-        blocked_indices, adv_success_rate = self.preform_attack(attack, count=n)
+        blocked_indices, adv_success_rate = self.preform_attack(
+            attack, count=n)
         block_rate = len(blocked_indices) / n
         self.assertGreater(block_rate, adv_success_rate * 0.6)
         logger.info('[%s] Block rate: %f',
@@ -184,7 +186,8 @@ class TestApplicabilityDomainCIFAR(unittest.TestCase):
         attack = SaliencyContainer(
             self.mc,
         )
-        blocked_indices, adv_success_rate = self.preform_attack(attack, count=n)
+        blocked_indices, adv_success_rate = self.preform_attack(
+            attack, count=n)
         block_rate = len(blocked_indices) / n
         self.assertGreater(block_rate, adv_success_rate * 0.6)
         logger.info('[%s] Block rate: %f',

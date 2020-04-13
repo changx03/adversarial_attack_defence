@@ -27,7 +27,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
     NOTE: 2020/03/29 Switch from using the hidden layer after conv layer to the 
     hidden layer before output layer. 
     """
-    
+
     @classmethod
     def setUpClass(cls):
         master_seed(SEED)
@@ -86,7 +86,8 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         accuracy = self.mc.evaluate(adv, y_clean)
         logger.info('Accuracy on adv. examples: %f', accuracy)
 
-        blocked_indices, x_passed = self.ad.detect(adv, y_adv)
+        blocked_indices, x_passed = self.ad.detect(
+            adv, y_adv, return_passed_x=True)
         logger.info('Blocked %d/%d samples from adv. examples',
                     len(blocked_indices), len(adv))
 
@@ -116,7 +117,7 @@ class TestApplicabilityDomainMNIST(unittest.TestCase):
         x = x[shuffled_indices]
         y = y[shuffled_indices]
 
-        blocked_indices, x_passed = self.ad.detect(x)
+        blocked_indices, x_passed = self.ad.detect(x, return_passed_x=True)
         print(f'# of blocked: {len(blocked_indices)}')
         self.assertEqual(len(x_passed) + len(blocked_indices), n)
         block_rate = len(blocked_indices) / n
