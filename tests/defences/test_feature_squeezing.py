@@ -15,16 +15,14 @@ logging.basicConfig(level=logging.DEBUG)
 
 SEED = 4096
 BATCH_SIZE = 128
-# NAME = 'MNIST'
 NAME = 'Iris'
 MAX_EPOCHS = 10
-# MODEL_FILE = os.path.join('save', 'MnistCnnV2_MNIST_e50.pt')
 MODEL_FILE = os.path.join('save', 'IrisNN_Iris_e200.pt')
 SQUEEZER_FILE = os.path.join('test', 'IrisNN_Iris_e200')
 
 
 class TestFeatureSqueezing(unittest.TestCase):
-    """Testing Feature Squeezing as Defence."""
+    """Testing Feature Squeezing as Defence on Iris dataset."""
 
     @classmethod
     def setUpClass(cls):
@@ -35,7 +33,7 @@ class TestFeatureSqueezing(unittest.TestCase):
         model = Model()
         logger.info('Starting %s data container...', NAME)
         dc = DataContainer(DATASET_LIST[NAME], get_data_path())
-        # dc()
+        # normalize is important!
         dc(normalize=True)
         cls.mc = ModelContainerPT(model, dc)
         cls.mc.load(MODEL_FILE)

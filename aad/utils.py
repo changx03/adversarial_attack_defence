@@ -66,6 +66,12 @@ def scale_normalize(data, xmin, xmax, mean=None):
         and isinstance(xmax, (np.ndarray, np.float32, float)) \
         and isinstance(mean, (type(None), np.ndarray, np.float32, float))
 
+    # handle image data
+    if len(data.shape) == 4: # (n,h,w,c)
+        mean = np.mean(mean) if mean is not None else None
+        xmin = np.min(xmin)
+        xmax = np.max(xmax)
+
     if mean is not None:
         return (data - mean) / (xmax - xmin)
     return (data - xmin) / (xmax - xmin)
