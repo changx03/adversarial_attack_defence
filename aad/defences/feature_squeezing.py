@@ -5,10 +5,10 @@ import copy
 import logging
 
 import numpy as np
-import torch.nn as nn
 from scipy.ndimage import median_filter
 
-from ..utils import name_handler, scale_normalize
+from ..basemodels import ModelContainerPT
+from ..utils import copy_model, name_handler, scale_normalize
 from .detector_container import DetectorContainer
 
 logger = logging.getLogger(__name__)
@@ -50,9 +50,9 @@ class FeatureSqueezing(DetectorContainer):
         """
         super(FeatureSqueezing, self).__init__(model_container)
 
-        dc = model_container.data_container
+        data_container = model_container.data_container
         if clip_values is None:
-            clip_values = dc.data_range
+            clip_values = data_container.data_range
 
         self._params = {
             'clip_values': clip_values,
@@ -62,8 +62,10 @@ class FeatureSqueezing(DetectorContainer):
             'pretrained': pretrained,
         }
         self._smoothing_methods = smoothing_methods
-        if 'median' in smoothing_methods and dc.data_type is not 'image':
+        if 'median' in smoothing_methods \
+                and data_container.data_type is not 'image':
             raise ValueError('median filter is only avaliable for images.')
+
         if 'median' in smoothing_methods and kernel_size is None:
             raise ValueError('kernel_size is required.')
         if 'binary' in smoothing_methods and bit_depth is None:
@@ -73,24 +75,30 @@ class FeatureSqueezing(DetectorContainer):
 
         self._models = []
         for method_name in smoothing_methods:
-            mc = copy.deepcopy(self.model_container)
+            model = copy_model(model_container.model, pretrained)
+            mc = ModelContainerPT(model, copy.deepcopy(data_container))
+            dc = mc.data_container
 
-            # reset pretrained parameters
-            if not pretrained:
-                for param in mc.model.parameters():
-                    nn.init.uniform_(param, a=-1.0, b=1.0)
             # replace train set with squeezed dataset
-            x, y = None, None
             if method_name == 'binary':
-                x, y = self._get_binary_data()
+                x_train, y_train = self.apply_binary_transform(
+                    dc.x_train, dc.y_train)
+                x_test, y_test = self.apply_binary_transform(
+                    dc.x_test, dc.y_test)
             elif method_name == 'normal':
-                x, y = self._get_normal_data()
+                x_train, y_train = self.apply_normal_transform(
+                    dc.x_train, dc.y_train)
+                x_test, y_test = self.apply_normal_transform(
+                    dc.x_test, dc.y_test)
             elif method_name == 'median':
-                x, y = self._get_median_data()
-            if x is None or y is None:
-                raise ValueError('Unrecognized squeezing method!')
-            mc.data_container.x_train = x
-            mc.data_container.y_train = y
+                x_train, y_train = self.apply_median_transform(
+                    dc.x_train, dc.y_train)
+                x_test, y_test = self.apply_median_transform(
+                    dc.x_test, dc.y_test)
+            mc.data_container.x_train = x_train
+            mc.data_container.y_train = y_train
+            mc.data_container.x_test = x_test
+            mc.data_container.y_test = y_test
             self._models.append({
                 'name': method_name,
                 'model_container': mc,
@@ -158,15 +166,25 @@ class FeatureSqueezing(DetectorContainer):
         # use -1 as a place holder
         results = -1 * np.ones((len(self._models) + 1,
                                 len(adv)), dtype=np.int64)
+
+        mc = self.model_container
+        my_pred = mc.predict(adv)
         if pred is None:
-            mc = self.model_container
-            pred = mc.predict(adv)
+            pred = my_pred
+        assert np.all(pred == my_pred)
         results[0] = pred
 
         i = 1
         for model in self._models:
+            method_name = model['name']
             mc = model['model_container']
-            results[i] = mc.predict(adv)
+            if method_name == 'binary':
+                adv_trans, _ = self.apply_binary_transform(adv, pred)
+            elif method_name == 'normal':
+                adv_trans, _ = self.apply_normal_transform(adv, pred)
+            elif method_name == 'median':
+                adv_trans, _ = self.apply_median_transform(adv, pred)
+            results[i] = mc.predict(adv_trans)
             i += 1
 
         # they have same labels, if variance is 0.
@@ -174,6 +192,7 @@ class FeatureSqueezing(DetectorContainer):
         passed_indices = np.where(matched)[0]
         blocked_indices = np.where(np.logical_not(matched))[0]
         if return_passed_x:
+            # return the data without transformation
             return blocked_indices, adv[passed_indices]
         return blocked_indices
 
@@ -195,11 +214,26 @@ class FeatureSqueezing(DetectorContainer):
             if model['name'] == method:
                 return model['model_container']
 
-    def _get_binary_data(self):
-        mc = self.model_container
-        dc = mc.data_container
-        x = dc.x_train
-        y = dc.y_train
+    def apply_binary_transform(self, x, y):
+        """
+        Apply binary transformation on input x. Rescale the input based on given bit depth. The parameters for
+        transformation were predefined when creating class instance.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Input data.
+
+        y : np.ndarray
+            The labels for the data.
+        Returns
+        -------
+        x : np.ndarray
+            Results after binary transformation.
+
+        y : np.ndarray
+            A copy of input parameter y.
+        """
         clip_values = self._params['clip_values']
         bit_depth = self._params['bit_depth']
 
@@ -208,27 +242,59 @@ class FeatureSqueezing(DetectorContainer):
         res = np.rint(x_norm * max_val) / max_val
         res = res * (clip_values[1] - clip_values[0])
         res += clip_values[0]
-        return res.astype(np.float32), y
+        return res.astype(np.float32), np.copy(y)
 
-    def _get_normal_data(self):
-        mc = self.model_container
-        dc = mc.data_container
-        x = dc.x_train
-        y = dc.y_train
+    def apply_normal_transform(self, x, y):
+        """
+        Add noise with Normal distribution to input x. The parameters for transformation were predefined when creating
+        class instance.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Input data.
+
+        y : np.ndarray
+            The labels for the data.
+        Returns
+        -------
+        x : np.ndarray
+            Input parameter x with noise.
+
+        y : np.ndarray
+            A copy of input parameter y.
+        """
         sigma = self._params['sigma']
         clip_values = self._params['clip_values']
         shape = x.shape
 
         res = x + np.random.normal(0, scale=sigma, size=shape)
         res = np.clip(res, clip_values[0], clip_values[1])
-        return res.astype(np.float32), y
+        return res.astype(np.float32), np.copy(y)
 
-    def _get_median_data(self):
-        mc = self.model_container
-        dc = mc.data_container
-        x = dc.x_train
-        y = dc.y_train
+    def apply_median_transform(self, x, y):
+        """
+        Apply median filter on a given input x. The parameters for transformation were predefined when creating class
+        instance.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Input data.
+
+        y : np.ndarray
+            The labels for the data.
+        Returns
+        -------
+        x : np.ndarray
+            Input parameter x after median filer.
+
+        y : np.ndarray
+            A copy of input parameter y.
+        """
         kernel_size = self._params['kernel_size']
 
-        res = median_filter(x, size=kernel_size)
-        return res.astype(np.float32), y
+        res = np.zeros_like(x, dtype=np.float32)
+        for i in range(len(x)):
+            res[i] = median_filter(x[i], size=kernel_size)
+        return res.astype(np.float32), np.copy(y)

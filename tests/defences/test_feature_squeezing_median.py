@@ -15,26 +15,25 @@ logging.basicConfig(level=logging.DEBUG)
 
 SEED = 4096
 BATCH_SIZE = 128
-NAME = 'Iris'
-MAX_EPOCHS = 200
-MODEL_FILE = os.path.join('save', 'IrisNN_Iris_e200.pt')
-SQUEEZER_FILE = os.path.join('test', 'IrisNN_Iris_e200')
+NAME = 'MNIST'
+MAX_EPOCHS = 30
+MODEL_FILE = os.path.join('save', 'MnistCnnV2_MNIST_e50.pt')
+SQUEEZER_FILE = os.path.join('test', 'MnistCnnV2_MNIST_e50')
+SQUEEZING_METHODS = ['median']
 
 
 class TestFeatureSqueezing(unittest.TestCase):
-    """Testing Feature Squeezing as Defence on Iris dataset."""
+    """Testing Feature Squeezing as Defence on MINIST dataset."""
 
     @classmethod
     def setUpClass(cls):
         master_seed(SEED)
 
-        # Model = get_model('MnistCnnV2')
-        Model = get_model('IrisNN')
+        Model = get_model('MnistCnnV2')
         model = Model()
         logger.info('Starting %s data container...', NAME)
         dc = DataContainer(DATASET_LIST[NAME], get_data_path())
-        # normalize is important!
-        dc(normalize=True)
+        dc()
         cls.mc = ModelContainerPT(model, dc)
         cls.mc.load(MODEL_FILE)
         accuracy = cls.mc.evaluate(dc.x_test, dc.y_test)
@@ -50,10 +49,10 @@ class TestFeatureSqueezing(unittest.TestCase):
         squeezer = FeatureSqueezing(
             self.mc,
             clip_values=x_range,
-            smoothing_methods=['normal', 'binary'],
+            smoothing_methods=SQUEEZING_METHODS,
             bit_depth=8,
             sigma=0.1,
-            kernel_size=2,
+            kernel_size=3,
             pretrained=True,
         )
 
@@ -73,9 +72,11 @@ class TestFeatureSqueezing(unittest.TestCase):
         squeezer.fit(max_epochs=2, batch_size=128)
 
         # expecting test set and train set have not been altered.
-        res = np.all(squeezer.model_container.data_container.x_test == x_test)
+        res = np.all(
+            squeezer.model_container.data_container.x_test == x_test)
         self.assertTrue(res)
-        res = np.all(squeezer.model_container.data_container.y_test == y_test)
+        res = np.all(
+            squeezer.model_container.data_container.y_test == y_test)
         self.assertTrue(res)
         res = np.all(
             squeezer.model_container.data_container.x_train == x_train)
@@ -91,75 +92,42 @@ class TestFeatureSqueezing(unittest.TestCase):
         squeezer = FeatureSqueezing(
             self.mc,
             clip_values=x_range,
-            smoothing_methods=['normal', 'binary'],
+            smoothing_methods=SQUEEZING_METHODS,
             bit_depth=8,
             sigma=0.1,
-            kernel_size=2,
+            kernel_size=3,
             pretrained=False,
         )
 
         # Expecting difference between input data and squeezed data
-        mc_normal = squeezer.get_def_model_container('normal')
-        mc_binary = squeezer.get_def_model_container('binary')
+        mc_median = squeezer.get_def_model_container(SQUEEZING_METHODS[0])
 
-        self.assertFalse((x_train == mc_normal.data_container.x_train).all())
-        self.assertFalse((x_train == mc_binary.data_container.x_train).all())
+        self.assertFalse((x_train == mc_median.data_container.x_train).all())
 
         # average perturbation
-        l2 = np.mean(get_l2_norm(x_train, mc_normal.data_container.x_train))
-        logger.info('L2 norm of normal squeezer:%f', l2)
-        self.assertLessEqual(l2, 0.2)
-
-        # maximum perturbation
-        l2 = np.max(get_l2_norm(x_train, mc_binary.data_container.x_train))
-        logger.info('L2 norm of binary squeezer:%f', l2)
-        self.assertLessEqual(l2, 0.2)
+        # No upper bound on median filter
+        l2 = np.mean(get_l2_norm(x_train, mc_median.data_container.x_train))
+        logger.info('L2 norm of median squeezer:%f', l2)
+        self.assertLessEqual(l2, 10)
 
     def test_fit_save(self):
         x_range = get_range(self.mc.data_container.x_train)
         squeezer = FeatureSqueezing(
             self.mc,
             clip_values=x_range,
-            smoothing_methods=['normal', 'binary'],
+            smoothing_methods=SQUEEZING_METHODS,
             bit_depth=8,
             sigma=0.1,
-            kernel_size=2,
+            kernel_size=3,
             pretrained=False,
         )
-        x_test = np.copy(squeezer.model_container.data_container.x_test)
-        y_test = np.copy(squeezer.model_container.data_container.y_test)
-        mc_normal = squeezer.get_def_model_container('normal')
-        mc_binary = squeezer.get_def_model_container('binary')
-
-        # predictions before fit
-        # without pre-trained parameter, expecting low accuracy
-        acc_nor_before = mc_normal.evaluate(x_test, y_test)
-        logger.info(
-            '[Before fit] Accuracy of normal squeezer: %f', acc_nor_before)
-        self.assertLessEqual(acc_nor_before, 0.60)
-        acc_bin_before = mc_binary.evaluate(x_test, y_test)
-        logger.info(
-            '[Before fit] Accuracy of binary squeezer: %f', acc_bin_before)
-        self.assertLessEqual(acc_bin_before, 0.60)
 
         squeezer.fit(max_epochs=MAX_EPOCHS, batch_size=128)
-
-        # predictions after fit
-        acc_nor_after = mc_normal.evaluate(x_test, y_test)
-        logger.info(
-            '[After fit] Accuracy of normal squeezer: %f', acc_nor_after)
-        self.assertGreater(acc_nor_after, acc_nor_before)
-        acc_bin_after = mc_binary.evaluate(x_test, y_test)
-        logger.info(
-            '[After fit] Accuracy of binary squeezer: %f', acc_bin_after)
-        self.assertGreater(acc_bin_after, acc_bin_before)
 
         # save parameters and check the existence of the files
         squeezer.save(SQUEEZER_FILE, True)
         self.assertTrue(os.path.exists(os.path.join(
-            'save', 'test', 'IrisNN_Iris_e200_normal.pt')))
-        self.assertTrue(os.path.exists(os.path.join(
-            'save', 'test', 'IrisNN_Iris_e200_binary.pt')))
+            'save', 'test', 'MnistCnnV2_MNIST_e50_median.pt')))
 
     def test_load(self):
         x_range = get_range(self.mc.data_container.x_train)
@@ -167,29 +135,24 @@ class TestFeatureSqueezing(unittest.TestCase):
         squeezer = FeatureSqueezing(
             self.mc,
             clip_values=x_range,
-            smoothing_methods=['normal', 'binary'],
+            smoothing_methods=SQUEEZING_METHODS,
             bit_depth=8,
             sigma=0.1,
-            kernel_size=2,
+            kernel_size=3,
             pretrained=False,
         )
         squeezer.load(os.path.join('save', SQUEEZER_FILE))
 
-        mc_normal = squeezer.get_def_model_container('normal')
-        mc_binary = squeezer.get_def_model_container('binary')
+        mc_median = squeezer.get_def_model_container(SQUEEZING_METHODS[0])
 
         x_test = squeezer.model_container.data_container.x_test
         y_test = squeezer.model_container.data_container.y_test
-        acc_nor_after = mc_normal.evaluate(x_test, y_test)
+
+        acc_med_after = mc_median.evaluate(x_test, y_test)
         logger.info(
-            'For normal squeezer, accuracy after load parameters: %f',
-            acc_nor_after)
-        self.assertGreater(acc_nor_after, 0.90)
-        acc_bin_after = mc_binary.evaluate(x_test, y_test)
-        logger.info(
-            'For binary squeezer, accuracy after load parameters: %f',
-            acc_bin_after)
-        self.assertGreater(acc_bin_after, 0.90)
+            'For median squeezer, accuracy after load parameters: %f',
+            acc_med_after)
+        self.assertGreater(acc_med_after, 0.90)
 
     def test_detect(self):
         dc = self.mc.data_container
@@ -198,10 +161,10 @@ class TestFeatureSqueezing(unittest.TestCase):
         squeezer = FeatureSqueezing(
             self.mc,
             clip_values=x_range,
-            smoothing_methods=['normal', 'binary'],
+            smoothing_methods=SQUEEZING_METHODS,
             bit_depth=8,
             sigma=0.1,
-            kernel_size=2,
+            kernel_size=3,
             pretrained=False,
         )
         squeezer.load(os.path.join('save', SQUEEZER_FILE))
@@ -210,36 +173,25 @@ class TestFeatureSqueezing(unittest.TestCase):
         x_test = dc.x_test
         pred = self.mc.predict(x_test)
         blocked_indices, passed_x = squeezer.detect(
-            x_test, pred,
-            return_passed_x=True)
+            x_test, pred, return_passed_x=True)
         logger.info('blocked clean samples: %d', len(blocked_indices))
         self.assertLessEqual(len(blocked_indices), len(x_test) * 0.1)
         self.assertEqual(len(blocked_indices) + len(passed_x), len(x_test))
 
         # the prediction parameter should not alter the result.
-        blocked_indices_2, passed_x = squeezer.detect(
-            x_test,
-            return_passed_x=True)
-        self.assertEqual(len(blocked_indices_2) + len(passed_x), len(x_test))
-
-        # NOTE: due to the randomness of the method. The blocked indices are not guaranteed to be the same!
-        # self.assertEquals(len(blocked_indices_2), len(blocked_indices))
+        blocked_indices_2 = squeezer.detect(x_test, return_passed_x=False)
+        self.assertTrue((blocked_indices_2 == blocked_indices).all())
 
         # test detector using FGSM attack
         # NOTE: the block rate is almost 0.
         attack = FGSMContainer(
             self.mc,
-            norm=2,
-            eps=0.2,
+            norm=np.inf,
+            eps=0.3,
             eps_step=0.1,
             targeted=False,
             batch_size=128)
         adv, y_adv, x, y = attack.generate(count=1000, use_testset=True)
-        blocked_indices, adv_passed = squeezer.detect(
-            adv, y_adv, return_passed_x=True)
+        blocked_indices = squeezer.detect(adv, y_adv, return_passed_x=False)
         logger.info('blocked adversarial: %d', len(blocked_indices))
-
-        passed_indices = np.where(
-            np.isin(np.arange(len(adv)), blocked_indices) == False)[0]
-        acc_adv = self.mc.evaluate(adv_passed, y[passed_indices])
-        logger.info('Accuracy on passed adv. examples: %f', acc_adv)
+        self.assertGreater(len(blocked_indices), 500)
