@@ -20,6 +20,8 @@ class CarliniL2Container(AttackContainer):
                  initial_const=1e-2, max_halving=5, max_doubling=10, batch_size=8):
         super(CarliniL2Container, self).__init__(model_container)
 
+        logger.warning('This is a very slow CPU implementation from IBM ART. Consider using CarliniL2V2Container instead.')
+
         self._params = {
             'confidence': confidence,
             'targeted': targeted,

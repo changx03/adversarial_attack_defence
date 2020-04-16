@@ -19,8 +19,6 @@ def get_attack(name):
     elif name == 'BIM':
         return BIMContainer
     elif name == 'Carlini':
-        return CarliniL2Container
-    elif name == 'CarliniV2':
         return CarliniL2V2Container
     elif name == 'DeepFool':
         return DeepFoolContainer

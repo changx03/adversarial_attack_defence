@@ -35,7 +35,8 @@ def main():
         max_iter=1000,
         confidence=0.0,
         initial_const=0.01,
-        batch_size=32,
+        c_range=(0, 1e10),
+        batch_size=16,
         clip_values=(0.0, 1.0)
     )
     adv, y_adv, x_clean, y_clean = attack.generate(count=100)
