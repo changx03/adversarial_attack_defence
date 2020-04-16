@@ -29,35 +29,35 @@ DATASET_LIST = {
     },
     'BankNote': {
         'name': 'BankNote',
-        'type': 'quantitative',
+        'type': 'numeric',
         'size': 1372,
         'num_classes': 2,
         'dim_data': (4,),
     },
     'BreastCancerWisconsin': {
         'name': 'BreastCancerWisconsin',
-        'type': 'quantitative',
+        'type': 'numeric',
         'size': 569,
         'num_classes': 2,
         'dim_data': (30,),
     },
     'HTRU2': {
         'name': 'HTRU2',
-        'type': 'quantitative',
+        'type': 'numeric',
         'size': 17898,
         'num_classes': 2,
         'dim_data': (8,),
     },
     'Iris': {
         'name': 'Iris',
-        'type': 'quantitative',
+        'type': 'numeric',
         'size': 150,
         'num_classes': 3,
         'dim_data': (4,),
     },
     'WheatSeed': {
         'name': 'WheatSeed',
-        'type': 'quantitative',
+        'type': 'numeric',
         'size': 210,
         'num_classes': 3,
         'dim_data': (7,),
@@ -68,7 +68,7 @@ def get_dataset_list():
     return list(DATASET_LIST.keys())
 
 
-# Only images are listed here. For quantitative data, the mean and std will vary
+# Only images are listed here. For numeric data, the mean and std will vary
 # by the normalization option.
 MEAN_LOOKUP = {
     'MNIST': [0.13066046],

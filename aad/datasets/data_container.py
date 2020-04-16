@@ -38,11 +38,7 @@ class DataContainer:
         self._x_test_np = None
         self._y_test_np = None
 
-        # TODO: Cross validation is NOT complete!
-        self.x_cv_np = None  # for cross validation
-        self.y_cv_np = None
-
-        assert self._data_type in ('image', 'quantitative')
+        assert self._data_type in ('image', 'numeric')
         assert os.path.exists(path), f'{path} does NOT exist!'
 
     @property
@@ -119,28 +115,20 @@ class DataContainer:
         # total length = train + test
         return len(self._x_train_np) + len(self._x_test_np)
 
-    def __call__(self, shuffle=True, normalize=False,
-                 size_train=0.8, cross_validation_fold=0):
+    def __call__(self, shuffle=True, normalize=False, size_train=0.8):
         """Load data and prepare for numpy arrays. `normalize` and `size_train`
         are not used in image datasets
         """
-        assert cross_validation_fold == 0 or cross_validation_fold in range(
-            3, 11)
-
         since = time.time()
         if self._data_type == 'image':
             self._prepare_image_data(shuffle, num_workers=0)
             self._train_mean = get_sample_mean(self.name)
             self._train_std = get_sample_std(self.name)
         else:
-            self._prepare_quantitative_data(
+            self._prepare_numeric_data(
                 shuffle, normalize, size_train)
             self._train_mean = self._x_train_np.mean(axis=0)
             self._train_std = self._x_train_np.std(axis=0)
-
-        if cross_validation_fold != 0:
-            self._cross_valid_fold = cross_validation_fold
-            self._prepare_cross_valid()
 
         time_elapsed = time.time() - since
 
@@ -226,8 +214,8 @@ class DataContainer:
 
         self._data_range = get_range(self._x_train_np, is_image=True)
 
-    def _prepare_quantitative_data(self, shuffle, normalize, size_train):
-        # for quantitative, starts with a Pandas dataframe, and then
+    def _prepare_numeric_data(self, shuffle, normalize, size_train):
+        # for numeric, starts with a Pandas dataframe, and then
         # populate numpy array and then pytorch DataLoader
         self._dataframe = self._get_dataframe()
         m = self._dataframe.shape[1] - 1  # the label is also in the frame

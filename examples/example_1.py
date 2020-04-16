@@ -12,7 +12,7 @@ def main():
     BATCH_SIZE = 128
 
     # image datasets: {'MNIST', 'CIFAR10', 'SVHN'}
-    # quantitative datasets: {'BankNote', 'BreastCancerWisconsin', 'HTRU2', 'Iris', 'WheatSeed'}
+    # numeric datasets: {'BankNote', 'BreastCancerWisconsin', 'HTRU2', 'Iris', 'WheatSeed'}
     NAME = 'MNIST'
     print(f'Starting {NAME} data container...')
     print(DATASET_LIST[NAME])
