@@ -62,6 +62,13 @@ class CarliniL2V2Container(AttackContainer):
         super(CarliniL2V2Container, self).__init__(model_container)
 
         dc = self.model_container.data_container
+        data = dc.x_train
+        dmax = np.max(data)
+        dmin = np.min(data)
+        if dmax > 1.0 or dmin < 0.0:
+            logger.warning(
+                'The data may not normalised. Consider using a normalised dataset.')
+
         if clip_values is None:
             clip_values = get_range(dc.x_train, dc.data_type == 'image')
 
@@ -183,7 +190,7 @@ class CarliniL2V2Container(AttackContainer):
             o_best_adv = torch.zeros_like(x)  # uses same device as x
 
             # we optimize over the tanh-space
-            x_tanh = self._to_tanh(x)
+            x_tanh = self._to_tanh(x, device)
             assert x_tanh.size() == x.size()
 
             # NOTE: testing untargeted attack here!
@@ -314,20 +321,28 @@ class CarliniL2V2Container(AttackContainer):
         x = x * (1-epsilon)
         return 0.5 * torch.log((1.+x) / (1.-x))
 
-    def _to_tanh(self, x):
+    def _to_tanh(self, x, device=None):
         assert isinstance(x, torch.Tensor)
         bound = self._params['clip_values']
-
-        box_mul = (bound[1] - bound[0]) * .5
-        box_plus = (bound[1] + bound[0]) * .5
+        dmin = torch.from_numpy(bound[0]).float()
+        dmax = torch.from_numpy(bound[1]).float()
+        if device is not None:
+            dmin = dmin.to(device)
+            dmax = dmax.to(device)
+        box_mul = (dmax - dmin) * .5
+        box_plus = (dmax + dmin) * .5
         return self._arctanh((x - box_plus) / box_mul)
 
-    def _from_tanh(self, w):
+    def _from_tanh(self, w, device=None):
         assert isinstance(w, torch.Tensor)
         bound = self._params['clip_values']
-
-        box_mul = (bound[1] - bound[0]) * .5
-        box_plus = (bound[1] + bound[0]) * .5
+        dmin = torch.from_numpy(bound[0]).float()
+        dmax = torch.from_numpy(bound[1]).float()
+        if device is not None:
+            dmin = dmin.to(device)
+            dmax = dmax.to(device)
+        box_mul = (dmax - dmin) * .5
+        box_plus = (dmax + dmin) * .5
         return torch.tanh(w)*box_mul + box_plus
 
     def _onehot_encoding(self, labels):
@@ -369,9 +384,9 @@ class CarliniL2V2Container(AttackContainer):
 
         optimizer.zero_grad()
         # the adversarial examples in image space
-        advs = self._from_tanh(inputs_tanh + pert_tanh)
+        advs = self._from_tanh(inputs_tanh + pert_tanh, device)
         # the clean images converted back from tanh space
-        inputs = self._from_tanh(inputs_tanh)
+        inputs = self._from_tanh(inputs_tanh, device)
 
         # The softmax is stripped out from this model.
         model = self.model_container.model

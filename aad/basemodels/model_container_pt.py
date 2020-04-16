@@ -66,7 +66,7 @@ class ModelContainerPT:
         self._model = model
         self._model.to(self.device)
 
-    def fit(self, max_epochs=5, batch_size=128, early_stop=True):
+    def fit(self, max_epochs=5, batch_size=128, early_stop=False):
         """
         Train the classification model.
 
