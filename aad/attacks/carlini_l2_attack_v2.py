@@ -324,8 +324,8 @@ class CarliniL2V2Container(AttackContainer):
     def _to_tanh(self, x, device=None):
         assert isinstance(x, torch.Tensor)
         bound = self._params['clip_values']
-        dmin = torch.from_numpy(bound[0]).float()
-        dmax = torch.from_numpy(bound[1]).float()
+        dmin = torch.tensor(bound[0], dtype=torch.float32)
+        dmax = torch.tensor(bound[1], dtype=torch.float32)
         if device is not None:
             dmin = dmin.to(device)
             dmax = dmax.to(device)
@@ -336,8 +336,8 @@ class CarliniL2V2Container(AttackContainer):
     def _from_tanh(self, w, device=None):
         assert isinstance(w, torch.Tensor)
         bound = self._params['clip_values']
-        dmin = torch.from_numpy(bound[0]).float()
-        dmax = torch.from_numpy(bound[1]).float()
+        dmin = torch.tensor(bound[0], dtype=torch.float32)
+        dmax = torch.tensor(bound[1], dtype=torch.float32)
         if device is not None:
             dmin = dmin.to(device)
             dmax = dmax.to(device)

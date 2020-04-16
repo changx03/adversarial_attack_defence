@@ -51,7 +51,7 @@ class TestAttackMNIST(unittest.TestCase):
         master_seed(SEED)
 
     def test_fgsm(self):
-        attack = FGSMContainer(
+        attack = attacks.FGSMContainer(
             self.mc,
             norm=np.inf,
             eps=0.3,
@@ -127,54 +127,43 @@ class TestAttackMNIST(unittest.TestCase):
         logger.info('L2 norm = %f', l2)
 
     def test_carlini(self):
-        pass
-        # """
-        # Carlini and Wagner attack uses a greedy search method. The success rate
-        # can be 100%. However the algorithm try to match the target with minimal 
-        # perturbations, but there is no l2 threshold during generation.
-        # """
-        # attack = attacks.CarliniL2Container(
-        #     self.mc,
-        #     confidence=0.0,
-        #     targeted=False,
-        #     learning_rate=1e-2,
-        #     binary_search_steps=10,
-        #     max_iter=100,
-        #     initial_const=1e-2,
-        #     max_halving=5,
-        #     max_doubling=10,
-        #     batch_size=8,
-        # )
-        # # Slow algorithm, only test 10 samples
-        # adv, y_adv, x_clean, y_clean = attack.generate(count=10)
+        attack = attacks.CarliniL2V2Container(
+            self.mc,
+            learning_rate=0.01,
+            binary_search_steps=9,
+            max_iter=1000,
+            confidence=0.0,
+            initial_const=0.01,
+            c_range=(0, 1e10),
+            batch_size=16,
+            clip_values=(0.0, 1.0)
+        )
+        adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)
 
-        # # At least made some change from clean images
-        # self.assertFalse((adv == x_clean).all())
+        # At least made some change from clean images
+        self.assertFalse((adv == x_clean).all())
 
-        # # test accuracy
-        # accuracy = self.mc.evaluate(adv, y_clean)
-        # logger.info('Accuracy on adv. examples: %f', accuracy)
-        # self.assertLessEqual(accuracy, 0.1)
+        # test accuracy
+        accuracy = self.mc.evaluate(adv, y_clean)
+        logger.info('Accuracy on adv. examples: %f', accuracy)
+        self.assertLessEqual(accuracy, 0.60)
 
-        # # test success rate
-        # success_rate = (y_adv != y_clean).sum() / len(y_adv)
-        # logger.info('Success rate of adv. attack: %f', success_rate)
-        # self.assertGreaterEqual(success_rate, 0.9)
+        # test success rate
+        success_rate = (y_adv != y_clean).sum() / len(y_adv)
+        logger.info('Success rate of adv. attack: %f', success_rate)
+        self.assertGreaterEqual(success_rate, 0.40)
 
-        # # sum success rate (missclassified) and accuracy (correctly classified)
-        # self.assertAlmostEqual(success_rate + accuracy, 1.0, places=4)
+        # Check the max perturbation
+        dif = np.max(np.abs(adv - x_clean))
+        logger.info('Max perturbation (L1-norm): %f', dif)
+        self.assertLessEqual(dif, 1.0 + 1e-4)
 
-        # # Check the max perturbation
-        # dif = np.max(np.abs(adv - x_clean))
-        # logger.info('Max perturbation (L1-norm): %f', dif)
-        # self.assertLessEqual(dif, 1.0 + 1e-4)
+        # Check bounding box
+        self.assertLessEqual(np.max(adv), 1.0 + 1e-4)
+        self.assertGreaterEqual(np.min(adv), 0 - 1e-4)
 
-        # # Check bounding box
-        # self.assertLessEqual(np.max(adv), 1.0 + 1e-4)
-        # self.assertGreaterEqual(np.min(adv), 0 - 1e-4)
-
-        # l2 = np.max(get_l2_norm(adv, x_clean))
-        # logger.info('L2 norm = %f', l2)
+        l2 = np.max(get_l2_norm(adv, x_clean))
+        logger.info('L2 norm = %f', l2)
 
     def test_deepfool(self):
         attack = attacks.DeepFoolContainer(
