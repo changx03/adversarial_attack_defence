@@ -25,7 +25,7 @@ class BIMContainer(AttackContainer):
             'max_iter': max_iter,
             'targeted': targeted,
             'batch_size': batch_size}
-        self.attack_params = params_received
+        self._params = params_received
 
         # use IBM ART pytorch module wrapper
         # the model used here should be already trained
@@ -83,9 +83,9 @@ class BIMContainer(AttackContainer):
             assert len(targets) >= len(x)
             targets = targets[:len(x)]  # trancate targets
 
-        self.attack_params['targeted'] = targeted
+        self._params['targeted'] = targeted
         attack = BasicIterativeMethod(
-            classifier=self.classifier, **self.attack_params)
+            classifier=self.classifier, **self._params)
 
         # predict the outcomes
         if targets is not None:

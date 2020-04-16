@@ -216,3 +216,36 @@ def copy_model(model, pretrained=False):
         clone.load_state_dict(state_dict)
 
     return clone
+
+
+def get_random_targets(true_labels,
+                       num_classes,
+                       use_onehot=False,
+                       dtype=np.int64):
+    """
+    Get randomly generated targets exclude the true labels
+
+    Parameters
+    ----------
+    true_labels : numpy.ndarray
+        List of true labels.
+    num_classes : int
+        Number of classes.
+    use_onehot : bool
+        Returns one-hot encoded targets, if it is true.
+    dtype : type
+        The data type of returned value. Default = np.int64
+    Returns
+    -------
+    numpy.ndarray
+        The target labels. It has same shape as `true_labels`.
+    """
+    count = len(true_labels)
+    classes = np.arange(num_classes)
+    targets = -np.ones_like(true_labels, dtype=np.int64)
+    for i in range(count):
+        targets[i] = np.random.choice(np.delete(classes, true_labels[i]))
+    if not use_onehot:
+        return targets
+    else:
+        return onehot_encoding(targets, num_classes, dtype)

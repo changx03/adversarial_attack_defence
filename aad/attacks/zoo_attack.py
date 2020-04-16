@@ -38,7 +38,7 @@ class ZooContainer(AttackContainer):
             variable_h=1e-4):
         super(ZooContainer, self).__init__(model_container)
 
-        params_received = {
+        self._params = {
             'confidence': confidence,
             'targeted': targeted,
             'learning_rate': learning_rate,
@@ -52,7 +52,6 @@ class ZooContainer(AttackContainer):
             'batch_size': batch_size,
             'variable_h': variable_h
         }
-        self.attack_params = params_received
 
         # use IBM ART pytorch module wrapper
         # the model used here should be already trained
@@ -110,9 +109,9 @@ class ZooContainer(AttackContainer):
             assert len(targets) >= len(x)
             targets = targets[:len(x)]  # trancate targets
 
-        self.attack_params['targeted'] = targeted
+        self._params['targeted'] = targeted
         attack = ZooAttack(
-            classifier=self.classifier, **self.attack_params)
+            classifier=self.classifier, **self._params)
 
         # predict the outcomes
         if targets is not None:

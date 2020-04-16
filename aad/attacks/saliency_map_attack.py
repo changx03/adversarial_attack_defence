@@ -22,11 +22,10 @@ class SaliencyContainer(AttackContainer):
         assert len(dim_data) == 3, \
             'Jacobian Saliency Map attack only works on images'
 
-        params_received = {
+        self._params = {
             'theta': theta,
             'gamma': gamma,
             'batch_size': batch_size}
-        self.attack_params = params_received
 
         # use IBM ART pytorch module wrapper
         # the model used here should be already trained
@@ -86,7 +85,7 @@ class SaliencyContainer(AttackContainer):
             targets = targets[:len(x)]  # trancate targets
 
         attack = SaliencyMapMethod(
-            classifier=self.classifier, **self.attack_params)
+            classifier=self.classifier, **self._params)
 
         # predict the outcomes
         if targets is not None:

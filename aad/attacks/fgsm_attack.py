@@ -22,7 +22,7 @@ class FGSMContainer(AttackContainer):
         """
         super(FGSMContainer, self).__init__(model_container)
 
-        params_received = {
+        self._params = {
             'norm': norm,
             'eps': eps,
             'eps_step': eps_step,
@@ -30,7 +30,6 @@ class FGSMContainer(AttackContainer):
             'num_random_init': num_random_init,
             'batch_size': batch_size,
             'minimal': minimal}
-        self.attack_params = params_received
 
         # use IBM ART pytorch module wrapper
         # the model used here should be already trained
@@ -83,5 +82,5 @@ class FGSMContainer(AttackContainer):
         return adv, y_adv, x, y_clean
 
     def _generate(self, x):
-        attack = FastGradientMethod(self.classifier, **self.attack_params)
+        attack = FastGradientMethod(self.classifier, **self._params)
         return attack.generate(x)

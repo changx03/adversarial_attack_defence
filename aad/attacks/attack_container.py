@@ -4,21 +4,23 @@ This module implements the base class for adversarial attack.
 import abc
 import logging
 import os
+import time
 
 import numpy as np
 
 from ..basemodels import ModelContainerPT
-from ..utils import name_handler, onehot_encoding
+from ..utils import name_handler
 
 logger = logging.getLogger(__name__)
 
 
 class AttackContainer(abc.ABC):
-    attack_params = dict()  # Override this in child class
+    _params = dict()  # Override this in child class
 
     def __init__(self, model_containter):
         assert isinstance(model_containter, ModelContainerPT)
         self.model_container = model_containter
+        self._since = 0.0
 
     @abc.abstractmethod
     def generate(self, count, use_testset=True, x=None, y=None, **kwargs):
@@ -28,9 +30,13 @@ class AttackContainer(abc.ABC):
     def set_params(self, **kwargs):
         """Sets parameters for the attack algorithm."""
         for key, value in kwargs.items():
-            if key in self.attack_params.keys():
-                self.attack_params[key] = value
+            if key in self._params.keys():
+                self._params[key] = value
         return True
+
+    @property
+    def attack_params(self):
+        return self._params
 
     def predict(self, adv, x):
         """Returns the predictions for adversarial examples and clean inputs."""
@@ -65,7 +71,8 @@ class AttackContainer(abc.ABC):
                 and x_adv.shape == x_clean.shape
             filename_raw = filename.replace('[ph]', 'x')
             # x_clean.astype(np.float32).tofile(filename_raw)
-            np.save(filename_raw, x_clean.astype(np.float32), allow_pickle=False)
+            np.save(filename_raw, x_clean.astype(
+                np.float32), allow_pickle=False)
         if y_clean is not None:
             assert isinstance(y_clean, np.ndarray) \
                 and len(y_clean) == len(x_adv)
@@ -74,11 +81,12 @@ class AttackContainer(abc.ABC):
             np.save(filename_y, y_clean.astype(np.int64), allow_pickle=False)
         logger.info('Saved results to %s', filename_adv)
 
-    @staticmethod
-    def randam_targets(count, num_classes, use_onehot=False, dtype=np.int64):
-        """Returns randomly generated labels."""
-        y_rand = np.random.choice(num_classes, count, replace=True)
-        if not use_onehot:
-            return y_rand
-        else:
-            return onehot_encoding(y_rand, num_classes, dtype)
+    def _log_time_start(self):
+        self._since = time.time()
+
+    def _log_time_end(self, title=None):
+        time_elapsed = time.time() - self._since
+        title = ' [' + title + ']' if title else ''
+        logger.debug(
+            'Time to complete%s: %dm %.3fs',
+            title, int(time_elapsed // 60), time_elapsed % 60)

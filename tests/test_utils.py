@@ -6,7 +6,7 @@ import numpy as np
 
 from aad.utils import (get_range, master_seed, name_handler, onehot_encoding,
                        scale_normalize, scale_unnormalize, shuffle_data,
-                       swap_image_channel)
+                       swap_image_channel, get_random_targets)
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -99,6 +99,16 @@ class TestUtils(unittest.TestCase):
         out = onehot_encoding(x, 3)
         e = [[1, 0, 0], [0, 1, 0]]
         self.assertTrue((out == e).all())
+
+    def test_get_random_targets(self):
+        y = np.array([0, 1, 2, 3, 4, 5], dtype=np.int64)
+        num_classes = 10
+        targets = get_random_targets(y, num_classes=num_classes)
+        logger.info(str(targets))
+        self.assertTupleEqual(targets.shape, y.shape)
+        self.assertTrue(np.all(targets != y))
+        self.assertTrue(np.all(targets < num_classes))
+        self.assertTrue(np.all(targets > 0))
 
 
 if __name__ == '__main__':

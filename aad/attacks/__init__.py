@@ -4,6 +4,7 @@ Module for adversarial attacks.
 from .attack_container import AttackContainer
 from .bim_attack import BIMContainer
 from .carlini_l2_attack import CarliniL2Container
+from .carlini_l2_attack_v2 import CarliniL2V2Container
 from .deepfool_attack import DeepFoolContainer
 from .dummy_attack import DummyAttack
 from .fgsm_attack import FGSMContainer
@@ -19,6 +20,8 @@ def get_attack(name):
         return BIMContainer
     elif name == 'Carlini':
         return CarliniL2Container
+    elif name == 'CarliniV2':
+        return CarliniL2V2Container
     elif name == 'DeepFool':
         return DeepFoolContainer
     elif name == 'Saliency':

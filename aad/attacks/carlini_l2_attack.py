@@ -20,7 +20,7 @@ class CarliniL2Container(AttackContainer):
                  initial_const=1e-2, max_halving=5, max_doubling=10, batch_size=8):
         super(CarliniL2Container, self).__init__(model_container)
 
-        params_received = {
+        self._params = {
             'confidence': confidence,
             'targeted': targeted,
             'learning_rate': learning_rate,
@@ -30,7 +30,6 @@ class CarliniL2Container(AttackContainer):
             'max_halving': max_halving,
             'max_doubling': max_doubling,
             'batch_size': batch_size}
-        self.attack_params = params_received
 
         # use IBM ART pytorch module wrapper
         # the model used here should be already trained
@@ -89,9 +88,9 @@ class CarliniL2Container(AttackContainer):
             assert len(targets) >= len(x)
             targets = targets[:len(x)]  # trancate targets
 
-        self.attack_params['targeted'] = targeted
+        self._params['targeted'] = targeted
         attack = CarliniL2Method(
-            classifier=self.classifier, **self.attack_params)
+            classifier=self.classifier, **self._params)
 
         # predict the outcomes
         if targets is not None:

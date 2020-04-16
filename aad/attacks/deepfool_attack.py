@@ -19,13 +19,12 @@ class DeepFoolContainer(AttackContainer):
                  nb_grads=10, batch_size=16):
         super(DeepFoolContainer, self).__init__(model_container,)
 
-        params_received = {
+        self._params = {
             'max_iter': max_iter,
             'epsilon': epsilon,
             'nb_grads': nb_grads,
             'batch_size': batch_size
         }
-        self.attack_params = params_received
 
         # use IBM ART pytorch module wrapper
         # the model used here should be already trained
@@ -78,5 +77,5 @@ class DeepFoolContainer(AttackContainer):
         return adv, y_adv, x, y_clean
 
     def _generate(self, x):
-        attack = DeepFool(self.classifier, **self.attack_params)
+        attack = DeepFool(self.classifier, **self._params)
         return attack.generate(x)
