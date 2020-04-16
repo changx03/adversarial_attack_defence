@@ -1,12 +1,11 @@
 import os
-import sys
 import logging
 
 import numpy as np
 
 from aad.attacks import CarliniL2V2Container
 from aad.basemodels import ModelContainerPT, MnistCnnCW
-from aad.utils import get_time_str, master_seed, get_data_path, get_l2_norm
+from aad.utils import master_seed, get_data_path, get_l2_norm
 from aad.datasets import DATASET_LIST, DataContainer
 
 logging.basicConfig(level=logging.DEBUG)
