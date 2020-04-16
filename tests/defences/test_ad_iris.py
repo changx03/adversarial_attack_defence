@@ -8,7 +8,8 @@ import aad.attacks as attacks
 from aad.basemodels import IrisNN, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.defences import ApplicabilityDomainContainer
-from aad.utils import get_data_path, get_pt_model_filename, master_seed
+from aad.utils import (get_data_path, get_pt_model_filename, get_range,
+                       master_seed)
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -122,7 +123,10 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             attack, count=NUM_ADV)
         block_rate = len(blocked_indices) / NUM_ADV
         self.assertGreater(block_rate, adv_success_rate * 0.6)
-        logger.info('[%s] Block rate: %f', attacks.FGSMContainer.__name__, block_rate)
+        logger.info(
+            '[%s] Block rate: %f',
+            attack.__class__.__name__,
+            block_rate)
 
     def test_bim_attack(self):
         attack = attacks.BIMContainer(
@@ -135,7 +139,10 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             attack, count=NUM_ADV)
         block_rate = len(blocked_indices) / NUM_ADV
         self.assertGreater(block_rate, adv_success_rate * 0.6)
-        logger.info('[%s] Block rate: %f', attacks.BIMContainer.__name__, block_rate)
+        logger.info(
+            '[%s] Block rate: %f',
+            attack.__class__.__name__,
+            block_rate)
 
     def test_deepfool_attack(self):
         attack = attacks.DeepFoolContainer(
@@ -147,33 +154,31 @@ class TestApplicabilityDomainIris(unittest.TestCase):
             attack, count=NUM_ADV)
         block_rate = len(blocked_indices) / NUM_ADV
         self.assertGreater(block_rate, adv_success_rate * 0.6)
-        logger.info('[%s] Block rate: %f',
-                    attacks.DeepFoolContainer.__name__, block_rate)
+        logger.info(
+            '[%s] Block rate: %f',
+            attack.__class__.__name__,
+            block_rate)
 
     def test_carlini_l2_attack(self):
-        pass
-        # """
-        # Testing defence against Carlini & Wagner L2 attack
-        # NOTE: This attack outputs a lot of debug lines!
-        # """
-        # n = NUM_ADV
-        # attack = CarliniL2Container(
-        #     self.mc,
-        #     confidence=0.0,
-        #     targeted=False,
-        #     learning_rate=1e-2,
-        #     binary_search_steps=10,
-        #     max_iter=100,
-        #     initial_const=1e-2,
-        #     max_halving=5,
-        #     max_doubling=10,
-        #     batch_size=n)
-        # blocked_indices, adv_success_rate = self.preform_attack(
-        #     attack, count=n)
-        # block_rate = len(blocked_indices) / n
-        # self.assertGreater(block_rate, adv_success_rate * 0.6)
-        # logger.info('[%s] Block rate: %f',
-        #             CarliniL2Container.__name__, block_rate)
+        clip_values = get_range(self.dc.x_train)
+        # Lower the upper bound of `c_range` will reduce the norm of perturbation.
+        attack = attacks.CarliniL2V2Container(
+            self.mc,
+            learning_rate=0.01,
+            binary_search_steps=9,
+            max_iter=1000,
+            confidence=0.0,
+            initial_const=0.01,
+            c_range=(0, 1e4),
+            batch_size=16,
+            clip_values=clip_values
+        )
+        blocked_indices, adv_success_rate = self.preform_attack(
+            attack, count=NUM_ADV)
+        block_rate = len(blocked_indices) / NUM_ADV
+        self.assertGreater(block_rate, adv_success_rate * 0.6)
+        logger.info('[%s] Block rate: %f',
+                    attack.__class__.__name__, block_rate)
 
 
 if __name__ == '__main__':

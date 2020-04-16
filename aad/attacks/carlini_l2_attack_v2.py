@@ -33,7 +33,7 @@ class CarliniL2V2Container(AttackContainer):
                  initial_const=1e-3,
                  c_range=(0, 1e10),
                  abort_early=True,
-                 batch_size=16,
+                 batch_size=32,
                  clip_values=None):
         """
         Create an instance of Carlini and Wagner L2-norm attack Container.

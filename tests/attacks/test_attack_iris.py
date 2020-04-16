@@ -127,6 +127,7 @@ class TestAttackIris(unittest.TestCase):
 
     def test_carlini(self):
         clip_values = get_range(self.dc.x_train)
+        # Lower the upper bound of `c_range` will reduce the norm of perturbation.
         attack = attacks.CarliniL2V2Container(
             self.mc,
             learning_rate=0.01,
@@ -134,7 +135,6 @@ class TestAttackIris(unittest.TestCase):
             max_iter=1000,
             confidence=0.0,
             initial_const=0.01,
-            # Lower the upper bound will reduce the norm of perturbation.
             c_range=(0, 1e4),
             batch_size=16,
             clip_values=clip_values

@@ -135,7 +135,7 @@ class TestAttackMNIST(unittest.TestCase):
             confidence=0.0,
             initial_const=0.01,
             c_range=(0, 1e10),
-            batch_size=16,
+            batch_size=64,
             clip_values=(0.0, 1.0)
         )
         adv, y_adv, x_clean, y_clean = attack.generate(count=NUM_ADV)

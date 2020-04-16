@@ -160,30 +160,25 @@ class TestApplicabilityDomainCIFAR(unittest.TestCase):
                     attacks.DeepFoolContainer.__name__, block_rate)
 
     def test_carlini_l2_attack(self):
-        pass
-        # n = 100
-        # attack = attacks.CarliniL2Container(
-        #     self.mc,
-        #     confidence=0.0,
-        #     targeted=False,
-        #     learning_rate=1e-2,
-        #     binary_search_steps=10,
-        #     max_iter=100,
-        #     initial_const=1e-2,
-        #     max_halving=5,
-        #     max_doubling=10,
-        #     batch_size=16)
-        # blocked_indices, adv_success_rate = self.preform_attack(
-        #     attack, count=n)
-        # block_rate = len(blocked_indices) / n
-        # self.assertGreater(block_rate, adv_success_rate * 0.6)
-        # logger.info('[%s] Block rate: %f',
-        #             attacks.CarliniL2Container.__name__, block_rate)
+        attack = attacks.CarliniL2V2Container(
+            self.mc,
+            learning_rate=0.01,
+            binary_search_steps=9,
+            max_iter=1000,
+            confidence=0.0,
+            initial_const=0.01,
+            c_range=(0, 1e10),
+            batch_size=64,
+            clip_values=(0.0, 1.0)
+        )
+        blocked_indices, adv_success_rate = self.preform_attack(
+            attack, count=NUM_ADV)
+        block_rate = len(blocked_indices) / NUM_ADV
+        self.assertGreater(block_rate, adv_success_rate * 0.6)
+        logger.info('[%s] Block rate: %f',
+                    attacks.CarliniL2Container.__name__, block_rate)
 
     def test_saliency_attack(self):
-        """
-        NOTE: Fail: 0.77 not greater than 0.79
-        """
         n = 100
         attack = attacks.SaliencyContainer(
             self.mc,
