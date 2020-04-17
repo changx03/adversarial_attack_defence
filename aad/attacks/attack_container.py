@@ -81,6 +81,44 @@ class AttackContainer(abc.ABC):
             np.save(filename_y, y_clean.astype(np.int64), allow_pickle=False)
         logger.info('Saved results to %s', filename_adv)
 
+    @staticmethod
+    def load_adv_examples(filename):
+        """
+        Load adversarial examples from a numpy binary file
+
+        Parameters
+        ----------
+        filename : str
+            File name
+
+        Returns
+        -------
+        adv : numpy.ndarray
+            List of adversarial examples.
+        pred_adv : numpy.ndarray, optional
+            List of predictions of the adversarial examples.
+        x_clean : numpy.ndarray, optional
+            List of clean inputs for generating the adversarial examples.
+        y_true : numpy.ndarray, optional
+            List of true labels.
+        """
+        postfix = ['adv', 'pred', 'x', 'y']
+        data_files = [filename.replace('_adv', '_' + s) for s in postfix]
+        if not os.path.exists(data_files[1]):
+            raise FileExistsError('{} does not exist!'.format(filename))
+        adv = np.load(data_files[0], allow_pickle=False)
+        pred_adv, x_clean, y_true = None, None, None
+        if os.path.exists(data_files[1]):
+            pred_adv = np.load(data_files[1], allow_pickle=False)
+            assert len(pred_adv) == len(adv)
+        if os.path.exists(data_files[2]):
+            x_clean = np.load(data_files[2], allow_pickle=False)
+            assert x_clean.shape == adv.shape
+        if os.path.exists(data_files[3]):
+            y_true = np.load(data_files[3], allow_pickle=False)
+            assert len(y_true) == len(adv)
+        return adv, pred_adv, x_clean, y_true
+
     def _log_time_start(self):
         self._since = time.time()
 
