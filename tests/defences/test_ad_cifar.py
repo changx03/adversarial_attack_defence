@@ -53,11 +53,11 @@ class TestApplicabilityDomainCIFAR(unittest.TestCase):
         cls.ad = ApplicabilityDomainContainer(
             cls.mc,
             hidden_model=hidden_model,
-            k1=9,
+            k2=9,
             reliability=1.6,
             sample_ratio=SAMPLE_RATIO,
-            confidence=0.7,
             kappa=10,
+            confidence=0.7,
         )
         cls.ad.fit()
 

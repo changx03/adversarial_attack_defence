@@ -123,8 +123,8 @@ class ModelContainerPT:
             return np.array([], dtype=np.int64)
 
         if not isinstance(x, torch.Tensor):
-            if (self.data_container.data_type == 'image'
-                    and x.shape[1] not in (1, 3)):
+            data_type = self.data_container.data_type
+            if data_type == 'image' and x.shape[1] not in (1, 3):
                 x = swap_image_channel(x)
             x = torch.from_numpy(x).float()
 

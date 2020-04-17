@@ -223,14 +223,13 @@ class FeatureSqueezing(DetectorContainer):
         ----------
         x : np.ndarray
             Input data.
-
         y : np.ndarray
             The labels for the data.
+
         Returns
         -------
         x : np.ndarray
             Results after binary transformation.
-
         y : np.ndarray
             A copy of input parameter y.
         """

@@ -24,11 +24,11 @@ class ApplicabilityDomainContainer(DetectorContainer):
     def __init__(self,
                  model_container,
                  hidden_model=None,
-                 k1=9,
-                 reliability=0.8,
+                 k2=2,
+                 reliability=1.9,
                  sample_ratio=1.0,
-                 confidence=0.9,
-                 kappa=6,
+                 kappa=10,
+                 confidence=1.0,
                  disable_s2=False):
         """Create a class `ApplicabilityDomainContainer` instance.
 
@@ -38,23 +38,23 @@ class ApplicabilityDomainContainer(DetectorContainer):
             A trained model.
         hidden_model : torch.nn.Module
             To compute output from a certain hidden layer.
-        k1 : int
+        k2 : int
             Number of nearest neighbours for Stage 2.
         reliability : float
-            The parameter for confidence interval in Stage 2.
+            The parameter zeta for confidence interval in Stage 2.
         sample_ratio : float
             The percentage of train sample will be used in Stage 3. Expected to be in range (0, 1].
-        confidence : float
-            The number of samples will be used to compute neighbours in Stage 3. k = num_classes * kappa
         kappa : float
             The number of samples will be used to compute neighbours in Stage 3. k = num_classes * kappa
+        confidence : float
+            The parameter gamma to control the weight of likelihood. In range (0, 1].
         disable_s2 : bool
             To disable Stage 2 defence. For testing the robustness Stage 3.
         """
         super(ApplicabilityDomainContainer, self).__init__(model_container)
 
         self._params = {
-            'k1': k1,
+            'k2': k2,
             'reliability': reliability,
             'sample_ratio': sample_ratio,
             'confidence': confidence,
@@ -86,41 +86,35 @@ class ApplicabilityDomainContainer(DetectorContainer):
         self._s2_thresholds = np.zeros_like(self._s2_means)
         self._s3_likelihood = None
 
-    def fit(self):
-        """
-        Train the model using the training set from `model_container.data_container`.
-        """
-        if self.encode_train_np is not None:
-            logger.warning(
-                'You cannot call fit() method multiple times! Please start a new instance')
-            return False
-
-        disable_s2 = self._params['disable_s2']
-
-        self._log_time_start()
-
-        # Step 1: compute hidden layer outputs from inputs
         dc = self.model_container.data_container
         x_train = dc.x_train
-        self.encode_train_np = self._preprocessing(x_train)
+        self.encode_train_np = self.preprocessing_(x_train)
         self.y_train_np = dc.y_train
         self.num_components = self.encode_train_np.shape[1]
         logger.debug('Number of input attributes: %d', self.num_components)
 
+    def fit(self):
+        """
+        Train the model using the training set from `model_container.data_container`.
+        """
+        disable_s2 = self._params['disable_s2']
+
+        self._log_time_start()
         # Stage 1
         self.fit_stage1_()
         self._log_time_end('AD Stage 1')
         # Stage 2
         if disable_s2 is False:
             self._log_time_start()
-            k1 = self._params['k1']
+            k2 = self._params['k2']
             zeta = self._params['reliability']
-            self.fit_stage2_(k1, zeta)
+            self.fit_stage2_(k2, zeta)
             self._log_time_end('AD Stage 2')
         # Stage 3
         self._log_time_start()
         kappa = self._params['kappa']
-        self.fit_stage3_(kappa)
+        gamma = self._params['confidence']
+        self.fit_stage3_(kappa, gamma)
         self._log_time_end('AD Stage 3')
 
         return True
@@ -169,23 +163,23 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
         # The adversarial examples exist in image/data space. The KNN model runs
         # in hidden layer (encoded space)
-        encoded_adv = self._preprocessing(adv)
+        encoded_adv = self.preprocessing_(adv)
 
         disable_s2 = self._params['disable_s2']
 
         # Stage 1
-        passed = self.def_state1_(encoded_adv, pred, passed)
+        passed = self.def_stage1_(encoded_adv, pred, passed)
         blocked = len(passed[passed == 0])
         logger.debug('Stage 1: blocked %d inputs', blocked)
         self.blocked_by_stages[0] = blocked
         # Stage 2
         if disable_s2 is False:
-            passed = self.def_state2_(encoded_adv, pred, passed)
+            passed = self.def_stage2_(encoded_adv, pred, passed)
             blocked = len(passed[passed == 0]) - blocked
             logger.debug('Stage 2: blocked %d inputs', blocked)
             self.blocked_by_stages[1] = blocked
         # Stage 3
-        passed = self.def_state3_(encoded_adv, passed)
+        passed = self.def_stage3_(encoded_adv, pred, passed)
         blocked = len(passed[passed == 0]) - blocked
         logger.debug('Stage 3: blocked %d inputs', blocked)
         self.blocked_by_stages[2] = blocked
@@ -204,10 +198,10 @@ class ApplicabilityDomainContainer(DetectorContainer):
         """
         return inputs
 
-    def _preprocessing(self, x_np):
+    def preprocessing_(self, x_np):
         # the # of channels should alway smaller than the size of image
         if self.data_type == 'image' and x_np.shape[1] not in (1, 3):
-            logger.debug('Before swap channel: x_np: %s', str(x_np.shape))
+            # logger.debug('Before swap channel: x_np: %s', str(x_np.shape))
             x_np = swap_image_channel(x_np)
 
         dataset = GenericDataset(x_np)
@@ -245,25 +239,28 @@ class ApplicabilityDomainContainer(DetectorContainer):
             self._x_max[i] = np.amax(x, axis=0)
             self._x_min[i] = np.amin(x, axis=0)
 
-    def fit_stage2_(self, k1, zeta):
+    def fit_stage2_(self, k2, zeta):
         self._s2_models = []
         for i in range(self.num_classes):
             indices = np.where(self.y_train_np == i)[0]
             x = self.encode_train_np[indices]
             # models are grouped by classes, y doesn't matter
             y = np.ones(len(x))
-            model = knn.KNeighborsClassifier(n_neighbors=k1, n_jobs=-1)
+            model = knn.KNeighborsClassifier(n_neighbors=k2, n_jobs=-1)
             model.fit(x, y)
             self._s2_models.append(model)
             # number of neighbours is k + 1, since it will return the node itself
-            dist, _ = model.kneighbors(x, n_neighbors=k1+1)
-            avg_dist = np.sum(dist, axis=1) / float(k1)
+            dist, _ = model.kneighbors(x, n_neighbors=k2+1)
+            avg_dist = np.sum(dist, axis=1) / k2
             self._s2_means[i] = np.mean(avg_dist)
             self._s2_stds[i] = np.std(avg_dist)
             self._s2_thresholds[i] = self._s2_means[i] + \
                 zeta * self._s2_stds[i]
 
-    def fit_stage3_(self, kappa):
+    def fit_stage3_(self, kappa, gamma):
+        kwargs = {'confidence': gamma}
+        self.set_params(**kwargs)
+
         x = self.encode_train_np
         y = self.y_train_np
         k = int(self.num_classes * kappa)
@@ -297,7 +294,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         self._s3_likelihood = np.mean(np.amax(bins, axis=1))
         logger.debug('Train set likelihood = %f', self._s3_likelihood)
 
-    def def_state1_(self, adv, pred_adv, passed):
+    def def_stage1_(self, adv, pred_adv, passed):
         """
         A bounding box which uses [min, max] from traning set
         """
@@ -316,7 +313,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
                 passed[blocked_indices] = 0
         return passed
 
-    def def_state2_(self, adv, pred_adv, passed):
+    def def_stage2_(self, adv, pred_adv, passed):
         """
         Filtering the inputs based on in-class k nearest neighbours.
         """
@@ -329,7 +326,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         passed_pred = pred_adv[passed_indices]
         models = self._s2_models
         classes = np.arange(self.num_classes)
-        k1 = self._params['k1']
+        k2 = self._params['k2']
 
         for model, threshold, c in zip(models, self._s2_thresholds, classes):
             inclass_indices = np.where(passed_pred == c)[0]
@@ -338,7 +335,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
             x = passed_adv[inclass_indices]
             neigh_dist, neigh_indices = model.kneighbors(
-                x, n_neighbors=k1, return_distance=True)
+                x, n_neighbors=k2, return_distance=True)
             mean = np.mean(neigh_dist, axis=1)
             sub_blocked_indices = np.where(mean > threshold)[0]
             # trace back the original indices from input adversarial examples
@@ -349,7 +346,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
         return passed
 
-    # def def_state3_(self, adv, pred_adv, passed):
+    # def def_stage3_(self, adv, pred_adv, passed):
     #     """
     #     NOTE: Deprecated!
     #     Filtering the inputs based on k nearest neighbours with entire training set
@@ -371,10 +368,13 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
     #     return passed
 
-    def def_state3_(self, adv, passed):
+    def def_stage3_(self, adv, pred_adv, passed):
         """
         Checking the class distribution of k nearest neighbours without predicting
         the inputs. Compute the likelihood using one-against-all approach.
+
+        pred_adv : numpy.ndarray
+            A dummy variable
         """
         passed_indices = np.where(passed == 1)[0]
         if len(passed_indices) == 0:
@@ -383,7 +383,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         x = adv[passed_indices]
         kappa = self._params['kappa']
         k = self.num_classes * kappa
-        confidence = self._params['confidence']
+        gamma = self._params['confidence']
 
         model = self._s3_model  # KNeighborsClassifier for entire train set
         neigh_indices = model.kneighbors(
@@ -401,7 +401,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
         likelihood = np.amax(bins, axis=1)
         logger.debug('Mean likelihood on adv: %f', likelihood.mean())
-        threshold = self._s3_likelihood * confidence
+        threshold = self._s3_likelihood * gamma
         blocked_indices = np.where(likelihood < threshold)[0]
         passed[blocked_indices] = 0
 

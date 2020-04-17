@@ -118,7 +118,7 @@ def main():
 
     result_prefix = [model_file] \
             + [adv_file] \
-            + [params['k1']] \
+            + [params['k2']] \
             + [params['reliability']] \
             + [params['sample_ratio']] \
             + [params['confidence']] \

@@ -56,11 +56,11 @@ class TestApplicabilityDomainBC(unittest.TestCase):
         cls.ad = ApplicabilityDomainContainer(
             cls.mc,
             hidden_model=hidden_model,
-            k1=6,
+            k2=6,
             reliability=1.6,
             sample_ratio=SAMPLE_RATIO,
-            confidence=0.9,
             kappa=10,
+            confidence=0.9,
         )
         cls.ad.fit()
 

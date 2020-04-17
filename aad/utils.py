@@ -287,6 +287,6 @@ def cross_validation_split(x, y, nth_fold, num_folds=5):
         end = len(y)
 
     idx_test = np.arange(start, end)
-    idx_train = np.where(np.isin(idx_test, np.arange(len(x))) == False)
+    idx_train = np.where(np.isin(np.arange(len(x)), idx_test) == False)[0]
     assert len(idx_test) + len(idx_train) == len(y)
     return x[idx_train], y[idx_train], x[idx_test], y[idx_test]

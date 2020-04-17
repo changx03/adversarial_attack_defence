@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 
 class DataContainer:
-    def __init__(self, dataset_dict, path):
+    def __init__(self, dataset_dict, path=None):
         self.name = dataset_dict['name']
         self._data_type = dataset_dict['type']
         self._num_classes = int(dataset_dict['num_classes'])
@@ -38,7 +38,8 @@ class DataContainer:
         self._y_test_np = None
 
         assert self._data_type in ('image', 'numeric')
-        assert os.path.exists(path), f'{path} does NOT exist!'
+        if path is not None:
+            assert os.path.exists(path), f'{path} does NOT exist!'
 
     @property
     def data_type(self):
@@ -156,7 +157,7 @@ class DataContainer:
             x_np = self._x_train_np if is_train else self._x_test_np
             y_np = self._y_train_np if is_train else self._y_test_np
 
-            if self._data_type == 'image':
+            if self._data_type == 'image' and x_np.shape[1] not in (1, 3):
                 x_np = swap_image_channel(x_np)
 
             dataset = GenericDataset(x_np, y_np)

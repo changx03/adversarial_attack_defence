@@ -174,7 +174,7 @@ class AdversarialTraining(DetectorContainer):
         model = mc.model
 
         # Build a train dataset with adversarial examples.
-        if dc.data_type == 'image':
+        if dc.data_type == 'image' and x_train.shape[1] not in (1, 3):
             x_train = swap_image_channel(x_train)
 
         dataset = GenericDataset(x_train, y_train)
