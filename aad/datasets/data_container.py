@@ -31,7 +31,6 @@ class DataContainer:
         self._train_mean = None
         self._train_std = None
         self._dataframe = None
-        self._cross_valid_fold = 0
         self._data_range = None
         self._x_train_np = None
         self._y_train_np = None
@@ -68,10 +67,6 @@ class DataContainer:
     @property
     def dataframe(self):
         return self._dataframe
-
-    @property
-    def cross_valid_fold(self):
-        return self._cross_valid_fold
 
     @property
     def data_range(self):
@@ -111,6 +106,18 @@ class DataContainer:
     def y_test(self, y):
         self._y_test_np = y
 
+    @property
+    def x_all(self):
+        return np.vstack((self._x_train_np, self._x_test_np))
+
+    @property
+    def y_all(self):
+        # for index encoding
+        if len(self._y_train_np.shape) == 1:
+            return np.append(self._y_train_np, self._y_test_np)
+        # for one-hot encoding
+        return np.vstack((self._y_train_np, self._y_test_np))
+
     def __len__(self):
         # total length = train + test
         return len(self._x_train_np) + len(self._x_test_np)
@@ -137,41 +144,17 @@ class DataContainer:
         logger.info('Successfully load data. Time to complete: %dm %.3fs',
                     int(time_elapsed // 60), time_elapsed % 60)
 
-    def get_one_fold_np(self, fold):
-        """
-        Returns the selected fold of ndarray.
-        """
-        assert fold < self._cross_valid_fold, \
-            'Expecting fold is between 0 and {}. Got: {}'.format(
-                self._cross_valid_fold-1, fold)
-
-        partition_size = len(self.y_cv_np) // self._cross_valid_fold
-        start = fold * partition_size
-        end = fold * partition_size + partition_size
-        # handle last batch
-        if fold == self._cross_valid_fold - 1:
-            end = len(self.y_cv_np)
-        x_np = self.x_cv_np[start: end]
-        y_np = self.y_cv_np[start: end]
-        return x_np, y_np
-
     def get_dataloader(self,
                        batch_size=64,
                        is_train=True,
-                       fold=-1,
                        shuffle=True,
                        num_workers=0):
         """
         Returns a PyTorch DataLoader.
-        If use parameter `fold`  for cross validation, parameter `is_train` will
-        be ignored.
         """
         try:
-            if fold != -1:
-                x_np, y_np = self.get_one_fold_np(fold)
-            else:
-                x_np = self._x_train_np if is_train else self._x_test_np
-                y_np = self._y_train_np if is_train else self._y_test_np
+            x_np = self._x_train_np if is_train else self._x_test_np
+            y_np = self._y_train_np if is_train else self._y_test_np
 
             if self._data_type == 'image':
                 x_np = swap_image_channel(x_np)
@@ -280,22 +263,6 @@ class DataContainer:
                 label_np[start: start + batch_size] = y.numpy()
                 start = start+batch_size
         return data_np, label_np
-
-    def _prepare_cross_valid(self):
-        """
-        stack train and test together
-        """
-        assert self._x_train_np is not None \
-            and self._x_test_np is not None \
-            and self._y_train_np is not None \
-            and self._y_test_np is not None
-
-        self.x_cv_np = np.concatenate(
-            (self._x_train_np, self._x_test_np),
-            axis=0)
-        self.y_cv_np = np.concatenate(
-            (self._y_train_np, self._y_test_np),
-            axis=0)
 
     def _split_dataframe2np(self, size_train):
         assert isinstance(size_train, (int, float))

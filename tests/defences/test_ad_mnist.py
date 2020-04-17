@@ -22,10 +22,6 @@ MAX_EPOCHS = 50
 
 
 class TestApplicabilityDomainMNIST(unittest.TestCase):
-    """
-    NOTE: 2020/03/29 Switch from using the hidden layer after conv layer to the 
-    hidden layer before output layer. 
-    """
 
     @classmethod
     def setUpClass(cls):

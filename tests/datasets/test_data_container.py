@@ -6,7 +6,8 @@ import numpy as np
 
 from aad.datasets import (DATASET_LIST, DataContainer, get_sample_mean,
                           get_sample_std)
-from aad.utils import get_data_path, master_seed, swap_image_channel
+from aad.utils import (get_data_path, master_seed, onehot_encoding,
+                       swap_image_channel)
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -453,24 +454,36 @@ class TestDataContainer(unittest.TestCase):
         y2 = y_pt[:8].cpu().detach().numpy()
         np.testing.assert_equal(y1, y2)
 
-    def test_cross_validation(self):
-        dataname = 'Iris'
+    def test_fetch_all(self):
+        dataname = 'CIFAR10'
         data_lookup = DATASET_LIST[dataname]
         path = get_data_path()
         dc = DataContainer(data_lookup, path)
-        num_fold = 4
-        dc(shuffle=False, normalize=True, cross_validation_fold=num_fold)
-        part_size = 150 // num_fold
+        dc(shuffle=False, normalize=False)
 
-        x0, y0 = dc.get_one_fold_np(0)
-        self.assertEqual(x0.shape, (part_size, 4))
-        self.assertEqual(y0.shape, (part_size,))
+        x_train = dc.x_train
+        y_train = dc.y_train
+        x_test = dc.x_test
+        y_test = dc.y_test
+        x_all = dc.x_all
+        y_all = dc.y_all
 
-        x3, y3 = dc.get_one_fold_np(3)
-        self.assertEqual(x3.shape, (39, 4))
-        self.assertEqual(y3.shape, (39,))
+        data_shape = list(x_train.shape)
+        data_shape[0] = len(x_train) + len(x_test)
+        self.assertTupleEqual(x_all.shape, tuple(data_shape))
 
-        self.assertTrue(not np.equal(x0[:10], x3[:10]).all())
+        label_shape = list(y_train.shape)
+        label_shape[0] = len(y_train) + len(y_test)
+        self.assertTupleEqual(y_all.shape, tuple(label_shape))
+
+        dc.y_train = onehot_encoding(y_train, dc.num_classes)
+        dc.y_test = onehot_encoding(y_test, dc.num_classes)
+        x_train = dc.x_train
+        y_train = dc.y_train
+        y_all = dc.y_all
+        label_shape = list(y_train.shape)
+        label_shape[0] = len(y_train) + len(y_test)
+        self.assertTupleEqual(y_all.shape, tuple(label_shape))
 
 
 if __name__ == '__main__':

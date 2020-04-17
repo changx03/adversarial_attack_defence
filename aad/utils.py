@@ -249,3 +249,44 @@ def get_random_targets(true_labels,
         return targets
     else:
         return onehot_encoding(targets, num_classes, dtype)
+
+
+def cross_validation_split(x, y, nth_fold, num_folds=5):
+    """
+    Split the data into cross validation set
+
+    Parameters
+    ----------
+    x_train : numpy.ndarray
+        List of data for cross validation split.
+    y_train : numpy.ndarray
+        List of labels.
+    nth_fold : int
+        The n-th fold.
+    num_folds : int
+        Total number of folds.
+
+    Returns
+    -------
+    x_train : numpy.ndarray
+        Train data.
+    y_train : numpy.ndarray
+        Train labels.
+    x_eval : numpy.ndarray
+        Evaluation data.
+    y_eval : numpy.ndarray
+        Evaluation labels.
+    """
+    assert len(x) == len(y)
+
+    partition_size = len(y) // num_folds
+    start = nth_fold * partition_size
+    end = nth_fold * partition_size + partition_size
+    # handle last batch
+    if nth_fold == num_folds - 1:
+        end = len(y)
+
+    idx_test = np.arange(start, end)
+    idx_train = np.where(np.isin(idx_test, np.arange(len(x))) == False)
+    assert len(idx_test) + len(idx_train) == len(y)
+    return x[idx_train], y[idx_train], x[idx_test], y[idx_test]
