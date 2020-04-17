@@ -67,7 +67,7 @@ class SaliencyContainer(AttackContainer):
         else:
             xx = x
 
-        adv = self._generate(xx)
+        adv = self._generate(xx, targets)
         y_adv, y_clean = self.predict(adv, xx)
 
         # ensure the outputs and inputs have same shape
