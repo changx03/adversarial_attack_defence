@@ -108,16 +108,19 @@ class ApplicabilityDomainContainer(DetectorContainer):
         logger.debug('Number of input attributes: %d', self.num_components)
 
         # Stage 1
-        self._fit_stage1()
+        self.fit_stage1_()
         self._log_time_end('AD Stage 1')
         # Stage 2
         if disable_s2 is False:
             self._log_time_start()
-            self._fit_stage2()
+            k1 = self._params['k1']
+            zeta = self._params['reliability']
+            self.fit_stage2_(k1, zeta)
             self._log_time_end('AD Stage 2')
         # Stage 3
         self._log_time_start()
-        self._fit_stage3()
+        kappa = self._params['kappa']
+        self.fit_stage3_(kappa)
         self._log_time_end('AD Stage 3')
 
         return True
@@ -127,13 +130,13 @@ class ApplicabilityDomainContainer(DetectorContainer):
         The parameters to save for Applicability Domain. Consider save the constants
         in a JSON file.
         """
-        pass
+        logger.warning('Save is not supported.')
 
     def load(self, filename):
         """
         This method does not support load parameters.
         """
-        pass
+        logger.warning('Load is not supported.')
 
     def detect(self, adv, pred=None, return_passed_x=False):
         """
@@ -171,18 +174,18 @@ class ApplicabilityDomainContainer(DetectorContainer):
         disable_s2 = self._params['disable_s2']
 
         # Stage 1
-        passed = self._def_state1(encoded_adv, pred, passed)
+        passed = self.def_state1_(encoded_adv, pred, passed)
         blocked = len(passed[passed == 0])
         logger.debug('Stage 1: blocked %d inputs', blocked)
         self.blocked_by_stages[0] = blocked
         # Stage 2
         if disable_s2 is False:
-            passed = self._def_state2(encoded_adv, pred, passed)
+            passed = self.def_state2_(encoded_adv, pred, passed)
             blocked = len(passed[passed == 0]) - blocked
             logger.debug('Stage 2: blocked %d inputs', blocked)
             self.blocked_by_stages[1] = blocked
         # Stage 3
-        passed = self._def_state3_v2(encoded_adv, passed)
+        passed = self.def_state3_(encoded_adv, passed)
         blocked = len(passed[passed == 0]) - blocked
         logger.debug('Stage 3: blocked %d inputs', blocked)
         self.blocked_by_stages[2] = blocked
@@ -193,6 +196,13 @@ class ApplicabilityDomainContainer(DetectorContainer):
         if return_passed_x:
             return blocked_indices, adv[passed_indices]
         return blocked_indices
+
+    @staticmethod
+    def dummy_model(inputs):
+        """
+        Return the input. Use this method when we don't need a hidden layer encoding.
+        """
+        return inputs
 
     def _preprocessing(self, x_np):
         # the # of channels should alway smaller than the size of image
@@ -224,7 +234,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
                 start = start + batch_size
         return x_encoded.cpu().detach().numpy()
 
-    def _fit_stage1(self):
+    def fit_stage1_(self):
         self._x_min = np.empty(
             (self.num_classes, self.num_components), dtype=np.float32)
         self._x_max = np.empty_like(self._x_min)
@@ -235,10 +245,8 @@ class ApplicabilityDomainContainer(DetectorContainer):
             self._x_max[i] = np.amax(x, axis=0)
             self._x_min[i] = np.amin(x, axis=0)
 
-    def _fit_stage2(self):
+    def fit_stage2_(self, k1, zeta):
         self._s2_models = []
-        k1 = self._params['k1']
-        zeta = self._params['reliability']
         for i in range(self.num_classes):
             indices = np.where(self.y_train_np == i)[0]
             x = self.encode_train_np[indices]
@@ -255,10 +263,9 @@ class ApplicabilityDomainContainer(DetectorContainer):
             self._s2_thresholds[i] = self._s2_means[i] + \
                 zeta * self._s2_stds[i]
 
-    def _fit_stage3(self):
+    def fit_stage3_(self, kappa):
         x = self.encode_train_np
         y = self.y_train_np
-        kappa = self._params['kappa']
         k = int(self.num_classes * kappa)
         sample_ratio = self._params['sample_ratio']
         logger.debug('k for Stage 3: %d', k)
@@ -290,7 +297,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
         self._s3_likelihood = np.mean(np.amax(bins, axis=1))
         logger.debug('Train set likelihood = %f', self._s3_likelihood)
 
-    def _def_state1(self, adv, pred_adv, passed):
+    def def_state1_(self, adv, pred_adv, passed):
         """
         A bounding box which uses [min, max] from traning set
         """
@@ -309,7 +316,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
                 passed[blocked_indices] = 0
         return passed
 
-    def _def_state2(self, adv, pred_adv, passed):
+    def def_state2_(self, adv, pred_adv, passed):
         """
         Filtering the inputs based on in-class k nearest neighbours.
         """
@@ -342,29 +349,29 @@ class ApplicabilityDomainContainer(DetectorContainer):
 
         return passed
 
-    def _def_state3(self, adv, pred_adv, passed):
-        """
-        NOTE: Deprecated!
-        Filtering the inputs based on k nearest neighbours with entire training set
-        """
-        passed_indices = np.where(passed == 1)[0]
-        if len(passed_indices) == 0:
-            return passed
+    # def def_state3_(self, adv, pred_adv, passed):
+    #     """
+    #     NOTE: Deprecated!
+    #     Filtering the inputs based on k nearest neighbours with entire training set
+    #     """
+    #     passed_indices = np.where(passed == 1)[0]
+    #     if len(passed_indices) == 0:
+    #         return passed
 
-        indices = np.arange(len(adv))
-        passed_adv = adv[passed_indices]
-        passed_pred = pred_adv[passed_indices]
-        model = self._s3_model
-        knn_pred = model.predict(passed_adv)
-        not_match_indices = np.where(np.not_equal(knn_pred, passed_pred))[0]
-        blocked_indices = indices[passed_indices][not_match_indices]
+    #     indices = np.arange(len(adv))
+    #     passed_adv = adv[passed_indices]
+    #     passed_pred = pred_adv[passed_indices]
+    #     model = self._s3_model
+    #     knn_pred = model.predict(passed_adv)
+    #     not_match_indices = np.where(np.not_equal(knn_pred, passed_pred))[0]
+    #     blocked_indices = indices[passed_indices][not_match_indices]
 
-        if len(blocked_indices) > 0:
-            passed[blocked_indices] = 0
+    #     if len(blocked_indices) > 0:
+    #         passed[blocked_indices] = 0
 
-        return passed
+    #     return passed
 
-    def _def_state3_v2(self, adv, passed):
+    def def_state3_(self, adv, passed):
         """
         Checking the class distribution of k nearest neighbours without predicting
         the inputs. Compute the likelihood using one-against-all approach.
@@ -399,10 +406,3 @@ class ApplicabilityDomainContainer(DetectorContainer):
         passed[blocked_indices] = 0
 
         return passed
-
-    @staticmethod
-    def dummy_model(inputs):
-        """
-        Return the input.Use this method when we don't need a hidden layer encoding.
-        """
-        return inputs
