@@ -111,7 +111,8 @@ def update_one_fold(data_container,
     num_classes = data_container.num_classes
     dc = CustomDataContainer(
         x_train, y_train, x_eval, y_eval,
-        name='IRIS_FOLD', data_type='image', num_classes=num_classes, dim_data=dim)
+        name='IRIS_FOLD', data_type=data_container.data_type, 
+        num_classes=num_classes, dim_data=dim)
     dc(normalize=True)
     mc = ModelContainerPT(model, dc)
     mc.load(MODEL_FILE)
