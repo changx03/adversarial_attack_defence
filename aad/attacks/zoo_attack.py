@@ -71,6 +71,33 @@ class ZooContainer(AttackContainer):
             nb_classes=num_classes)
 
     def generate(self, count=1000, use_testset=True, x=None, targets=None, **kwargs):
+        """
+        Generate adversarial examples.
+
+        Parameters
+        ----------
+        count : int
+            The number of adversarial examples will be generated from the test set. This parameter will not be used
+            when 
+        use_testset : bool
+            Use test set to generate adversarial examples.
+        x : numpy.ndarray, optional
+            The data for generating adversarial examples. If this parameter is not null, `count` and `use_testset` will
+            be ignored.
+        targets : numpy.ndarray, optional
+            The expected labels for targeted attack.
+
+        Returns
+        -------
+        adv : numpy.ndarray
+            The adversarial examples which have same shape as x.
+        pred_adv :  : numpy.ndarray
+            The predictions of adv. examples.
+        x_clean : numpy.ndarray
+            The clean inputs.
+        pred_clean : numpy.ndarray
+            The prediction of clean inputs.
+        """
         assert use_testset or x is not None
 
         since = time.time()
@@ -92,7 +119,7 @@ class ZooContainer(AttackContainer):
             xx = x
 
         adv = self._generate(xx, targets)
-        y_adv, y_clean = self.predict(adv, xx)
+        pred_adv, pred_clean = self.predict(adv, xx)
 
         # ensure the outputs and inputs have same shape
         if x.shape != adv.shape:
@@ -100,7 +127,7 @@ class ZooContainer(AttackContainer):
         time_elapsed = time.time() - since
         logger.info('Time to complete training %d adv. examples: %dm %.3fs',
                     count, int(time_elapsed // 60), time_elapsed % 60)
-        return adv, y_adv, x, y_clean
+        return adv, pred_adv, x, pred_clean
 
     def _generate(self, x, targets=None):
         targeted = targets is not None

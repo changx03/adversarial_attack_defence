@@ -40,9 +40,9 @@ class AttackContainer(abc.ABC):
 
     def predict(self, adv, x):
         """Returns the predictions for adversarial examples and clean inputs."""
-        y_adv = self.model_container.predict(adv)
-        y = self.model_container.predict(x)
-        return y_adv, y
+        pred_adv = self.model_container.predict(adv)
+        pred_clean = self.model_container.predict(x)
+        return pred_adv, pred_clean
 
     @staticmethod
     def save_attack(filename,

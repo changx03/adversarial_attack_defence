@@ -105,8 +105,14 @@ class CarliniL2V2Container(AttackContainer):
 
         Returns
         -------
-        numpy.ndarray
+        adv : numpy.ndarray
             The adversarial examples which have same shape as x.
+        pred_adv :  : numpy.ndarray
+            The predictions of adv. examples.
+        x_clean : numpy.ndarray
+            The clean inputs.
+        pred_clean : numpy.ndarray
+            The prediction of clean inputs.
         """
         assert use_testset or x is not None
 
@@ -129,7 +135,7 @@ class CarliniL2V2Container(AttackContainer):
             xx = x
 
         adv = self._generate(xx, targets)
-        y_adv, y_clean = self.predict(adv, xx)
+        pred_adv, pred_clean = self.predict(adv, xx)
 
         # ensure the outputs and inputs have same shape
         if x.shape != adv.shape:
@@ -137,7 +143,7 @@ class CarliniL2V2Container(AttackContainer):
         time_elapsed = time.time() - since
         logger.info('Time to complete training %d adv. examples: %dm %.3fs',
                     count, int(time_elapsed // 60), time_elapsed % 60)
-        return adv, y_adv, x, y_clean
+        return adv, pred_adv, x, pred_clean
 
     def _generate(self, inputs, targets=None):
         num_advs = len(inputs)
