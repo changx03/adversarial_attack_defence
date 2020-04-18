@@ -6,7 +6,6 @@ import os
 import time
 
 import numpy as np
-import torch
 
 import aad.attacks as attacks
 from aad.basemodels import MnistCnnV2, ModelContainerPT
@@ -14,7 +13,7 @@ from aad.datasets import DATASET_LIST, CustomDataContainer, DataContainer
 from aad.defences import ApplicabilityDomainContainer
 from aad.utils import cross_validation_split, get_data_path, master_seed
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('CV_MNIST')
 logging.basicConfig(level=logging.INFO)
 
 SEED = 4096
