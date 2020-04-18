@@ -292,7 +292,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
                 defaultreallimits=(0, self.num_classes-1)
             )[0]
         self._s3_likelihood = np.mean(np.amax(bins, axis=1))
-        logger.debug('Train set likelihood = %f', self._s3_likelihood)
+        logger.debug('Train set likelihood: %f', self._s3_likelihood)
 
     def def_stage1_(self, adv, pred_adv, passed):
         """
