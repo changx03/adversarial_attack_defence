@@ -56,7 +56,7 @@ def main():
     model_name, dname = parse_model_filename(adv_file)
 
     # set logging config. Run this before logging anything!
-    set_logging('attack', dname, verbose, save_log)
+    set_logging('defence_ad', dname, verbose, save_log)
 
     # check adv. examples and parameter config files
     for f in data_files[:2] + [param_file]:

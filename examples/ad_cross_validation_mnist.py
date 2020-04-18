@@ -43,7 +43,7 @@ GAMMA_RANGE = (0.5, 1.0)
 # If epsilon = 1, both are weight the same.
 EPSILON = 1.0
 # Only consider the parameter when 90% of the clean samples can pass the test.
-PASS_THRESHOLD_S2 = 0.9
+PASS_THRESHOLD = 0.9
 
 NUM_FOLDS = 5
 
@@ -95,7 +95,7 @@ def search_param(ad, update_fn, def_stage, drange, increment, const_param,
         passed_adv = def_stage(ad, encoded_adv, pred_adv, passed)
         score_adv = len(passed_clean[passed_adv == 0])
         score = -score_clean + EPSILON * score_adv
-        if score > max_score and PASS_THRESHOLD_S2 * n <= (n - score_clean):
+        if score > max_score and PASS_THRESHOLD * n <= (n - score_clean):
             max_score = score
             best = i
         scores_clean.append(n - score_clean)
