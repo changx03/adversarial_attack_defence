@@ -1,0 +1,11 @@
+{
+    "k_range": [1, 16],
+    "z_range": [1.0, 3.0],
+    "kappa_range": [5, 10],
+    "gamma_range": [0.5, 1.0],
+    "epsilon": 1.0,
+    "pass_threshold": 0.9,
+    "num_folds": 4,
+    "batch_size": 64,
+    "sample_ratio": 1.0
+}
