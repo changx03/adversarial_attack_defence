@@ -124,7 +124,7 @@ def update_one_fold(data_container,
     mc = ModelContainerPT(model, dc)
     mc.load(MODEL_FILE)
     accuracy = mc.evaluate(x_eval, y_eval)
-    print(f'Accuracy on adv. examples: {accuracy}')
+    print(f'Accuracy on clean samples: {accuracy}')
 
     ad = ApplicabilityDomainContainer(
         mc, hidden_model=model.hidden_model, k2=K2,
@@ -132,6 +132,8 @@ def update_one_fold(data_container,
         kappa=KAPPA, confidence=CONFIDENCE)
     adv, pred_adv, x_clean, y_true = attack.generate(
         use_testset=False, x=x_eval)
+    accuracy = mc.evaluate(adv, y_true)
+    print(f'Accuracy on adv. examples: {accuracy}')
 
     max_scores = np.zeros(2, dtype=np.float32)
     # Search parameters for Stage 2
@@ -181,7 +183,7 @@ def cross_validation(data_container, model, attack):
         k2s[i], zetas[i], kappas[i], gammas[i], scores[i] = update_one_fold(
             data_container, model, attack, x_train, y_train, x_eval, y_eval)
         elapsed_fold = time.time() - start_fold
-        print('[{}/{}] {:.0f}m {}s - score: {} k2:{}, zeta:{:.1f}, kappa: {}, gamma: {:.1f}'.format(
+        print('[{}/{}] {:.0f}m {}s - score: {:.1f} - k2:{}, zeta:{:.1f}, kappa: {}, gamma: {:.1f}'.format(
             i, NUM_FOLDS, elapsed_fold // 60, elapsed_fold % 60,
             scores[i], k2s[i], zetas[i], kappas[i], gammas[i]))
     max_idx = np.argmax(scores)
