@@ -2,6 +2,7 @@ import argparse as ap
 import json
 import logging
 import os
+import sys
 
 import numpy as np
 
@@ -61,14 +62,14 @@ def main():
     # check adv. examples and parameter config files
     for f in data_files[:2] + [param_file]:
         if not os.path.exists(f):
-            raise FileNotFoundError('{} does not exist!'.format(f))
+            logger.warning('%s does not exist. Exit.', f)
+            sys.exit(0)
     # check clean samples
     for f in data_files[-2:]:
         if not os.path.exists(f):
             logger.warning(
                 'Cannot load files for clean samples. Skip checking clean set.')
             check_clean = False
-    dirname = os.path.dirname(adv_file)
 
     with open(param_file) as param_json:
         params = json.load(param_json)
@@ -113,17 +114,18 @@ def main():
     logger.info('Accuracy on test set: %f', accuracy)
 
     # preform defence
-    ad = ApplicabilityDomainContainer(mc, hidden_model=model.hidden_model, **params)
+    ad = ApplicabilityDomainContainer(
+        mc, hidden_model=model.hidden_model, **params)
     ad.fit()
 
     result_prefix = [model_file] \
-            + [adv_file] \
-            + [params['k2']] \
-            + [params['reliability']] \
-            + [params['sample_ratio']] \
-            + [params['confidence']] \
-            + [params['kappa']] \
-            + [params['disable_s2']]
+        + [adv_file] \
+        + [params['k2']] \
+        + [params['reliability']] \
+        + [params['sample_ratio']] \
+        + [params['confidence']] \
+        + [params['kappa']] \
+        + [params['disable_s2']]
 
     # check clean
     if check_clean:
@@ -136,15 +138,13 @@ def main():
     # check adversarial examples
     adv = np.load(data_files[0], allow_pickle=False)
     pred = np.load(data_files[1], allow_pickle=False)
-    adv_passed, adv_blk_idx, blocked_counts = detect(ad, 'adv. examples', adv, pred)
+    adv_passed, adv_blk_idx, blocked_counts = detect(
+        ad, 'adv. examples', adv, pred)
     result = result_prefix + ['adv'] + blocked_counts
     result = '[result]' + ','.join([str(r) for r in result])
     if check_clean:
         logger.info(result_clean)
     logger.info(result)
-
-
-
 
 
 if __name__ == '__main__':
