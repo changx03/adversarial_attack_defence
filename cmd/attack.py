@@ -112,6 +112,8 @@ def main():
     set_logging('attack', dname, verbose, save_log)
 
     # show parameters
+    print('[attack] Start generating {} adv. samples from {} model...'.format(
+        num_adv, model_name))
     logger.info('Start at   : %s', get_time_str())
     logger.info('RECEIVED PARAMETERS:')
     logger.info('model file :%s', model_file)

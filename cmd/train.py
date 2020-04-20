@@ -64,6 +64,7 @@ def main():
     set_logging('train', dname, verbose, save_log)
 
     # show parameters
+    print('[train] Start training {} model...'.format(model_name))
     logger.info('Start at      : %s', get_time_str())
     logger.info('RECEIVED PARAMETERS:')
     logger.info('dataset       :%s', dname)

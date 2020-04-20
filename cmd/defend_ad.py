@@ -75,6 +75,7 @@ def main():
         params = json.load(param_json)
 
     # show parameters
+    print('[defend_ad] Running applicability domain on {}...'.format(model_name))
     logger.info('Start at    : %s', get_time_str())
     logger.info('RECEIVED PARAMETERS:')
     logger.info('model file  :%s', model_file)

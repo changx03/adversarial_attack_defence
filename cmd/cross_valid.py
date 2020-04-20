@@ -72,6 +72,7 @@ def main():
         params = json.load(param_json)
 
     # show parameters
+    print('[cv] Running cross validation on {} with {}...'.format(model_file, data_name))
     logger.info('Start at      : %s', get_time_str())
     logger.info('RECEIVED PARAMETERS:')
     logger.info('model file    :%s', model_file)
@@ -196,4 +197,4 @@ if __name__ == '__main__':
     $ python ./cmd/cross_valid.py -vl -m ./save/CifarResnet50_CIFAR10_e30.pt -p ./cmd/CvParams_cifar.json
     """
     main()
-    print('[attack] Task completed!')
+    print('[cv] Task completed!')
