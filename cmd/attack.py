@@ -48,7 +48,7 @@ def main():
         '-p', '--param', type=str, required=True,
         help='a JSON config file which contains the parameters for the attacks')
     parser.add_argument(
-        '-n', '--number', type=int, default=100,
+        '-n', '--number', type=int, default=1000,
         help='the number of adv. examples want to generate. (if more than test set, it uses all test examples.)')
     parser.add_argument(
         '-s', '--seed', type=int, default=4096,
@@ -63,9 +63,6 @@ def main():
         '-w', '--overwrite', action='store_true', default=False,
         help='overwrite the existing file')
     parser.add_argument(
-        '-F', '--fgsm', action='store_true', default=False,
-        help='Apply FGSM attack')
-    parser.add_argument(
         '-B', '--bim', action='store_true', default=False,
         help='Apply BIM attack')
     parser.add_argument(
@@ -74,6 +71,9 @@ def main():
     parser.add_argument(
         '-D', '--deepfool', action='store_true', default=False,
         help='Apply DeepFool attack')
+    parser.add_argument(
+        '-F', '--fgsm', action='store_true', default=False,
+        help='Apply FGSM attack')
     parser.add_argument(
         '-S', '--saliency', action='store_true', default=False,
         help='Apply Saliency Map attack')
@@ -165,16 +165,16 @@ def main():
 if __name__ == '__main__':
     """
     Examples:
-    $ python ./cmd/attack.py -m ./save/BCNN_BreastCancerWisconsin_e200.pt -p ./cmd/AttackParams.json -lvw -FD
-    $ python ./cmd/attack.py -m ./save/CifarCnn_CIFAR10_e50.pt -p ./cmd/AttackParams.json -vw -FD
-    $ python ./cmd/attack.py -m ./save/IrisNN_BankNote_e200.pt -p ./cmd/AttackParams.json -vw -FD
-    $ python ./cmd/attack.py -m ./save/IrisNN_HTRU2_e200.pt -p ./cmd/AttackParams.json -vw -FD
-    $ python ./cmd/attack.py -m ./save/IrisNN_Iris_e200.pt -p ./cmd/AttackParams.json -vw -FD
-    $ python ./cmd/attack.py -m ./save/IrisNN_WheatSeed_e300.pt -p ./cmd/AttackParams.json -vw -FD
-    $ python ./cmd/attack.py -m ./save/MnistCnnV2_MNIST_e50.pt -p ./cmd/AttackParams.json -vw -FD
-    $ python ./cmd/attack.py -m ./save/CifarResnet50_SVHN_e30.pt -p ./cmd/AttackParams.json -vw -F
-    $ python ./cmd/attack.py -m ./save/CifarResnet50_SVHN_e30.pt -p ./cmd/AttackParams.json -vw -D
-    $ python ./cmd/attack.py -m ./save/CifarResnet50_SVHN_e30.pt -p ./cmd/AttackParams.json -w -C
+    $ python ./cmd/attack.py -m ./save/IrisNN_Iris_e200.pt -p ./cmd/AttackParams.json -lvw -BCDF
+    $ python ./cmd/attack.py -m ./save/BCNN_BreastCancerWisconsin_e200.pt -p ./cmd/AttackParams.json -lvw -BCDF
+    $ python ./cmd/attack.py -m ./save/IrisNN_BankNote_e200.pt -p ./cmd/AttackParams.json -lvw -BCDF
+    $ python ./cmd/attack.py -m ./save/IrisNN_HTRU2_e200.pt -p ./cmd/AttackParams.json -lvw -BCDF
+    $ python ./cmd/attack.py -m ./save/IrisNN_WheatSeed_e300.pt -p ./cmd/AttackParams.json -lvw -BCDF
+
+    $ python ./cmd/attack.py -m ./save/MnistCnnV2_MNIST_e50.pt -p ./cmd/AttackParams.json -lvw -BCDFS
+    $ python ./cmd/attack.py -m ./save/CifarCnn_CIFAR10_e50.pt -p ./cmd/AttackParams.json -lvw -BCDFS
+    $ python ./cmd/attack.py -m ./save/CifarResnet50_CIFAR10_e30.pt -p ./cmd/AttackParams.json -lvw -BCDFS
+    $ python ./cmd/attack.py -m ./save/CifarResnet50_SVHN_e30.pt -p ./cmd/AttackParams.json -lvw -BCDFS
     """
     main()
     print('[attack] Task completed!')

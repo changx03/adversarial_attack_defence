@@ -5,35 +5,34 @@
     "minimal": true
   },
   "BIM": {
-    "eps":0.3,
-    "eps_step":0.1,
-    "max_iter":100,
-    "targeted":false
+    "eps": 0.3,
+    "eps_step": 0.1,
+    "max_iter": 100,
+    "targeted": false
   },
   "Carlini": {
-    "confidence":0.0,
-    "targeted":false,
-    "learning_rate":1e-2,
-    "binary_search_steps":10,
-    "max_iter":100,
-    "initial_const":1e-2,
-    "max_halving":5,
-    "max_doubling":10,
-    "batch_size":8
+    "targeted": false,
+    "learning_rate": 0.01,
+    "binary_search_steps": 9,
+    "max_iter": 1000,
+    "confidence": 0,
+    "initial_const": 1e-3,
+    "c_range": [0, 1e10],
+    "abort_early": false,
+    "batch_size": 64
   },
   "DeepFool": {
-    "max_iter":100,
-    "epsilon":1e-6,
-    "nb_grads":10,
-    "batch_size":16
+    "max_iter": 100,
+    "epsilon": 1e-6,
+    "nb_grads": 10,
+    "batch_size": 16
   },
   "Saliency": {
-    "targeted":false,
-    "learning_rate":1e-2,
-    "max_iter":15,
-    "binary_search_steps":5,
-    "abort_early":true,
-    "use_resize":false,
-    "use_importance":false
+    "learning_rate": 1e-2,
+    "max_iter": 15,
+    "binary_search_steps": 5,
+    "abort_early": true,
+    "use_resize": false,
+    "use_importance": false
   }
 }
