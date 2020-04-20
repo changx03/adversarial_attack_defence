@@ -72,7 +72,8 @@ def main():
         params = json.load(param_json)
 
     # show parameters
-    print('[cv] Running cross validation on {} with {}...'.format(model_file, data_name))
+    print('[cv] Running cross validation on {} with {}...'.format(
+        model_file, data_name))
     logger.info('Start at      : %s', get_time_str())
     logger.info('RECEIVED PARAMETERS:')
     logger.info('model file    :%s', model_file)
@@ -161,18 +162,14 @@ def main():
         pred = np.load(data_files[3], allow_pickle=False)
 
         # fetch optimal parameters
-        k2 = cross_validation.k2
-        zeta = cross_validation.zeta
-        kappa = cross_validation.kappa
-        gamma = cross_validation.gamma
         ad = ApplicabilityDomainContainer(
             mc,
             hidden_model=model.hidden_model,
-            k2=k2,
-            reliability=zeta,
+            k2=cross_validation.k2,
+            reliability=cross_validation.reliability,
             sample_ratio=sample_ratio,
-            kappa=kappa,
-            confidence=gamma
+            kappa=cross_validation.kappa,
+            confidence=cross_validation.confidence,
         )
         logger.info('Params: %s', str(ad.params))
         ad.fit()
@@ -186,7 +183,7 @@ def main():
     # save results
     if not does_ignore:
         file_name = name_handler(
-            model_name + '_' + data_name, 'csv', overwrite=False)
+            model_name + '_' + data_name, 'csv', overwrite=overwrite)
         cross_validation.save(file_name)
 
 

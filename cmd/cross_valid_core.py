@@ -29,13 +29,6 @@ class CrossValidation:
         self.gamma_range = gamma_range
         self.epsilon = epsilon
 
-        # the optimal parameters
-        self.sample_ratio = None
-        self.k2 = None
-        self.zeta = None
-        self.kappa = None
-        self.gamma = None
-
         # results per fold
         self.folds = []
         self.k2s = []
@@ -52,15 +45,25 @@ class CrossValidation:
         self.x_clean = None
         self.y_true = None
 
+    @property
+    def k2(self):
+        return self.applicability_domain.params['k2']
+
+    @property
+    def reliability(self):
+        return self.applicability_domain.params['reliability']
+
+    @property
+    def kappa(self):
+        return self.applicability_domain.params['kappa']
+
+    @property
+    def confidence(self):
+        return self.applicability_domain.params['confidence']
+
     def fit(self, attack):
-        params = self.applicability_domain.params
-        self.sample_ratio = ['sample_ratio']
-        self.k2 = params['k2']
-        self.zeta = params['reliability']
-        self.kappa = params['kappa']
-        self.gamma = params['confidence']
         self.attack = attack
-        self.k2, self.zeta, self.kappa, self.gamma = self._cross_validation()
+        self._cross_validation()
 
     def save(self, filename):
         filename = name_handler(os.path.join(
@@ -184,7 +187,9 @@ class CrossValidation:
         idx = np.argmax(scores)
         return values[idx], scores[idx]
 
-    def _update_one_fold(self, nth_fold, attack, x_train, y_train, x_eval, y_eval):
+    def _update_one_fold(self, nth_fold, attack, x_train, y_train, x_eval,
+                         y_eval):
+        ad = self.applicability_domain
         mc = self.model_container
         dim = mc.data_container.dim_data
         num_classes = mc.data_container.num_classes
@@ -201,37 +206,43 @@ class CrossValidation:
 
         max_scores = np.zeros(2, dtype=np.float32)
         # Search parameters for Stage 2
-        zeta = self.zeta
-        k2 = self.k2
         # find best k2
         new_k2, max_score = self._search_param(
-            nth_fold, self._update_k2, self._def_stage2, self._save_k2, self.k_range, 1, zeta)
-        k2 = int(new_k2)
-        logger.debug('Found best k2: %i with score: %i', k2, max_score)
+            nth_fold, self._update_k2, self._def_stage2, self._save_k2,
+            self.k_range, 1, ad.params['reliability'])
+        kwargs = {'k2': int(new_k2)}
+        ad.set_params(**kwargs)
+        logger.debug('Found best k2: %i with score: %i',
+                     ad.params['k2'], max_score)
 
         # find best zeta
         new_zeta, max_score = self._search_param(
-            nth_fold, self._update_zeta, self._def_stage2, self._save_zeta, self.z_range, 0.1, k2)
-        zeta = np.around(new_zeta, decimals=1)
-        logger.debug('Found best zeta: %f with score: %i', zeta, max_scores[0])
+            nth_fold, self._update_zeta, self._def_stage2, self._save_zeta,
+            self.z_range, 0.1, ad.params['k2'])
+        kwargs = {'reliability': np.around(new_zeta, decimals=1)}
+        ad.set_params(**kwargs)
+        logger.debug('Found best zeta: %f with score: %i',
+                     ad.params['reliability'], max_scores[0])
 
         # Search parameters for Stage 3
-        kappa = self.kappa
-        gamma = self.gamma
         # find kappa
         new_kappa, max_score = self._search_param(
-            nth_fold, self._update_kappa, self._def_stage3, self._save_kappa, self.kappa_range, 1, gamma)
-        kappa = int(new_kappa)
-        logger.debug('Found best kappa: %i with score: %i', kappa, max_score)
+            nth_fold, self._update_kappa, self._def_stage3, self._save_kappa,
+            self.kappa_range, 1, ad.params['confidence'])
+        kwargs = {'kappa': int(new_kappa)}
+        ad.set_params(**kwargs)
+        logger.debug('Found best kappa: %i with score: %i',
+                     ad.params['kappa'], max_score)
 
         # find parameter gamma
         new_gamma, max_scores[1] = self._search_param(
-            nth_fold, self._update_gamma, self._def_stage3, self._save_gamma, self.gamma_range, 0.1, kappa)
-        gamma = np.around(new_gamma, decimals=1)
+            nth_fold, self._update_gamma, self._def_stage3, self._save_gamma,
+            self.gamma_range, 0.1, ad.params['kappa'])
+        kwargs = {'confidence': np.around(new_gamma, decimals=1)}
+        ad.set_params(**kwargs)
         logger.debug('Found best gamma: %f with score: %i',
-                     gamma, max_scores[1])
-
-        return k2, zeta, kappa, gamma, np.sum(max_scores)
+                     ad.params['confidence'], max_scores[1])
+        return np.sum(max_scores)
 
     def _cross_validation(self):
         attack = self.attack
@@ -243,9 +254,14 @@ class CrossValidation:
             start_fold = time.time()
             x_train, y_train, x_eval, y_eval = cross_validation_split(
                 dc.x_all, dc.y_all, i, num_folds)
-            k2, zeta, kappa, gamma, max_score = self._update_one_fold(
+            max_score = self._update_one_fold(
                 i, attack, x_train, y_train, x_eval, y_eval)
             elapsed_fold = time.time() - start_fold
+            ad = self.applicability_domain
+            k2 = ad.params['k2']
+            zeta = ad.params['reliability']
+            kappa = ad.params['kappa']
+            gamma = ad.params['confidence']
             logger.debug('[%d/%d] %.0fm %.1fs - score: %.1f - k2: %d, zeta: %.1f, kappa: %d, gamma: %.1f',
                          i, num_folds, elapsed_fold // 60, elapsed_fold % 60,
                          max_score, k2, zeta, kappa, gamma)
@@ -253,4 +269,10 @@ class CrossValidation:
         elapsed = time.time() - start
         logger.info('Time to complete cross validation: %.0fm %.1fs',
                     elapsed // 60, elapsed % 60)
-        return self.k2s[max_idx], self.zetas[max_idx], self.kappas[max_idx], self.gammas[max_idx]
+        kwargs = {
+            'k2': int(self.k2s[max_idx]),
+            'reliability': np.around(self.zetas[max_idx], decimals=1),
+            'kappa': int(self.kappas[max_idx]),
+            'confidence': np.around(self.gammas[max_idx], decimals=1),
+        }
+        self.applicability_domain.set_params(**kwargs)

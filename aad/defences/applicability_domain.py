@@ -57,8 +57,8 @@ class ApplicabilityDomainContainer(DetectorContainer):
             'k2': k2,
             'reliability': reliability,
             'sample_ratio': sample_ratio,
-            'confidence': confidence,
             'kappa': kappa,
+            'confidence': confidence,
             'disable_s2': disable_s2,
         }
         self.device = model_container.device
