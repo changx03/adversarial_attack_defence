@@ -1,0 +1,19 @@
+2020-04-21 00:45:17,973:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-04-21 00:45:21,820:INFO:data_container:Train size: 60000 - Test size: 10000
+2020-04-21 00:45:21,820:INFO:data_container:Successfully load data. Time to complete: 0m 3.847s
+2020-04-21 00:45:24,137:DEBUG:model_container_pt:Using device: cuda
+2020-04-21 00:45:24,139:INFO:model_container_pt:Loaded model from save/MnistCnnV2_MNIST_e50.pt
+2020-04-21 00:45:24,279:INFO:ad_training_MNIST:Accuracy on test set: 0.990900
+2020-04-21 00:45:24,296:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-04-21 00:45:24,361:INFO:model_container_pt:Loaded model from save/AdvTrain_MnistCnnV2_MNIST.pt
+2020-04-21 00:45:24,395:INFO:ad_training_MNIST:Blocked 15/1000 samples on clean
+2020-04-21 00:45:24,412:INFO:ad_training_MNIST:Accuracy on BIM set: 0.000000
+2020-04-21 00:45:24,445:INFO:ad_training_MNIST:Blocked 983/1000 samples on BIM
+2020-04-21 00:45:24,462:INFO:ad_training_MNIST:Accuracy on Carlini set: 0.097000
+2020-04-21 00:45:24,495:INFO:ad_training_MNIST:Blocked 968/1000 samples on Carlini
+2020-04-21 00:45:24,511:INFO:ad_training_MNIST:Accuracy on DeepFool set: 0.413000
+2020-04-21 00:45:24,544:INFO:ad_training_MNIST:Blocked 583/1000 samples on DeepFool
+2020-04-21 00:45:24,561:INFO:ad_training_MNIST:Accuracy on FGSM set: 0.411000
+2020-04-21 00:45:24,592:INFO:ad_training_MNIST:Blocked 577/1000 samples on FGSM
+2020-04-21 00:45:24,607:INFO:ad_training_MNIST:Accuracy on Saliency set: 0.000000
+2020-04-21 00:45:24,638:INFO:ad_training_MNIST:Blocked 853/1000 samples on Saliency

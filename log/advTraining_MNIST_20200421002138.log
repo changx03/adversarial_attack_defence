@@ -1,0 +1,30 @@
+2020-04-21 00:21:38,662:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-04-21 00:21:42,419:INFO:data_container:Train size: 60000 - Test size: 10000
+2020-04-21 00:21:42,419:INFO:data_container:Successfully load data. Time to complete: 0m 3.758s
+2020-04-21 00:21:44,724:DEBUG:model_container_pt:Using device: cuda
+2020-04-21 00:21:44,726:INFO:model_container_pt:Loaded model from save/MnistCnnV2_MNIST_e50.pt
+2020-04-21 00:21:44,867:INFO:ad_training:Accuracy on test set: 0.990900
+2020-04-21 00:21:44,884:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-04-21 00:21:45,016:DEBUG:adversarial_training:Generate 6000 adv. examples using [BIMContainer]
+2020-04-21 00:22:16,634:INFO:projected_gradient_descent:Success rate of attack: 100.00%
+2020-04-21 00:22:16,790:INFO:bim_attack:Time to complete training 1000 adv. examples: 0m 31.773s
+2020-04-21 00:22:16,792:DEBUG:detector_container:Time to complete [Train Adv. Examples]: 0m 31.781s
+2020-04-21 00:22:19,395:DEBUG:adversarial_training:[1/30]0m 2.602s: Train loss: 0.171241 acc: 0.949450 - Test loss: 0.038152 acc: 0.987400
+2020-04-21 00:22:21,881:DEBUG:adversarial_training:[2/30]0m 2.485s: Train loss: 0.061483 acc: 0.980700 - Test loss: 0.037332 acc: 0.987800
+2020-04-21 00:22:24,364:DEBUG:adversarial_training:[3/30]0m 2.483s: Train loss: 0.037783 acc: 0.987833 - Test loss: 0.034001 acc: 0.989100
+2020-04-21 00:22:26,833:DEBUG:adversarial_training:[4/30]0m 2.468s: Train loss: 0.028373 acc: 0.990933 - Test loss: 0.035449 acc: 0.989200
+2020-04-21 00:22:29,305:DEBUG:adversarial_training:[5/30]0m 2.472s: Train loss: 0.022926 acc: 0.992317 - Test loss: 0.034326 acc: 0.988700
+2020-04-21 00:22:31,773:DEBUG:adversarial_training:[6/30]0m 2.468s: Train loss: 0.020171 acc: 0.993133 - Test loss: 0.047851 acc: 0.986200
+2020-04-21 00:22:34,387:DEBUG:adversarial_training:[7/30]0m 2.613s: Train loss: 0.016252 acc: 0.994533 - Test loss: 0.035921 acc: 0.989400
+2020-04-21 00:22:36,962:DEBUG:adversarial_training:[8/30]0m 2.574s: Train loss: 0.013141 acc: 0.995733 - Test loss: 0.045644 acc: 0.988200
+2020-04-21 00:22:39,450:DEBUG:adversarial_training:[9/30]0m 2.488s: Train loss: 0.013558 acc: 0.995300 - Test loss: 0.030473 acc: 0.990700
+2020-04-21 00:22:42,046:DEBUG:adversarial_training:[10/30]0m 2.595s: Train loss: 0.010961 acc: 0.996483 - Test loss: 0.038354 acc: 0.989300
+2020-04-21 00:22:44,627:DEBUG:adversarial_training:[11/30]0m 2.582s: Train loss: 0.011790 acc: 0.996017 - Test loss: 0.039248 acc: 0.989100
+2020-04-21 00:22:47,215:DEBUG:adversarial_training:[12/30]0m 2.587s: Train loss: 0.009444 acc: 0.996783 - Test loss: 0.048987 acc: 0.986400
+2020-04-21 00:22:49,846:DEBUG:adversarial_training:[13/30]0m 2.631s: Train loss: 0.008033 acc: 0.997333 - Test loss: 0.041663 acc: 0.991100
+2020-04-21 00:22:52,412:DEBUG:adversarial_training:[14/30]0m 2.566s: Train loss: 0.007771 acc: 0.997500 - Test loss: 0.048041 acc: 0.988600
+2020-04-21 00:22:55,016:DEBUG:adversarial_training:[15/30]0m 2.604s: Train loss: 0.008822 acc: 0.997050 - Test loss: 0.036449 acc: 0.989700
+2020-04-21 00:22:57,829:DEBUG:adversarial_training:[16/30]0m 2.812s: Train loss: 0.007936 acc: 0.997300 - Test loss: 0.052221 acc: 0.987400
+2020-04-21 00:23:00,568:DEBUG:adversarial_training:[17/30]0m 2.738s: Train loss: 0.008252 acc: 0.997267 - Test loss: 0.042197 acc: 0.990200
+2020-04-21 00:23:00,568:DEBUG:adversarial_training:No improvement in the last 5 epochs. Abort at 16 epoch!
+2020-04-21 00:23:00,578:INFO:model_container_pt:Saved model to save/AdvTrain_MnistCnnV2_MNIST.pt
