@@ -38,8 +38,8 @@ python ./cmd/defend_ad.py -vl -a ./save/IrisNN_WheatSeed_Carlini_adv.npy -p ./cm
 python ./cmd/defend_ad.py -vl -a ./save/IrisNN_WheatSeed_DeepFool_adv.npy -p ./cmd/AdParamsNumeral.json -m ./save/IrisNN_WheatSeed_e300.pt
 python ./cmd/defend_ad.py -vl -a ./save/IrisNN_WheatSeed_FGSM_adv.npy -p ./cmd/AdParamsNumeral.json -m ./save/IrisNN_WheatSeed_e300.pt
 
-python ./cmd/defend_ad.py -vl -a ./save/CifarResnet50_MNIST_BIM_adv.npy -p ./cmd/AdParamsImage.json -m ./save/MnistCnnV2_MNIST_e50.pt
-python ./cmd/defend_ad.py -vl -a ./save/CifarResnet50_MNIST_Carlini_adv.npy -p ./cmd/AdParamsImage.json -m ./save/MnistCnnV2_MNIST_e50.pt
-python ./cmd/defend_ad.py -vl -a ./save/CifarResnet50_MNIST_DeepFool_adv.npy -p ./cmd/AdParamsImage.json -m ./save/MnistCnnV2_MNIST_e50.pt
-python ./cmd/defend_ad.py -vl -a ./save/CifarResnet50_MNIST_FGSM_adv.npy -p ./cmd/AdParamsImage.json -m ./save/MnistCnnV2_MNIST_e50.pt
-python ./cmd/defend_ad.py -vl -a ./save/CifarResnet50_MNIST_Saliency_adv.npy -p ./cmd/AdParamsImage.json -m ./save/MnistCnnV2_MNIST_e50.pt
+python ./cmd/defend_ad.py -vl -a ./save/MnistCnnV2_MNIST_BIM_adv.npy -p ./cmd/AdParamsImage.json -m ./save/MnistCnnV2_MNIST_e50.pt
+python ./cmd/defend_ad.py -vl -a ./save/MnistCnnV2_MNIST_Carlini_adv.npy -p ./cmd/AdParamsImage.json -m ./save/MnistCnnV2_MNIST_e50.pt
+python ./cmd/defend_ad.py -vl -a ./save/MnistCnnV2_MNIST_DeepFool_adv.npy -p ./cmd/AdParamsImage.json -m ./save/MnistCnnV2_MNIST_e50.pt
+python ./cmd/defend_ad.py -vl -a ./save/MnistCnnV2_MNIST_FGSM_adv.npy -p ./cmd/AdParamsImage.json -m ./save/MnistCnnV2_MNIST_e50.pt
+python ./cmd/defend_ad.py -vl -a ./save/MnistCnnV2_MNIST_Saliency_adv.npy -p ./cmd/AdParamsImage.json -m ./save/MnistCnnV2_MNIST_e50.pt
