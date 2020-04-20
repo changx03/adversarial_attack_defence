@@ -58,7 +58,7 @@ class AdversarialTraining(DetectorContainer):
     def attacks(self):
         return self._attacks
 
-    def fit(self, max_epochs=10, batch_size=128, ratio=0.2):
+    def fit(self, max_epochs=10, batch_size=128, ratio=0.2, early_stop=False):
         """
         Train the classifier with adversarial examples.
 
@@ -111,7 +111,8 @@ class AdversarialTraining(DetectorContainer):
 
         # train
         y_train = dc.y_train
-        self.fit_discriminator(x_train, y_train, max_epochs, batch_size)
+        self.fit_discriminator(
+            x_train, y_train, max_epochs, batch_size, early_stop)
 
     def save(self, filename, overwrite=False):
         """Save trained parameters."""
@@ -153,7 +154,7 @@ class AdversarialTraining(DetectorContainer):
             return blocked_indices, adv[passed_indices]
         return blocked_indices
 
-    def fit_discriminator(self, x_train, y_train, max_epochs, batch_size):
+    def fit_discriminator(self, x_train, y_train, max_epochs, batch_size, early_stop=False):
         """
         Train the model with an extra train set.
 
@@ -226,17 +227,18 @@ class AdversarialTraining(DetectorContainer):
             mc.accuracy_test.append(va_acc)
 
             # early stopping
-            if (tr_acc >= 0.999 and va_acc >= 0.999) or tr_loss < 1e-4:
-                logger.debug(
-                    'Satisfied the accuracy threshold. Abort at %d epoch!',
-                    epoch)
-                break
-            if len(mc.loss_train) - 5 >= 0 \
-                    and mc.loss_train[-5] <= mc.loss_train[-1]:
-                logger.debug(
-                    'No improvement in the last 5 epochs. Abort at %d epoch!',
-                    epoch)
-                break
+            if early_stop:
+                if (tr_acc >= 0.999 and va_acc >= 0.999) or tr_loss < 1e-4:
+                    logger.debug(
+                        'Satisfied the accuracy threshold. Abort at %d epoch!',
+                        epoch)
+                    break
+                if len(mc.loss_train) - 5 >= 0 \
+                        and mc.loss_train[-5] <= mc.loss_train[-1]:
+                    logger.debug(
+                        'No improvement in the last 5 epochs. Abort at %d epoch!',
+                        epoch)
+                    break
 
         model.load_state_dict(best_model_state)
 
