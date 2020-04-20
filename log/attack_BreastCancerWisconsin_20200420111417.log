@@ -1,0 +1,61 @@
+2020-04-20 11:14:17,951:INFO:attack:Start at   : 20200420111417
+2020-04-20 11:14:17,952:INFO:attack:RECEIVED PARAMETERS:
+2020-04-20 11:14:17,952:INFO:attack:model file :./save/BCNN_BreastCancerWisconsin_e200.pt
+2020-04-20 11:14:17,952:INFO:attack:model      :BCNN
+2020-04-20 11:14:17,952:INFO:attack:dataset    :BreastCancerWisconsin
+2020-04-20 11:14:17,952:INFO:attack:params     :./cmd/AttackParams.json
+2020-04-20 11:14:17,952:INFO:attack:num_adv    :1000
+2020-04-20 11:14:17,952:INFO:attack:seed       :4096
+2020-04-20 11:14:17,952:INFO:attack:verbose    :True
+2020-04-20 11:14:17,952:INFO:attack:save_log   :True
+2020-04-20 11:14:17,952:INFO:attack:overwrite  :True
+2020-04-20 11:14:17,952:INFO:attack:dirname    :'./save'
+2020-04-20 11:14:17,952:INFO:attack:attacks    :FGSM, BIM, Carlini, DeepFool
+2020-04-20 11:14:17,952:DEBUG:utils:Setting random seed for PyTorch.
+2020-04-20 11:14:17,979:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-04-20 11:14:17,979:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/BreastCancerWisconsin.csv
+2020-04-20 11:14:18,007:INFO:data_container:Train size: 455 - Test size: 114
+2020-04-20 11:14:18,007:INFO:data_container:Successfully load data. Time to complete: 0m 0.028s
+2020-04-20 11:14:18,008:INFO:attack:Use BCNN model
+2020-04-20 11:14:20,316:DEBUG:model_container_pt:Using device: cuda
+2020-04-20 11:14:20,326:INFO:model_container_pt:Loaded model from ./save/BCNN_BreastCancerWisconsin_e200.pt
+2020-04-20 11:14:20,346:INFO:attack:Accuracy on test set: 0.973684
+2020-04-20 11:14:20,346:DEBUG:attack:FGSM params: {'eps': 0.3, 'eps_step': 0.1, 'minimal': True}
+2020-04-20 11:14:20,346:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-04-20 11:14:20,346:INFO:fast_gradient:Using model predictions as correct labels for FGM.
+2020-04-20 11:14:20,348:INFO:fast_gradient:Performing minimal perturbation FGM.
+2020-04-20 11:14:20,353:INFO:fast_gradient:Success rate of FGM attack: 97.37%
+2020-04-20 11:14:20,355:INFO:fgsm_attack:Time to complete training 114 adv. examples: 0m 0.009s
+2020-04-20 11:14:20,355:INFO:attack:# of adv created from BCNN_BreastCancerWisconsin: 114
+2020-04-20 11:14:20,356:INFO:attack:Success rate of FGSM: 0.973684
+2020-04-20 11:14:20,356:INFO:attack:Accuracy on FGSM: 0.026316
+2020-04-20 11:14:20,356:DEBUG:attack:Save adv. attack results into: BCNN_BreastCancerWisconsin_FGSM
+2020-04-20 11:14:20,356:INFO:attack_container:Saved results to save/BCNN_BreastCancerWisconsin_FGSM_adv.npy
+2020-04-20 11:14:20,356:DEBUG:attack:BIM params: {'eps': 0.3, 'eps_step': 0.1, 'max_iter': 100, 'targeted': False}
+2020-04-20 11:14:20,356:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-04-20 11:14:20,559:INFO:projected_gradient_descent:Success rate of attack: 99.12%
+2020-04-20 11:14:20,561:INFO:bim_attack:Time to complete training 114 adv. examples: 0m 0.204s
+2020-04-20 11:14:20,561:INFO:attack:# of adv created from BCNN_BreastCancerWisconsin: 114
+2020-04-20 11:14:20,561:INFO:attack:Success rate of BIM: 0.991228
+2020-04-20 11:14:20,562:INFO:attack:Accuracy on BIM: 0.008772
+2020-04-20 11:14:20,562:DEBUG:attack:Save adv. attack results into: BCNN_BreastCancerWisconsin_BIM
+2020-04-20 11:14:20,562:INFO:attack_container:Saved results to save/BCNN_BreastCancerWisconsin_BIM_adv.npy
+2020-04-20 11:14:20,562:DEBUG:attack:Carlini params: {'targeted': False, 'learning_rate': 0.01, 'binary_search_steps': 9, 'max_iter': 1000, 'confidence': 0, 'initial_const': 0.001, 'c_range': [0, 10000000000.0], 'abort_early': False, 'batch_size': 64}
+2020-04-20 11:14:45,362:DEBUG:carlini_l2_attack_v2:[   0/ 114] -  0m 24.8s - L2 mean: 468750016.0000
+2020-04-20 11:15:08,248:DEBUG:carlini_l2_attack_v2:[  64/ 114] -  0m 22.9s - L2 mean: 600000000.0000
+2020-04-20 11:15:08,248:DEBUG:attack_container:Time to complete [Carlini & Wagner Attack L2]: 0m 47.685s
+2020-04-20 11:15:08,253:INFO:carlini_l2_attack_v2:Time to complete training 114 adv. examples: 0m 47.690s
+2020-04-20 11:15:08,253:INFO:attack:# of adv created from BCNN_BreastCancerWisconsin: 114
+2020-04-20 11:15:08,254:INFO:attack:Success rate of Carlini: 0.473684
+2020-04-20 11:15:08,254:INFO:attack:Accuracy on Carlini: 0.526316
+2020-04-20 11:15:08,254:DEBUG:attack:Save adv. attack results into: BCNN_BreastCancerWisconsin_Carlini
+2020-04-20 11:15:08,254:INFO:attack_container:Saved results to save/BCNN_BreastCancerWisconsin_Carlini_adv.npy
+2020-04-20 11:15:08,254:DEBUG:attack:DeepFool params: {'max_iter': 100, 'epsilon': 1e-06, 'nb_grads': 10, 'batch_size': 16}
+2020-04-20 11:15:08,255:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-04-20 11:15:09,314:INFO:deepfool:Success rate of DeepFool attack: 92.98%
+2020-04-20 11:15:09,315:INFO:deepfool_attack:Time to complete training 114 adv. examples: 0m 1.061s
+2020-04-20 11:15:09,315:INFO:attack:# of adv created from BCNN_BreastCancerWisconsin: 114
+2020-04-20 11:15:09,317:INFO:attack:Success rate of DeepFool: 0.921053
+2020-04-20 11:15:09,317:INFO:attack:Accuracy on DeepFool: 0.078947
+2020-04-20 11:15:09,317:DEBUG:attack:Save adv. attack results into: BCNN_BreastCancerWisconsin_DeepFool
+2020-04-20 11:15:09,318:INFO:attack_container:Saved results to save/BCNN_BreastCancerWisconsin_DeepFool_adv.npy

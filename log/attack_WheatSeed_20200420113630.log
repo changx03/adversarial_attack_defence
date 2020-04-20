@@ -1,0 +1,60 @@
+2020-04-20 11:36:30,086:INFO:attack:Start at   : 20200420113630
+2020-04-20 11:36:30,086:INFO:attack:RECEIVED PARAMETERS:
+2020-04-20 11:36:30,086:INFO:attack:model file :./save/IrisNN_WheatSeed_e300.pt
+2020-04-20 11:36:30,086:INFO:attack:model      :IrisNN
+2020-04-20 11:36:30,086:INFO:attack:dataset    :WheatSeed
+2020-04-20 11:36:30,086:INFO:attack:params     :./cmd/AttackParams.json
+2020-04-20 11:36:30,086:INFO:attack:num_adv    :1000
+2020-04-20 11:36:30,087:INFO:attack:seed       :4096
+2020-04-20 11:36:30,087:INFO:attack:verbose    :True
+2020-04-20 11:36:30,087:INFO:attack:save_log   :True
+2020-04-20 11:36:30,087:INFO:attack:overwrite  :True
+2020-04-20 11:36:30,087:INFO:attack:dirname    :'./save'
+2020-04-20 11:36:30,087:INFO:attack:attacks    :FGSM, BIM, Carlini, DeepFool
+2020-04-20 11:36:30,087:DEBUG:utils:Setting random seed for PyTorch.
+2020-04-20 11:36:30,122:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-04-20 11:36:30,122:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/seeds_dataset.txt
+2020-04-20 11:36:30,146:INFO:data_container:Train size: 168 - Test size: 42
+2020-04-20 11:36:30,146:INFO:data_container:Successfully load data. Time to complete: 0m 0.024s
+2020-04-20 11:36:30,148:INFO:attack:Use IrisNN model
+2020-04-20 11:36:32,500:DEBUG:model_container_pt:Using device: cuda
+2020-04-20 11:36:32,508:INFO:model_container_pt:Loaded model from ./save/IrisNN_WheatSeed_e300.pt
+2020-04-20 11:36:32,530:INFO:attack:Accuracy on test set: 0.904762
+2020-04-20 11:36:32,530:DEBUG:attack:FGSM params: {'eps': 0.3, 'eps_step': 0.1, 'minimal': True}
+2020-04-20 11:36:32,530:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-04-20 11:36:32,530:INFO:fast_gradient:Using model predictions as correct labels for FGM.
+2020-04-20 11:36:32,531:INFO:fast_gradient:Performing minimal perturbation FGM.
+2020-04-20 11:36:32,533:INFO:fast_gradient:Success rate of FGM attack: 76.19%
+2020-04-20 11:36:32,534:INFO:fgsm_attack:Time to complete training 42 adv. examples: 0m 0.004s
+2020-04-20 11:36:32,534:INFO:attack:# of adv created from IrisNN_WheatSeed: 42
+2020-04-20 11:36:32,534:INFO:attack:Success rate of FGSM: 0.761905
+2020-04-20 11:36:32,534:INFO:attack:Accuracy on FGSM: 0.238095
+2020-04-20 11:36:32,534:DEBUG:attack:Save adv. attack results into: IrisNN_WheatSeed_FGSM
+2020-04-20 11:36:32,535:INFO:attack_container:Saved results to save/IrisNN_WheatSeed_FGSM_adv.npy
+2020-04-20 11:36:32,535:DEBUG:attack:BIM params: {'eps': 0.3, 'eps_step': 0.1, 'max_iter': 100, 'targeted': False}
+2020-04-20 11:36:32,535:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-04-20 11:36:32,630:INFO:projected_gradient_descent:Success rate of attack: 92.86%
+2020-04-20 11:36:32,631:INFO:bim_attack:Time to complete training 42 adv. examples: 0m 0.096s
+2020-04-20 11:36:32,631:INFO:attack:# of adv created from IrisNN_WheatSeed: 42
+2020-04-20 11:36:32,632:INFO:attack:Success rate of BIM: 0.928571
+2020-04-20 11:36:32,632:INFO:attack:Accuracy on BIM: 0.071429
+2020-04-20 11:36:32,632:DEBUG:attack:Save adv. attack results into: IrisNN_WheatSeed_BIM
+2020-04-20 11:36:32,633:INFO:attack_container:Saved results to save/IrisNN_WheatSeed_BIM_adv.npy
+2020-04-20 11:36:32,633:DEBUG:attack:Carlini params: {'targeted': False, 'learning_rate': 0.01, 'binary_search_steps': 9, 'max_iter': 1000, 'confidence': 0, 'initial_const': 0.001, 'c_range': [0, 10000000000.0], 'abort_early': False, 'batch_size': 64}
+2020-04-20 11:36:53,972:DEBUG:carlini_l2_attack_v2:[   0/  42] -  0m 21.3s - L2 mean: 714285760.0000
+2020-04-20 11:36:53,972:DEBUG:attack_container:Time to complete [Carlini & Wagner Attack L2]: 0m 21.339s
+2020-04-20 11:36:53,976:INFO:carlini_l2_attack_v2:Time to complete training 42 adv. examples: 0m 21.343s
+2020-04-20 11:36:53,976:INFO:attack:# of adv created from IrisNN_WheatSeed: 42
+2020-04-20 11:36:53,976:INFO:attack:Success rate of Carlini: 0.785714
+2020-04-20 11:36:53,977:INFO:attack:Accuracy on Carlini: 0.214286
+2020-04-20 11:36:53,977:DEBUG:attack:Save adv. attack results into: IrisNN_WheatSeed_Carlini
+2020-04-20 11:36:53,977:INFO:attack_container:Saved results to save/IrisNN_WheatSeed_Carlini_adv.npy
+2020-04-20 11:36:53,977:DEBUG:attack:DeepFool params: {'max_iter': 100, 'epsilon': 1e-06, 'nb_grads': 10, 'batch_size': 16}
+2020-04-20 11:36:53,977:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-04-20 11:36:54,295:INFO:deepfool:Success rate of DeepFool attack: 92.86%
+2020-04-20 11:36:54,297:INFO:deepfool_attack:Time to complete training 42 adv. examples: 0m 0.319s
+2020-04-20 11:36:54,297:INFO:attack:# of adv created from IrisNN_WheatSeed: 42
+2020-04-20 11:36:54,298:INFO:attack:Success rate of DeepFool: 0.952381
+2020-04-20 11:36:54,298:INFO:attack:Accuracy on DeepFool: 0.047619
+2020-04-20 11:36:54,298:DEBUG:attack:Save adv. attack results into: IrisNN_WheatSeed_DeepFool
+2020-04-20 11:36:54,299:INFO:attack_container:Saved results to save/IrisNN_WheatSeed_DeepFool_adv.npy

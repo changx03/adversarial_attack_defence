@@ -1,0 +1,31 @@
+2020-04-20 17:14:19,783:INFO:attack:Start at   : 20200420171419
+2020-04-20 17:14:19,783:INFO:attack:RECEIVED PARAMETERS:
+2020-04-20 17:14:19,783:INFO:attack:model file :./save/MnistCnnV2_MNIST_e50.pt
+2020-04-20 17:14:19,783:INFO:attack:model      :MnistCnnV2
+2020-04-20 17:14:19,784:INFO:attack:dataset    :MNIST
+2020-04-20 17:14:19,784:INFO:attack:params     :./cmd/AttackParams.json
+2020-04-20 17:14:19,784:INFO:attack:num_adv    :1000
+2020-04-20 17:14:19,784:INFO:attack:seed       :4096
+2020-04-20 17:14:19,784:INFO:attack:verbose    :True
+2020-04-20 17:14:19,784:INFO:attack:save_log   :True
+2020-04-20 17:14:19,784:INFO:attack:overwrite  :True
+2020-04-20 17:14:19,784:INFO:attack:dirname    :'./save'
+2020-04-20 17:14:19,784:INFO:attack:attacks    :Saliency
+2020-04-20 17:14:19,784:DEBUG:utils:Setting random seed for PyTorch.
+2020-04-20 17:14:19,804:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-04-20 17:14:23,655:INFO:data_container:Train size: 60000 - Test size: 10000
+2020-04-20 17:14:23,655:INFO:data_container:Successfully load data. Time to complete: 0m 3.851s
+2020-04-20 17:14:23,657:INFO:attack:Use MnistCnnV2 model
+2020-04-20 17:14:26,029:DEBUG:model_container_pt:Using device: cuda
+2020-04-20 17:14:26,030:INFO:model_container_pt:Loaded model from ./save/MnistCnnV2_MNIST_e50.pt
+2020-04-20 17:14:26,180:INFO:attack:Accuracy on test set: 0.990900
+2020-04-20 17:14:26,181:DEBUG:attack:Saliency params: {'theta': 0.1, 'gamma': 1.0, 'batch_size': 16}
+2020-04-20 17:14:26,197:DEBUG:saliency_map_attack:clip_values = (0.0, 1.0)
+2020-04-20 17:14:26,198:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-04-20 17:17:08,133:INFO:saliency_map:Success rate of JSMA attack: 100.00%
+2020-04-20 17:17:08,164:INFO:saliency_map_attack:Time to complete training 1000 adv. examples: 2m 41.966s
+2020-04-20 17:17:08,164:INFO:attack:# of adv created from MnistCnnV2_MNIST: 1000
+2020-04-20 17:17:08,179:INFO:attack:Success rate of Saliency: 1.000000
+2020-04-20 17:17:08,179:INFO:attack:Accuracy on Saliency: 0.000000
+2020-04-20 17:17:08,179:DEBUG:attack:Save adv. attack results into: MnistCnnV2_MNIST_Saliency
+2020-04-20 17:17:08,213:INFO:attack_container:Saved results to save/MnistCnnV2_MNIST_Saliency_adv.npy
