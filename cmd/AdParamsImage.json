@@ -1,0 +1,8 @@
+{
+  "k2": 1,
+  "reliability": 1.0,
+  "sample_ratio": 0.2,
+  "kappa": 16,
+  "confidence": 0.9,
+  "disable_s2": false
+}

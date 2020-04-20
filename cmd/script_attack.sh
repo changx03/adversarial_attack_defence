@@ -1,6 +1,5 @@
 #!/bin/bash
-
-# use chmod +x ./cmd/attack.sh to give execute permission
+# chmod +x ./cmd/script_attack.sh
 
 python ./cmd/attack.py -m ./save/IrisNN_Iris_e200.pt -p ./cmd/AttackParams.json -lvw -BCDF
 python ./cmd/attack.py -m ./save/BCNN_BreastCancerWisconsin_e200.pt -p ./cmd/AttackParams.json -lvw -BCDF
