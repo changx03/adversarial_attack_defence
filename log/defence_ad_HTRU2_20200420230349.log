@@ -1,0 +1,39 @@
+2020-04-20 23:03:49,663:INFO:defend_ad:Start at    : 20200420230349
+2020-04-20 23:03:49,663:INFO:defend_ad:RECEIVED PARAMETERS:
+2020-04-20 23:03:49,663:INFO:defend_ad:model file  :./save/IrisNN_HTRU2_e200.pt
+2020-04-20 23:03:49,663:INFO:defend_ad:adv file    :./save/IrisNN_HTRU2_BIM_adv.npy
+2020-04-20 23:03:49,663:INFO:defend_ad:model       :IrisNN
+2020-04-20 23:03:49,663:INFO:defend_ad:dataset     :HTRU2
+2020-04-20 23:03:49,663:INFO:defend_ad:param file  :./cmd/AdParamsNumeral.json
+2020-04-20 23:03:49,663:INFO:defend_ad:seed        :4096
+2020-04-20 23:03:49,664:INFO:defend_ad:verbose     :True
+2020-04-20 23:03:49,664:INFO:defend_ad:save_log    :True
+2020-04-20 23:03:49,664:INFO:defend_ad:check_clean :True
+2020-04-20 23:03:49,664:DEBUG:defend_ad:params     : {'k2': 1, 'reliability': 1.0, 'sample_ratio': 1.0, 'kappa': 6, 'confidence': 0.8, 'disable_s2': False}
+2020-04-20 23:03:49,664:DEBUG:utils:Setting random seed for PyTorch.
+2020-04-20 23:03:49,691:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-04-20 23:03:49,691:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/HTRU2/HTRU_2.arff
+2020-04-20 23:03:49,755:INFO:data_container:Train size: 14318 - Test size: 3580
+2020-04-20 23:03:49,755:INFO:data_container:Successfully load data. Time to complete: 0m 0.064s
+2020-04-20 23:03:49,756:INFO:defend_ad:Use IrisNN model
+2020-04-20 23:03:52,136:DEBUG:model_container_pt:Using device: cuda
+2020-04-20 23:03:52,144:INFO:model_container_pt:Loaded model from ./save/IrisNN_HTRU2_e200.pt
+2020-04-20 23:03:52,223:INFO:defend_ad:Accuracy on test set: 0.980726
+2020-04-20 23:03:52,279:DEBUG:applicability_domain:Number of input attributes: 32
+2020-04-20 23:03:52,281:DEBUG:detector_container:Time to complete [AD Stage 1]: 0m 0.001s
+2020-04-20 23:03:52,518:DEBUG:detector_container:Time to complete [AD Stage 2]: 0m 0.237s
+2020-04-20 23:03:52,518:DEBUG:applicability_domain:k for Stage 3: 12
+2020-04-20 23:03:52,630:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 14318
+2020-04-20 23:03:54,129:DEBUG:applicability_domain:Train set likelihood: 0.980939
+2020-04-20 23:03:54,129:DEBUG:detector_container:Time to complete [AD Stage 3]: 0m 1.611s
+2020-04-20 23:03:54,137:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-04-20 23:03:54,345:DEBUG:applicability_domain:Stage 2: blocked 89 inputs
+2020-04-20 23:03:54,542:DEBUG:applicability_domain:Mean likelihood on adv: 0.984449
+2020-04-20 23:03:54,542:DEBUG:applicability_domain:Stage 3: blocked 18 inputs
+2020-04-20 23:03:54,542:INFO:defend_ad:Blocked 107/1000 samples on clean samples
+2020-04-20 23:03:54,551:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-04-20 23:03:54,758:DEBUG:applicability_domain:Stage 2: blocked 1000 inputs
+2020-04-20 23:03:54,759:DEBUG:applicability_domain:Stage 3: blocked 0 inputs
+2020-04-20 23:03:54,759:INFO:defend_ad:Blocked 1000/1000 samples on adv. examples
+2020-04-20 23:03:54,759:INFO:defend_ad:[result]./save/IrisNN_HTRU2_e200.pt,./save/IrisNN_HTRU2_BIM_adv.npy,1,1.0,1.0,0.8,6,False,clean,0,89,18
+2020-04-20 23:03:54,760:INFO:defend_ad:[result]./save/IrisNN_HTRU2_e200.pt,./save/IrisNN_HTRU2_BIM_adv.npy,1,1.0,1.0,0.8,6,False,adv,0,1000,0

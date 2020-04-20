@@ -1,0 +1,39 @@
+2020-04-20 23:11:59,243:INFO:defend_ad:Start at    : 20200420231159
+2020-04-20 23:11:59,244:INFO:defend_ad:RECEIVED PARAMETERS:
+2020-04-20 23:11:59,244:INFO:defend_ad:model file  :./save/MnistCnnV2_MNIST_e50.pt
+2020-04-20 23:11:59,244:INFO:defend_ad:adv file    :./save/MnistCnnV2_MNIST_Saliency_adv.npy
+2020-04-20 23:11:59,244:INFO:defend_ad:model       :MnistCnnV2
+2020-04-20 23:11:59,244:INFO:defend_ad:dataset     :MNIST
+2020-04-20 23:11:59,244:INFO:defend_ad:param file  :./cmd/AdParamsImage.json
+2020-04-20 23:11:59,244:INFO:defend_ad:seed        :4096
+2020-04-20 23:11:59,244:INFO:defend_ad:verbose     :True
+2020-04-20 23:11:59,244:INFO:defend_ad:save_log    :True
+2020-04-20 23:11:59,244:INFO:defend_ad:check_clean :True
+2020-04-20 23:11:59,244:DEBUG:defend_ad:params     : {'k2': 1, 'reliability': 1.0, 'sample_ratio': 0.2, 'kappa': 16, 'confidence': 0.9, 'disable_s2': False}
+2020-04-20 23:11:59,244:DEBUG:utils:Setting random seed for PyTorch.
+2020-04-20 23:11:59,266:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-04-20 23:12:03,016:INFO:data_container:Train size: 60000 - Test size: 10000
+2020-04-20 23:12:03,016:INFO:data_container:Successfully load data. Time to complete: 0m 3.750s
+2020-04-20 23:12:03,019:INFO:defend_ad:Use MnistCnnV2 model
+2020-04-20 23:12:05,297:DEBUG:model_container_pt:Using device: cuda
+2020-04-20 23:12:05,299:INFO:model_container_pt:Loaded model from ./save/MnistCnnV2_MNIST_e50.pt
+2020-04-20 23:12:05,438:INFO:defend_ad:Accuracy on test set: 0.990900
+2020-04-20 23:12:06,109:DEBUG:applicability_domain:Number of input attributes: 128
+2020-04-20 23:12:06,128:DEBUG:detector_container:Time to complete [AD Stage 1]: 0m 0.019s
+2020-04-20 23:12:10,146:DEBUG:detector_container:Time to complete [AD Stage 2]: 0m 4.018s
+2020-04-20 23:12:10,146:DEBUG:applicability_domain:k for Stage 3: 160
+2020-04-20 23:12:14,147:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 12000
+2020-04-20 23:12:21,177:DEBUG:applicability_domain:Train set likelihood: 0.995859
+2020-04-20 23:12:21,179:DEBUG:detector_container:Time to complete [AD Stage 3]: 0m 11.032s
+2020-04-20 23:12:21,205:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-04-20 23:12:22,253:DEBUG:applicability_domain:Stage 2: blocked 143 inputs
+2020-04-20 23:12:22,987:DEBUG:applicability_domain:Mean likelihood on adv: 0.999781
+2020-04-20 23:12:22,987:DEBUG:applicability_domain:Stage 3: blocked 0 inputs
+2020-04-20 23:12:22,987:INFO:defend_ad:Blocked 143/1000 samples on clean samples
+2020-04-20 23:12:23,013:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-04-20 23:12:23,641:DEBUG:applicability_domain:Stage 2: blocked 974 inputs
+2020-04-20 23:12:23,796:DEBUG:applicability_domain:Mean likelihood on adv: 0.549279
+2020-04-20 23:12:23,796:DEBUG:applicability_domain:Stage 3: blocked 2 inputs
+2020-04-20 23:12:23,797:INFO:defend_ad:Blocked 976/1000 samples on adv. examples
+2020-04-20 23:12:23,797:INFO:defend_ad:[result]./save/MnistCnnV2_MNIST_e50.pt,./save/MnistCnnV2_MNIST_Saliency_adv.npy,1,1.0,0.2,0.9,16,False,clean,0,143,0
+2020-04-20 23:12:23,797:INFO:defend_ad:[result]./save/MnistCnnV2_MNIST_e50.pt,./save/MnistCnnV2_MNIST_Saliency_adv.npy,1,1.0,0.2,0.9,16,False,adv,0,974,2

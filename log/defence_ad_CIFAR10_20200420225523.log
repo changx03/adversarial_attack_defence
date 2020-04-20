@@ -1,0 +1,39 @@
+2020-04-20 22:55:23,188:INFO:defend_ad:Start at    : 20200420225523
+2020-04-20 22:55:23,189:INFO:defend_ad:RECEIVED PARAMETERS:
+2020-04-20 22:55:23,189:INFO:defend_ad:model file  :./save/CifarResnet50_CIFAR10_e30.pt
+2020-04-20 22:55:23,189:INFO:defend_ad:adv file    :./save/CifarResnet50_CIFAR10_Saliency_adv.npy
+2020-04-20 22:55:23,189:INFO:defend_ad:model       :CifarResnet50
+2020-04-20 22:55:23,189:INFO:defend_ad:dataset     :CIFAR10
+2020-04-20 22:55:23,189:INFO:defend_ad:param file  :./cmd/AdParamsImage.json
+2020-04-20 22:55:23,189:INFO:defend_ad:seed        :4096
+2020-04-20 22:55:23,189:INFO:defend_ad:verbose     :True
+2020-04-20 22:55:23,189:INFO:defend_ad:save_log    :True
+2020-04-20 22:55:23,189:INFO:defend_ad:check_clean :True
+2020-04-20 22:55:23,189:DEBUG:defend_ad:params     : {'k2': 1, 'reliability': 1.0, 'sample_ratio': 0.2, 'kappa': 16, 'confidence': 0.9, 'disable_s2': False}
+2020-04-20 22:55:23,189:DEBUG:utils:Setting random seed for PyTorch.
+2020-04-20 22:55:23,211:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-04-20 22:55:28,772:INFO:data_container:Train size: 50000 - Test size: 10000
+2020-04-20 22:55:28,772:INFO:data_container:Successfully load data. Time to complete: 0m 5.561s
+2020-04-20 22:55:29,110:INFO:defend_ad:Use CifarResnet50 model
+2020-04-20 22:55:31,401:DEBUG:model_container_pt:Using device: cuda
+2020-04-20 22:55:31,457:INFO:model_container_pt:Loaded model from ./save/CifarResnet50_CIFAR10_e30.pt
+2020-04-20 22:55:32,663:INFO:defend_ad:Accuracy on test set: 0.819600
+2020-04-20 22:55:37,796:DEBUG:applicability_domain:Number of input attributes: 2048
+2020-04-20 22:55:38,051:DEBUG:detector_container:Time to complete [AD Stage 1]: 0m 0.255s
+2020-04-20 22:58:10,782:DEBUG:detector_container:Time to complete [AD Stage 2]: 2m 32.730s
+2020-04-20 22:58:10,782:DEBUG:applicability_domain:k for Stage 3: 160
+2020-04-20 22:58:26,220:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 10000
+2020-04-20 23:03:01,077:DEBUG:applicability_domain:Train set likelihood: 0.999682
+2020-04-20 23:03:01,088:DEBUG:detector_container:Time to complete [AD Stage 3]: 4m 50.306s
+2020-04-20 23:03:01,244:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-04-20 23:03:04,870:DEBUG:applicability_domain:Stage 2: blocked 232 inputs
+2020-04-20 23:03:26,109:DEBUG:applicability_domain:Mean likelihood on adv: 0.973527
+2020-04-20 23:03:26,109:DEBUG:applicability_domain:Stage 3: blocked 48 inputs
+2020-04-20 23:03:26,111:INFO:defend_ad:Blocked 280/1000 samples on clean samples
+2020-04-20 23:03:26,279:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-04-20 23:03:30,013:DEBUG:applicability_domain:Stage 2: blocked 980 inputs
+2020-04-20 23:03:30,866:DEBUG:applicability_domain:Mean likelihood on adv: 0.729688
+2020-04-20 23:03:30,866:DEBUG:applicability_domain:Stage 3: blocked 0 inputs
+2020-04-20 23:03:30,867:INFO:defend_ad:Blocked 980/1000 samples on adv. examples
+2020-04-20 23:03:30,867:INFO:defend_ad:[result]./save/CifarResnet50_CIFAR10_e30.pt,./save/CifarResnet50_CIFAR10_Saliency_adv.npy,1,1.0,0.2,0.9,16,False,clean,0,232,48
+2020-04-20 23:03:30,867:INFO:defend_ad:[result]./save/CifarResnet50_CIFAR10_e30.pt,./save/CifarResnet50_CIFAR10_Saliency_adv.npy,1,1.0,0.2,0.9,16,False,adv,0,980,0

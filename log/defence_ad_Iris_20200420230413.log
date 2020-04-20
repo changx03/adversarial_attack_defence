@@ -1,0 +1,40 @@
+2020-04-20 23:04:13,078:INFO:defend_ad:Start at    : 20200420230413
+2020-04-20 23:04:13,078:INFO:defend_ad:RECEIVED PARAMETERS:
+2020-04-20 23:04:13,079:INFO:defend_ad:model file  :./save/IrisNN_Iris_e200.pt
+2020-04-20 23:04:13,079:INFO:defend_ad:adv file    :./save/IrisNN_Iris_BIM_adv.npy
+2020-04-20 23:04:13,079:INFO:defend_ad:model       :IrisNN
+2020-04-20 23:04:13,079:INFO:defend_ad:dataset     :Iris
+2020-04-20 23:04:13,079:INFO:defend_ad:param file  :./cmd/AdParamsNumeral.json
+2020-04-20 23:04:13,079:INFO:defend_ad:seed        :4096
+2020-04-20 23:04:13,079:INFO:defend_ad:verbose     :True
+2020-04-20 23:04:13,079:INFO:defend_ad:save_log    :True
+2020-04-20 23:04:13,079:INFO:defend_ad:check_clean :True
+2020-04-20 23:04:13,079:DEBUG:defend_ad:params     : {'k2': 1, 'reliability': 1.0, 'sample_ratio': 1.0, 'kappa': 6, 'confidence': 0.8, 'disable_s2': False}
+2020-04-20 23:04:13,079:DEBUG:utils:Setting random seed for PyTorch.
+2020-04-20 23:04:13,099:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-04-20 23:04:13,099:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/iris.data
+2020-04-20 23:04:13,105:INFO:data_container:Train size: 90 - Test size: 60
+2020-04-20 23:04:13,105:INFO:data_container:Successfully load data. Time to complete: 0m 0.006s
+2020-04-20 23:04:13,106:INFO:defend_ad:Use IrisNN model
+2020-04-20 23:04:15,391:DEBUG:model_container_pt:Using device: cuda
+2020-04-20 23:04:15,392:INFO:model_container_pt:Loaded model from ./save/IrisNN_Iris_e200.pt
+2020-04-20 23:04:15,414:INFO:defend_ad:Accuracy on test set: 0.966667
+2020-04-20 23:04:15,415:DEBUG:applicability_domain:Number of input attributes: 16
+2020-04-20 23:04:15,415:DEBUG:detector_container:Time to complete [AD Stage 1]: 0m 0.000s
+2020-04-20 23:04:15,731:DEBUG:detector_container:Time to complete [AD Stage 2]: 0m 0.316s
+2020-04-20 23:04:15,731:DEBUG:applicability_domain:k for Stage 3: 18
+2020-04-20 23:04:15,733:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 90
+2020-04-20 23:04:15,849:DEBUG:applicability_domain:Train set likelihood: 0.958025
+2020-04-20 23:04:15,849:DEBUG:detector_container:Time to complete [AD Stage 3]: 0m 0.118s
+2020-04-20 23:04:15,851:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-04-20 23:04:16,163:DEBUG:applicability_domain:Stage 2: blocked 3 inputs
+2020-04-20 23:04:16,296:DEBUG:applicability_domain:Mean likelihood on adv: 0.960039
+2020-04-20 23:04:16,297:DEBUG:applicability_domain:Stage 3: blocked 5 inputs
+2020-04-20 23:04:16,297:INFO:defend_ad:Blocked 8/60 samples on clean samples
+2020-04-20 23:04:16,304:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-04-20 23:04:16,618:DEBUG:applicability_domain:Stage 2: blocked 38 inputs
+2020-04-20 23:04:16,729:DEBUG:applicability_domain:Mean likelihood on adv: 1.000000
+2020-04-20 23:04:16,730:DEBUG:applicability_domain:Stage 3: blocked 0 inputs
+2020-04-20 23:04:16,730:INFO:defend_ad:Blocked 38/60 samples on adv. examples
+2020-04-20 23:04:16,730:INFO:defend_ad:[result]./save/IrisNN_Iris_e200.pt,./save/IrisNN_Iris_BIM_adv.npy,1,1.0,1.0,0.8,6,False,clean,0,3,5
+2020-04-20 23:04:16,730:INFO:defend_ad:[result]./save/IrisNN_Iris_e200.pt,./save/IrisNN_Iris_BIM_adv.npy,1,1.0,1.0,0.8,6,False,adv,0,38,0

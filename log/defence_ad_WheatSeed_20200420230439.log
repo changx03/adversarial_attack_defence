@@ -1,0 +1,40 @@
+2020-04-20 23:04:39,692:INFO:defend_ad:Start at    : 20200420230439
+2020-04-20 23:04:39,692:INFO:defend_ad:RECEIVED PARAMETERS:
+2020-04-20 23:04:39,693:INFO:defend_ad:model file  :./save/IrisNN_WheatSeed_e300.pt
+2020-04-20 23:04:39,693:INFO:defend_ad:adv file    :./save/IrisNN_WheatSeed_DeepFool_adv.npy
+2020-04-20 23:04:39,693:INFO:defend_ad:model       :IrisNN
+2020-04-20 23:04:39,693:INFO:defend_ad:dataset     :WheatSeed
+2020-04-20 23:04:39,693:INFO:defend_ad:param file  :./cmd/AdParamsNumeral.json
+2020-04-20 23:04:39,693:INFO:defend_ad:seed        :4096
+2020-04-20 23:04:39,693:INFO:defend_ad:verbose     :True
+2020-04-20 23:04:39,693:INFO:defend_ad:save_log    :True
+2020-04-20 23:04:39,693:INFO:defend_ad:check_clean :True
+2020-04-20 23:04:39,693:DEBUG:defend_ad:params     : {'k2': 1, 'reliability': 1.0, 'sample_ratio': 1.0, 'kappa': 6, 'confidence': 0.8, 'disable_s2': False}
+2020-04-20 23:04:39,693:DEBUG:utils:Setting random seed for PyTorch.
+2020-04-20 23:04:39,713:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-04-20 23:04:39,713:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/seeds_dataset.txt
+2020-04-20 23:04:39,719:INFO:data_container:Train size: 168 - Test size: 42
+2020-04-20 23:04:39,719:INFO:data_container:Successfully load data. Time to complete: 0m 0.006s
+2020-04-20 23:04:39,720:INFO:defend_ad:Use IrisNN model
+2020-04-20 23:04:42,046:DEBUG:model_container_pt:Using device: cuda
+2020-04-20 23:04:42,047:INFO:model_container_pt:Loaded model from ./save/IrisNN_WheatSeed_e300.pt
+2020-04-20 23:04:42,065:INFO:defend_ad:Accuracy on test set: 0.904762
+2020-04-20 23:04:42,067:DEBUG:applicability_domain:Number of input attributes: 28
+2020-04-20 23:04:42,067:DEBUG:detector_container:Time to complete [AD Stage 1]: 0m 0.000s
+2020-04-20 23:04:42,384:DEBUG:detector_container:Time to complete [AD Stage 2]: 0m 0.316s
+2020-04-20 23:04:42,384:DEBUG:applicability_domain:k for Stage 3: 18
+2020-04-20 23:04:42,386:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 168
+2020-04-20 23:04:42,505:DEBUG:applicability_domain:Train set likelihood: 0.890542
+2020-04-20 23:04:42,506:DEBUG:detector_container:Time to complete [AD Stage 3]: 0m 0.122s
+2020-04-20 23:04:42,507:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-04-20 23:04:42,829:DEBUG:applicability_domain:Stage 2: blocked 2 inputs
+2020-04-20 23:04:42,955:DEBUG:applicability_domain:Mean likelihood on adv: 0.911111
+2020-04-20 23:04:42,956:DEBUG:applicability_domain:Stage 3: blocked 4 inputs
+2020-04-20 23:04:42,956:INFO:defend_ad:Blocked 6/42 samples on clean samples
+2020-04-20 23:04:42,962:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-04-20 23:04:43,274:DEBUG:applicability_domain:Stage 2: blocked 15 inputs
+2020-04-20 23:04:43,394:DEBUG:applicability_domain:Mean likelihood on adv: 0.676955
+2020-04-20 23:04:43,395:DEBUG:applicability_domain:Stage 3: blocked 12 inputs
+2020-04-20 23:04:43,395:INFO:defend_ad:Blocked 27/42 samples on adv. examples
+2020-04-20 23:04:43,395:INFO:defend_ad:[result]./save/IrisNN_WheatSeed_e300.pt,./save/IrisNN_WheatSeed_DeepFool_adv.npy,1,1.0,1.0,0.8,6,False,clean,0,2,4
+2020-04-20 23:04:43,396:INFO:defend_ad:[result]./save/IrisNN_WheatSeed_e300.pt,./save/IrisNN_WheatSeed_DeepFool_adv.npy,1,1.0,1.0,0.8,6,False,adv,0,15,12

@@ -1,0 +1,580 @@
+2020-04-20 19:29:59,741:INFO:cross_valid:Start at      : 20200420192959
+2020-04-20 19:29:59,741:INFO:cross_valid:RECEIVED PARAMETERS:
+2020-04-20 19:29:59,741:INFO:cross_valid:model file    :./save/IrisNN_Iris_e200.pt
+2020-04-20 19:29:59,741:INFO:cross_valid:adv file      :./save/IrisNN_Iris_Carlini_adv.npy
+2020-04-20 19:29:59,741:INFO:cross_valid:model         :IrisNN
+2020-04-20 19:29:59,741:INFO:cross_valid:dataset       :Iris
+2020-04-20 19:29:59,741:INFO:cross_valid:param file    :./cmd/CvParams_iris.json
+2020-04-20 19:29:59,741:INFO:cross_valid:seed          :4096
+2020-04-20 19:29:59,741:INFO:cross_valid:verbose       :True
+2020-04-20 19:29:59,741:INFO:cross_valid:save_log      :True
+2020-04-20 19:29:59,741:INFO:cross_valid:Ignore saving :False
+2020-04-20 19:29:59,741:INFO:cross_valid:overwrite     :False
+2020-04-20 19:29:59,741:INFO:cross_valid:PARAMETERS FROM JSON FILE:
+2020-04-20 19:29:59,741:INFO:cross_valid:k_range       :[1, 16]
+2020-04-20 19:29:59,741:INFO:cross_valid:z_range       :[1.0, 3.0]
+2020-04-20 19:29:59,741:INFO:cross_valid:kappa_range   :[5, 10]
+2020-04-20 19:29:59,741:INFO:cross_valid:gamma_range   :[0.5, 1.0]
+2020-04-20 19:29:59,741:INFO:cross_valid:epsilon       :1.0
+2020-04-20 19:29:59,742:INFO:cross_valid:num_folds     :4
+2020-04-20 19:29:59,742:INFO:cross_valid:batch_size    :64
+2020-04-20 19:29:59,742:INFO:cross_valid:sample_ratio  :1.0
+2020-04-20 19:29:59,742:DEBUG:utils:Setting random seed for PyTorch.
+2020-04-20 19:29:59,768:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-04-20 19:29:59,768:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/iris.data
+2020-04-20 19:29:59,773:INFO:data_container:Train size: 120 - Test size: 30
+2020-04-20 19:29:59,773:INFO:data_container:Successfully load data. Time to complete: 0m 0.006s
+2020-04-20 19:29:59,773:INFO:cross_valid:Sample size: 150
+2020-04-20 19:29:59,774:INFO:cross_valid:Use IrisNN model
+2020-04-20 19:30:02,064:DEBUG:model_container_pt:Using device: cuda
+2020-04-20 19:30:02,065:INFO:model_container_pt:Loaded model from ./save/IrisNN_Iris_e200.pt
+2020-04-20 19:30:02,085:INFO:cross_valid:Accuracy on test set: 0.966667
+2020-04-20 19:30:02,087:DEBUG:applicability_domain:Number of input attributes: 16
+2020-04-20 19:30:02,087:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-04-20 19:30:02,164:INFO:projected_gradient_descent:Success rate of attack: 100.00%
+2020-04-20 19:30:02,165:INFO:bim_attack:Time to complete training 1000 adv. examples: 0m 0.078s
+2020-04-20 19:30:02,165:INFO:cross_valid_core:Accuracy of adv. examples on FOLD_0: 0.000000
+2020-04-20 19:30:02,165:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.900000
+2020-04-20 19:30:03,113:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 1.900000
+2020-04-20 19:30:04,064:DEBUG:cross_valid_core:Received k2: 3.000000, zeta: 1.900000
+2020-04-20 19:30:05,011:DEBUG:cross_valid_core:Received k2: 4.000000, zeta: 1.900000
+2020-04-20 19:30:05,955:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 1.900000
+2020-04-20 19:30:06,907:DEBUG:cross_valid_core:Received k2: 6.000000, zeta: 1.900000
+2020-04-20 19:30:07,858:DEBUG:cross_valid_core:Received k2: 7.000000, zeta: 1.900000
+2020-04-20 19:30:08,809:DEBUG:cross_valid_core:Received k2: 8.000000, zeta: 1.900000
+2020-04-20 19:30:09,761:DEBUG:cross_valid_core:Received k2: 9.000000, zeta: 1.900000
+2020-04-20 19:30:10,714:DEBUG:cross_valid_core:Received k2: 10.000000, zeta: 1.900000
+2020-04-20 19:30:11,665:DEBUG:cross_valid_core:Received k2: 11.000000, zeta: 1.900000
+2020-04-20 19:30:12,616:DEBUG:cross_valid_core:Received k2: 12.000000, zeta: 1.900000
+2020-04-20 19:30:13,567:DEBUG:cross_valid_core:Received k2: 13.000000, zeta: 1.900000
+2020-04-20 19:30:14,518:DEBUG:cross_valid_core:Received k2: 14.000000, zeta: 1.900000
+2020-04-20 19:30:15,470:DEBUG:cross_valid_core:Received k2: 15.000000, zeta: 1.900000
+2020-04-20 19:30:16,421:DEBUG:cross_valid_core:Received k2: 16.000000, zeta: 1.900000
+2020-04-20 19:30:17,372:DEBUG:cross_valid_core:var: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+2020-04-20 19:30:17,373:DEBUG:cross_valid_core:score_clean: 37,37,36,36,36,36,36,35,35,35,35,35,35,34,34,34
+2020-04-20 19:30:17,373:DEBUG:cross_valid_core:score_adv: 20,22,23,22,20,21,22,22,19,19,20,20,20,21,19,18
+2020-04-20 19:30:17,373:DEBUG:cross_valid_core:score_total: 20.0,22.0,22.0,21.0,19.0,20.0,21.0,20.0,17.0,17.0,18.0,18.0,18.0,18.0,16.0,15.0
+2020-04-20 19:30:17,373:DEBUG:cross_valid_core:Found best k2: 2 with score: 22
+2020-04-20 19:30:17,373:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 1.000000
+2020-04-20 19:30:18,323:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 1.100000
+2020-04-20 19:30:19,274:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 1.200000
+2020-04-20 19:30:20,226:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 1.300000
+2020-04-20 19:30:21,181:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 1.400000
+2020-04-20 19:30:22,133:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 1.500000
+2020-04-20 19:30:23,084:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 1.600000
+2020-04-20 19:30:24,036:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 1.700000
+2020-04-20 19:30:24,987:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 1.800000
+2020-04-20 19:30:25,938:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 1.900000
+2020-04-20 19:30:26,890:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 2.000000
+2020-04-20 19:30:27,841:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 2.100000
+2020-04-20 19:30:28,793:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 2.200000
+2020-04-20 19:30:29,742:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 2.300000
+2020-04-20 19:30:30,694:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 2.400000
+2020-04-20 19:30:31,641:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 2.500000
+2020-04-20 19:30:32,592:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 2.600000
+2020-04-20 19:30:33,543:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 2.700000
+2020-04-20 19:30:34,494:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 2.800000
+2020-04-20 19:30:35,445:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 2.900000
+2020-04-20 19:30:36,396:DEBUG:cross_valid_core:var: 1.0,1.1,1.2000000000000002,1.3000000000000003,1.4000000000000004,1.5000000000000004,1.6000000000000005,1.7000000000000006,1.8000000000000007,1.9000000000000008,2.000000000000001,2.100000000000001,2.200000000000001,2.300000000000001,2.4000000000000012,2.5000000000000013,2.6000000000000014,2.7000000000000015,2.8000000000000016,2.9000000000000017
+2020-04-20 19:30:36,396:DEBUG:cross_valid_core:score_clean: 36,36,36,36,36,36,37,37,37,37,37,37,37,37,37,37,37,37,37,37
+2020-04-20 19:30:36,396:DEBUG:cross_valid_core:score_adv: 27,27,26,25,25,24,23,23,22,22,22,19,19,19,19,18,18,18,17,17
+2020-04-20 19:30:36,396:DEBUG:cross_valid_core:score_total: 26.0,26.0,25.0,24.0,24.0,23.0,23.0,23.0,22.0,22.0,22.0,19.0,19.0,19.0,19.0,18.0,18.0,18.0,17.0,17.0
+2020-04-20 19:30:36,397:DEBUG:cross_valid_core:Found best zeta: 1.000000 with score: 0
+2020-04-20 19:30:36,397:DEBUG:cross_valid_core:Received kappa: 5.000000, gamma: 1.000000
+2020-04-20 19:30:36,397:DEBUG:applicability_domain:k for Stage 3: 15
+2020-04-20 19:30:36,399:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:30:36,515:DEBUG:applicability_domain:Train set likelihood: 0.966667
+2020-04-20 19:30:36,625:DEBUG:applicability_domain:Mean likelihood on adv: 0.981982
+2020-04-20 19:30:36,734:DEBUG:applicability_domain:Mean likelihood on adv: 0.985859
+2020-04-20 19:30:36,734:DEBUG:cross_valid_core:Received kappa: 6.000000, gamma: 1.000000
+2020-04-20 19:30:36,734:DEBUG:applicability_domain:k for Stage 3: 18
+2020-04-20 19:30:36,735:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:30:36,851:DEBUG:applicability_domain:Train set likelihood: 0.964352
+2020-04-20 19:30:36,961:DEBUG:applicability_domain:Mean likelihood on adv: 0.981982
+2020-04-20 19:30:37,069:DEBUG:applicability_domain:Mean likelihood on adv: 0.983165
+2020-04-20 19:30:37,070:DEBUG:cross_valid_core:Received kappa: 7.000000, gamma: 1.000000
+2020-04-20 19:30:37,070:DEBUG:applicability_domain:k for Stage 3: 21
+2020-04-20 19:30:37,070:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:30:37,221:DEBUG:applicability_domain:Train set likelihood: 0.957540
+2020-04-20 19:30:37,333:DEBUG:applicability_domain:Mean likelihood on adv: 0.972973
+2020-04-20 19:30:37,443:DEBUG:applicability_domain:Mean likelihood on adv: 0.982143
+2020-04-20 19:30:37,443:DEBUG:cross_valid_core:Received kappa: 8.000000, gamma: 1.000000
+2020-04-20 19:30:37,443:DEBUG:applicability_domain:k for Stage 3: 24
+2020-04-20 19:30:37,443:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:30:37,560:DEBUG:applicability_domain:Train set likelihood: 0.953819
+2020-04-20 19:30:37,670:DEBUG:applicability_domain:Mean likelihood on adv: 0.967342
+2020-04-20 19:30:37,780:DEBUG:applicability_domain:Mean likelihood on adv: 0.977865
+2020-04-20 19:30:37,780:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 1.000000
+2020-04-20 19:30:37,780:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:30:37,780:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:30:37,898:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:30:38,008:DEBUG:applicability_domain:Mean likelihood on adv: 0.961962
+2020-04-20 19:30:38,118:DEBUG:applicability_domain:Mean likelihood on adv: 0.972521
+2020-04-20 19:30:38,118:DEBUG:cross_valid_core:Received kappa: 10.000000, gamma: 1.000000
+2020-04-20 19:30:38,118:DEBUG:applicability_domain:k for Stage 3: 30
+2020-04-20 19:30:38,118:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:30:38,237:DEBUG:applicability_domain:Train set likelihood: 0.937778
+2020-04-20 19:30:38,348:DEBUG:applicability_domain:Mean likelihood on adv: 0.951351
+2020-04-20 19:30:38,457:DEBUG:applicability_domain:Mean likelihood on adv: 0.966667
+2020-04-20 19:30:38,458:DEBUG:cross_valid_core:var: 5,6,7,8,9,10
+2020-04-20 19:30:38,458:DEBUG:cross_valid_core:score_clean: 33,33,32,32,31,28
+2020-04-20 19:30:38,458:DEBUG:cross_valid_core:score_adv: 4,5,6,6,7,10
+2020-04-20 19:30:38,458:DEBUG:cross_valid_core:score_total: 0.0,1.0,1.0,1.0,1.0,1.0
+2020-04-20 19:30:38,458:DEBUG:cross_valid_core:Found best kappa: 6 with score: 1
+2020-04-20 19:30:38,458:DEBUG:cross_valid_core:Received kappa: 6.000000, gamma: 0.500000
+2020-04-20 19:30:38,458:DEBUG:applicability_domain:k for Stage 3: 18
+2020-04-20 19:30:38,458:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:30:38,574:DEBUG:applicability_domain:Train set likelihood: 0.964352
+2020-04-20 19:30:38,684:DEBUG:applicability_domain:Mean likelihood on adv: 0.981982
+2020-04-20 19:30:38,794:DEBUG:applicability_domain:Mean likelihood on adv: 0.966967
+2020-04-20 19:30:38,794:DEBUG:cross_valid_core:Received kappa: 6.000000, gamma: 0.600000
+2020-04-20 19:30:38,794:DEBUG:applicability_domain:k for Stage 3: 18
+2020-04-20 19:30:38,794:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:30:38,941:DEBUG:applicability_domain:Train set likelihood: 0.964352
+2020-04-20 19:30:39,053:DEBUG:applicability_domain:Mean likelihood on adv: 0.981982
+2020-04-20 19:30:39,163:DEBUG:applicability_domain:Mean likelihood on adv: 0.966967
+2020-04-20 19:30:39,163:DEBUG:cross_valid_core:Received kappa: 6.000000, gamma: 0.700000
+2020-04-20 19:30:39,163:DEBUG:applicability_domain:k for Stage 3: 18
+2020-04-20 19:30:39,163:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:30:39,315:DEBUG:applicability_domain:Train set likelihood: 0.964352
+2020-04-20 19:30:39,427:DEBUG:applicability_domain:Mean likelihood on adv: 0.981982
+2020-04-20 19:30:39,537:DEBUG:applicability_domain:Mean likelihood on adv: 0.976852
+2020-04-20 19:30:39,537:DEBUG:cross_valid_core:Received kappa: 6.000000, gamma: 0.800000
+2020-04-20 19:30:39,544:DEBUG:applicability_domain:k for Stage 3: 18
+2020-04-20 19:30:39,544:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:30:39,661:DEBUG:applicability_domain:Train set likelihood: 0.964352
+2020-04-20 19:30:39,771:DEBUG:applicability_domain:Mean likelihood on adv: 0.981982
+2020-04-20 19:30:39,881:DEBUG:applicability_domain:Mean likelihood on adv: 0.976852
+2020-04-20 19:30:39,881:DEBUG:cross_valid_core:Received kappa: 6.000000, gamma: 0.900000
+2020-04-20 19:30:39,881:DEBUG:applicability_domain:k for Stage 3: 18
+2020-04-20 19:30:39,881:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:30:39,997:DEBUG:applicability_domain:Train set likelihood: 0.964352
+2020-04-20 19:30:40,108:DEBUG:applicability_domain:Mean likelihood on adv: 0.981982
+2020-04-20 19:30:40,227:DEBUG:applicability_domain:Mean likelihood on adv: 0.984127
+2020-04-20 19:30:40,228:DEBUG:cross_valid_core:Received kappa: 6.000000, gamma: 1.000000
+2020-04-20 19:30:40,228:DEBUG:applicability_domain:k for Stage 3: 18
+2020-04-20 19:30:40,230:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:30:40,350:DEBUG:applicability_domain:Train set likelihood: 0.964352
+2020-04-20 19:30:40,460:DEBUG:applicability_domain:Mean likelihood on adv: 0.981982
+2020-04-20 19:30:40,569:DEBUG:applicability_domain:Mean likelihood on adv: 0.983165
+2020-04-20 19:30:40,570:DEBUG:cross_valid_core:var: 0.5,0.6,0.7,0.7999999999999999,0.8999999999999999,0.9999999999999999
+2020-04-20 19:30:40,570:DEBUG:cross_valid_core:score_clean: 37,37,36,36,35,33
+2020-04-20 19:30:40,570:DEBUG:cross_valid_core:score_adv: 0,1,2,3,3,5
+2020-04-20 19:30:40,570:DEBUG:cross_valid_core:score_total: 0.0,1.0,1.0,2.0,1.0,1.0
+2020-04-20 19:30:40,570:DEBUG:cross_valid_core:Found best gamma: 0.800000 with score: 2
+2020-04-20 19:30:40,570:DEBUG:cross_valid_core:[0/4] 0m 38.5s - score: 2.0 - k2: 2, zeta: 1.0, kappa: 6, gamma: 0.8
+2020-04-20 19:30:40,652:INFO:projected_gradient_descent:Success rate of attack: 100.00%
+2020-04-20 19:30:40,653:INFO:bim_attack:Time to complete training 1000 adv. examples: 0m 0.083s
+2020-04-20 19:30:40,654:INFO:cross_valid_core:Accuracy of adv. examples on FOLD_1: 0.000000
+2020-04-20 19:30:40,654:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.000000
+2020-04-20 19:30:41,602:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 1.000000
+2020-04-20 19:30:42,553:DEBUG:cross_valid_core:Received k2: 3.000000, zeta: 1.000000
+2020-04-20 19:30:43,504:DEBUG:cross_valid_core:Received k2: 4.000000, zeta: 1.000000
+2020-04-20 19:30:44,455:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 1.000000
+2020-04-20 19:30:45,406:DEBUG:cross_valid_core:Received k2: 6.000000, zeta: 1.000000
+2020-04-20 19:30:46,354:DEBUG:cross_valid_core:Received k2: 7.000000, zeta: 1.000000
+2020-04-20 19:30:47,305:DEBUG:cross_valid_core:Received k2: 8.000000, zeta: 1.000000
+2020-04-20 19:30:48,256:DEBUG:cross_valid_core:Received k2: 9.000000, zeta: 1.000000
+2020-04-20 19:30:49,204:DEBUG:cross_valid_core:Received k2: 10.000000, zeta: 1.000000
+2020-04-20 19:30:50,157:DEBUG:cross_valid_core:Received k2: 11.000000, zeta: 1.000000
+2020-04-20 19:30:51,109:DEBUG:cross_valid_core:Received k2: 12.000000, zeta: 1.000000
+2020-04-20 19:30:52,060:DEBUG:cross_valid_core:Received k2: 13.000000, zeta: 1.000000
+2020-04-20 19:30:53,014:DEBUG:cross_valid_core:Received k2: 14.000000, zeta: 1.000000
+2020-04-20 19:30:53,965:DEBUG:cross_valid_core:Received k2: 15.000000, zeta: 1.000000
+2020-04-20 19:30:54,913:DEBUG:cross_valid_core:Received k2: 16.000000, zeta: 1.000000
+2020-04-20 19:30:55,864:DEBUG:cross_valid_core:var: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+2020-04-20 19:30:55,864:DEBUG:cross_valid_core:score_clean: 36,36,34,35,34,34,34,33,34,34,34,34,34,34,34,34
+2020-04-20 19:30:55,871:DEBUG:cross_valid_core:score_adv: 32,32,32,31,31,29,29,30,31,31,30,30,30,30,30,30
+2020-04-20 19:30:55,871:DEBUG:cross_valid_core:score_total: 31.0,31.0,29.0,29.0,28.0,26.0,26.0,26.0,28.0,28.0,27.0,27.0,27.0,27.0,27.0,27.0
+2020-04-20 19:30:55,872:DEBUG:cross_valid_core:Found best k2: 1 with score: 31
+2020-04-20 19:30:55,872:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.000000
+2020-04-20 19:30:56,833:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.100000
+2020-04-20 19:30:57,773:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.200000
+2020-04-20 19:30:58,717:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.300000
+2020-04-20 19:30:59,685:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.400000
+2020-04-20 19:31:00,642:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.500000
+2020-04-20 19:31:01,597:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.600000
+2020-04-20 19:31:02,557:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.700000
+2020-04-20 19:31:03,504:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.800000
+2020-04-20 19:31:04,451:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.900000
+2020-04-20 19:31:05,400:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.000000
+2020-04-20 19:31:06,345:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.100000
+2020-04-20 19:31:07,297:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.200000
+2020-04-20 19:31:08,244:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.300000
+2020-04-20 19:31:09,193:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.400000
+2020-04-20 19:31:10,143:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.500000
+2020-04-20 19:31:11,104:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.600000
+2020-04-20 19:31:12,050:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.700000
+2020-04-20 19:31:13,005:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.800000
+2020-04-20 19:31:13,958:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.900000
+2020-04-20 19:31:14,910:DEBUG:cross_valid_core:var: 1.0,1.1,1.2000000000000002,1.3000000000000003,1.4000000000000004,1.5000000000000004,1.6000000000000005,1.7000000000000006,1.8000000000000007,1.9000000000000008,2.000000000000001,2.100000000000001,2.200000000000001,2.300000000000001,2.4000000000000012,2.5000000000000013,2.6000000000000014,2.7000000000000015,2.8000000000000016,2.9000000000000017
+2020-04-20 19:31:14,910:DEBUG:cross_valid_core:score_clean: 36,36,36,36,36,36,36,37,37,37,37,37,37,37,37,37,37,37,37,37
+2020-04-20 19:31:14,910:DEBUG:cross_valid_core:score_adv: 32,32,31,29,28,27,27,25,25,25,23,23,23,20,19,19,19,19,18,17
+2020-04-20 19:31:14,910:DEBUG:cross_valid_core:score_total: 31.0,31.0,30.0,28.0,27.0,26.0,26.0,25.0,25.0,25.0,23.0,23.0,23.0,20.0,19.0,19.0,19.0,19.0,18.0,17.0
+2020-04-20 19:31:14,911:DEBUG:cross_valid_core:Found best zeta: 1.000000 with score: 0
+2020-04-20 19:31:14,911:DEBUG:cross_valid_core:Received kappa: 5.000000, gamma: 0.800000
+2020-04-20 19:31:14,911:DEBUG:applicability_domain:k for Stage 3: 15
+2020-04-20 19:31:14,913:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:15,035:DEBUG:applicability_domain:Train set likelihood: 0.966667
+2020-04-20 19:31:15,143:DEBUG:applicability_domain:Mean likelihood on adv: 0.951351
+2020-04-20 19:31:15,258:DEBUG:applicability_domain:Mean likelihood on adv: 0.996078
+2020-04-20 19:31:15,259:DEBUG:cross_valid_core:Received kappa: 6.000000, gamma: 0.800000
+2020-04-20 19:31:15,259:DEBUG:applicability_domain:k for Stage 3: 18
+2020-04-20 19:31:15,260:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:15,395:DEBUG:applicability_domain:Train set likelihood: 0.964352
+2020-04-20 19:31:15,522:DEBUG:applicability_domain:Mean likelihood on adv: 0.947447
+2020-04-20 19:31:15,635:DEBUG:applicability_domain:Mean likelihood on adv: 0.991830
+2020-04-20 19:31:15,635:DEBUG:cross_valid_core:Received kappa: 7.000000, gamma: 0.800000
+2020-04-20 19:31:15,635:DEBUG:applicability_domain:k for Stage 3: 21
+2020-04-20 19:31:15,636:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:15,765:DEBUG:applicability_domain:Train set likelihood: 0.957540
+2020-04-20 19:31:15,883:DEBUG:applicability_domain:Mean likelihood on adv: 0.940798
+2020-04-20 19:31:16,008:DEBUG:applicability_domain:Mean likelihood on adv: 0.988456
+2020-04-20 19:31:16,008:DEBUG:cross_valid_core:Received kappa: 8.000000, gamma: 0.800000
+2020-04-20 19:31:16,008:DEBUG:applicability_domain:k for Stage 3: 24
+2020-04-20 19:31:16,010:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:16,154:DEBUG:applicability_domain:Train set likelihood: 0.953819
+2020-04-20 19:31:16,278:DEBUG:applicability_domain:Mean likelihood on adv: 0.934685
+2020-04-20 19:31:16,390:DEBUG:applicability_domain:Mean likelihood on adv: 0.988281
+2020-04-20 19:31:16,390:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 0.800000
+2020-04-20 19:31:16,390:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:31:16,391:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:16,510:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:31:16,623:DEBUG:applicability_domain:Mean likelihood on adv: 0.925926
+2020-04-20 19:31:16,733:DEBUG:applicability_domain:Mean likelihood on adv: 0.982639
+2020-04-20 19:31:16,733:DEBUG:cross_valid_core:Received kappa: 10.000000, gamma: 0.800000
+2020-04-20 19:31:16,733:DEBUG:applicability_domain:k for Stage 3: 30
+2020-04-20 19:31:16,734:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:16,876:DEBUG:applicability_domain:Train set likelihood: 0.937778
+2020-04-20 19:31:16,989:DEBUG:applicability_domain:Mean likelihood on adv: 0.918018
+2020-04-20 19:31:17,100:DEBUG:applicability_domain:Mean likelihood on adv: 0.985556
+2020-04-20 19:31:17,100:DEBUG:cross_valid_core:var: 5,6,7,8,9,10
+2020-04-20 19:31:17,100:DEBUG:cross_valid_core:score_clean: 34,34,33,32,32,30
+2020-04-20 19:31:17,100:DEBUG:cross_valid_core:score_adv: 3,3,4,5,6,8
+2020-04-20 19:31:17,100:DEBUG:cross_valid_core:score_total: 0.0,0.0,0.0,0.0,1.0,1.0
+2020-04-20 19:31:17,100:DEBUG:cross_valid_core:Found best kappa: 9 with score: 1
+2020-04-20 19:31:17,100:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 0.500000
+2020-04-20 19:31:17,100:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:31:17,101:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:17,226:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:31:17,336:DEBUG:applicability_domain:Mean likelihood on adv: 0.925926
+2020-04-20 19:31:17,447:DEBUG:applicability_domain:Mean likelihood on adv: 0.951952
+2020-04-20 19:31:17,448:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 0.600000
+2020-04-20 19:31:17,448:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:31:17,448:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:17,574:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:31:17,703:DEBUG:applicability_domain:Mean likelihood on adv: 0.925926
+2020-04-20 19:31:17,819:DEBUG:applicability_domain:Mean likelihood on adv: 0.951952
+2020-04-20 19:31:17,819:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 0.700000
+2020-04-20 19:31:17,819:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:31:17,820:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:17,941:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:31:18,065:DEBUG:applicability_domain:Mean likelihood on adv: 0.925926
+2020-04-20 19:31:18,178:DEBUG:applicability_domain:Mean likelihood on adv: 0.950617
+2020-04-20 19:31:18,179:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 0.800000
+2020-04-20 19:31:18,179:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:31:18,179:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:18,304:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:31:18,416:DEBUG:applicability_domain:Mean likelihood on adv: 0.925926
+2020-04-20 19:31:18,523:DEBUG:applicability_domain:Mean likelihood on adv: 0.982639
+2020-04-20 19:31:18,523:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 0.900000
+2020-04-20 19:31:18,523:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:31:18,524:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:18,652:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:31:18,779:DEBUG:applicability_domain:Mean likelihood on adv: 0.925926
+2020-04-20 19:31:18,891:DEBUG:applicability_domain:Mean likelihood on adv: 0.989783
+2020-04-20 19:31:18,891:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 1.000000
+2020-04-20 19:31:18,891:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:31:18,891:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:19,030:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:31:19,137:DEBUG:applicability_domain:Mean likelihood on adv: 0.925926
+2020-04-20 19:31:19,254:DEBUG:applicability_domain:Mean likelihood on adv: 0.987654
+2020-04-20 19:31:19,254:DEBUG:cross_valid_core:var: 0.5,0.6,0.7,0.7999999999999999,0.8999999999999999,0.9999999999999999
+2020-04-20 19:31:19,255:DEBUG:cross_valid_core:score_clean: 37,37,36,32,29,24
+2020-04-20 19:31:19,255:DEBUG:cross_valid_core:score_adv: 0,1,2,6,9,14
+2020-04-20 19:31:19,255:DEBUG:cross_valid_core:score_total: 0.0,1.0,1.0,1.0,1.0,1.0
+2020-04-20 19:31:19,255:DEBUG:cross_valid_core:Found best gamma: 0.600000 with score: 1
+2020-04-20 19:31:19,255:DEBUG:cross_valid_core:[1/4] 0m 38.7s - score: 1.0 - k2: 1, zeta: 1.0, kappa: 9, gamma: 0.6
+2020-04-20 19:31:19,471:INFO:projected_gradient_descent:Success rate of attack: 100.00%
+2020-04-20 19:31:19,472:INFO:bim_attack:Time to complete training 1000 adv. examples: 0m 0.216s
+2020-04-20 19:31:19,473:INFO:cross_valid_core:Accuracy of adv. examples on FOLD_2: 0.000000
+2020-04-20 19:31:19,473:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.000000
+2020-04-20 19:31:20,414:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 1.000000
+2020-04-20 19:31:21,359:DEBUG:cross_valid_core:Received k2: 3.000000, zeta: 1.000000
+2020-04-20 19:31:22,313:DEBUG:cross_valid_core:Received k2: 4.000000, zeta: 1.000000
+2020-04-20 19:31:23,160:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 1.000000
+2020-04-20 19:31:24,005:DEBUG:cross_valid_core:Received k2: 6.000000, zeta: 1.000000
+2020-04-20 19:31:24,875:DEBUG:cross_valid_core:Received k2: 7.000000, zeta: 1.000000
+2020-04-20 19:31:25,725:DEBUG:cross_valid_core:Received k2: 8.000000, zeta: 1.000000
+2020-04-20 19:31:26,573:DEBUG:cross_valid_core:Received k2: 9.000000, zeta: 1.000000
+2020-04-20 19:31:27,416:DEBUG:cross_valid_core:Received k2: 10.000000, zeta: 1.000000
+2020-04-20 19:31:28,259:DEBUG:cross_valid_core:Received k2: 11.000000, zeta: 1.000000
+2020-04-20 19:31:29,107:DEBUG:cross_valid_core:Received k2: 12.000000, zeta: 1.000000
+2020-04-20 19:31:29,950:DEBUG:cross_valid_core:Received k2: 13.000000, zeta: 1.000000
+2020-04-20 19:31:30,799:DEBUG:cross_valid_core:Received k2: 14.000000, zeta: 1.000000
+2020-04-20 19:31:31,639:DEBUG:cross_valid_core:Received k2: 15.000000, zeta: 1.000000
+2020-04-20 19:31:32,483:DEBUG:cross_valid_core:Received k2: 16.000000, zeta: 1.000000
+2020-04-20 19:31:33,333:DEBUG:cross_valid_core:var: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+2020-04-20 19:31:33,333:DEBUG:cross_valid_core:score_clean: 37,37,37,36,36,35,35,35,35,35,35,35,35,35,35,35
+2020-04-20 19:31:33,340:DEBUG:cross_valid_core:score_adv: 26,29,29,30,31,31,32,32,32,31,32,32,31,31,30,31
+2020-04-20 19:31:33,340:DEBUG:cross_valid_core:score_total: 26.0,29.0,29.0,29.0,30.0,29.0,30.0,30.0,30.0,29.0,30.0,30.0,29.0,29.0,28.0,29.0
+2020-04-20 19:31:33,340:DEBUG:cross_valid_core:Found best k2: 5 with score: 30
+2020-04-20 19:31:33,341:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 1.000000
+2020-04-20 19:31:34,184:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 1.100000
+2020-04-20 19:31:35,027:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 1.200000
+2020-04-20 19:31:35,870:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 1.300000
+2020-04-20 19:31:36,818:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 1.400000
+2020-04-20 19:31:37,768:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 1.500000
+2020-04-20 19:31:38,716:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 1.600000
+2020-04-20 19:31:39,660:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 1.700000
+2020-04-20 19:31:40,613:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 1.800000
+2020-04-20 19:31:41,561:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 1.900000
+2020-04-20 19:31:42,514:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 2.000000
+2020-04-20 19:31:43,466:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 2.100000
+2020-04-20 19:31:44,414:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 2.200000
+2020-04-20 19:31:45,362:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 2.300000
+2020-04-20 19:31:46,309:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 2.400000
+2020-04-20 19:31:47,262:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 2.500000
+2020-04-20 19:31:48,211:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 2.600000
+2020-04-20 19:31:49,160:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 2.700000
+2020-04-20 19:31:50,107:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 2.800000
+2020-04-20 19:31:51,055:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 2.900000
+2020-04-20 19:31:52,003:DEBUG:cross_valid_core:var: 1.0,1.1,1.2000000000000002,1.3000000000000003,1.4000000000000004,1.5000000000000004,1.6000000000000005,1.7000000000000006,1.8000000000000007,1.9000000000000008,2.000000000000001,2.100000000000001,2.200000000000001,2.300000000000001,2.4000000000000012,2.5000000000000013,2.6000000000000014,2.7000000000000015,2.8000000000000016,2.9000000000000017
+2020-04-20 19:31:52,003:DEBUG:cross_valid_core:score_clean: 36,36,36,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37
+2020-04-20 19:31:52,003:DEBUG:cross_valid_core:score_adv: 31,28,25,25,24,23,22,22,19,19,19,19,19,16,15,15,14,13,12,12
+2020-04-20 19:31:52,004:DEBUG:cross_valid_core:score_total: 30.0,27.0,24.0,25.0,24.0,23.0,22.0,22.0,19.0,19.0,19.0,19.0,19.0,16.0,15.0,15.0,14.0,13.0,12.0,12.0
+2020-04-20 19:31:52,004:DEBUG:cross_valid_core:Found best zeta: 1.000000 with score: 0
+2020-04-20 19:31:52,004:DEBUG:cross_valid_core:Received kappa: 5.000000, gamma: 0.600000
+2020-04-20 19:31:52,004:DEBUG:applicability_domain:k for Stage 3: 15
+2020-04-20 19:31:52,006:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:52,119:DEBUG:applicability_domain:Train set likelihood: 0.966667
+2020-04-20 19:31:52,225:DEBUG:applicability_domain:Mean likelihood on adv: 0.978378
+2020-04-20 19:31:52,331:DEBUG:applicability_domain:Mean likelihood on adv: 0.994445
+2020-04-20 19:31:52,331:DEBUG:cross_valid_core:Received kappa: 6.000000, gamma: 0.600000
+2020-04-20 19:31:52,331:DEBUG:applicability_domain:k for Stage 3: 18
+2020-04-20 19:31:52,331:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:52,447:DEBUG:applicability_domain:Train set likelihood: 0.964352
+2020-04-20 19:31:52,569:DEBUG:applicability_domain:Mean likelihood on adv: 0.975976
+2020-04-20 19:31:52,681:DEBUG:applicability_domain:Mean likelihood on adv: 0.986111
+2020-04-20 19:31:52,681:DEBUG:cross_valid_core:Received kappa: 7.000000, gamma: 0.600000
+2020-04-20 19:31:52,681:DEBUG:applicability_domain:k for Stage 3: 21
+2020-04-20 19:31:52,681:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:52,800:DEBUG:applicability_domain:Train set likelihood: 0.957540
+2020-04-20 19:31:52,909:DEBUG:applicability_domain:Mean likelihood on adv: 0.971686
+2020-04-20 19:31:53,017:DEBUG:applicability_domain:Mean likelihood on adv: 0.978836
+2020-04-20 19:31:53,018:DEBUG:cross_valid_core:Received kappa: 8.000000, gamma: 0.600000
+2020-04-20 19:31:53,018:DEBUG:applicability_domain:k for Stage 3: 24
+2020-04-20 19:31:53,018:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:53,153:DEBUG:applicability_domain:Train set likelihood: 0.953819
+2020-04-20 19:31:53,268:DEBUG:applicability_domain:Mean likelihood on adv: 0.969595
+2020-04-20 19:31:53,381:DEBUG:applicability_domain:Mean likelihood on adv: 0.967342
+2020-04-20 19:31:53,381:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 0.600000
+2020-04-20 19:31:53,381:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:31:53,382:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:53,510:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:31:53,625:DEBUG:applicability_domain:Mean likelihood on adv: 0.961962
+2020-04-20 19:31:53,739:DEBUG:applicability_domain:Mean likelihood on adv: 0.959960
+2020-04-20 19:31:53,740:DEBUG:cross_valid_core:Received kappa: 10.000000, gamma: 0.600000
+2020-04-20 19:31:53,740:DEBUG:applicability_domain:k for Stage 3: 30
+2020-04-20 19:31:53,740:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:53,873:DEBUG:applicability_domain:Train set likelihood: 0.937778
+2020-04-20 19:31:53,980:DEBUG:applicability_domain:Mean likelihood on adv: 0.956757
+2020-04-20 19:31:54,089:DEBUG:applicability_domain:Mean likelihood on adv: 0.954955
+2020-04-20 19:31:54,089:DEBUG:cross_valid_core:var: 5,6,7,8,9,10
+2020-04-20 19:31:54,089:DEBUG:cross_valid_core:score_clean: 36,36,36,37,37,37
+2020-04-20 19:31:54,089:DEBUG:cross_valid_core:score_adv: 1,1,1,0,1,1
+2020-04-20 19:31:54,089:DEBUG:cross_valid_core:score_total: 0.0,0.0,0.0,0.0,1.0,1.0
+2020-04-20 19:31:54,090:DEBUG:cross_valid_core:Found best kappa: 9 with score: 1
+2020-04-20 19:31:54,090:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 0.500000
+2020-04-20 19:31:54,090:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:31:54,090:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:54,218:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:31:54,336:DEBUG:applicability_domain:Mean likelihood on adv: 0.961962
+2020-04-20 19:31:54,450:DEBUG:applicability_domain:Mean likelihood on adv: 0.959960
+2020-04-20 19:31:54,451:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 0.600000
+2020-04-20 19:31:54,451:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:31:54,451:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:54,582:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:31:54,700:DEBUG:applicability_domain:Mean likelihood on adv: 0.961962
+2020-04-20 19:31:54,818:DEBUG:applicability_domain:Mean likelihood on adv: 0.959960
+2020-04-20 19:31:54,818:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 0.700000
+2020-04-20 19:31:54,818:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:31:54,819:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:54,947:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:31:55,059:DEBUG:applicability_domain:Mean likelihood on adv: 0.961962
+2020-04-20 19:31:55,171:DEBUG:applicability_domain:Mean likelihood on adv: 0.965021
+2020-04-20 19:31:55,171:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 0.800000
+2020-04-20 19:31:55,171:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:31:55,172:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:55,307:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:31:55,419:DEBUG:applicability_domain:Mean likelihood on adv: 0.961962
+2020-04-20 19:31:55,532:DEBUG:applicability_domain:Mean likelihood on adv: 0.973856
+2020-04-20 19:31:55,532:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 0.900000
+2020-04-20 19:31:55,532:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:31:55,533:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:55,654:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:31:55,764:DEBUG:applicability_domain:Mean likelihood on adv: 0.961962
+2020-04-20 19:31:55,875:DEBUG:applicability_domain:Mean likelihood on adv: 0.973856
+2020-04-20 19:31:55,875:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 1.000000
+2020-04-20 19:31:55,876:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:31:55,876:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:31:56,001:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:31:56,110:DEBUG:applicability_domain:Mean likelihood on adv: 0.961962
+2020-04-20 19:31:56,220:DEBUG:applicability_domain:Mean likelihood on adv: 0.969349
+2020-04-20 19:31:56,220:DEBUG:cross_valid_core:var: 0.5,0.6,0.7,0.7999999999999999,0.8999999999999999,0.9999999999999999
+2020-04-20 19:31:56,220:DEBUG:cross_valid_core:score_clean: 37,37,36,34,34,29
+2020-04-20 19:31:56,221:DEBUG:cross_valid_core:score_adv: 0,1,3,4,5,10
+2020-04-20 19:31:56,221:DEBUG:cross_valid_core:score_total: 0.0,1.0,2.0,1.0,2.0,2.0
+2020-04-20 19:31:56,221:DEBUG:cross_valid_core:Found best gamma: 0.700000 with score: 2
+2020-04-20 19:31:56,221:DEBUG:cross_valid_core:[2/4] 0m 37.0s - score: 2.0 - k2: 5, zeta: 1.0, kappa: 9, gamma: 0.7
+2020-04-20 19:31:56,393:INFO:projected_gradient_descent:Success rate of attack: 100.00%
+2020-04-20 19:31:56,395:INFO:bim_attack:Time to complete training 1000 adv. examples: 0m 0.174s
+2020-04-20 19:31:56,396:INFO:cross_valid_core:Accuracy of adv. examples on FOLD_3: 0.000000
+2020-04-20 19:31:56,397:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.000000
+2020-04-20 19:31:57,344:DEBUG:cross_valid_core:Received k2: 2.000000, zeta: 1.000000
+2020-04-20 19:31:58,292:DEBUG:cross_valid_core:Received k2: 3.000000, zeta: 1.000000
+2020-04-20 19:31:59,243:DEBUG:cross_valid_core:Received k2: 4.000000, zeta: 1.000000
+2020-04-20 19:32:00,191:DEBUG:cross_valid_core:Received k2: 5.000000, zeta: 1.000000
+2020-04-20 19:32:01,141:DEBUG:cross_valid_core:Received k2: 6.000000, zeta: 1.000000
+2020-04-20 19:32:02,092:DEBUG:cross_valid_core:Received k2: 7.000000, zeta: 1.000000
+2020-04-20 19:32:03,042:DEBUG:cross_valid_core:Received k2: 8.000000, zeta: 1.000000
+2020-04-20 19:32:03,990:DEBUG:cross_valid_core:Received k2: 9.000000, zeta: 1.000000
+2020-04-20 19:32:04,942:DEBUG:cross_valid_core:Received k2: 10.000000, zeta: 1.000000
+2020-04-20 19:32:05,892:DEBUG:cross_valid_core:Received k2: 11.000000, zeta: 1.000000
+2020-04-20 19:32:06,840:DEBUG:cross_valid_core:Received k2: 12.000000, zeta: 1.000000
+2020-04-20 19:32:07,790:DEBUG:cross_valid_core:Received k2: 13.000000, zeta: 1.000000
+2020-04-20 19:32:08,740:DEBUG:cross_valid_core:Received k2: 14.000000, zeta: 1.000000
+2020-04-20 19:32:09,694:DEBUG:cross_valid_core:Received k2: 15.000000, zeta: 1.000000
+2020-04-20 19:32:10,643:DEBUG:cross_valid_core:Received k2: 16.000000, zeta: 1.000000
+2020-04-20 19:32:11,593:DEBUG:cross_valid_core:var: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+2020-04-20 19:32:11,593:DEBUG:cross_valid_core:score_clean: 36,36,37,37,37,37,37,37,37,36,36,36,36,36,36,36
+2020-04-20 19:32:11,593:DEBUG:cross_valid_core:score_adv: 33,31,30,28,27,27,27,27,28,28,28,28,28,27,27,27
+2020-04-20 19:32:11,594:DEBUG:cross_valid_core:score_total: 30.0,28.0,28.0,26.0,25.0,25.0,25.0,25.0,26.0,25.0,25.0,25.0,25.0,24.0,24.0,24.0
+2020-04-20 19:32:11,594:DEBUG:cross_valid_core:Found best k2: 1 with score: 30
+2020-04-20 19:32:11,594:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.000000
+2020-04-20 19:32:12,543:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.100000
+2020-04-20 19:32:13,492:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.200000
+2020-04-20 19:32:14,440:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.300000
+2020-04-20 19:32:15,389:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.400000
+2020-04-20 19:32:16,345:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.500000
+2020-04-20 19:32:17,293:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.600000
+2020-04-20 19:32:18,243:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.700000
+2020-04-20 19:32:19,191:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.800000
+2020-04-20 19:32:20,138:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 1.900000
+2020-04-20 19:32:21,085:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.000000
+2020-04-20 19:32:22,033:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.100000
+2020-04-20 19:32:22,981:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.200000
+2020-04-20 19:32:23,928:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.300000
+2020-04-20 19:32:24,876:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.400000
+2020-04-20 19:32:25,829:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.500000
+2020-04-20 19:32:26,781:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.600000
+2020-04-20 19:32:27,731:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.700000
+2020-04-20 19:32:28,684:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.800000
+2020-04-20 19:32:29,633:DEBUG:cross_valid_core:Received k2: 1.000000, zeta: 2.900000
+2020-04-20 19:32:30,582:DEBUG:cross_valid_core:var: 1.0,1.1,1.2000000000000002,1.3000000000000003,1.4000000000000004,1.5000000000000004,1.6000000000000005,1.7000000000000006,1.8000000000000007,1.9000000000000008,2.000000000000001,2.100000000000001,2.200000000000001,2.300000000000001,2.4000000000000012,2.5000000000000013,2.6000000000000014,2.7000000000000015,2.8000000000000016,2.9000000000000017
+2020-04-20 19:32:30,582:DEBUG:cross_valid_core:score_clean: 36,36,36,36,37,37,37,38,38,38,38,38,38,38,38,38,38,38,38,38
+2020-04-20 19:32:30,582:DEBUG:cross_valid_core:score_adv: 33,31,27,26,23,21,20,18,18,18,18,17,16,16,16,16,15,15,15,14
+2020-04-20 19:32:30,582:DEBUG:cross_valid_core:score_total: 30.0,28.0,24.0,23.0,21.0,19.0,18.0,17.0,17.0,17.0,17.0,16.0,15.0,15.0,15.0,15.0,14.0,14.0,14.0,13.0
+2020-04-20 19:32:30,582:DEBUG:cross_valid_core:Found best zeta: 1.000000 with score: 0
+2020-04-20 19:32:30,583:DEBUG:cross_valid_core:Received kappa: 5.000000, gamma: 0.700000
+2020-04-20 19:32:30,583:DEBUG:applicability_domain:k for Stage 3: 15
+2020-04-20 19:32:30,584:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:32:30,703:DEBUG:applicability_domain:Train set likelihood: 0.966667
+2020-04-20 19:32:30,813:DEBUG:applicability_domain:Mean likelihood on adv: 0.958974
+2020-04-20 19:32:30,922:DEBUG:applicability_domain:Mean likelihood on adv: 0.998095
+2020-04-20 19:32:30,922:DEBUG:cross_valid_core:Received kappa: 6.000000, gamma: 0.700000
+2020-04-20 19:32:30,922:DEBUG:applicability_domain:k for Stage 3: 18
+2020-04-20 19:32:30,923:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:32:31,059:DEBUG:applicability_domain:Train set likelihood: 0.964352
+2020-04-20 19:32:31,173:DEBUG:applicability_domain:Mean likelihood on adv: 0.952991
+2020-04-20 19:32:31,282:DEBUG:applicability_domain:Mean likelihood on adv: 0.993651
+2020-04-20 19:32:31,282:DEBUG:cross_valid_core:Received kappa: 7.000000, gamma: 0.700000
+2020-04-20 19:32:31,282:DEBUG:applicability_domain:k for Stage 3: 21
+2020-04-20 19:32:31,283:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:32:31,405:DEBUG:applicability_domain:Train set likelihood: 0.957540
+2020-04-20 19:32:31,515:DEBUG:applicability_domain:Mean likelihood on adv: 0.952381
+2020-04-20 19:32:31,627:DEBUG:applicability_domain:Mean likelihood on adv: 0.989116
+2020-04-20 19:32:31,627:DEBUG:cross_valid_core:Received kappa: 8.000000, gamma: 0.700000
+2020-04-20 19:32:31,627:DEBUG:applicability_domain:k for Stage 3: 24
+2020-04-20 19:32:31,628:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:32:31,752:DEBUG:applicability_domain:Train set likelihood: 0.953820
+2020-04-20 19:32:31,866:DEBUG:applicability_domain:Mean likelihood on adv: 0.954060
+2020-04-20 19:32:31,980:DEBUG:applicability_domain:Mean likelihood on adv: 0.985714
+2020-04-20 19:32:31,980:DEBUG:cross_valid_core:Received kappa: 9.000000, gamma: 0.700000
+2020-04-20 19:32:31,980:DEBUG:applicability_domain:k for Stage 3: 27
+2020-04-20 19:32:31,981:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:32:32,124:DEBUG:applicability_domain:Train set likelihood: 0.946605
+2020-04-20 19:32:32,235:DEBUG:applicability_domain:Mean likelihood on adv: 0.947768
+2020-04-20 19:32:32,349:DEBUG:applicability_domain:Mean likelihood on adv: 0.982011
+2020-04-20 19:32:32,351:DEBUG:cross_valid_core:Received kappa: 10.000000, gamma: 0.700000
+2020-04-20 19:32:32,351:DEBUG:applicability_domain:k for Stage 3: 30
+2020-04-20 19:32:32,352:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:32:32,481:DEBUG:applicability_domain:Train set likelihood: 0.937778
+2020-04-20 19:32:32,594:DEBUG:applicability_domain:Mean likelihood on adv: 0.939316
+2020-04-20 19:32:32,705:DEBUG:applicability_domain:Mean likelihood on adv: 0.976191
+2020-04-20 19:32:32,705:DEBUG:cross_valid_core:var: 5,6,7,8,9,10
+2020-04-20 19:32:32,705:DEBUG:cross_valid_core:score_clean: 35,35,35,35,35,35
+2020-04-20 19:32:32,705:DEBUG:cross_valid_core:score_adv: 4,4,4,5,5,5
+2020-04-20 19:32:32,705:DEBUG:cross_valid_core:score_total: 0.0,0.0,0.0,1.0,1.0,1.0
+2020-04-20 19:32:32,705:DEBUG:cross_valid_core:Found best kappa: 8 with score: 1
+2020-04-20 19:32:32,705:DEBUG:cross_valid_core:Received kappa: 8.000000, gamma: 0.500000
+2020-04-20 19:32:32,705:DEBUG:applicability_domain:k for Stage 3: 24
+2020-04-20 19:32:32,705:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:32:32,835:DEBUG:applicability_domain:Train set likelihood: 0.953819
+2020-04-20 19:32:32,946:DEBUG:applicability_domain:Mean likelihood on adv: 0.954060
+2020-04-20 19:32:33,059:DEBUG:applicability_domain:Mean likelihood on adv: 0.955128
+2020-04-20 19:32:33,059:DEBUG:cross_valid_core:Received kappa: 8.000000, gamma: 0.600000
+2020-04-20 19:32:33,059:DEBUG:applicability_domain:k for Stage 3: 24
+2020-04-20 19:32:33,060:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:32:33,182:DEBUG:applicability_domain:Train set likelihood: 0.953819
+2020-04-20 19:32:33,293:DEBUG:applicability_domain:Mean likelihood on adv: 0.954060
+2020-04-20 19:32:33,404:DEBUG:applicability_domain:Mean likelihood on adv: 0.955128
+2020-04-20 19:32:33,404:DEBUG:cross_valid_core:Received kappa: 8.000000, gamma: 0.700000
+2020-04-20 19:32:33,404:DEBUG:applicability_domain:k for Stage 3: 24
+2020-04-20 19:32:33,405:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:32:33,518:DEBUG:applicability_domain:Train set likelihood: 0.953819
+2020-04-20 19:32:33,627:DEBUG:applicability_domain:Mean likelihood on adv: 0.954060
+2020-04-20 19:32:33,746:DEBUG:applicability_domain:Mean likelihood on adv: 0.985714
+2020-04-20 19:32:33,746:DEBUG:cross_valid_core:Received kappa: 8.000000, gamma: 0.800000
+2020-04-20 19:32:33,747:DEBUG:applicability_domain:k for Stage 3: 24
+2020-04-20 19:32:33,748:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:32:33,866:DEBUG:applicability_domain:Train set likelihood: 0.953819
+2020-04-20 19:32:33,980:DEBUG:applicability_domain:Mean likelihood on adv: 0.954060
+2020-04-20 19:32:34,095:DEBUG:applicability_domain:Mean likelihood on adv: 0.985714
+2020-04-20 19:32:34,095:DEBUG:cross_valid_core:Received kappa: 8.000000, gamma: 0.900000
+2020-04-20 19:32:34,096:DEBUG:applicability_domain:k for Stage 3: 24
+2020-04-20 19:32:34,097:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:32:34,232:DEBUG:applicability_domain:Train set likelihood: 0.953819
+2020-04-20 19:32:34,352:DEBUG:applicability_domain:Mean likelihood on adv: 0.954060
+2020-04-20 19:32:34,464:DEBUG:applicability_domain:Mean likelihood on adv: 0.985714
+2020-04-20 19:32:34,465:DEBUG:cross_valid_core:Received kappa: 8.000000, gamma: 1.000000
+2020-04-20 19:32:34,465:DEBUG:applicability_domain:k for Stage 3: 24
+2020-04-20 19:32:34,465:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:32:34,616:DEBUG:applicability_domain:Train set likelihood: 0.953819
+2020-04-20 19:32:34,736:DEBUG:applicability_domain:Mean likelihood on adv: 0.954060
+2020-04-20 19:32:34,851:DEBUG:applicability_domain:Mean likelihood on adv: 0.984375
+2020-04-20 19:32:34,851:DEBUG:cross_valid_core:var: 0.5,0.6,0.7,0.7999999999999999,0.8999999999999999,0.9999999999999999
+2020-04-20 19:32:34,851:DEBUG:cross_valid_core:score_clean: 39,39,35,35,35,32
+2020-04-20 19:32:34,851:DEBUG:cross_valid_core:score_adv: 0,2,5,5,5,8
+2020-04-20 19:32:34,851:DEBUG:cross_valid_core:score_total: 0.0,2.0,1.0,1.0,1.0,1.0
+2020-04-20 19:32:34,851:DEBUG:cross_valid_core:Found best gamma: 0.600000 with score: 2
+2020-04-20 19:32:34,851:DEBUG:cross_valid_core:[3/4] 0m 38.6s - score: 2.0 - k2: 1, zeta: 1.0, kappa: 8, gamma: 0.6
+2020-04-20 19:32:34,851:INFO:cross_valid_core:Time to complete cross validation: 2m 32.8s
+2020-04-20 19:32:34,856:DEBUG:applicability_domain:Number of input attributes: 16
+2020-04-20 19:32:34,856:INFO:cross_valid:Params: {'k2': 1, 'reliability': 1.0, 'sample_ratio': 1.0, 'kappa': 6, 'confidence': 0.80000000000000004, 'disable_s2': False}
+2020-04-20 19:32:34,856:DEBUG:detector_container:Time to complete [AD Stage 1]: 0m 0.000s
+2020-04-20 19:32:35,169:DEBUG:detector_container:Time to complete [AD Stage 2]: 0m 0.312s
+2020-04-20 19:32:35,169:DEBUG:applicability_domain:k for Stage 3: 18
+2020-04-20 19:32:35,171:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 120
+2020-04-20 19:32:35,321:DEBUG:applicability_domain:Train set likelihood: 0.964352
+2020-04-20 19:32:35,321:DEBUG:detector_container:Time to complete [AD Stage 3]: 0m 0.152s
+2020-04-20 19:32:35,323:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-04-20 19:32:35,632:DEBUG:applicability_domain:Stage 2: blocked 3 inputs
+2020-04-20 19:32:35,742:DEBUG:applicability_domain:Mean likelihood on adv: 0.957115
+2020-04-20 19:32:35,742:DEBUG:applicability_domain:Stage 3: blocked 5 inputs
+2020-04-20 19:32:35,742:INFO:cross_valid:Blocked 8/60 on clean data
+2020-04-20 19:32:35,743:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-04-20 19:32:36,053:DEBUG:applicability_domain:Stage 2: blocked 32 inputs
+2020-04-20 19:32:36,160:DEBUG:applicability_domain:Mean likelihood on adv: 0.553571
+2020-04-20 19:32:36,160:DEBUG:applicability_domain:Stage 3: blocked 13 inputs
+2020-04-20 19:32:36,160:INFO:cross_valid:Blocked 45/60 on adv. examples.
