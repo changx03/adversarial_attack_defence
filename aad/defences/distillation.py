@@ -142,17 +142,17 @@ class DistillationContainer(DetectorContainer):
             mc.accuracy_test.append(va_acc)
 
             # early stopping
-            if (tr_acc >= 0.999 and va_acc >= 0.999) or tr_loss < 1e-4:
-                logger.debug(
-                    'Satisfied the accuracy threshold. Abort at %d epoch!',
-                    epoch)
-                break
-            if len(mc.loss_train) - 5 >= 0 \
-                    and mc.loss_train[-5] <= mc.loss_train[-1]:
-                logger.debug(
-                    'No improvement in the last 5 epochs. Abort at %d epoch!',
-                    epoch)
-                break
+            # if (tr_acc >= 0.999 and va_acc >= 0.999) or tr_loss < 1e-4:
+            #     logger.debug(
+            #         'Satisfied the accuracy threshold. Abort at %d epoch!',
+            #         epoch)
+            #     break
+            # if len(mc.loss_train) - 5 >= 0 \
+            #         and mc.loss_train[-5] <= mc.loss_train[-1]:
+            #     logger.debug(
+            #         'No improvement in the last 5 epochs. Abort at %d epoch!',
+            #         epoch)
+            #     break
 
         model.load_state_dict(best_model_state)
 

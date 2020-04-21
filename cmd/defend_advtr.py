@@ -97,7 +97,7 @@ def main():
     set_logging(LOG_NAME, data_name, verbose, save_log)
 
     # show parameters
-    print('[DefAdvTr] Running adversarial training on {}...'.format(model_name))
+    print(f'[{LOG_NAME}] Running adversarial training on {model_name}...')
     logger.info('Start at    : %s', get_time_str())
     logger.info('RECEIVED PARAMETERS:')
     logger.info('model file  :%s', model_file)
@@ -185,4 +185,4 @@ if __name__ == '__main__':
     $ python ./cmd/defend_advtr.py -vl -e 30 -r 0.25 -m ./save/CifarResnet50_SVHN_e30.pt  -BCDFS
     """
     main()
-    print('[DefAdvTr] Task completed!')
+    print(f'[{LOG_NAME}] Task completed!')
