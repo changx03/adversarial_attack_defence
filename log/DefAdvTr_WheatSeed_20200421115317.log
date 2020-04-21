@@ -1,0 +1,242 @@
+2020-04-21 11:53:17,161:INFO:defend_advtr:Start at    : 20200421115317
+2020-04-21 11:53:17,162:INFO:defend_advtr:RECEIVED PARAMETERS:
+2020-04-21 11:53:17,162:INFO:defend_advtr:model file  :./save/IrisNN_WheatSeed_e300.pt
+2020-04-21 11:53:17,162:INFO:defend_advtr:model       :IrisNN
+2020-04-21 11:53:17,162:INFO:defend_advtr:dataset     :WheatSeed
+2020-04-21 11:53:17,162:INFO:defend_advtr:max_epochs  :200
+2020-04-21 11:53:17,162:INFO:defend_advtr:ratio  :0
+2020-04-21 11:53:17,162:INFO:defend_advtr:batch_size  :128
+2020-04-21 11:53:17,162:INFO:defend_advtr:seed        :4096
+2020-04-21 11:53:17,162:INFO:defend_advtr:verbose     :True
+2020-04-21 11:53:17,162:INFO:defend_advtr:save_log    :True
+2020-04-21 11:53:17,162:INFO:defend_advtr:need train  :True
+2020-04-21 11:53:17,162:INFO:defend_advtr:attacks     :clean, BIM, Carlini, DeepFool, FGSM
+2020-04-21 11:53:17,162:DEBUG:utils:Setting random seed for PyTorch.
+2020-04-21 11:53:17,184:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-04-21 11:53:17,184:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/seeds_dataset.txt
+2020-04-21 11:53:17,190:INFO:data_container:Train size: 168 - Test size: 42
+2020-04-21 11:53:17,190:INFO:data_container:Successfully load data. Time to complete: 0m 0.006s
+2020-04-21 11:53:19,512:DEBUG:model_container_pt:Using device: cuda
+2020-04-21 11:53:19,513:INFO:model_container_pt:Loaded model from ./save/IrisNN_WheatSeed_e300.pt
+2020-04-21 11:53:19,532:INFO:defend_advtr:Accuracy on test set: 0.904762
+2020-04-21 11:53:19,533:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-04-21 11:53:19,534:DEBUG:adversarial_training:Generate 84 adv. examples using [BIMContainer]
+2020-04-21 11:53:19,695:INFO:projected_gradient_descent:Success rate of attack: 98.81%
+2020-04-21 11:53:19,696:INFO:bim_attack:Time to complete training 1000 adv. examples: 0m 0.162s
+2020-04-21 11:53:19,696:DEBUG:detector_container:Time to complete [Train Adv. Examples]: 0m 0.162s
+2020-04-21 11:53:19,700:DEBUG:adversarial_training:[1/200]0m 0.004s: Train loss: 2.683674 acc: 0.500000 - Test loss: 0.283957 acc: 0.904762
+2020-04-21 11:53:19,704:DEBUG:adversarial_training:[2/200]0m 0.003s: Train loss: 2.424165 acc: 0.482143 - Test loss: 0.432243 acc: 0.833333
+2020-04-21 11:53:19,708:DEBUG:adversarial_training:[3/200]0m 0.003s: Train loss: 2.000530 acc: 0.452381 - Test loss: 0.744907 acc: 0.738095
+2020-04-21 11:53:19,711:DEBUG:adversarial_training:[4/200]0m 0.003s: Train loss: 1.742173 acc: 0.416667 - Test loss: 1.102633 acc: 0.690476
+2020-04-21 11:53:19,714:DEBUG:adversarial_training:[5/200]0m 0.003s: Train loss: 1.823661 acc: 0.470238 - Test loss: 1.193227 acc: 0.666667
+2020-04-21 11:53:19,717:DEBUG:adversarial_training:[6/200]0m 0.003s: Train loss: 1.823145 acc: 0.511905 - Test loss: 0.954099 acc: 0.690476
+2020-04-21 11:53:19,720:DEBUG:adversarial_training:[7/200]0m 0.003s: Train loss: 1.594436 acc: 0.505952 - Test loss: 0.660655 acc: 0.714286
+2020-04-21 11:53:19,723:DEBUG:adversarial_training:[8/200]0m 0.003s: Train loss: 1.442347 acc: 0.482143 - Test loss: 0.482953 acc: 0.738095
+2020-04-21 11:53:19,726:DEBUG:adversarial_training:[9/200]0m 0.003s: Train loss: 1.403803 acc: 0.488095 - Test loss: 0.407123 acc: 0.785714
+2020-04-21 11:53:19,729:DEBUG:adversarial_training:[10/200]0m 0.003s: Train loss: 1.353966 acc: 0.511905 - Test loss: 0.391638 acc: 0.785714
+2020-04-21 11:53:19,733:DEBUG:adversarial_training:[11/200]0m 0.003s: Train loss: 1.261364 acc: 0.500000 - Test loss: 0.421647 acc: 0.761905
+2020-04-21 11:53:19,736:DEBUG:adversarial_training:[12/200]0m 0.003s: Train loss: 1.147272 acc: 0.470238 - Test loss: 0.465607 acc: 0.738095
+2020-04-21 11:53:19,739:DEBUG:adversarial_training:[13/200]0m 0.003s: Train loss: 1.090905 acc: 0.446429 - Test loss: 0.511946 acc: 0.738095
+2020-04-21 11:53:19,742:DEBUG:adversarial_training:[14/200]0m 0.003s: Train loss: 1.068978 acc: 0.434524 - Test loss: 0.541817 acc: 0.714286
+2020-04-21 11:53:19,745:DEBUG:adversarial_training:[15/200]0m 0.003s: Train loss: 1.050038 acc: 0.422619 - Test loss: 0.548434 acc: 0.714286
+2020-04-21 11:53:19,748:DEBUG:adversarial_training:[16/200]0m 0.003s: Train loss: 1.018197 acc: 0.428571 - Test loss: 0.529365 acc: 0.714286
+2020-04-21 11:53:19,752:DEBUG:adversarial_training:[17/200]0m 0.003s: Train loss: 0.980384 acc: 0.434524 - Test loss: 0.506740 acc: 0.738095
+2020-04-21 11:53:19,755:DEBUG:adversarial_training:[18/200]0m 0.003s: Train loss: 0.947417 acc: 0.440476 - Test loss: 0.490233 acc: 0.738095
+2020-04-21 11:53:19,758:DEBUG:adversarial_training:[19/200]0m 0.003s: Train loss: 0.933109 acc: 0.452381 - Test loss: 0.485850 acc: 0.738095
+2020-04-21 11:53:19,761:DEBUG:adversarial_training:[20/200]0m 0.003s: Train loss: 0.915557 acc: 0.464286 - Test loss: 0.495961 acc: 0.738095
+2020-04-21 11:53:19,764:DEBUG:adversarial_training:[21/200]0m 0.003s: Train loss: 0.903045 acc: 0.452381 - Test loss: 0.513343 acc: 0.761905
+2020-04-21 11:53:19,767:DEBUG:adversarial_training:[22/200]0m 0.003s: Train loss: 0.894132 acc: 0.458333 - Test loss: 0.533112 acc: 0.761905
+2020-04-21 11:53:19,770:DEBUG:adversarial_training:[23/200]0m 0.003s: Train loss: 0.886812 acc: 0.458333 - Test loss: 0.545889 acc: 0.738095
+2020-04-21 11:53:19,774:DEBUG:adversarial_training:[24/200]0m 0.003s: Train loss: 0.882268 acc: 0.488095 - Test loss: 0.553919 acc: 0.738095
+2020-04-21 11:53:19,777:DEBUG:adversarial_training:[25/200]0m 0.003s: Train loss: 0.876502 acc: 0.488095 - Test loss: 0.552002 acc: 0.714286
+2020-04-21 11:53:19,780:DEBUG:adversarial_training:[26/200]0m 0.003s: Train loss: 0.871584 acc: 0.500000 - Test loss: 0.545670 acc: 0.714286
+2020-04-21 11:53:19,783:DEBUG:adversarial_training:[27/200]0m 0.003s: Train loss: 0.867555 acc: 0.505952 - Test loss: 0.543788 acc: 0.714286
+2020-04-21 11:53:19,786:DEBUG:adversarial_training:[28/200]0m 0.003s: Train loss: 0.863286 acc: 0.517857 - Test loss: 0.546579 acc: 0.714286
+2020-04-21 11:53:19,789:DEBUG:adversarial_training:[29/200]0m 0.003s: Train loss: 0.861986 acc: 0.517857 - Test loss: 0.550196 acc: 0.714286
+2020-04-21 11:53:19,792:DEBUG:adversarial_training:[30/200]0m 0.003s: Train loss: 0.859363 acc: 0.517857 - Test loss: 0.556391 acc: 0.738095
+2020-04-21 11:53:19,796:DEBUG:adversarial_training:[31/200]0m 0.003s: Train loss: 0.857533 acc: 0.517857 - Test loss: 0.562818 acc: 0.738095
+2020-04-21 11:53:19,799:DEBUG:adversarial_training:[32/200]0m 0.003s: Train loss: 0.854751 acc: 0.523810 - Test loss: 0.566901 acc: 0.738095
+2020-04-21 11:53:19,802:DEBUG:adversarial_training:[33/200]0m 0.003s: Train loss: 0.852771 acc: 0.517857 - Test loss: 0.568768 acc: 0.738095
+2020-04-21 11:53:19,805:DEBUG:adversarial_training:[34/200]0m 0.003s: Train loss: 0.851171 acc: 0.517857 - Test loss: 0.569445 acc: 0.761905
+2020-04-21 11:53:19,808:DEBUG:adversarial_training:[35/200]0m 0.003s: Train loss: 0.849499 acc: 0.494048 - Test loss: 0.568118 acc: 0.785714
+2020-04-21 11:53:19,811:DEBUG:adversarial_training:[36/200]0m 0.003s: Train loss: 0.847944 acc: 0.488095 - Test loss: 0.563446 acc: 0.785714
+2020-04-21 11:53:19,814:DEBUG:adversarial_training:[37/200]0m 0.003s: Train loss: 0.846838 acc: 0.482143 - Test loss: 0.557549 acc: 0.833333
+2020-04-21 11:53:19,818:DEBUG:adversarial_training:[38/200]0m 0.003s: Train loss: 0.845579 acc: 0.500000 - Test loss: 0.553596 acc: 0.833333
+2020-04-21 11:53:19,821:DEBUG:adversarial_training:[39/200]0m 0.003s: Train loss: 0.844401 acc: 0.511905 - Test loss: 0.551197 acc: 0.833333
+2020-04-21 11:53:19,824:DEBUG:adversarial_training:[40/200]0m 0.003s: Train loss: 0.843257 acc: 0.511905 - Test loss: 0.552256 acc: 0.785714
+2020-04-21 11:53:19,827:DEBUG:adversarial_training:[41/200]0m 0.003s: Train loss: 0.841475 acc: 0.505952 - Test loss: 0.557204 acc: 0.761905
+2020-04-21 11:53:19,830:DEBUG:adversarial_training:[42/200]0m 0.003s: Train loss: 0.838970 acc: 0.505952 - Test loss: 0.561591 acc: 0.738095
+2020-04-21 11:53:19,833:DEBUG:adversarial_training:[43/200]0m 0.003s: Train loss: 0.838500 acc: 0.488095 - Test loss: 0.563500 acc: 0.738095
+2020-04-21 11:53:19,836:DEBUG:adversarial_training:[44/200]0m 0.003s: Train loss: 0.836728 acc: 0.505952 - Test loss: 0.561297 acc: 0.738095
+2020-04-21 11:53:19,840:DEBUG:adversarial_training:[45/200]0m 0.003s: Train loss: 0.834833 acc: 0.505952 - Test loss: 0.564169 acc: 0.690476
+2020-04-21 11:53:19,843:DEBUG:adversarial_training:[46/200]0m 0.003s: Train loss: 0.833704 acc: 0.511905 - Test loss: 0.569521 acc: 0.690476
+2020-04-21 11:53:19,846:DEBUG:adversarial_training:[47/200]0m 0.003s: Train loss: 0.833097 acc: 0.523810 - Test loss: 0.575868 acc: 0.666667
+2020-04-21 11:53:19,849:DEBUG:adversarial_training:[48/200]0m 0.003s: Train loss: 0.832333 acc: 0.529762 - Test loss: 0.575685 acc: 0.666667
+2020-04-21 11:53:19,852:DEBUG:adversarial_training:[49/200]0m 0.003s: Train loss: 0.830924 acc: 0.529762 - Test loss: 0.571185 acc: 0.690476
+2020-04-21 11:53:19,855:DEBUG:adversarial_training:[50/200]0m 0.003s: Train loss: 0.829088 acc: 0.511905 - Test loss: 0.564009 acc: 0.690476
+2020-04-21 11:53:19,858:DEBUG:adversarial_training:[51/200]0m 0.003s: Train loss: 0.827155 acc: 0.517857 - Test loss: 0.557926 acc: 0.738095
+2020-04-21 11:53:19,861:DEBUG:adversarial_training:[52/200]0m 0.003s: Train loss: 0.825966 acc: 0.511905 - Test loss: 0.554375 acc: 0.738095
+2020-04-21 11:53:19,864:DEBUG:adversarial_training:[53/200]0m 0.003s: Train loss: 0.825069 acc: 0.523810 - Test loss: 0.553724 acc: 0.738095
+2020-04-21 11:53:19,868:DEBUG:adversarial_training:[54/200]0m 0.003s: Train loss: 0.824075 acc: 0.523810 - Test loss: 0.555263 acc: 0.738095
+2020-04-21 11:53:19,871:DEBUG:adversarial_training:[55/200]0m 0.003s: Train loss: 0.822583 acc: 0.517857 - Test loss: 0.555253 acc: 0.714286
+2020-04-21 11:53:19,874:DEBUG:adversarial_training:[56/200]0m 0.003s: Train loss: 0.821539 acc: 0.523810 - Test loss: 0.555564 acc: 0.690476
+2020-04-21 11:53:19,877:DEBUG:adversarial_training:[57/200]0m 0.003s: Train loss: 0.820452 acc: 0.529762 - Test loss: 0.553638 acc: 0.690476
+2020-04-21 11:53:19,880:DEBUG:adversarial_training:[58/200]0m 0.003s: Train loss: 0.819614 acc: 0.535714 - Test loss: 0.550775 acc: 0.714286
+2020-04-21 11:53:19,883:DEBUG:adversarial_training:[59/200]0m 0.003s: Train loss: 0.818571 acc: 0.535714 - Test loss: 0.552422 acc: 0.690476
+2020-04-21 11:53:19,886:DEBUG:adversarial_training:[60/200]0m 0.003s: Train loss: 0.817070 acc: 0.535714 - Test loss: 0.558140 acc: 0.714286
+2020-04-21 11:53:19,889:DEBUG:adversarial_training:[61/200]0m 0.003s: Train loss: 0.816181 acc: 0.535714 - Test loss: 0.566210 acc: 0.714286
+2020-04-21 11:53:19,892:DEBUG:adversarial_training:[62/200]0m 0.003s: Train loss: 0.814539 acc: 0.529762 - Test loss: 0.569635 acc: 0.714286
+2020-04-21 11:53:19,895:DEBUG:adversarial_training:[63/200]0m 0.003s: Train loss: 0.813705 acc: 0.529762 - Test loss: 0.571000 acc: 0.690476
+2020-04-21 11:53:19,898:DEBUG:adversarial_training:[64/200]0m 0.003s: Train loss: 0.812689 acc: 0.535714 - Test loss: 0.570978 acc: 0.690476
+2020-04-21 11:53:19,901:DEBUG:adversarial_training:[65/200]0m 0.003s: Train loss: 0.811365 acc: 0.541667 - Test loss: 0.567869 acc: 0.714286
+2020-04-21 11:53:19,905:DEBUG:adversarial_training:[66/200]0m 0.003s: Train loss: 0.810280 acc: 0.541667 - Test loss: 0.562443 acc: 0.690476
+2020-04-21 11:53:19,908:DEBUG:adversarial_training:[67/200]0m 0.003s: Train loss: 0.808510 acc: 0.553571 - Test loss: 0.560542 acc: 0.690476
+2020-04-21 11:53:19,911:DEBUG:adversarial_training:[68/200]0m 0.003s: Train loss: 0.807439 acc: 0.547619 - Test loss: 0.561718 acc: 0.761905
+2020-04-21 11:53:19,914:DEBUG:adversarial_training:[69/200]0m 0.003s: Train loss: 0.805994 acc: 0.547619 - Test loss: 0.566256 acc: 0.761905
+2020-04-21 11:53:19,917:DEBUG:adversarial_training:[70/200]0m 0.003s: Train loss: 0.805397 acc: 0.553571 - Test loss: 0.572046 acc: 0.738095
+2020-04-21 11:53:19,920:DEBUG:adversarial_training:[71/200]0m 0.003s: Train loss: 0.804962 acc: 0.553571 - Test loss: 0.571957 acc: 0.738095
+2020-04-21 11:53:19,923:DEBUG:adversarial_training:[72/200]0m 0.003s: Train loss: 0.804097 acc: 0.553571 - Test loss: 0.567896 acc: 0.738095
+2020-04-21 11:53:19,926:DEBUG:adversarial_training:[73/200]0m 0.003s: Train loss: 0.801749 acc: 0.547619 - Test loss: 0.569763 acc: 0.690476
+2020-04-21 11:53:19,930:DEBUG:adversarial_training:[74/200]0m 0.003s: Train loss: 0.800223 acc: 0.547619 - Test loss: 0.574896 acc: 0.690476
+2020-04-21 11:53:19,933:DEBUG:adversarial_training:[75/200]0m 0.003s: Train loss: 0.800249 acc: 0.547619 - Test loss: 0.577847 acc: 0.666667
+2020-04-21 11:53:19,936:DEBUG:adversarial_training:[76/200]0m 0.003s: Train loss: 0.799421 acc: 0.535714 - Test loss: 0.574765 acc: 0.666667
+2020-04-21 11:53:19,939:DEBUG:adversarial_training:[77/200]0m 0.003s: Train loss: 0.798010 acc: 0.559524 - Test loss: 0.567381 acc: 0.666667
+2020-04-21 11:53:19,942:DEBUG:adversarial_training:[78/200]0m 0.003s: Train loss: 0.796395 acc: 0.565476 - Test loss: 0.561458 acc: 0.666667
+2020-04-21 11:53:19,945:DEBUG:adversarial_training:[79/200]0m 0.003s: Train loss: 0.796769 acc: 0.559524 - Test loss: 0.560005 acc: 0.666667
+2020-04-21 11:53:19,948:DEBUG:adversarial_training:[80/200]0m 0.003s: Train loss: 0.794775 acc: 0.559524 - Test loss: 0.565217 acc: 0.666667
+2020-04-21 11:53:19,951:DEBUG:adversarial_training:[81/200]0m 0.003s: Train loss: 0.793611 acc: 0.565476 - Test loss: 0.564967 acc: 0.666667
+2020-04-21 11:53:19,955:DEBUG:adversarial_training:[82/200]0m 0.003s: Train loss: 0.791669 acc: 0.565476 - Test loss: 0.558810 acc: 0.666667
+2020-04-21 11:53:19,958:DEBUG:adversarial_training:[83/200]0m 0.003s: Train loss: 0.791052 acc: 0.559524 - Test loss: 0.555149 acc: 0.666667
+2020-04-21 11:53:19,961:DEBUG:adversarial_training:[84/200]0m 0.003s: Train loss: 0.790149 acc: 0.565476 - Test loss: 0.559171 acc: 0.690476
+2020-04-21 11:53:19,964:DEBUG:adversarial_training:[85/200]0m 0.003s: Train loss: 0.788758 acc: 0.559524 - Test loss: 0.569808 acc: 0.666667
+2020-04-21 11:53:19,967:DEBUG:adversarial_training:[86/200]0m 0.003s: Train loss: 0.788224 acc: 0.565476 - Test loss: 0.574057 acc: 0.666667
+2020-04-21 11:53:19,971:DEBUG:adversarial_training:[87/200]0m 0.003s: Train loss: 0.787699 acc: 0.565476 - Test loss: 0.570540 acc: 0.666667
+2020-04-21 11:53:19,974:DEBUG:adversarial_training:[88/200]0m 0.003s: Train loss: 0.786087 acc: 0.571429 - Test loss: 0.563818 acc: 0.666667
+2020-04-21 11:53:19,977:DEBUG:adversarial_training:[89/200]0m 0.003s: Train loss: 0.784844 acc: 0.571429 - Test loss: 0.560248 acc: 0.666667
+2020-04-21 11:53:19,980:DEBUG:adversarial_training:[90/200]0m 0.003s: Train loss: 0.782990 acc: 0.577381 - Test loss: 0.562170 acc: 0.690476
+2020-04-21 11:53:19,983:DEBUG:adversarial_training:[91/200]0m 0.003s: Train loss: 0.782511 acc: 0.571429 - Test loss: 0.565100 acc: 0.690476
+2020-04-21 11:53:19,986:DEBUG:adversarial_training:[92/200]0m 0.003s: Train loss: 0.782011 acc: 0.571429 - Test loss: 0.565999 acc: 0.690476
+2020-04-21 11:53:19,989:DEBUG:adversarial_training:[93/200]0m 0.003s: Train loss: 0.781450 acc: 0.589286 - Test loss: 0.565138 acc: 0.690476
+2020-04-21 11:53:19,993:DEBUG:adversarial_training:[94/200]0m 0.003s: Train loss: 0.780366 acc: 0.583333 - Test loss: 0.563713 acc: 0.690476
+2020-04-21 11:53:19,996:DEBUG:adversarial_training:[95/200]0m 0.003s: Train loss: 0.779620 acc: 0.589286 - Test loss: 0.561084 acc: 0.690476
+2020-04-21 11:53:19,999:DEBUG:adversarial_training:[96/200]0m 0.003s: Train loss: 0.778764 acc: 0.583333 - Test loss: 0.560496 acc: 0.690476
+2020-04-21 11:53:20,002:DEBUG:adversarial_training:[97/200]0m 0.003s: Train loss: 0.777751 acc: 0.583333 - Test loss: 0.562788 acc: 0.690476
+2020-04-21 11:53:20,005:DEBUG:adversarial_training:[98/200]0m 0.003s: Train loss: 0.777030 acc: 0.589286 - Test loss: 0.566947 acc: 0.666667
+2020-04-21 11:53:20,008:DEBUG:adversarial_training:[99/200]0m 0.003s: Train loss: 0.775693 acc: 0.607143 - Test loss: 0.562877 acc: 0.666667
+2020-04-21 11:53:20,011:DEBUG:adversarial_training:[100/200]0m 0.003s: Train loss: 0.772804 acc: 0.595238 - Test loss: 0.550096 acc: 0.666667
+2020-04-21 11:53:20,014:DEBUG:adversarial_training:[101/200]0m 0.003s: Train loss: 0.772642 acc: 0.559524 - Test loss: 0.538156 acc: 0.690476
+2020-04-21 11:53:20,017:DEBUG:adversarial_training:[102/200]0m 0.003s: Train loss: 0.776703 acc: 0.559524 - Test loss: 0.535962 acc: 0.690476
+2020-04-21 11:53:20,021:DEBUG:adversarial_training:[103/200]0m 0.003s: Train loss: 0.775452 acc: 0.565476 - Test loss: 0.544592 acc: 0.666667
+2020-04-21 11:53:20,024:DEBUG:adversarial_training:[104/200]0m 0.003s: Train loss: 0.770375 acc: 0.577381 - Test loss: 0.561107 acc: 0.666667
+2020-04-21 11:53:20,027:DEBUG:adversarial_training:[105/200]0m 0.003s: Train loss: 0.770102 acc: 0.601190 - Test loss: 0.573525 acc: 0.690476
+2020-04-21 11:53:20,030:DEBUG:adversarial_training:[106/200]0m 0.003s: Train loss: 0.770398 acc: 0.589286 - Test loss: 0.574241 acc: 0.690476
+2020-04-21 11:53:20,033:DEBUG:adversarial_training:[107/200]0m 0.003s: Train loss: 0.770140 acc: 0.595238 - Test loss: 0.568328 acc: 0.690476
+2020-04-21 11:53:20,036:DEBUG:adversarial_training:[108/200]0m 0.003s: Train loss: 0.768447 acc: 0.601190 - Test loss: 0.555502 acc: 0.666667
+2020-04-21 11:53:20,040:DEBUG:adversarial_training:[109/200]0m 0.003s: Train loss: 0.765466 acc: 0.601190 - Test loss: 0.546842 acc: 0.666667
+2020-04-21 11:53:20,043:DEBUG:adversarial_training:[110/200]0m 0.003s: Train loss: 0.764722 acc: 0.595238 - Test loss: 0.540551 acc: 0.666667
+2020-04-21 11:53:20,046:DEBUG:adversarial_training:[111/200]0m 0.003s: Train loss: 0.765646 acc: 0.589286 - Test loss: 0.538818 acc: 0.666667
+2020-04-21 11:53:20,049:DEBUG:adversarial_training:[112/200]0m 0.003s: Train loss: 0.764325 acc: 0.583333 - Test loss: 0.543537 acc: 0.666667
+2020-04-21 11:53:20,052:DEBUG:adversarial_training:[113/200]0m 0.003s: Train loss: 0.762005 acc: 0.583333 - Test loss: 0.554235 acc: 0.666667
+2020-04-21 11:53:20,055:DEBUG:adversarial_training:[114/200]0m 0.003s: Train loss: 0.761875 acc: 0.595238 - Test loss: 0.562154 acc: 0.666667
+2020-04-21 11:53:20,058:DEBUG:adversarial_training:[115/200]0m 0.003s: Train loss: 0.760756 acc: 0.613095 - Test loss: 0.562343 acc: 0.666667
+2020-04-21 11:53:20,061:DEBUG:adversarial_training:[116/200]0m 0.003s: Train loss: 0.758981 acc: 0.613095 - Test loss: 0.563421 acc: 0.666667
+2020-04-21 11:53:20,064:DEBUG:adversarial_training:[117/200]0m 0.003s: Train loss: 0.758672 acc: 0.607143 - Test loss: 0.563087 acc: 0.666667
+2020-04-21 11:53:20,068:DEBUG:adversarial_training:[118/200]0m 0.003s: Train loss: 0.757876 acc: 0.607143 - Test loss: 0.562217 acc: 0.666667
+2020-04-21 11:53:20,071:DEBUG:adversarial_training:[119/200]0m 0.003s: Train loss: 0.756701 acc: 0.595238 - Test loss: 0.558390 acc: 0.666667
+2020-04-21 11:53:20,074:DEBUG:adversarial_training:[120/200]0m 0.003s: Train loss: 0.755617 acc: 0.583333 - Test loss: 0.556730 acc: 0.666667
+2020-04-21 11:53:20,077:DEBUG:adversarial_training:[121/200]0m 0.003s: Train loss: 0.754758 acc: 0.601190 - Test loss: 0.555127 acc: 0.666667
+2020-04-21 11:53:20,081:DEBUG:adversarial_training:[122/200]0m 0.003s: Train loss: 0.753720 acc: 0.601190 - Test loss: 0.554023 acc: 0.666667
+2020-04-21 11:53:20,084:DEBUG:adversarial_training:[123/200]0m 0.003s: Train loss: 0.752692 acc: 0.595238 - Test loss: 0.550990 acc: 0.666667
+2020-04-21 11:53:20,087:DEBUG:adversarial_training:[124/200]0m 0.003s: Train loss: 0.752359 acc: 0.607143 - Test loss: 0.549753 acc: 0.666667
+2020-04-21 11:53:20,090:DEBUG:adversarial_training:[125/200]0m 0.003s: Train loss: 0.751739 acc: 0.607143 - Test loss: 0.553771 acc: 0.642857
+2020-04-21 11:53:20,093:DEBUG:adversarial_training:[126/200]0m 0.003s: Train loss: 0.750580 acc: 0.601190 - Test loss: 0.555162 acc: 0.642857
+2020-04-21 11:53:20,096:DEBUG:adversarial_training:[127/200]0m 0.003s: Train loss: 0.750027 acc: 0.601190 - Test loss: 0.552617 acc: 0.642857
+2020-04-21 11:53:20,100:DEBUG:adversarial_training:[128/200]0m 0.003s: Train loss: 0.749079 acc: 0.601190 - Test loss: 0.547648 acc: 0.619048
+2020-04-21 11:53:20,103:DEBUG:adversarial_training:[129/200]0m 0.003s: Train loss: 0.748829 acc: 0.601190 - Test loss: 0.547509 acc: 0.642857
+2020-04-21 11:53:20,106:DEBUG:adversarial_training:[130/200]0m 0.003s: Train loss: 0.747847 acc: 0.601190 - Test loss: 0.550164 acc: 0.642857
+2020-04-21 11:53:20,109:DEBUG:adversarial_training:[131/200]0m 0.003s: Train loss: 0.746766 acc: 0.601190 - Test loss: 0.552339 acc: 0.642857
+2020-04-21 11:53:20,112:DEBUG:adversarial_training:[132/200]0m 0.003s: Train loss: 0.745400 acc: 0.601190 - Test loss: 0.552806 acc: 0.666667
+2020-04-21 11:53:20,115:DEBUG:adversarial_training:[133/200]0m 0.003s: Train loss: 0.744700 acc: 0.607143 - Test loss: 0.556078 acc: 0.690476
+2020-04-21 11:53:20,119:DEBUG:adversarial_training:[134/200]0m 0.003s: Train loss: 0.743954 acc: 0.613095 - Test loss: 0.551345 acc: 0.690476
+2020-04-21 11:53:20,122:DEBUG:adversarial_training:[135/200]0m 0.003s: Train loss: 0.743605 acc: 0.613095 - Test loss: 0.545884 acc: 0.666667
+2020-04-21 11:53:20,125:DEBUG:adversarial_training:[136/200]0m 0.003s: Train loss: 0.742022 acc: 0.607143 - Test loss: 0.547831 acc: 0.690476
+2020-04-21 11:53:20,128:DEBUG:adversarial_training:[137/200]0m 0.003s: Train loss: 0.741020 acc: 0.613095 - Test loss: 0.551826 acc: 0.690476
+2020-04-21 11:53:20,131:DEBUG:adversarial_training:[138/200]0m 0.003s: Train loss: 0.740448 acc: 0.619048 - Test loss: 0.555168 acc: 0.690476
+2020-04-21 11:53:20,134:DEBUG:adversarial_training:[139/200]0m 0.003s: Train loss: 0.739817 acc: 0.625000 - Test loss: 0.553037 acc: 0.690476
+2020-04-21 11:53:20,137:DEBUG:adversarial_training:[140/200]0m 0.003s: Train loss: 0.739408 acc: 0.630952 - Test loss: 0.548334 acc: 0.690476
+2020-04-21 11:53:20,140:DEBUG:adversarial_training:[141/200]0m 0.003s: Train loss: 0.738115 acc: 0.630952 - Test loss: 0.546222 acc: 0.690476
+2020-04-21 11:53:20,144:DEBUG:adversarial_training:[142/200]0m 0.003s: Train loss: 0.736952 acc: 0.619048 - Test loss: 0.544998 acc: 0.690476
+2020-04-21 11:53:20,147:DEBUG:adversarial_training:[143/200]0m 0.003s: Train loss: 0.736316 acc: 0.619048 - Test loss: 0.544672 acc: 0.666667
+2020-04-21 11:53:20,150:DEBUG:adversarial_training:[144/200]0m 0.003s: Train loss: 0.736008 acc: 0.601190 - Test loss: 0.544887 acc: 0.642857
+2020-04-21 11:53:20,153:DEBUG:adversarial_training:[145/200]0m 0.003s: Train loss: 0.735216 acc: 0.601190 - Test loss: 0.547751 acc: 0.642857
+2020-04-21 11:53:20,156:DEBUG:adversarial_training:[146/200]0m 0.003s: Train loss: 0.733912 acc: 0.613095 - Test loss: 0.552112 acc: 0.666667
+2020-04-21 11:53:20,159:DEBUG:adversarial_training:[147/200]0m 0.003s: Train loss: 0.732501 acc: 0.607143 - Test loss: 0.561662 acc: 0.666667
+2020-04-21 11:53:20,163:DEBUG:adversarial_training:[148/200]0m 0.003s: Train loss: 0.732718 acc: 0.613095 - Test loss: 0.566199 acc: 0.666667
+2020-04-21 11:53:20,166:DEBUG:adversarial_training:[149/200]0m 0.003s: Train loss: 0.732318 acc: 0.619048 - Test loss: 0.561201 acc: 0.666667
+2020-04-21 11:53:20,169:DEBUG:adversarial_training:[150/200]0m 0.003s: Train loss: 0.731350 acc: 0.625000 - Test loss: 0.551134 acc: 0.666667
+2020-04-21 11:53:20,172:DEBUG:adversarial_training:[151/200]0m 0.003s: Train loss: 0.729214 acc: 0.607143 - Test loss: 0.544295 acc: 0.690476
+2020-04-21 11:53:20,175:DEBUG:adversarial_training:[152/200]0m 0.003s: Train loss: 0.728905 acc: 0.613095 - Test loss: 0.541278 acc: 0.690476
+2020-04-21 11:53:20,179:DEBUG:adversarial_training:[153/200]0m 0.003s: Train loss: 0.728350 acc: 0.619048 - Test loss: 0.542296 acc: 0.690476
+2020-04-21 11:53:20,182:DEBUG:adversarial_training:[154/200]0m 0.003s: Train loss: 0.728528 acc: 0.613095 - Test loss: 0.540966 acc: 0.690476
+2020-04-21 11:53:20,185:DEBUG:adversarial_training:[155/200]0m 0.003s: Train loss: 0.727374 acc: 0.613095 - Test loss: 0.536994 acc: 0.690476
+2020-04-21 11:53:20,188:DEBUG:adversarial_training:[156/200]0m 0.003s: Train loss: 0.726630 acc: 0.607143 - Test loss: 0.541194 acc: 0.666667
+2020-04-21 11:53:20,191:DEBUG:adversarial_training:[157/200]0m 0.003s: Train loss: 0.725307 acc: 0.619048 - Test loss: 0.544293 acc: 0.666667
+2020-04-21 11:53:20,195:DEBUG:adversarial_training:[158/200]0m 0.003s: Train loss: 0.723815 acc: 0.619048 - Test loss: 0.544345 acc: 0.666667
+2020-04-21 11:53:20,198:DEBUG:adversarial_training:[159/200]0m 0.003s: Train loss: 0.723169 acc: 0.619048 - Test loss: 0.542261 acc: 0.666667
+2020-04-21 11:53:20,201:DEBUG:adversarial_training:[160/200]0m 0.003s: Train loss: 0.722411 acc: 0.607143 - Test loss: 0.539053 acc: 0.666667
+2020-04-21 11:53:20,204:DEBUG:adversarial_training:[161/200]0m 0.003s: Train loss: 0.722272 acc: 0.607143 - Test loss: 0.538492 acc: 0.666667
+2020-04-21 11:53:20,207:DEBUG:adversarial_training:[162/200]0m 0.003s: Train loss: 0.721617 acc: 0.607143 - Test loss: 0.539213 acc: 0.666667
+2020-04-21 11:53:20,210:DEBUG:adversarial_training:[163/200]0m 0.003s: Train loss: 0.720375 acc: 0.607143 - Test loss: 0.542890 acc: 0.666667
+2020-04-21 11:53:20,214:DEBUG:adversarial_training:[164/200]0m 0.003s: Train loss: 0.720885 acc: 0.613095 - Test loss: 0.546273 acc: 0.666667
+2020-04-21 11:53:20,217:DEBUG:adversarial_training:[165/200]0m 0.003s: Train loss: 0.718404 acc: 0.613095 - Test loss: 0.541430 acc: 0.666667
+2020-04-21 11:53:20,220:DEBUG:adversarial_training:[166/200]0m 0.003s: Train loss: 0.718752 acc: 0.613095 - Test loss: 0.541718 acc: 0.666667
+2020-04-21 11:53:20,223:DEBUG:adversarial_training:[167/200]0m 0.003s: Train loss: 0.717531 acc: 0.613095 - Test loss: 0.547539 acc: 0.666667
+2020-04-21 11:53:20,226:DEBUG:adversarial_training:[168/200]0m 0.003s: Train loss: 0.716569 acc: 0.625000 - Test loss: 0.545904 acc: 0.666667
+2020-04-21 11:53:20,229:DEBUG:adversarial_training:[169/200]0m 0.003s: Train loss: 0.714970 acc: 0.625000 - Test loss: 0.537634 acc: 0.666667
+2020-04-21 11:53:20,233:DEBUG:adversarial_training:[170/200]0m 0.003s: Train loss: 0.714829 acc: 0.625000 - Test loss: 0.532616 acc: 0.690476
+2020-04-21 11:53:20,236:DEBUG:adversarial_training:[171/200]0m 0.003s: Train loss: 0.715128 acc: 0.630952 - Test loss: 0.531065 acc: 0.690476
+2020-04-21 11:53:20,239:DEBUG:adversarial_training:[172/200]0m 0.003s: Train loss: 0.713527 acc: 0.654762 - Test loss: 0.527197 acc: 0.690476
+2020-04-21 11:53:20,242:DEBUG:adversarial_training:[173/200]0m 0.003s: Train loss: 0.713271 acc: 0.648810 - Test loss: 0.526589 acc: 0.690476
+2020-04-21 11:53:20,246:DEBUG:adversarial_training:[174/200]0m 0.003s: Train loss: 0.712651 acc: 0.648810 - Test loss: 0.531169 acc: 0.690476
+2020-04-21 11:53:20,249:DEBUG:adversarial_training:[175/200]0m 0.003s: Train loss: 0.711577 acc: 0.660714 - Test loss: 0.542017 acc: 0.690476
+2020-04-21 11:53:20,252:DEBUG:adversarial_training:[176/200]0m 0.003s: Train loss: 0.711678 acc: 0.666667 - Test loss: 0.548276 acc: 0.690476
+2020-04-21 11:53:20,255:DEBUG:adversarial_training:[177/200]0m 0.003s: Train loss: 0.711651 acc: 0.660714 - Test loss: 0.549997 acc: 0.690476
+2020-04-21 11:53:20,258:DEBUG:adversarial_training:[178/200]0m 0.003s: Train loss: 0.709617 acc: 0.672619 - Test loss: 0.539262 acc: 0.666667
+2020-04-21 11:53:20,261:DEBUG:adversarial_training:[179/200]0m 0.003s: Train loss: 0.706935 acc: 0.636905 - Test loss: 0.526344 acc: 0.690476
+2020-04-21 11:53:20,265:DEBUG:adversarial_training:[180/200]0m 0.003s: Train loss: 0.710185 acc: 0.613095 - Test loss: 0.525999 acc: 0.690476
+2020-04-21 11:53:20,268:DEBUG:adversarial_training:[181/200]0m 0.003s: Train loss: 0.709760 acc: 0.607143 - Test loss: 0.536125 acc: 0.642857
+2020-04-21 11:53:20,271:DEBUG:adversarial_training:[182/200]0m 0.003s: Train loss: 0.705644 acc: 0.613095 - Test loss: 0.549581 acc: 0.642857
+2020-04-21 11:53:20,274:DEBUG:adversarial_training:[183/200]0m 0.003s: Train loss: 0.704437 acc: 0.625000 - Test loss: 0.561917 acc: 0.642857
+2020-04-21 11:53:20,277:DEBUG:adversarial_training:[184/200]0m 0.003s: Train loss: 0.706513 acc: 0.636905 - Test loss: 0.561646 acc: 0.666667
+2020-04-21 11:53:20,281:DEBUG:adversarial_training:[185/200]0m 0.003s: Train loss: 0.705407 acc: 0.636905 - Test loss: 0.547851 acc: 0.666667
+2020-04-21 11:53:20,284:DEBUG:adversarial_training:[186/200]0m 0.003s: Train loss: 0.701330 acc: 0.648810 - Test loss: 0.532978 acc: 0.690476
+2020-04-21 11:53:20,287:DEBUG:adversarial_training:[187/200]0m 0.003s: Train loss: 0.701447 acc: 0.654762 - Test loss: 0.520263 acc: 0.690476
+2020-04-21 11:53:20,290:DEBUG:adversarial_training:[188/200]0m 0.003s: Train loss: 0.702729 acc: 0.666667 - Test loss: 0.518297 acc: 0.690476
+2020-04-21 11:53:20,293:DEBUG:adversarial_training:[189/200]0m 0.003s: Train loss: 0.701480 acc: 0.672619 - Test loss: 0.526467 acc: 0.690476
+2020-04-21 11:53:20,296:DEBUG:adversarial_training:[190/200]0m 0.003s: Train loss: 0.700073 acc: 0.666667 - Test loss: 0.539287 acc: 0.714286
+2020-04-21 11:53:20,299:DEBUG:adversarial_training:[191/200]0m 0.003s: Train loss: 0.700388 acc: 0.666667 - Test loss: 0.544434 acc: 0.714286
+2020-04-21 11:53:20,302:DEBUG:adversarial_training:[192/200]0m 0.003s: Train loss: 0.700278 acc: 0.678571 - Test loss: 0.540069 acc: 0.690476
+2020-04-21 11:53:20,306:DEBUG:adversarial_training:[193/200]0m 0.003s: Train loss: 0.697508 acc: 0.696429 - Test loss: 0.529168 acc: 0.690476
+2020-04-21 11:53:20,309:DEBUG:adversarial_training:[194/200]0m 0.003s: Train loss: 0.695851 acc: 0.690476 - Test loss: 0.518615 acc: 0.714286
+2020-04-21 11:53:20,312:DEBUG:adversarial_training:[195/200]0m 0.003s: Train loss: 0.696655 acc: 0.666667 - Test loss: 0.517180 acc: 0.714286
+2020-04-21 11:53:20,315:DEBUG:adversarial_training:[196/200]0m 0.003s: Train loss: 0.696648 acc: 0.660714 - Test loss: 0.525702 acc: 0.666667
+2020-04-21 11:53:20,318:DEBUG:adversarial_training:[197/200]0m 0.003s: Train loss: 0.695064 acc: 0.636905 - Test loss: 0.538578 acc: 0.642857
+2020-04-21 11:53:20,321:DEBUG:adversarial_training:[198/200]0m 0.003s: Train loss: 0.692426 acc: 0.636905 - Test loss: 0.545003 acc: 0.642857
+2020-04-21 11:53:20,324:DEBUG:adversarial_training:[199/200]0m 0.003s: Train loss: 0.693450 acc: 0.630952 - Test loss: 0.543514 acc: 0.619048
+2020-04-21 11:53:20,327:DEBUG:adversarial_training:[200/200]0m 0.003s: Train loss: 0.691093 acc: 0.630952 - Test loss: 0.530740 acc: 0.666667
+2020-04-21 11:53:20,328:INFO:model_container_pt:Saved model to save/AdvTrain_IrisNN_WheatSeed.pt
+2020-04-21 11:53:20,328:DEBUG:defend_advtr:Load save/IrisNN_WheatSeed_BIM_x.npy...
+2020-04-21 11:53:20,329:INFO:defend_advtr:Accuracy on clean set: 1.000000
+2020-04-21 11:53:20,330:INFO:defend_advtr:Blocked 0/42 samples on clean
+2020-04-21 11:53:20,330:DEBUG:defend_advtr:Load save/IrisNN_WheatSeed_BIM_adv.npy...
+2020-04-21 11:53:20,330:INFO:defend_advtr:Accuracy on BIM set: 0.071429
+2020-04-21 11:53:20,331:INFO:defend_advtr:Blocked 0/42 samples on BIM
+2020-04-21 11:53:20,331:DEBUG:defend_advtr:Load save/IrisNN_WheatSeed_Carlini_adv.npy...
+2020-04-21 11:53:20,332:INFO:defend_advtr:Accuracy on Carlini set: 0.214286
+2020-04-21 11:53:20,333:INFO:defend_advtr:Blocked 19/42 samples on Carlini
+2020-04-21 11:53:20,333:DEBUG:defend_advtr:Load save/IrisNN_WheatSeed_DeepFool_adv.npy...
+2020-04-21 11:53:20,334:INFO:defend_advtr:Accuracy on DeepFool set: 0.047619
+2020-04-21 11:53:20,334:INFO:defend_advtr:Blocked 9/42 samples on DeepFool
+2020-04-21 11:53:20,335:DEBUG:defend_advtr:Load save/IrisNN_WheatSeed_FGSM_adv.npy...
+2020-04-21 11:53:20,335:INFO:defend_advtr:Accuracy on FGSM set: 0.238095
+2020-04-21 11:53:20,336:INFO:defend_advtr:Blocked 3/42 samples on FGSM

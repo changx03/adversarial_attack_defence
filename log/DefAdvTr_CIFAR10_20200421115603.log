@@ -1,0 +1,74 @@
+2020-04-21 11:56:03,494:INFO:defend_advtr:Start at    : 20200421115603
+2020-04-21 11:56:03,494:INFO:defend_advtr:RECEIVED PARAMETERS:
+2020-04-21 11:56:03,494:INFO:defend_advtr:model file  :./save/CifarCnn_CIFAR10_e50.pt
+2020-04-21 11:56:03,494:INFO:defend_advtr:model       :CifarCnn
+2020-04-21 11:56:03,494:INFO:defend_advtr:dataset     :CIFAR10
+2020-04-21 11:56:03,494:INFO:defend_advtr:max_epochs  :30
+2020-04-21 11:56:03,494:INFO:defend_advtr:ratio  :0
+2020-04-21 11:56:03,494:INFO:defend_advtr:batch_size  :128
+2020-04-21 11:56:03,494:INFO:defend_advtr:seed        :4096
+2020-04-21 11:56:03,494:INFO:defend_advtr:verbose     :True
+2020-04-21 11:56:03,494:INFO:defend_advtr:save_log    :True
+2020-04-21 11:56:03,494:INFO:defend_advtr:need train  :True
+2020-04-21 11:56:03,494:INFO:defend_advtr:attacks     :clean, BIM, Carlini, DeepFool, FGSM, Saliency
+2020-04-21 11:56:03,495:DEBUG:utils:Setting random seed for PyTorch.
+2020-04-21 11:56:03,518:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-04-21 11:56:09,044:INFO:data_container:Train size: 50000 - Test size: 10000
+2020-04-21 11:56:09,044:INFO:data_container:Successfully load data. Time to complete: 0m 5.526s
+2020-04-21 11:56:11,321:DEBUG:model_container_pt:Using device: cuda
+2020-04-21 11:56:11,325:INFO:model_container_pt:Loaded model from ./save/CifarCnn_CIFAR10_e50.pt
+2020-04-21 11:56:11,698:INFO:defend_advtr:Accuracy on test set: 0.813400
+2020-04-21 11:56:11,752:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-04-21 11:56:12,168:DEBUG:adversarial_training:Generate 12500 adv. examples using [BIMContainer]
+2020-04-21 11:59:24,513:INFO:projected_gradient_descent:Success rate of attack: 100.00%
+2020-04-21 11:59:25,401:INFO:bim_attack:Time to complete training 1000 adv. examples: 3m 13.234s
+2020-04-21 11:59:25,416:DEBUG:detector_container:Time to complete [Train Adv. Examples]: 3m 13.286s
+2020-04-21 11:59:31,266:DEBUG:adversarial_training:[1/30]0m 5.848s: Train loss: 0.812636 acc: 0.772320 - Test loss: 0.670064 acc: 0.791000
+2020-04-21 11:59:37,428:DEBUG:adversarial_training:[2/30]0m 6.161s: Train loss: 0.329445 acc: 0.894680 - Test loss: 0.692028 acc: 0.783100
+2020-04-21 11:59:43,340:DEBUG:adversarial_training:[3/30]0m 5.912s: Train loss: 0.273450 acc: 0.914940 - Test loss: 0.733963 acc: 0.784200
+2020-04-21 11:59:49,473:DEBUG:adversarial_training:[4/30]0m 6.133s: Train loss: 0.242386 acc: 0.922640 - Test loss: 0.867969 acc: 0.767700
+2020-04-21 11:59:55,548:DEBUG:adversarial_training:[5/30]0m 6.075s: Train loss: 0.228195 acc: 0.928160 - Test loss: 0.763941 acc: 0.777900
+2020-04-21 12:00:01,513:DEBUG:adversarial_training:[6/30]0m 5.965s: Train loss: 0.203136 acc: 0.934800 - Test loss: 0.853290 acc: 0.766200
+2020-04-21 12:00:07,354:DEBUG:adversarial_training:[7/30]0m 5.841s: Train loss: 0.196664 acc: 0.936780 - Test loss: 0.705528 acc: 0.790300
+2020-04-21 12:00:13,193:DEBUG:adversarial_training:[8/30]0m 5.839s: Train loss: 0.181802 acc: 0.942360 - Test loss: 0.782589 acc: 0.765200
+2020-04-21 12:00:19,035:DEBUG:adversarial_training:[9/30]0m 5.842s: Train loss: 0.174296 acc: 0.943380 - Test loss: 0.793434 acc: 0.780500
+2020-04-21 12:00:24,878:DEBUG:adversarial_training:[10/30]0m 5.843s: Train loss: 0.152959 acc: 0.951460 - Test loss: 0.811091 acc: 0.765700
+2020-04-21 12:00:30,719:DEBUG:adversarial_training:[11/30]0m 5.840s: Train loss: 0.168805 acc: 0.944880 - Test loss: 0.707160 acc: 0.786200
+2020-04-21 12:00:36,564:DEBUG:adversarial_training:[12/30]0m 5.845s: Train loss: 0.149165 acc: 0.952360 - Test loss: 1.038038 acc: 0.742100
+2020-04-21 12:00:42,404:DEBUG:adversarial_training:[13/30]0m 5.839s: Train loss: 0.151620 acc: 0.950300 - Test loss: 0.750727 acc: 0.791900
+2020-04-21 12:00:48,242:DEBUG:adversarial_training:[14/30]0m 5.837s: Train loss: 0.146359 acc: 0.952300 - Test loss: 0.815340 acc: 0.771500
+2020-04-21 12:00:54,081:DEBUG:adversarial_training:[15/30]0m 5.839s: Train loss: 0.145144 acc: 0.951500 - Test loss: 0.842409 acc: 0.772500
+2020-04-21 12:00:59,926:DEBUG:adversarial_training:[16/30]0m 5.845s: Train loss: 0.128410 acc: 0.958480 - Test loss: 0.855377 acc: 0.769000
+2020-04-21 12:01:05,765:DEBUG:adversarial_training:[17/30]0m 5.839s: Train loss: 0.133351 acc: 0.955840 - Test loss: 0.739890 acc: 0.782700
+2020-04-21 12:01:11,606:DEBUG:adversarial_training:[18/30]0m 5.840s: Train loss: 0.131242 acc: 0.956340 - Test loss: 0.743403 acc: 0.773800
+2020-04-21 12:01:17,446:DEBUG:adversarial_training:[19/30]0m 5.840s: Train loss: 0.133057 acc: 0.956120 - Test loss: 0.719055 acc: 0.787600
+2020-04-21 12:01:23,282:DEBUG:adversarial_training:[20/30]0m 5.836s: Train loss: 0.123961 acc: 0.958780 - Test loss: 0.727319 acc: 0.789400
+2020-04-21 12:01:29,124:DEBUG:adversarial_training:[21/30]0m 5.842s: Train loss: 0.133550 acc: 0.956560 - Test loss: 0.901836 acc: 0.767800
+2020-04-21 12:01:34,966:DEBUG:adversarial_training:[22/30]0m 5.841s: Train loss: 0.118564 acc: 0.961380 - Test loss: 0.833890 acc: 0.774800
+2020-04-21 12:01:40,821:DEBUG:adversarial_training:[23/30]0m 5.855s: Train loss: 0.122513 acc: 0.959440 - Test loss: 0.746122 acc: 0.784500
+2020-04-21 12:01:46,681:DEBUG:adversarial_training:[24/30]0m 5.860s: Train loss: 0.121477 acc: 0.959700 - Test loss: 0.828126 acc: 0.772800
+2020-04-21 12:01:52,547:DEBUG:adversarial_training:[25/30]0m 5.866s: Train loss: 0.126619 acc: 0.957600 - Test loss: 0.934855 acc: 0.758300
+2020-04-21 12:01:58,413:DEBUG:adversarial_training:[26/30]0m 5.866s: Train loss: 0.113531 acc: 0.963040 - Test loss: 0.966451 acc: 0.760600
+2020-04-21 12:02:04,276:DEBUG:adversarial_training:[27/30]0m 5.863s: Train loss: 0.118143 acc: 0.961020 - Test loss: 0.960502 acc: 0.756800
+2020-04-21 12:02:10,142:DEBUG:adversarial_training:[28/30]0m 5.866s: Train loss: 0.121744 acc: 0.960240 - Test loss: 0.939351 acc: 0.753900
+2020-04-21 12:02:16,002:DEBUG:adversarial_training:[29/30]0m 5.860s: Train loss: 0.118812 acc: 0.960560 - Test loss: 0.784743 acc: 0.778900
+2020-04-21 12:02:21,864:DEBUG:adversarial_training:[30/30]0m 5.862s: Train loss: 0.120953 acc: 0.959920 - Test loss: 0.854456 acc: 0.772100
+2020-04-21 12:02:21,892:INFO:model_container_pt:Saved model to save/AdvTrain_CifarCnn_CIFAR10.pt
+2020-04-21 12:02:21,892:DEBUG:defend_advtr:Load save/CifarCnn_CIFAR10_BIM_x.npy...
+2020-04-21 12:02:21,938:INFO:defend_advtr:Accuracy on clean set: 1.000000
+2020-04-21 12:02:22,019:INFO:defend_advtr:Blocked 200/1000 samples on clean
+2020-04-21 12:02:22,019:DEBUG:defend_advtr:Load save/CifarCnn_CIFAR10_BIM_adv.npy...
+2020-04-21 12:02:22,069:INFO:defend_advtr:Accuracy on BIM set: 0.000000
+2020-04-21 12:02:22,149:INFO:defend_advtr:Blocked 998/1000 samples on BIM
+2020-04-21 12:02:22,149:DEBUG:defend_advtr:Load save/CifarCnn_CIFAR10_Carlini_adv.npy...
+2020-04-21 12:02:22,198:INFO:defend_advtr:Accuracy on Carlini set: 0.091000
+2020-04-21 12:02:22,279:INFO:defend_advtr:Blocked 803/1000 samples on Carlini
+2020-04-21 12:02:22,279:DEBUG:defend_advtr:Load save/CifarCnn_CIFAR10_DeepFool_adv.npy...
+2020-04-21 12:02:22,327:INFO:defend_advtr:Accuracy on DeepFool set: 0.421000
+2020-04-21 12:02:22,409:INFO:defend_advtr:Blocked 579/1000 samples on DeepFool
+2020-04-21 12:02:22,409:DEBUG:defend_advtr:Load save/CifarCnn_CIFAR10_FGSM_adv.npy...
+2020-04-21 12:02:22,458:INFO:defend_advtr:Accuracy on FGSM set: 0.039000
+2020-04-21 12:02:22,542:INFO:defend_advtr:Blocked 757/1000 samples on FGSM
+2020-04-21 12:02:22,542:DEBUG:defend_advtr:Load save/CifarCnn_CIFAR10_Saliency_adv.npy...
+2020-04-21 12:02:22,596:INFO:defend_advtr:Accuracy on Saliency set: 0.000000
+2020-04-21 12:02:22,683:INFO:defend_advtr:Blocked 971/1000 samples on Saliency
