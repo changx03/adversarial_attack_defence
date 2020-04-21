@@ -6,11 +6,11 @@ import numpy as np
 
 from aad.attacks import BIMContainer
 from aad.basemodels import IrisNN, ModelContainerPT, get_model
-from aad.defences import AdversarialTraining
+from aad.defences import DistillationContainer
 from aad.utils import get_time_str, master_seed
 from cmd_utils import get_data_container, parse_model_filename, set_logging
 
-LOG_NAME = 'DefAdvTr'
+LOG_NAME = 'DefDistill'
 logger = logging.getLogger(LOG_NAME)
 
 
@@ -23,8 +23,8 @@ def main():
         '-e', '--epoch', type=int, required=True,
         help='the number of max epochs for training')
     parser.add_argument(
-        '-r', '--ratio', type=float, required=True,
-        help='the percentage of adversarial examples mix to the training set.')
+        '-t', '--temp', type=float, required=True,
+        help='the temperature parameter for distillation network')
     parser.add_argument(
         '-b', '--batchsize', type=int, default=128, help='batch size')
     parser.add_argument(
@@ -54,7 +54,7 @@ def main():
     args = parser.parse_args()
     model_file = args.model
     max_epochs = args.epoch
-    ratio = args.ratio
+    temp = args.temp
     batch_size = args.batchsize
     seed = args.seed
     verbose = args.verbose
@@ -87,9 +87,9 @@ def main():
     # the 1st file this the clean inputs
     attack_list = ['clean'] + attack_list
 
-    # Do I need train the discriminator?
+    # Do I need train the distillation network?
     need_train = False
-    pretrain_file = f'AdvTrain_{model_name}_{data_name}.pt'
+    pretrain_file = f'distill_{model_name}_{data_name}.pt'
     if not os.path.exists(os.path.join('save', pretrain_file)):
         need_train = True
 
@@ -104,7 +104,7 @@ def main():
     logger.info('model       :%s', model_name)
     logger.info('dataset     :%s', data_name)
     logger.info('max_epochs  :%d', max_epochs)
-    logger.info('ratio  :%d', ratio)
+    logger.info('temperature :%d', temp)
     logger.info('batch_size  :%d', batch_size)
     logger.info('seed        :%d', seed)
     logger.info('verbose     :%r', verbose)
@@ -150,13 +150,13 @@ def main():
         max_iter=100,
         targeted=False)
 
-    adv_trainer = AdversarialTraining(classifier_mc, [attack])
+    distillation = DistillationContainer(
+        classifier_mc, model, temperature=1.0, pretrained=False)
     if need_train:
-        adv_trainer.fit(max_epochs=max_epochs,
-                        batch_size=batch_size, ratio=ratio)
-        adv_trainer.save(pretrain_file, overwrite=True)
+        distillation.fit(max_epochs=max_epochs, batch_size=batch_size)
+        distillation.save(pretrain_file, overwrite=True)
     else:
-        adv_trainer.load(os.path.join('save', pretrain_file))
+        distillation.load(os.path.join('save', pretrain_file))
 
     y = np.load(y_file, allow_pickle=False)
     for i in range(len(attack_list)):
@@ -166,7 +166,7 @@ def main():
         adv = np.load(adv_file, allow_pickle=False)
         accuracy = classifier_mc.evaluate(adv, y)
         logger.info('Accuracy on %s set: %f', adv_name, accuracy)
-        blocked_indices = adv_trainer.detect(adv, return_passed_x=False)
+        blocked_indices = distillation.detect(adv, return_passed_x=False)
         logger.info('Blocked %d/%d samples on %s',
                     len(blocked_indices), len(adv), adv_name)
 
@@ -174,15 +174,15 @@ def main():
 if __name__ == '__main__':
     """
     Examples:
-    $ python ./cmd/defend_advtr.py -vl -e 200 -r 0.5 -m ./save/IrisNN_Iris_e200.pt -BCDF
-    $ python ./cmd/defend_advtr.py -vl -e 200 -r 0.25 -m ./save/BCNN_BreastCancerWisconsin_e200.pt  -BCDF
-    $ python ./cmd/defend_advtr.py -vl -e 200 -r 0.25 -m ./save/IrisNN_BankNote_e200.pt  -BCDF
-    $ python ./cmd/defend_advtr.py -vl -e 200 -r 0.25 -m ./save/IrisNN_HTRU2_e200.pt  -BCDF
-    $ python ./cmd/defend_advtr.py -vl -e 200 -r 0.5 -m ./save/IrisNN_WheatSeed_e300.pt  -BCDF
-    $ python ./cmd/defend_advtr.py -vl -e 30 -r 0.25 -m ./save/MnistCnnV2_MNIST_e50.pt  -BCDFS
-    $ python ./cmd/defend_advtr.py -vl -e 30 -r 0.25 -m ./save/CifarCnn_CIFAR10_e50.pt  -BCDFS
-    $ python ./cmd/defend_advtr.py -vl -e 30 -r 0.25 -m ./save/CifarResnet50_CIFAR10_e30.pt  -BCDFS
-    $ python ./cmd/defend_advtr.py -vl -e 30 -r 0.25 -m ./save/CifarResnet50_SVHN_e30.pt  -BCDFS
+    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.5 -m ./save/IrisNN_Iris_e200.pt -BCDF
+    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.25 -m ./save/BCNN_BreastCancerWisconsin_e200.pt  -BCDF
+    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.25 -m ./save/IrisNN_BankNote_e200.pt  -BCDF
+    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.25 -m ./save/IrisNN_HTRU2_e200.pt  -BCDF
+    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.5 -m ./save/IrisNN_WheatSeed_e300.pt  -BCDF
+    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.25 -m ./save/MnistCnnV2_MNIST_e50.pt  -BCDFS
+    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.25 -m ./save/CifarCnn_CIFAR10_e50.pt  -BCDFS
+    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.25 -m ./save/CifarResnet50_CIFAR10_e30.pt  -BCDFS
+    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.25 -m ./save/CifarResnet50_SVHN_e30.pt  -BCDFS
     """
     main()
     print('[DefAdvTr] Task completed!')
