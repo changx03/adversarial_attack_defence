@@ -1,0 +1,75 @@
+2020-05-01 03:09:04,473:INFO:train:Start at      : 20200501030904
+2020-05-01 03:09:04,474:INFO:train:RECEIVED PARAMETERS:
+2020-05-01 03:09:04,474:INFO:train:dataset       :CIFAR10
+2020-05-01 03:09:04,474:INFO:train:filename      :None
+2020-05-01 03:09:04,474:INFO:train:max_epochs    :50
+2020-05-01 03:09:04,474:INFO:train:batch_size    :128
+2020-05-01 03:09:04,474:INFO:train:seed          :4096
+2020-05-01 03:09:04,474:INFO:train:use_shuffle   :True
+2020-05-01 03:09:04,474:INFO:train:use_normalize :True
+2020-05-01 03:09:04,474:INFO:train:model_name    :CifarCnn
+2020-05-01 03:09:04,474:INFO:train:verbose       :True
+2020-05-01 03:09:04,474:INFO:train:save_log      :True
+2020-05-01 03:09:04,474:INFO:train:overwrite     :True
+2020-05-01 03:09:04,474:DEBUG:utils:Setting random seed for PyTorch.
+2020-05-01 03:09:04,509:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-05-01 03:09:10,094:INFO:data_container:Train size: 50000 - Test size: 10000
+2020-05-01 03:09:10,094:INFO:data_container:Successfully load data. Time to complete: 0m 5.585s
+2020-05-01 03:09:10,105:INFO:train:Selected CifarCnn model
+2020-05-01 03:09:12,814:DEBUG:model_container_pt:Using device: cuda
+2020-05-01 03:09:18,993:DEBUG:model_container_pt:[1/50]0m 6.176s: Train loss: 1.269652 acc: 0.535460 - Test loss: 1.075270 acc: 0.630000
+2020-05-01 03:09:24,940:DEBUG:model_container_pt:[2/50]0m 5.946s: Train loss: 0.809459 acc: 0.713240 - Test loss: 0.855998 acc: 0.702900
+2020-05-01 03:09:30,843:DEBUG:model_container_pt:[3/50]0m 5.902s: Train loss: 0.672851 acc: 0.763520 - Test loss: 0.831268 acc: 0.709500
+2020-05-01 03:09:36,751:DEBUG:model_container_pt:[4/50]0m 5.906s: Train loss: 0.589750 acc: 0.794420 - Test loss: 0.690090 acc: 0.760600
+2020-05-01 03:09:42,681:DEBUG:model_container_pt:[5/50]0m 5.929s: Train loss: 0.524849 acc: 0.816360 - Test loss: 0.688471 acc: 0.765600
+2020-05-01 03:09:48,577:DEBUG:model_container_pt:[6/50]0m 5.895s: Train loss: 0.470025 acc: 0.836460 - Test loss: 0.614090 acc: 0.793900
+2020-05-01 03:09:54,467:DEBUG:model_container_pt:[7/50]0m 5.888s: Train loss: 0.428164 acc: 0.850640 - Test loss: 0.626726 acc: 0.782000
+2020-05-01 03:10:00,372:DEBUG:model_container_pt:[8/50]0m 5.905s: Train loss: 0.388238 acc: 0.865640 - Test loss: 0.746772 acc: 0.758600
+2020-05-01 03:10:06,282:DEBUG:model_container_pt:[9/50]0m 5.911s: Train loss: 0.356673 acc: 0.874500 - Test loss: 0.830782 acc: 0.723800
+2020-05-01 03:10:12,195:DEBUG:model_container_pt:[10/50]0m 5.913s: Train loss: 0.326514 acc: 0.886180 - Test loss: 0.635636 acc: 0.790300
+2020-05-01 03:10:18,127:DEBUG:model_container_pt:[11/50]0m 5.931s: Train loss: 0.296102 acc: 0.895760 - Test loss: 0.994326 acc: 0.713200
+2020-05-01 03:10:24,052:DEBUG:model_container_pt:[12/50]0m 5.925s: Train loss: 0.272841 acc: 0.904220 - Test loss: 0.631838 acc: 0.795700
+2020-05-01 03:10:29,949:DEBUG:model_container_pt:[13/50]0m 5.896s: Train loss: 0.250971 acc: 0.912280 - Test loss: 0.633679 acc: 0.797900
+2020-05-01 03:10:35,850:DEBUG:model_container_pt:[14/50]0m 5.899s: Train loss: 0.231082 acc: 0.918840 - Test loss: 0.658545 acc: 0.796800
+2020-05-01 03:10:41,814:DEBUG:model_container_pt:[15/50]0m 5.964s: Train loss: 0.217349 acc: 0.923360 - Test loss: 0.649371 acc: 0.789800
+2020-05-01 03:10:47,686:DEBUG:model_container_pt:[16/50]0m 5.872s: Train loss: 0.201300 acc: 0.929440 - Test loss: 0.623033 acc: 0.807100
+2020-05-01 03:10:53,560:DEBUG:model_container_pt:[17/50]0m 5.873s: Train loss: 0.189198 acc: 0.934000 - Test loss: 0.837371 acc: 0.757300
+2020-05-01 03:10:59,439:DEBUG:model_container_pt:[18/50]0m 5.878s: Train loss: 0.179011 acc: 0.937640 - Test loss: 0.724539 acc: 0.785300
+2020-05-01 03:11:05,320:DEBUG:model_container_pt:[19/50]0m 5.881s: Train loss: 0.169971 acc: 0.940300 - Test loss: 0.665337 acc: 0.800300
+2020-05-01 03:11:11,188:DEBUG:model_container_pt:[20/50]0m 5.868s: Train loss: 0.164441 acc: 0.941980 - Test loss: 0.722193 acc: 0.798700
+2020-05-01 03:11:17,057:DEBUG:model_container_pt:[21/50]0m 5.869s: Train loss: 0.151529 acc: 0.946900 - Test loss: 0.679193 acc: 0.790700
+2020-05-01 03:11:22,930:DEBUG:model_container_pt:[22/50]0m 5.873s: Train loss: 0.152183 acc: 0.946820 - Test loss: 0.659511 acc: 0.801800
+2020-05-01 03:11:29,066:DEBUG:model_container_pt:[23/50]0m 6.135s: Train loss: 0.147908 acc: 0.949260 - Test loss: 0.743591 acc: 0.796500
+2020-05-01 03:11:35,182:DEBUG:model_container_pt:[24/50]0m 6.116s: Train loss: 0.140932 acc: 0.951000 - Test loss: 0.762329 acc: 0.769600
+2020-05-01 03:11:41,237:DEBUG:model_container_pt:[25/50]0m 6.055s: Train loss: 0.132641 acc: 0.953460 - Test loss: 0.864864 acc: 0.763500
+2020-05-01 03:11:47,457:DEBUG:model_container_pt:[26/50]0m 6.220s: Train loss: 0.145285 acc: 0.948820 - Test loss: 0.674843 acc: 0.814800
+2020-05-01 03:11:53,869:DEBUG:model_container_pt:[27/50]0m 6.411s: Train loss: 0.129801 acc: 0.955080 - Test loss: 0.750420 acc: 0.787900
+2020-05-01 03:12:00,247:DEBUG:model_container_pt:[28/50]0m 6.378s: Train loss: 0.126520 acc: 0.955760 - Test loss: 0.778224 acc: 0.782800
+2020-05-01 03:12:06,636:DEBUG:model_container_pt:[29/50]0m 6.389s: Train loss: 0.128848 acc: 0.955840 - Test loss: 0.796892 acc: 0.784200
+2020-05-01 03:12:12,876:DEBUG:model_container_pt:[30/50]0m 6.240s: Train loss: 0.127903 acc: 0.956180 - Test loss: 0.822064 acc: 0.772200
+2020-05-01 03:12:19,006:DEBUG:model_container_pt:[31/50]0m 6.130s: Train loss: 0.120906 acc: 0.958060 - Test loss: 0.796355 acc: 0.780500
+2020-05-01 03:12:25,283:DEBUG:model_container_pt:[32/50]0m 6.277s: Train loss: 0.131696 acc: 0.954840 - Test loss: 0.734330 acc: 0.798000
+2020-05-01 03:12:31,736:DEBUG:model_container_pt:[33/50]0m 6.453s: Train loss: 0.121707 acc: 0.957900 - Test loss: 0.655164 acc: 0.807900
+2020-05-01 03:12:38,119:DEBUG:model_container_pt:[34/50]0m 6.383s: Train loss: 0.118792 acc: 0.959420 - Test loss: 0.736091 acc: 0.800200
+2020-05-01 03:12:44,518:DEBUG:model_container_pt:[35/50]0m 6.399s: Train loss: 0.118559 acc: 0.959640 - Test loss: 0.798484 acc: 0.779600
+2020-05-01 03:12:50,885:DEBUG:model_container_pt:[36/50]0m 6.368s: Train loss: 0.113522 acc: 0.960760 - Test loss: 0.814684 acc: 0.786900
+2020-05-01 03:12:57,125:DEBUG:model_container_pt:[37/50]0m 6.239s: Train loss: 0.117104 acc: 0.959280 - Test loss: 0.822695 acc: 0.784900
+2020-05-01 03:13:03,321:DEBUG:model_container_pt:[38/50]0m 6.196s: Train loss: 0.112041 acc: 0.962440 - Test loss: 0.824314 acc: 0.782100
+2020-05-01 03:13:09,572:DEBUG:model_container_pt:[39/50]0m 6.251s: Train loss: 0.115389 acc: 0.960420 - Test loss: 0.799684 acc: 0.796600
+2020-05-01 03:13:15,818:DEBUG:model_container_pt:[40/50]0m 6.246s: Train loss: 0.105183 acc: 0.963320 - Test loss: 0.735530 acc: 0.792100
+2020-05-01 03:13:21,865:DEBUG:model_container_pt:[41/50]0m 6.047s: Train loss: 0.116966 acc: 0.959200 - Test loss: 0.850838 acc: 0.782700
+2020-05-01 03:13:27,871:DEBUG:model_container_pt:[42/50]0m 6.006s: Train loss: 0.108174 acc: 0.963100 - Test loss: 0.729834 acc: 0.802900
+2020-05-01 03:13:33,874:DEBUG:model_container_pt:[43/50]0m 6.002s: Train loss: 0.109259 acc: 0.962840 - Test loss: 0.800001 acc: 0.791400
+2020-05-01 03:13:40,051:DEBUG:model_container_pt:[44/50]0m 6.178s: Train loss: 0.108103 acc: 0.962180 - Test loss: 0.814743 acc: 0.770600
+2020-05-01 03:13:45,902:DEBUG:model_container_pt:[45/50]0m 5.850s: Train loss: 0.113405 acc: 0.961420 - Test loss: 0.861399 acc: 0.778500
+2020-05-01 03:13:51,906:DEBUG:model_container_pt:[46/50]0m 6.005s: Train loss: 0.103239 acc: 0.965460 - Test loss: 0.882050 acc: 0.778700
+2020-05-01 03:13:57,765:DEBUG:model_container_pt:[47/50]0m 5.859s: Train loss: 0.101750 acc: 0.966020 - Test loss: 0.774152 acc: 0.798200
+2020-05-01 03:14:03,814:DEBUG:model_container_pt:[48/50]0m 6.048s: Train loss: 0.102047 acc: 0.964780 - Test loss: 0.804242 acc: 0.782800
+2020-05-01 03:14:09,784:DEBUG:model_container_pt:[49/50]0m 5.971s: Train loss: 0.115036 acc: 0.960480 - Test loss: 0.745437 acc: 0.803100
+2020-05-01 03:14:15,749:DEBUG:model_container_pt:[50/50]0m 5.965s: Train loss: 0.100753 acc: 0.966340 - Test loss: 0.970952 acc: 0.750400
+2020-05-01 03:14:15,750:INFO:model_container_pt:Time to complete training: 5m 2.936s
+2020-05-01 03:14:15,750:DEBUG:train:File name: CifarCnn_CIFAR10_e50.pt
+2020-05-01 03:14:15,764:INFO:model_container_pt:Saved model to save/CifarCnn_CIFAR10_e50.pt
+2020-05-01 03:14:15,764:DEBUG:train:Use saved parameters from CifarCnn_CIFAR10_e50.pt
+2020-05-01 03:14:15,769:INFO:model_container_pt:Loaded model from save/CifarCnn_CIFAR10_e50.pt
+2020-05-01 03:14:16,148:INFO:train:Accuracy on test set: 0.814800
