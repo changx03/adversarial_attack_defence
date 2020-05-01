@@ -1,0 +1,34 @@
+2020-05-01 14:02:47,284:INFO:attack:Start at   : 20200501140247
+2020-05-01 14:02:47,284:INFO:attack:RECEIVED PARAMETERS:
+2020-05-01 14:02:47,284:INFO:attack:model file :./save/IrisNN_WheatSeed_e300.pt
+2020-05-01 14:02:47,284:INFO:attack:model      :IrisNN
+2020-05-01 14:02:47,284:INFO:attack:dataset    :WheatSeed
+2020-05-01 14:02:47,284:INFO:attack:params     :./cmd/AttackParams.json
+2020-05-01 14:02:47,284:INFO:attack:num_adv    :1000
+2020-05-01 14:02:47,284:INFO:attack:seed       :4096
+2020-05-01 14:02:47,284:INFO:attack:verbose    :True
+2020-05-01 14:02:47,284:INFO:attack:save_log   :True
+2020-05-01 14:02:47,284:INFO:attack:overwrite  :True
+2020-05-01 14:02:47,284:INFO:attack:dirname    :'./save'
+2020-05-01 14:02:47,284:INFO:attack:attacks    :FGSM
+2020-05-01 14:02:47,284:DEBUG:utils:Setting random seed for PyTorch.
+2020-05-01 14:02:47,312:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-05-01 14:02:47,312:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/seeds_dataset.txt
+2020-05-01 14:02:47,321:INFO:data_container:Train size: 168 - Test size: 42
+2020-05-01 14:02:47,321:INFO:data_container:Successfully load data. Time to complete: 0m 0.008s
+2020-05-01 14:02:47,321:INFO:attack:Use IrisNN model
+2020-05-01 14:02:49,580:DEBUG:model_container_pt:Using device: cuda
+2020-05-01 14:02:49,584:INFO:model_container_pt:Loaded model from ./save/IrisNN_WheatSeed_e300.pt
+2020-05-01 14:02:49,605:INFO:attack:Accuracy on test set: 0.904762
+2020-05-01 14:02:49,606:DEBUG:attack:FGSM params: {'eps': 0.3, 'eps_step': 0.1, 'minimal': True}
+2020-05-01 14:02:49,606:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-05-01 14:02:49,606:INFO:fgsm_attack:Accuracy on clean set: 0.904762
+2020-05-01 14:02:49,607:INFO:fast_gradient:Using model predictions as correct labels for FGM.
+2020-05-01 14:02:49,607:INFO:fast_gradient:Performing minimal perturbation FGM.
+2020-05-01 14:02:49,609:INFO:fast_gradient:Success rate of FGM attack: 76.19%
+2020-05-01 14:02:49,610:INFO:fgsm_attack:Time to complete training 42 adv. examples: 0m 0.004s
+2020-05-01 14:02:49,610:INFO:attack:# of adv created from IrisNN_WheatSeed: 42
+2020-05-01 14:02:49,611:INFO:attack:Success rate of FGSM: 0.761905
+2020-05-01 14:02:49,611:INFO:attack:Accuracy on FGSM: 0.238095
+2020-05-01 14:02:49,611:DEBUG:attack:Save adv. attack results into: IrisNN_WheatSeed_FGSM
+2020-05-01 14:02:49,611:INFO:attack_container:Saved results to save/IrisNN_WheatSeed_FGSM_adv.npy

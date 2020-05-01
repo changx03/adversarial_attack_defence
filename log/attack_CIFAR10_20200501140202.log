@@ -1,0 +1,33 @@
+2020-05-01 14:02:02,160:INFO:attack:Start at   : 20200501140202
+2020-05-01 14:02:02,160:INFO:attack:RECEIVED PARAMETERS:
+2020-05-01 14:02:02,160:INFO:attack:model file :./save/CifarResnet50_CIFAR10_e50.pt
+2020-05-01 14:02:02,160:INFO:attack:model      :CifarResnet50
+2020-05-01 14:02:02,161:INFO:attack:dataset    :CIFAR10
+2020-05-01 14:02:02,161:INFO:attack:params     :./cmd/AttackParams.json
+2020-05-01 14:02:02,161:INFO:attack:num_adv    :1000
+2020-05-01 14:02:02,161:INFO:attack:seed       :4096
+2020-05-01 14:02:02,161:INFO:attack:verbose    :True
+2020-05-01 14:02:02,161:INFO:attack:save_log   :True
+2020-05-01 14:02:02,161:INFO:attack:overwrite  :True
+2020-05-01 14:02:02,161:INFO:attack:dirname    :'./save'
+2020-05-01 14:02:02,161:INFO:attack:attacks    :FGSM
+2020-05-01 14:02:02,161:DEBUG:utils:Setting random seed for PyTorch.
+2020-05-01 14:02:02,187:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-05-01 14:02:07,694:INFO:data_container:Train size: 50000 - Test size: 10000
+2020-05-01 14:02:07,694:INFO:data_container:Successfully load data. Time to complete: 0m 5.507s
+2020-05-01 14:02:08,048:INFO:attack:Use CifarResnet50 model
+2020-05-01 14:02:10,310:DEBUG:model_container_pt:Using device: cuda
+2020-05-01 14:02:10,365:INFO:model_container_pt:Loaded model from ./save/CifarResnet50_CIFAR10_e50.pt
+2020-05-01 14:02:11,438:INFO:attack:Accuracy on test set: 0.823500
+2020-05-01 14:02:11,438:DEBUG:attack:FGSM params: {'eps': 0.3, 'eps_step': 0.1, 'minimal': True}
+2020-05-01 14:02:11,492:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-05-01 14:02:11,602:INFO:fgsm_attack:Accuracy on clean set: 0.829000
+2020-05-01 14:02:11,603:INFO:fast_gradient:Using model predictions as correct labels for FGM.
+2020-05-01 14:02:11,748:INFO:fast_gradient:Performing minimal perturbation FGM.
+2020-05-01 14:02:12,972:INFO:fast_gradient:Success rate of FGM attack: 92.20%
+2020-05-01 14:02:13,185:INFO:fgsm_attack:Time to complete training 1000 adv. examples: 0m 1.691s
+2020-05-01 14:02:13,185:INFO:attack:# of adv created from CifarResnet50_CIFAR10: 1000
+2020-05-01 14:02:13,289:INFO:attack:Success rate of FGSM: 0.922000
+2020-05-01 14:02:13,289:INFO:attack:Accuracy on FGSM: 0.078000
+2020-05-01 14:02:13,289:DEBUG:attack:Save adv. attack results into: CifarResnet50_CIFAR10_FGSM
+2020-05-01 14:02:13,430:INFO:attack_container:Saved results to save/CifarResnet50_CIFAR10_FGSM_adv.npy

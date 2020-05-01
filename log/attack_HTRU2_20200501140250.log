@@ -1,0 +1,34 @@
+2020-05-01 14:02:50,354:INFO:attack:Start at   : 20200501140250
+2020-05-01 14:02:50,354:INFO:attack:RECEIVED PARAMETERS:
+2020-05-01 14:02:50,355:INFO:attack:model file :./save/IrisNN_HTRU2_e200.pt
+2020-05-01 14:02:50,355:INFO:attack:model      :IrisNN
+2020-05-01 14:02:50,355:INFO:attack:dataset    :HTRU2
+2020-05-01 14:02:50,355:INFO:attack:params     :./cmd/AttackParams.json
+2020-05-01 14:02:50,355:INFO:attack:num_adv    :1000
+2020-05-01 14:02:50,355:INFO:attack:seed       :4096
+2020-05-01 14:02:50,355:INFO:attack:verbose    :True
+2020-05-01 14:02:50,355:INFO:attack:save_log   :True
+2020-05-01 14:02:50,355:INFO:attack:overwrite  :True
+2020-05-01 14:02:50,355:INFO:attack:dirname    :'./save'
+2020-05-01 14:02:50,355:INFO:attack:attacks    :FGSM
+2020-05-01 14:02:50,355:DEBUG:utils:Setting random seed for PyTorch.
+2020-05-01 14:02:50,382:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-05-01 14:02:50,383:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/HTRU2/HTRU_2.arff
+2020-05-01 14:02:50,451:INFO:data_container:Train size: 14318 - Test size: 3580
+2020-05-01 14:02:50,451:INFO:data_container:Successfully load data. Time to complete: 0m 0.068s
+2020-05-01 14:02:50,451:INFO:attack:Use IrisNN model
+2020-05-01 14:02:52,736:DEBUG:model_container_pt:Using device: cuda
+2020-05-01 14:02:52,740:INFO:model_container_pt:Loaded model from ./save/IrisNN_HTRU2_e200.pt
+2020-05-01 14:02:52,800:INFO:attack:Accuracy on test set: 0.981564
+2020-05-01 14:02:52,800:DEBUG:attack:FGSM params: {'eps': 0.3, 'eps_step': 0.1, 'minimal': True}
+2020-05-01 14:02:52,801:INFO:pytorch:Inferred 1 hidden layers on PyTorch classifier.
+2020-05-01 14:02:52,807:INFO:fgsm_attack:Accuracy on clean set: 0.977000
+2020-05-01 14:02:52,807:INFO:fast_gradient:Using model predictions as correct labels for FGM.
+2020-05-01 14:02:52,811:INFO:fast_gradient:Performing minimal perturbation FGM.
+2020-05-01 14:02:52,837:INFO:fast_gradient:Success rate of FGM attack: 97.20%
+2020-05-01 14:02:52,846:INFO:fgsm_attack:Time to complete training 1000 adv. examples: 0m 0.045s
+2020-05-01 14:02:52,846:INFO:attack:# of adv created from IrisNN_HTRU2: 1000
+2020-05-01 14:02:52,850:INFO:attack:Success rate of FGSM: 0.972000
+2020-05-01 14:02:52,850:INFO:attack:Accuracy on FGSM: 0.028000
+2020-05-01 14:02:52,850:DEBUG:attack:Save adv. attack results into: IrisNN_HTRU2_FGSM
+2020-05-01 14:02:52,851:INFO:attack_container:Saved results to save/IrisNN_HTRU2_FGSM_adv.npy

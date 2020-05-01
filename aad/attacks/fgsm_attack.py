@@ -87,7 +87,13 @@ class FGSMContainer(AttackContainer):
         if use_testset and len(dc.x_test) < count:
             count = len(dc.x_test)
 
-        x = np.copy(dc.x_test[:count]) if use_testset else np.copy(x)
+        if use_testset:
+            x = np.copy(dc.x_test[:count])
+            y = np.copy(dc.y_test[:count])
+            acc = self.model_container.evaluate(x, y)
+            logger.info('Accuracy on clean set: %f', acc)
+        else:
+            x = np.copy(x)
 
         # handle (h, w, c) to (c, h, w)
         data_type = self.model_container.data_container.data_type
@@ -95,7 +101,7 @@ class FGSMContainer(AttackContainer):
             xx = swap_image_channel(x)
         else:
             xx = x
-
+        
         # predict the outcomes
         adv = self._generate(xx)
         pred_adv, pred_clean = self.predict(adv, xx)
