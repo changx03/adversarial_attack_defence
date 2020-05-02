@@ -1,0 +1,39 @@
+2020-05-02 12:43:01,681:INFO:defend_ad:Start at    : 20200502124301
+2020-05-02 12:43:01,681:INFO:defend_ad:RECEIVED PARAMETERS:
+2020-05-02 12:43:01,681:INFO:defend_ad:model file  :./save/CifarCnn_SVHN_e50.pt
+2020-05-02 12:43:01,681:INFO:defend_ad:adv file    :./save/CifarCnn_SVHN_Carlini_adv.npy
+2020-05-02 12:43:01,681:INFO:defend_ad:model       :CifarCnn
+2020-05-02 12:43:01,682:INFO:defend_ad:dataset     :SVHN
+2020-05-02 12:43:01,682:INFO:defend_ad:param file  :./cmd/AdParamsImage.json
+2020-05-02 12:43:01,682:INFO:defend_ad:seed        :4096
+2020-05-02 12:43:01,682:INFO:defend_ad:verbose     :True
+2020-05-02 12:43:01,682:INFO:defend_ad:save_log    :True
+2020-05-02 12:43:01,682:INFO:defend_ad:check_clean :True
+2020-05-02 12:43:01,682:DEBUG:defend_ad:params     : {'k2': 1, 'reliability': 1.0, 'sample_ratio': 0.2, 'kappa': 16, 'confidence': 0.9, 'disable_s2': False}
+2020-05-02 12:43:01,682:DEBUG:utils:Setting random seed for PyTorch.
+2020-05-02 12:43:01,700:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-05-02 12:43:11,712:INFO:data_container:Train size: 73257 - Test size: 26032
+2020-05-02 12:43:11,712:INFO:data_container:Successfully load data. Time to complete: 0m 10.011s
+2020-05-02 12:43:11,722:INFO:defend_ad:Use CifarCnn model
+2020-05-02 12:43:13,325:DEBUG:model_container_pt:Using device: cuda
+2020-05-02 12:43:13,330:INFO:model_container_pt:Loaded model from ./save/CifarCnn_SVHN_e50.pt
+2020-05-02 12:43:14,279:INFO:defend_ad:Accuracy on test set: 0.936501
+2020-05-02 12:43:16,749:DEBUG:applicability_domain:Number of input attributes: 512
+2020-05-02 12:43:16,830:DEBUG:detector_container:Time to complete [AD Stage 1]: 0m 0.080s
+2020-05-02 12:43:47,115:DEBUG:detector_container:Time to complete [AD Stage 2]: 0m 30.286s
+2020-05-02 12:43:47,115:DEBUG:applicability_domain:k for Stage 3: 160
+2020-05-02 12:43:52,922:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 14651
+2020-05-02 12:44:17,097:DEBUG:applicability_domain:Train set likelihood: 0.968731
+2020-05-02 12:44:17,100:DEBUG:detector_container:Time to complete [AD Stage 3]: 0m 29.984s
+2020-05-02 12:44:17,175:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-05-02 12:44:18,610:DEBUG:applicability_domain:Stage 2: blocked 185 inputs
+2020-05-02 12:44:20,164:DEBUG:applicability_domain:Mean likelihood on adv: 0.977584
+2020-05-02 12:44:20,164:DEBUG:applicability_domain:Stage 3: blocked 34 inputs
+2020-05-02 12:44:20,166:INFO:defend_ad:Blocked 219/1000 samples on clean samples
+2020-05-02 12:44:20,224:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-05-02 12:44:21,666:DEBUG:applicability_domain:Stage 2: blocked 673 inputs
+2020-05-02 12:44:22,583:DEBUG:applicability_domain:Mean likelihood on adv: 0.669343
+2020-05-02 12:44:22,583:DEBUG:applicability_domain:Stage 3: blocked 96 inputs
+2020-05-02 12:44:22,583:INFO:defend_ad:Blocked 769/1000 samples on adv. examples
+2020-05-02 12:44:22,583:INFO:defend_ad:[result]./save/CifarCnn_SVHN_e50.pt,./save/CifarCnn_SVHN_Carlini_adv.npy,1,1.0,0.2,0.9,16,False,clean,0,185,34
+2020-05-02 12:44:22,583:INFO:defend_ad:[result]./save/CifarCnn_SVHN_e50.pt,./save/CifarCnn_SVHN_Carlini_adv.npy,1,1.0,0.2,0.9,16,False,adv,0,673,96
