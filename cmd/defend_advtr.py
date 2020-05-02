@@ -28,6 +28,9 @@ def main():
     parser.add_argument(
         '-b', '--batchsize', type=int, default=128, help='batch size')
     parser.add_argument(
+        '-t', '--train', action='store_true', default=False,
+        help='require training')
+    parser.add_argument(
         '-s', '--seed', type=int, default=4096,
         help='the seed for random number generator')
     parser.add_argument(
@@ -59,6 +62,7 @@ def main():
     seed = args.seed
     verbose = args.verbose
     save_log = args.savelog
+    need_train = args.train
 
     model_name, data_name = parse_model_filename(model_file)
 
@@ -88,7 +92,6 @@ def main():
     attack_list = ['clean'] + attack_list
 
     # Do I need train the discriminator?
-    need_train = False
     pretrain_file = f'AdvTrain_{model_name}_{data_name}.pt'
     if not os.path.exists(os.path.join('save', pretrain_file)):
         need_train = True
@@ -174,15 +177,15 @@ def main():
 if __name__ == '__main__':
     """
     Examples:
-    $ python ./cmd/defend_advtr.py -vl -e 200 -r 0.5 -m ./save/IrisNN_Iris_e200.pt -BCDF
-    $ python ./cmd/defend_advtr.py -vl -e 200 -r 0.25 -m ./save/BCNN_BreastCancerWisconsin_e200.pt  -BCDF
-    $ python ./cmd/defend_advtr.py -vl -e 200 -r 0.25 -m ./save/IrisNN_BankNote_e200.pt  -BCDF
-    $ python ./cmd/defend_advtr.py -vl -e 200 -r 0.25 -m ./save/IrisNN_HTRU2_e200.pt  -BCDF
-    $ python ./cmd/defend_advtr.py -vl -e 200 -r 0.5 -m ./save/IrisNN_WheatSeed_e300.pt  -BCDF
-    $ python ./cmd/defend_advtr.py -vl -e 30 -r 0.25 -m ./save/MnistCnnV2_MNIST_e50.pt  -BCDFS
-    $ python ./cmd/defend_advtr.py -vl -e 30 -r 0.25 -m ./save/CifarCnn_CIFAR10_e50.pt  -BCDFS
-    $ python ./cmd/defend_advtr.py -vl -e 30 -r 0.25 -m ./save/CifarResnet50_CIFAR10_e30.pt  -BCDFS
-    $ python ./cmd/defend_advtr.py -vl -e 30 -r 0.25 -m ./save/CifarResnet50_SVHN_e30.pt  -BCDFS
+    $ python ./cmd/defend_advtr.py -vlt -e 200 -r 0.5 -m ./save/IrisNN_Iris_e200.pt -BCDF
+    $ python ./cmd/defend_advtr.py -vlt -e 200 -r 0.25 -m ./save/BCNN_BreastCancerWisconsin_e200.pt  -BCDF
+    $ python ./cmd/defend_advtr.py -vlt -e 200 -r 0.25 -m ./save/IrisNN_BankNote_e200.pt  -BCDF
+    $ python ./cmd/defend_advtr.py -vlt -e 200 -r 0.25 -m ./save/IrisNN_HTRU2_e200.pt  -BCDF
+    $ python ./cmd/defend_advtr.py -vlt -e 200 -r 0.5 -m ./save/IrisNN_WheatSeed_e300.pt  -BCDF
+    $ python ./cmd/defend_advtr.py -vlt -e 30 -r 0.25 -m ./save/MnistCnnV2_MNIST_e50.pt  -BCDFS
+    $ python ./cmd/defend_advtr.py -vlt -e 30 -r 0.25 -m ./save/CifarCnn_CIFAR10_e50.pt  -BCDFS
+    $ python ./cmd/defend_advtr.py -vlt -e 30 -r 0.25 -m ./save/CifarResnet50_CIFAR10_e30.pt  -BCDFS
+    $ python ./cmd/defend_advtr.py -vlt -e 30 -r 0.25 -m ./save/CifarResnet50_SVHN_e30.pt  -BCDFS
     """
     main()
     print(f'[{LOG_NAME}] Task completed!')
