@@ -35,7 +35,8 @@ class DistillationContainer(DetectorContainer):
         model_container : ModelContainerPT
             A trained model.
         distillation_model : torch.nn.Module
-            The distillation model has same architecture as the classifier model.
+            The distillation model has same architecture as the classifier model. This model must be a different
+            instance to the classification model.
         temperature : float
             It controls the smoothness of the softmax function.
         pretrained : bool
@@ -47,6 +48,9 @@ class DistillationContainer(DetectorContainer):
             'temperature': temperature,
             'pretrained': pretrained,
         }
+
+        if distillation_model == model_container.model:
+            raise ValueError('Distillation model must be a new instance.')
 
         # check if the model produces probability outputs
         dc = self.model_container.data_container

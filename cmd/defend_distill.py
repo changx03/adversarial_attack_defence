@@ -14,6 +14,10 @@ LOG_NAME = 'DefDistill'
 logger = logging.getLogger(LOG_NAME)
 
 
+def build_distill_filename(model_name, dataset, epochs, temp):
+    return f'distill_{model_name}_{dataset}_t{temp}_e{epochs}.pt'
+
+
 def main():
     parser = ap.ArgumentParser()
     parser.add_argument(
@@ -23,10 +27,13 @@ def main():
         '-e', '--epoch', type=int, required=True,
         help='the number of max epochs for training')
     parser.add_argument(
-        '-t', '--temp', type=float, required=True,
+        '-t', '--temp', type=int, default=20,
         help='the temperature parameter for distillation network')
     parser.add_argument(
         '-b', '--batchsize', type=int, default=128, help='batch size')
+    parser.add_argument(
+        '-T', '--train', action='store_true', default=False,
+        help='require training')
     parser.add_argument(
         '-s', '--seed', type=int, default=4096,
         help='the seed for random number generator')
@@ -59,19 +66,20 @@ def main():
     seed = args.seed
     verbose = args.verbose
     save_log = args.savelog
+    need_train = args.train
 
     model_name, data_name = parse_model_filename(model_file)
 
     # Which attack should apply?
     attack_list = []
-    if args.bim:
-        attack_list.append('BIM')
-    if args.carlini:
-        attack_list.append('Carlini')
-    if args.deepfool:
-        attack_list.append('DeepFool')
     if args.fgsm:
         attack_list.append('FGSM')
+    if args.bim:
+        attack_list.append('BIM')
+    if args.deepfool:
+        attack_list.append('DeepFool')
+    if args.carlini:
+        attack_list.append('Carlini')
     if args.saliency:
         attack_list.append('Saliency')
 
@@ -88,8 +96,8 @@ def main():
     attack_list = ['clean'] + attack_list
 
     # Do I need train the distillation network?
-    need_train = False
-    pretrain_file = f'distill_{model_name}_{data_name}.pt'
+    pretrain_file = build_distill_filename(
+        model_name, data_name, max_epochs, temp)
     if not os.path.exists(os.path.join('save', pretrain_file)):
         need_train = True
 
@@ -110,6 +118,7 @@ def main():
     logger.info('verbose     :%r', verbose)
     logger.info('save_log    :%r', save_log)
     logger.info('need train  :%r', need_train)
+    logger.info('pretrained  :%s', pretrain_file)
     logger.info('attacks     :%s', ', '.join(attack_list))
 
     # check files
@@ -131,10 +140,15 @@ def main():
     # select a model
     Model = get_model(model_name)
     model = Model()
+    distill_model = Model()
     if data_name in ('BankNote', 'HTRU2', 'Iris', 'WheatSeed'):
         num_classes = dc.num_classes
         num_features = dc.dim_data[0]
         model = IrisNN(
+            num_features=num_features,
+            hidden_nodes=num_features*4,
+            num_classes=num_classes)
+        distill_model = IrisNN(
             num_features=num_features,
             hidden_nodes=num_features*4,
             num_classes=num_classes)
@@ -143,29 +157,25 @@ def main():
     accuracy = classifier_mc.evaluate(dc.x_test, dc.y_test)
     logger.info('Accuracy on test set: %f', accuracy)
 
-    attack = BIMContainer(
-        classifier_mc,
-        eps=0.3,
-        eps_step=0.1,
-        max_iter=100,
-        targeted=False)
-
     distillation = DistillationContainer(
-        classifier_mc, model, temperature=1.0, pretrained=False)
+        classifier_mc, distill_model, temperature=temp, pretrained=False)
     if need_train:
         distillation.fit(max_epochs=max_epochs, batch_size=batch_size)
         distillation.save(pretrain_file, overwrite=True)
     else:
         distillation.load(os.path.join('save', pretrain_file))
 
+    smooth_mc = distillation.get_def_model_container()
     y = np.load(y_file, allow_pickle=False)
     for i in range(len(attack_list)):
         adv_file = attack_files[i]
         adv_name = attack_list[i]
         logger.debug('Load %s...', adv_file)
         adv = np.load(adv_file, allow_pickle=False)
-        accuracy = classifier_mc.evaluate(adv, y)
-        logger.info('Accuracy on %s set: %f', adv_name, accuracy)
+        acc_og = classifier_mc.evaluate(adv, y)
+        acc_distill = smooth_mc.evaluate(adv, y)
+        logger.info('Accuracy on %s set - OG: %f, Distill: %f',
+            adv_name, acc_og, acc_distill)
         blocked_indices = distillation.detect(adv, return_passed_x=False)
         logger.info('Blocked %d/%d samples on %s',
                     len(blocked_indices), len(adv), adv_name)
@@ -174,15 +184,15 @@ def main():
 if __name__ == '__main__':
     """
     Examples:
-    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.5 -m ./save/IrisNN_Iris_e200.pt -BCDF
-    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.25 -m ./save/BCNN_BreastCancerWisconsin_e200.pt  -BCDF
-    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.25 -m ./save/IrisNN_BankNote_e200.pt  -BCDF
-    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.25 -m ./save/IrisNN_HTRU2_e200.pt  -BCDF
-    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.5 -m ./save/IrisNN_WheatSeed_e300.pt  -BCDF
-    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.25 -m ./save/MnistCnnV2_MNIST_e50.pt  -BCDFS
-    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.25 -m ./save/CifarCnn_CIFAR10_e50.pt  -BCDFS
-    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.25 -m ./save/CifarResnet50_CIFAR10_e30.pt  -BCDFS
-    $ python ./cmd/defend_distill.py -vl -t 10 -r 0.25 -m ./save/CifarResnet50_SVHN_e30.pt  -BCDFS
+    $ python ./cmd/defend_distill.py -vl -t 20 -e 200 -m ./save/IrisNN_Iris_e200.pt -BCDF
+    $ python ./cmd/defend_distill.py -vl -t 20 -e 200 -m ./save/BCNN_BreastCancerWisconsin_e200.pt  -BCDF
+    $ python ./cmd/defend_distill.py -vl -t 20 -e 200 -m ./save/IrisNN_BankNote_e200.pt  -BCDF
+    $ python ./cmd/defend_distill.py -vl -t 20 -e 200 -m ./save/IrisNN_HTRU2_e200.pt  -BCDF
+    $ python ./cmd/defend_distill.py -vl -t 20 -e 300 -m ./save/IrisNN_WheatSeed_e300.pt  -BCDF
+    $ python ./cmd/defend_distill.py -vl -t 20 -e 50 -m ./save/MnistCnnV2_MNIST_e50.pt  -BCDFS
+    $ python ./cmd/defend_distill.py -vl -t 20 -e 50 -m ./save/CifarCnn_CIFAR10_e50.pt  -BCDFS
+    $ python ./cmd/defend_distill.py -vl -t 20 -e 50 -m ./save/CifarResnet50_CIFAR10_e50.pt  -BCDFS
+    $ python ./cmd/defend_distill.py -vl -t 20 -e 50 -m ./save/CifarResnet50_SVHN_e50.pt  -BCDFS
     """
     main()
     print(f'[{LOG_NAME}] Task completed!')

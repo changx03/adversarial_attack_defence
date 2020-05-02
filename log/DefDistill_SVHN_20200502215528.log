@@ -1,0 +1,98 @@
+2020-05-02 21:55:28,794:INFO:defend_distill:Start at    : 20200502215528
+2020-05-02 21:55:28,794:INFO:defend_distill:RECEIVED PARAMETERS:
+2020-05-02 21:55:28,794:INFO:defend_distill:model file  :./save/CifarCnn_SVHN_e50.pt
+2020-05-02 21:55:28,794:INFO:defend_distill:model       :CifarCnn
+2020-05-02 21:55:28,794:INFO:defend_distill:dataset     :SVHN
+2020-05-02 21:55:28,794:INFO:defend_distill:max_epochs  :50
+2020-05-02 21:55:28,794:INFO:defend_distill:temperature :20
+2020-05-02 21:55:28,794:INFO:defend_distill:batch_size  :128
+2020-05-02 21:55:28,794:INFO:defend_distill:seed        :4096
+2020-05-02 21:55:28,794:INFO:defend_distill:verbose     :True
+2020-05-02 21:55:28,794:INFO:defend_distill:save_log    :True
+2020-05-02 21:55:28,794:INFO:defend_distill:need train  :True
+2020-05-02 21:55:28,794:INFO:defend_distill:pretrained  :distill_CifarCnn_SVHN_t20_e50.pt
+2020-05-02 21:55:28,795:INFO:defend_distill:attacks     :clean, FGSM, BIM, DeepFool, Carlini, Saliency
+2020-05-02 21:55:28,795:DEBUG:utils:Setting random seed for PyTorch.
+2020-05-02 21:55:28,816:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-05-02 21:55:38,654:INFO:data_container:Train size: 73257 - Test size: 26032
+2020-05-02 21:55:38,654:INFO:data_container:Successfully load data. Time to complete: 0m 9.838s
+2020-05-02 21:55:40,443:DEBUG:model_container_pt:Using device: cuda
+2020-05-02 21:55:40,454:INFO:model_container_pt:Loaded model from ./save/CifarCnn_SVHN_e50.pt
+2020-05-02 21:55:41,451:INFO:defend_distill:Accuracy on test set: 0.936501
+2020-05-02 21:55:42,392:DEBUG:distillation:Test set accuracy on pre-trained model: 0.936501
+2020-05-02 21:55:45,570:DEBUG:distillation:Accuracy of smooth labels: 0.973818
+2020-05-02 21:55:45,570:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-05-02 21:55:55,247:INFO:data_container:Train size: 73257 - Test size: 26032
+2020-05-02 21:55:55,247:INFO:data_container:Successfully load data. Time to complete: 0m 9.677s
+2020-05-02 21:55:55,360:DEBUG:model_container_pt:Using device: cuda
+2020-05-02 21:55:58,316:DEBUG:distillation:Train set accuracy on distillation model: 0.065932
+2020-05-02 21:55:59,305:DEBUG:distillation:Test set accuracy on distillation model: 0.067071
+2020-05-02 21:56:09,693:DEBUG:distillation:[1/50]0m 10.386s: Train loss: 2.287533 acc: 0.668892 - Test loss: 2.017502 acc: 0.831361
+2020-05-02 21:56:19,959:DEBUG:distillation:[2/50]0m 10.264s: Train loss: 2.279723 acc: 0.883479 - Test loss: 1.962528 acc: 0.831899
+2020-05-02 21:56:30,317:DEBUG:distillation:[3/50]0m 10.357s: Train loss: 2.279633 acc: 0.890495 - Test loss: 1.987266 acc: 0.863476
+2020-05-02 21:56:40,483:DEBUG:distillation:[4/50]0m 10.164s: Train loss: 2.279627 acc: 0.892679 - Test loss: 1.958331 acc: 0.824408
+2020-05-02 21:56:50,272:DEBUG:distillation:[5/50]0m 9.789s: Train loss: 2.279644 acc: 0.894386 - Test loss: 1.948770 acc: 0.857522
+2020-05-02 21:56:59,522:DEBUG:distillation:[6/50]0m 9.250s: Train loss: 2.279601 acc: 0.894481 - Test loss: 1.886419 acc: 0.891633
+2020-05-02 21:57:08,467:DEBUG:distillation:[7/50]0m 8.944s: Train loss: 2.279536 acc: 0.897634 - Test loss: 1.902352 acc: 0.879379
+2020-05-02 21:57:17,398:DEBUG:distillation:[8/50]0m 8.931s: Train loss: 2.279526 acc: 0.897293 - Test loss: 1.941949 acc: 0.845575
+2020-05-02 21:57:26,377:DEBUG:distillation:[9/50]0m 8.979s: Train loss: 2.279513 acc: 0.897348 - Test loss: 1.927341 acc: 0.860595
+2020-05-02 21:57:36,475:DEBUG:distillation:[10/50]0m 10.098s: Train loss: 2.279482 acc: 0.898713 - Test loss: 1.888131 acc: 0.864935
+2020-05-02 21:57:46,313:DEBUG:distillation:[11/50]0m 9.837s: Train loss: 2.279489 acc: 0.897771 - Test loss: 1.890426 acc: 0.884373
+2020-05-02 21:57:56,149:DEBUG:distillation:[12/50]0m 9.837s: Train loss: 2.279487 acc: 0.898945 - Test loss: 1.939040 acc: 0.833666
+2020-05-02 21:58:05,985:DEBUG:distillation:[13/50]0m 9.835s: Train loss: 2.279492 acc: 0.898453 - Test loss: 1.968602 acc: 0.859173
+2020-05-02 21:58:15,818:DEBUG:distillation:[14/50]0m 9.833s: Train loss: 2.279496 acc: 0.898563 - Test loss: 1.934424 acc: 0.845959
+2020-05-02 21:58:25,643:DEBUG:distillation:[15/50]0m 9.825s: Train loss: 2.279495 acc: 0.897948 - Test loss: 1.944383 acc: 0.865128
+2020-05-02 21:58:35,488:DEBUG:distillation:[16/50]0m 9.844s: Train loss: 2.279483 acc: 0.898931 - Test loss: 1.938100 acc: 0.858059
+2020-05-02 21:58:45,326:DEBUG:distillation:[17/50]0m 9.838s: Train loss: 2.279480 acc: 0.898262 - Test loss: 1.948686 acc: 0.869353
+2020-05-02 21:58:55,166:DEBUG:distillation:[18/50]0m 9.840s: Train loss: 2.279482 acc: 0.897880 - Test loss: 1.968960 acc: 0.855178
+2020-05-02 21:59:04,968:DEBUG:distillation:[19/50]0m 9.801s: Train loss: 2.279485 acc: 0.897607 - Test loss: 1.943073 acc: 0.857291
+2020-05-02 21:59:14,283:DEBUG:distillation:[20/50]0m 9.315s: Train loss: 2.279471 acc: 0.899136 - Test loss: 1.948830 acc: 0.873848
+2020-05-02 21:59:23,236:DEBUG:distillation:[21/50]0m 8.952s: Train loss: 2.279469 acc: 0.898590 - Test loss: 2.015376 acc: 0.845459
+2020-05-02 21:59:32,401:DEBUG:distillation:[22/50]0m 9.165s: Train loss: 2.279490 acc: 0.898030 - Test loss: 1.986943 acc: 0.855447
+2020-05-02 21:59:42,268:DEBUG:distillation:[23/50]0m 9.867s: Train loss: 2.279478 acc: 0.899081 - Test loss: 1.939841 acc: 0.876460
+2020-05-02 21:59:52,120:DEBUG:distillation:[24/50]0m 9.853s: Train loss: 2.279484 acc: 0.897648 - Test loss: 1.914132 acc: 0.869123
+2020-05-02 22:00:01,959:DEBUG:distillation:[25/50]0m 9.838s: Train loss: 2.279486 acc: 0.898644 - Test loss: 1.978196 acc: 0.866703
+2020-05-02 22:00:11,806:DEBUG:distillation:[26/50]0m 9.847s: Train loss: 2.279480 acc: 0.899750 - Test loss: 1.938012 acc: 0.854295
+2020-05-02 22:00:21,649:DEBUG:distillation:[27/50]0m 9.843s: Train loss: 2.279458 acc: 0.899737 - Test loss: 1.955540 acc: 0.879955
+2020-05-02 22:00:31,646:DEBUG:distillation:[28/50]0m 9.997s: Train loss: 2.279479 acc: 0.899395 - Test loss: 1.897584 acc: 0.886294
+2020-05-02 22:00:41,497:DEBUG:distillation:[29/50]0m 9.851s: Train loss: 2.279489 acc: 0.898317 - Test loss: 1.992442 acc: 0.872081
+2020-05-02 22:00:51,351:DEBUG:distillation:[30/50]0m 9.854s: Train loss: 2.279476 acc: 0.899723 - Test loss: 1.960172 acc: 0.867240
+2020-05-02 22:01:00,829:DEBUG:distillation:[31/50]0m 9.477s: Train loss: 2.279491 acc: 0.898317 - Test loss: 1.951886 acc: 0.875576
+2020-05-02 22:01:10,392:DEBUG:distillation:[32/50]0m 9.563s: Train loss: 2.279479 acc: 0.900023 - Test loss: 1.965127 acc: 0.844192
+2020-05-02 22:01:19,637:DEBUG:distillation:[33/50]0m 9.245s: Train loss: 2.279483 acc: 0.898576 - Test loss: 1.919957 acc: 0.870928
+2020-05-02 22:01:28,798:DEBUG:distillation:[34/50]0m 9.161s: Train loss: 2.279480 acc: 0.898604 - Test loss: 1.888457 acc: 0.885756
+2020-05-02 22:01:38,098:DEBUG:distillation:[35/50]0m 9.301s: Train loss: 2.279476 acc: 0.898385 - Test loss: 1.963324 acc: 0.870736
+2020-05-02 22:01:47,168:DEBUG:distillation:[36/50]0m 9.070s: Train loss: 2.279493 acc: 0.898672 - Test loss: 1.985751 acc: 0.851606
+2020-05-02 22:01:56,326:DEBUG:distillation:[37/50]0m 9.158s: Train loss: 2.279477 acc: 0.899122 - Test loss: 1.967405 acc: 0.876076
+2020-05-02 22:02:06,019:DEBUG:distillation:[38/50]0m 9.693s: Train loss: 2.279477 acc: 0.898781 - Test loss: 1.930646 acc: 0.849455
+2020-05-02 22:02:15,340:DEBUG:distillation:[39/50]0m 9.321s: Train loss: 2.279473 acc: 0.898085 - Test loss: 1.951185 acc: 0.876729
+2020-05-02 22:02:25,271:DEBUG:distillation:[40/50]0m 9.931s: Train loss: 2.279474 acc: 0.898631 - Test loss: 1.946992 acc: 0.670022
+2020-05-02 22:02:35,193:DEBUG:distillation:[41/50]0m 9.922s: Train loss: 2.279499 acc: 0.898726 - Test loss: 1.941480 acc: 0.739782
+2020-05-02 22:02:45,181:DEBUG:distillation:[42/50]0m 9.988s: Train loss: 2.279482 acc: 0.898999 - Test loss: 1.915171 acc: 0.864897
+2020-05-02 22:02:55,105:DEBUG:distillation:[43/50]0m 9.924s: Train loss: 2.279490 acc: 0.898303 - Test loss: 1.914397 acc: 0.882183
+2020-05-02 22:03:05,412:DEBUG:distillation:[44/50]0m 10.307s: Train loss: 2.279494 acc: 0.898235 - Test loss: 1.967672 acc: 0.877228
+2020-05-02 22:03:15,773:DEBUG:distillation:[45/50]0m 10.360s: Train loss: 2.279483 acc: 0.898918 - Test loss: 1.944605 acc: 0.873387
+2020-05-02 22:03:25,694:DEBUG:distillation:[46/50]0m 9.921s: Train loss: 2.279493 acc: 0.898262 - Test loss: 1.967407 acc: 0.847687
+2020-05-02 22:03:35,540:DEBUG:distillation:[47/50]0m 9.846s: Train loss: 2.279486 acc: 0.898836 - Test loss: 1.952341 acc: 0.881069
+2020-05-02 22:03:45,381:DEBUG:distillation:[48/50]0m 9.841s: Train loss: 2.279496 acc: 0.897935 - Test loss: 1.941500 acc: 0.838353
+2020-05-02 22:03:55,232:DEBUG:distillation:[49/50]0m 9.851s: Train loss: 2.279500 acc: 0.897907 - Test loss: 1.881135 acc: 0.879264
+2020-05-02 22:04:05,074:DEBUG:distillation:[50/50]0m 9.842s: Train loss: 2.279493 acc: 0.898276 - Test loss: 1.963028 acc: 0.872887
+2020-05-02 22:04:05,081:INFO:model_container_pt:Saved model to save/distill_CifarCnn_SVHN_t20_e50.pt
+2020-05-02 22:04:05,088:DEBUG:defend_distill:Load save/CifarCnn_SVHN_FGSM_x.npy...
+2020-05-02 22:04:05,183:INFO:defend_distill:Accuracy on clean set - OG: 1.000000, Distill: 0.896000
+2020-05-02 22:04:05,274:INFO:defend_distill:Blocked 104/1000 samples on clean
+2020-05-02 22:04:05,274:DEBUG:defend_distill:Load save/CifarCnn_SVHN_FGSM_adv.npy...
+2020-05-02 22:04:05,373:INFO:defend_distill:Accuracy on FGSM set - OG: 0.045000, Distill: 0.163000
+2020-05-02 22:04:05,464:INFO:defend_distill:Blocked 656/1000 samples on FGSM
+2020-05-02 22:04:05,464:DEBUG:defend_distill:Load save/CifarCnn_SVHN_BIM_adv.npy...
+2020-05-02 22:04:05,562:INFO:defend_distill:Accuracy on BIM set - OG: 0.000000, Distill: 0.000000
+2020-05-02 22:04:05,650:INFO:defend_distill:Blocked 28/1000 samples on BIM
+2020-05-02 22:04:05,650:DEBUG:defend_distill:Load save/CifarCnn_SVHN_DeepFool_adv.npy...
+2020-05-02 22:04:05,751:INFO:defend_distill:Accuracy on DeepFool set - OG: 0.340000, Distill: 0.834000
+2020-05-02 22:04:05,850:INFO:defend_distill:Blocked 617/1000 samples on DeepFool
+2020-05-02 22:04:05,850:DEBUG:defend_distill:Load save/CifarCnn_SVHN_Carlini_adv.npy...
+2020-05-02 22:04:05,948:INFO:defend_distill:Accuracy on Carlini set - OG: 0.117000, Distill: 0.124000
+2020-05-02 22:04:06,038:INFO:defend_distill:Blocked 895/1000 samples on Carlini
+2020-05-02 22:04:06,038:DEBUG:defend_distill:Load save/CifarCnn_SVHN_Saliency_adv.npy...
+2020-05-02 22:04:06,137:INFO:defend_distill:Accuracy on Saliency set - OG: 0.000000, Distill: 0.718000
+2020-05-02 22:04:06,228:INFO:defend_distill:Blocked 942/1000 samples on Saliency
