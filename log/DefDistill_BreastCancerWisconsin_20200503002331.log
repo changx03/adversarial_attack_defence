@@ -1,0 +1,247 @@
+2020-05-03 00:23:31,612:INFO:defend_distill:Start at    : 20200503002331
+2020-05-03 00:23:31,612:INFO:defend_distill:RECEIVED PARAMETERS:
+2020-05-03 00:23:31,612:INFO:defend_distill:model file  :./save/BCNN_BreastCancerWisconsin_e200.pt
+2020-05-03 00:23:31,612:INFO:defend_distill:model       :BCNN
+2020-05-03 00:23:31,612:INFO:defend_distill:dataset     :BreastCancerWisconsin
+2020-05-03 00:23:31,612:INFO:defend_distill:max_epochs  :200
+2020-05-03 00:23:31,613:INFO:defend_distill:temperature :20
+2020-05-03 00:23:31,613:INFO:defend_distill:batch_size  :128
+2020-05-03 00:23:31,613:INFO:defend_distill:seed        :4096
+2020-05-03 00:23:31,613:INFO:defend_distill:verbose     :True
+2020-05-03 00:23:31,613:INFO:defend_distill:save_log    :True
+2020-05-03 00:23:31,613:INFO:defend_distill:need train  :True
+2020-05-03 00:23:31,613:INFO:defend_distill:pretrained  :distill_BCNN_BreastCancerWisconsin_t20_e200.pt
+2020-05-03 00:23:31,613:INFO:defend_distill:attacks     :clean, FGSM, BIM, DeepFool, Carlini
+2020-05-03 00:23:31,613:DEBUG:utils:Setting random seed for PyTorch.
+2020-05-03 00:23:31,643:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-05-03 00:23:31,643:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/BreastCancerWisconsin.csv
+2020-05-03 00:23:31,660:INFO:data_container:Train size: 455 - Test size: 114
+2020-05-03 00:23:31,660:INFO:data_container:Successfully load data. Time to complete: 0m 0.017s
+2020-05-03 00:23:33,258:DEBUG:model_container_pt:Using device: cuda
+2020-05-03 00:23:33,267:INFO:model_container_pt:Loaded model from ./save/BCNN_BreastCancerWisconsin_e200.pt
+2020-05-03 00:23:33,286:INFO:defend_distill:Accuracy on test set: 0.973684
+2020-05-03 00:23:33,287:DEBUG:distillation:Test set accuracy on pre-trained model: 0.973684
+2020-05-03 00:23:33,293:DEBUG:distillation:Accuracy of smooth labels: 0.989011
+2020-05-03 00:23:33,294:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-05-03 00:23:33,294:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/BreastCancerWisconsin.csv
+2020-05-03 00:23:33,300:INFO:data_container:Train size: 455 - Test size: 114
+2020-05-03 00:23:33,300:INFO:data_container:Successfully load data. Time to complete: 0m 0.007s
+2020-05-03 00:23:33,301:DEBUG:model_container_pt:Using device: cuda
+2020-05-03 00:23:33,303:DEBUG:distillation:Train set accuracy on distillation model: 0.367033
+2020-05-03 00:23:33,304:DEBUG:distillation:Test set accuracy on distillation model: 0.771930
+2020-05-03 00:23:33,318:DEBUG:distillation:[1/200]0m 0.013s: Train loss: 0.699687 acc: 0.367033 - Test loss: 4.342031 acc: 0.771930
+2020-05-03 00:23:33,328:DEBUG:distillation:[2/200]0m 0.010s: Train loss: 0.695600 acc: 0.367033 - Test loss: 6.404252 acc: 0.771930
+2020-05-03 00:23:33,339:DEBUG:distillation:[3/200]0m 0.011s: Train loss: 0.693617 acc: 0.367033 - Test loss: 7.045137 acc: 0.771930
+2020-05-03 00:23:33,350:DEBUG:distillation:[4/200]0m 0.011s: Train loss: 0.692798 acc: 0.676923 - Test loss: 6.053249 acc: 0.771930
+2020-05-03 00:23:33,360:DEBUG:distillation:[5/200]0m 0.009s: Train loss: 0.692463 acc: 0.731868 - Test loss: 4.326172 acc: 0.771930
+2020-05-03 00:23:33,372:DEBUG:distillation:[6/200]0m 0.011s: Train loss: 0.692199 acc: 0.786813 - Test loss: 2.688932 acc: 0.771930
+2020-05-03 00:23:33,384:DEBUG:distillation:[7/200]0m 0.011s: Train loss: 0.692010 acc: 0.881319 - Test loss: 1.352573 acc: 0.771930
+2020-05-03 00:23:33,394:DEBUG:distillation:[8/200]0m 0.010s: Train loss: 0.691893 acc: 0.938462 - Test loss: 0.828516 acc: 0.771930
+2020-05-03 00:23:33,405:DEBUG:distillation:[9/200]0m 0.011s: Train loss: 0.691801 acc: 0.942857 - Test loss: 0.807772 acc: 0.219298
+2020-05-03 00:23:33,415:DEBUG:distillation:[10/200]0m 0.010s: Train loss: 0.691699 acc: 0.964835 - Test loss: 0.949798 acc: 0.228070
+2020-05-03 00:23:33,425:DEBUG:distillation:[11/200]0m 0.010s: Train loss: 0.691605 acc: 0.945055 - Test loss: 1.029135 acc: 0.228070
+2020-05-03 00:23:33,437:DEBUG:distillation:[12/200]0m 0.011s: Train loss: 0.691547 acc: 0.923077 - Test loss: 1.081986 acc: 0.228070
+2020-05-03 00:23:33,447:DEBUG:distillation:[13/200]0m 0.010s: Train loss: 0.691517 acc: 0.892308 - Test loss: 1.082145 acc: 0.228070
+2020-05-03 00:23:33,457:DEBUG:distillation:[14/200]0m 0.010s: Train loss: 0.691507 acc: 0.859341 - Test loss: 1.090055 acc: 0.228070
+2020-05-03 00:23:33,468:DEBUG:distillation:[15/200]0m 0.010s: Train loss: 0.691526 acc: 0.863736 - Test loss: 1.074875 acc: 0.228070
+2020-05-03 00:23:33,477:DEBUG:distillation:[16/200]0m 0.009s: Train loss: 0.691554 acc: 0.868132 - Test loss: 1.033396 acc: 0.228070
+2020-05-03 00:23:33,489:DEBUG:distillation:[17/200]0m 0.011s: Train loss: 0.691590 acc: 0.848352 - Test loss: 0.994207 acc: 0.228070
+2020-05-03 00:23:33,499:DEBUG:distillation:[18/200]0m 0.010s: Train loss: 0.691645 acc: 0.815385 - Test loss: 0.964027 acc: 0.228070
+2020-05-03 00:23:33,509:DEBUG:distillation:[19/200]0m 0.010s: Train loss: 0.691710 acc: 0.793407 - Test loss: 0.931298 acc: 0.228070
+2020-05-03 00:23:33,520:DEBUG:distillation:[20/200]0m 0.011s: Train loss: 0.691789 acc: 0.773626 - Test loss: 0.898794 acc: 0.228070
+2020-05-03 00:23:33,529:DEBUG:distillation:[21/200]0m 0.009s: Train loss: 0.691862 acc: 0.753846 - Test loss: 0.873668 acc: 0.228070
+2020-05-03 00:23:33,540:DEBUG:distillation:[22/200]0m 0.011s: Train loss: 0.691949 acc: 0.736264 - Test loss: 0.848770 acc: 0.228070
+2020-05-03 00:23:33,551:DEBUG:distillation:[23/200]0m 0.011s: Train loss: 0.692041 acc: 0.740659 - Test loss: 0.829368 acc: 0.228070
+2020-05-03 00:23:33,561:DEBUG:distillation:[24/200]0m 0.010s: Train loss: 0.692147 acc: 0.745055 - Test loss: 0.809517 acc: 0.228070
+2020-05-03 00:23:33,570:DEBUG:distillation:[25/200]0m 0.010s: Train loss: 0.692243 acc: 0.714286 - Test loss: 0.791321 acc: 0.228070
+2020-05-03 00:23:33,580:DEBUG:distillation:[26/200]0m 0.010s: Train loss: 0.692337 acc: 0.683516 - Test loss: 0.778822 acc: 0.228070
+2020-05-03 00:23:33,590:DEBUG:distillation:[27/200]0m 0.010s: Train loss: 0.692420 acc: 0.657143 - Test loss: 0.766197 acc: 0.228070
+2020-05-03 00:23:33,599:DEBUG:distillation:[28/200]0m 0.010s: Train loss: 0.692497 acc: 0.646154 - Test loss: 0.757132 acc: 0.228070
+2020-05-03 00:23:33,609:DEBUG:distillation:[29/200]0m 0.010s: Train loss: 0.692571 acc: 0.635165 - Test loss: 0.749688 acc: 0.228070
+2020-05-03 00:23:33,618:DEBUG:distillation:[30/200]0m 0.009s: Train loss: 0.692638 acc: 0.632967 - Test loss: 0.743827 acc: 0.228070
+2020-05-03 00:23:33,628:DEBUG:distillation:[31/200]0m 0.009s: Train loss: 0.692700 acc: 0.632967 - Test loss: 0.738994 acc: 0.228070
+2020-05-03 00:23:33,638:DEBUG:distillation:[32/200]0m 0.010s: Train loss: 0.692754 acc: 0.632967 - Test loss: 0.735357 acc: 0.228070
+2020-05-03 00:23:33,647:DEBUG:distillation:[33/200]0m 0.010s: Train loss: 0.692814 acc: 0.632967 - Test loss: 0.732436 acc: 0.228070
+2020-05-03 00:23:33,657:DEBUG:distillation:[34/200]0m 0.009s: Train loss: 0.692857 acc: 0.632967 - Test loss: 0.729664 acc: 0.228070
+2020-05-03 00:23:33,666:DEBUG:distillation:[35/200]0m 0.010s: Train loss: 0.692887 acc: 0.632967 - Test loss: 0.726822 acc: 0.228070
+2020-05-03 00:23:33,676:DEBUG:distillation:[36/200]0m 0.010s: Train loss: 0.692910 acc: 0.632967 - Test loss: 0.723347 acc: 0.228070
+2020-05-03 00:23:33,686:DEBUG:distillation:[37/200]0m 0.010s: Train loss: 0.692929 acc: 0.632967 - Test loss: 0.718161 acc: 0.228070
+2020-05-03 00:23:33,695:DEBUG:distillation:[38/200]0m 0.010s: Train loss: 0.692946 acc: 0.632967 - Test loss: 0.710619 acc: 0.228070
+2020-05-03 00:23:33,705:DEBUG:distillation:[39/200]0m 0.009s: Train loss: 0.692960 acc: 0.632967 - Test loss: 0.701456 acc: 0.228070
+2020-05-03 00:23:33,714:DEBUG:distillation:[40/200]0m 0.009s: Train loss: 0.692968 acc: 0.632967 - Test loss: 0.694796 acc: 0.228070
+2020-05-03 00:23:33,724:DEBUG:distillation:[41/200]0m 0.009s: Train loss: 0.692969 acc: 0.632967 - Test loss: 0.691296 acc: 0.377193
+2020-05-03 00:23:33,734:DEBUG:distillation:[42/200]0m 0.009s: Train loss: 0.692968 acc: 0.632967 - Test loss: 0.689305 acc: 0.771930
+2020-05-03 00:23:33,743:DEBUG:distillation:[43/200]0m 0.010s: Train loss: 0.692968 acc: 0.632967 - Test loss: 0.688760 acc: 0.929825
+2020-05-03 00:23:33,753:DEBUG:distillation:[44/200]0m 0.010s: Train loss: 0.692968 acc: 0.632967 - Test loss: 0.687918 acc: 0.807018
+2020-05-03 00:23:33,763:DEBUG:distillation:[45/200]0m 0.010s: Train loss: 0.692966 acc: 0.632967 - Test loss: 0.687441 acc: 0.780702
+2020-05-03 00:23:33,773:DEBUG:distillation:[46/200]0m 0.010s: Train loss: 0.692964 acc: 0.632967 - Test loss: 0.687041 acc: 0.771930
+2020-05-03 00:23:33,782:DEBUG:distillation:[47/200]0m 0.009s: Train loss: 0.692966 acc: 0.632967 - Test loss: 0.687036 acc: 0.771930
+2020-05-03 00:23:33,792:DEBUG:distillation:[48/200]0m 0.009s: Train loss: 0.692964 acc: 0.632967 - Test loss: 0.686500 acc: 0.771930
+2020-05-03 00:23:33,801:DEBUG:distillation:[49/200]0m 0.010s: Train loss: 0.692960 acc: 0.632967 - Test loss: 0.686534 acc: 0.771930
+2020-05-03 00:23:33,811:DEBUG:distillation:[50/200]0m 0.010s: Train loss: 0.692960 acc: 0.632967 - Test loss: 0.686492 acc: 0.771930
+2020-05-03 00:23:33,821:DEBUG:distillation:[51/200]0m 0.010s: Train loss: 0.692959 acc: 0.632967 - Test loss: 0.686280 acc: 0.771930
+2020-05-03 00:23:33,830:DEBUG:distillation:[52/200]0m 0.009s: Train loss: 0.692957 acc: 0.632967 - Test loss: 0.686136 acc: 0.771930
+2020-05-03 00:23:33,840:DEBUG:distillation:[53/200]0m 0.009s: Train loss: 0.692955 acc: 0.632967 - Test loss: 0.686035 acc: 0.771930
+2020-05-03 00:23:33,849:DEBUG:distillation:[54/200]0m 0.010s: Train loss: 0.692954 acc: 0.632967 - Test loss: 0.685773 acc: 0.771930
+2020-05-03 00:23:33,859:DEBUG:distillation:[55/200]0m 0.010s: Train loss: 0.692952 acc: 0.632967 - Test loss: 0.685858 acc: 0.771930
+2020-05-03 00:23:33,869:DEBUG:distillation:[56/200]0m 0.010s: Train loss: 0.692953 acc: 0.632967 - Test loss: 0.685919 acc: 0.771930
+2020-05-03 00:23:33,878:DEBUG:distillation:[57/200]0m 0.009s: Train loss: 0.692953 acc: 0.632967 - Test loss: 0.685891 acc: 0.771930
+2020-05-03 00:23:33,888:DEBUG:distillation:[58/200]0m 0.010s: Train loss: 0.692953 acc: 0.632967 - Test loss: 0.685881 acc: 0.771930
+2020-05-03 00:23:33,898:DEBUG:distillation:[59/200]0m 0.010s: Train loss: 0.692952 acc: 0.632967 - Test loss: 0.685764 acc: 0.771930
+2020-05-03 00:23:33,907:DEBUG:distillation:[60/200]0m 0.010s: Train loss: 0.692953 acc: 0.632967 - Test loss: 0.685805 acc: 0.771930
+2020-05-03 00:23:33,917:DEBUG:distillation:[61/200]0m 0.010s: Train loss: 0.692952 acc: 0.632967 - Test loss: 0.685715 acc: 0.771930
+2020-05-03 00:23:33,926:DEBUG:distillation:[62/200]0m 0.010s: Train loss: 0.692955 acc: 0.632967 - Test loss: 0.685893 acc: 0.771930
+2020-05-03 00:23:33,936:DEBUG:distillation:[63/200]0m 0.010s: Train loss: 0.692954 acc: 0.632967 - Test loss: 0.685521 acc: 0.771930
+2020-05-03 00:23:33,945:DEBUG:distillation:[64/200]0m 0.009s: Train loss: 0.692949 acc: 0.632967 - Test loss: 0.685613 acc: 0.771930
+2020-05-03 00:23:33,955:DEBUG:distillation:[65/200]0m 0.009s: Train loss: 0.692949 acc: 0.632967 - Test loss: 0.685561 acc: 0.771930
+2020-05-03 00:23:33,964:DEBUG:distillation:[66/200]0m 0.009s: Train loss: 0.692948 acc: 0.632967 - Test loss: 0.685386 acc: 0.771930
+2020-05-03 00:23:33,974:DEBUG:distillation:[67/200]0m 0.009s: Train loss: 0.692946 acc: 0.632967 - Test loss: 0.685076 acc: 0.771930
+2020-05-03 00:23:33,983:DEBUG:distillation:[68/200]0m 0.009s: Train loss: 0.692943 acc: 0.632967 - Test loss: 0.685070 acc: 0.771930
+2020-05-03 00:23:33,993:DEBUG:distillation:[69/200]0m 0.009s: Train loss: 0.692944 acc: 0.632967 - Test loss: 0.685146 acc: 0.771930
+2020-05-03 00:23:34,002:DEBUG:distillation:[70/200]0m 0.009s: Train loss: 0.692943 acc: 0.632967 - Test loss: 0.684985 acc: 0.771930
+2020-05-03 00:23:34,012:DEBUG:distillation:[71/200]0m 0.009s: Train loss: 0.692942 acc: 0.632967 - Test loss: 0.685031 acc: 0.771930
+2020-05-03 00:23:34,021:DEBUG:distillation:[72/200]0m 0.009s: Train loss: 0.692943 acc: 0.632967 - Test loss: 0.684699 acc: 0.771930
+2020-05-03 00:23:34,030:DEBUG:distillation:[73/200]0m 0.009s: Train loss: 0.692938 acc: 0.632967 - Test loss: 0.684687 acc: 0.771930
+2020-05-03 00:23:34,040:DEBUG:distillation:[74/200]0m 0.009s: Train loss: 0.692938 acc: 0.632967 - Test loss: 0.684597 acc: 0.771930
+2020-05-03 00:23:34,049:DEBUG:distillation:[75/200]0m 0.009s: Train loss: 0.692938 acc: 0.632967 - Test loss: 0.684494 acc: 0.771930
+2020-05-03 00:23:34,059:DEBUG:distillation:[76/200]0m 0.009s: Train loss: 0.692941 acc: 0.632967 - Test loss: 0.684662 acc: 0.771930
+2020-05-03 00:23:34,068:DEBUG:distillation:[77/200]0m 0.009s: Train loss: 0.692938 acc: 0.632967 - Test loss: 0.684322 acc: 0.771930
+2020-05-03 00:23:34,077:DEBUG:distillation:[78/200]0m 0.009s: Train loss: 0.692934 acc: 0.632967 - Test loss: 0.684113 acc: 0.771930
+2020-05-03 00:23:34,087:DEBUG:distillation:[79/200]0m 0.009s: Train loss: 0.692934 acc: 0.632967 - Test loss: 0.683921 acc: 0.771930
+2020-05-03 00:23:34,096:DEBUG:distillation:[80/200]0m 0.009s: Train loss: 0.692933 acc: 0.632967 - Test loss: 0.684041 acc: 0.771930
+2020-05-03 00:23:34,106:DEBUG:distillation:[81/200]0m 0.009s: Train loss: 0.692932 acc: 0.632967 - Test loss: 0.683934 acc: 0.771930
+2020-05-03 00:23:34,115:DEBUG:distillation:[82/200]0m 0.009s: Train loss: 0.692932 acc: 0.632967 - Test loss: 0.683892 acc: 0.771930
+2020-05-03 00:23:34,125:DEBUG:distillation:[83/200]0m 0.009s: Train loss: 0.692931 acc: 0.632967 - Test loss: 0.683807 acc: 0.771930
+2020-05-03 00:23:34,134:DEBUG:distillation:[84/200]0m 0.009s: Train loss: 0.692929 acc: 0.632967 - Test loss: 0.683530 acc: 0.771930
+2020-05-03 00:23:34,144:DEBUG:distillation:[85/200]0m 0.009s: Train loss: 0.692929 acc: 0.632967 - Test loss: 0.683272 acc: 0.771930
+2020-05-03 00:23:34,153:DEBUG:distillation:[86/200]0m 0.009s: Train loss: 0.692927 acc: 0.632967 - Test loss: 0.683154 acc: 0.771930
+2020-05-03 00:23:34,162:DEBUG:distillation:[87/200]0m 0.009s: Train loss: 0.692927 acc: 0.632967 - Test loss: 0.683134 acc: 0.771930
+2020-05-03 00:23:34,172:DEBUG:distillation:[88/200]0m 0.009s: Train loss: 0.692928 acc: 0.632967 - Test loss: 0.683375 acc: 0.771930
+2020-05-03 00:23:34,181:DEBUG:distillation:[89/200]0m 0.009s: Train loss: 0.692928 acc: 0.632967 - Test loss: 0.683503 acc: 0.771930
+2020-05-03 00:23:34,190:DEBUG:distillation:[90/200]0m 0.009s: Train loss: 0.692929 acc: 0.632967 - Test loss: 0.683591 acc: 0.771930
+2020-05-03 00:23:34,200:DEBUG:distillation:[91/200]0m 0.009s: Train loss: 0.692929 acc: 0.632967 - Test loss: 0.683574 acc: 0.771930
+2020-05-03 00:23:34,209:DEBUG:distillation:[92/200]0m 0.009s: Train loss: 0.692929 acc: 0.632967 - Test loss: 0.683497 acc: 0.771930
+2020-05-03 00:23:34,218:DEBUG:distillation:[93/200]0m 0.009s: Train loss: 0.692928 acc: 0.632967 - Test loss: 0.683399 acc: 0.771930
+2020-05-03 00:23:34,228:DEBUG:distillation:[94/200]0m 0.009s: Train loss: 0.692928 acc: 0.632967 - Test loss: 0.683127 acc: 0.771930
+2020-05-03 00:23:34,237:DEBUG:distillation:[95/200]0m 0.009s: Train loss: 0.692926 acc: 0.632967 - Test loss: 0.683024 acc: 0.771930
+2020-05-03 00:23:34,246:DEBUG:distillation:[96/200]0m 0.009s: Train loss: 0.692926 acc: 0.632967 - Test loss: 0.682928 acc: 0.771930
+2020-05-03 00:23:34,256:DEBUG:distillation:[97/200]0m 0.009s: Train loss: 0.692926 acc: 0.632967 - Test loss: 0.682729 acc: 0.771930
+2020-05-03 00:23:34,265:DEBUG:distillation:[98/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682736 acc: 0.771930
+2020-05-03 00:23:34,274:DEBUG:distillation:[99/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682603 acc: 0.771930
+2020-05-03 00:23:34,284:DEBUG:distillation:[100/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682532 acc: 0.771930
+2020-05-03 00:23:34,293:DEBUG:distillation:[101/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682610 acc: 0.771930
+2020-05-03 00:23:34,302:DEBUG:distillation:[102/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682509 acc: 0.771930
+2020-05-03 00:23:34,313:DEBUG:distillation:[103/200]0m 0.010s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682408 acc: 0.771930
+2020-05-03 00:23:34,323:DEBUG:distillation:[104/200]0m 0.010s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682406 acc: 0.771930
+2020-05-03 00:23:34,334:DEBUG:distillation:[105/200]0m 0.011s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682229 acc: 0.771930
+2020-05-03 00:23:34,344:DEBUG:distillation:[106/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682093 acc: 0.771930
+2020-05-03 00:23:34,354:DEBUG:distillation:[107/200]0m 0.010s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681957 acc: 0.771930
+2020-05-03 00:23:34,363:DEBUG:distillation:[108/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681943 acc: 0.771930
+2020-05-03 00:23:34,372:DEBUG:distillation:[109/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681997 acc: 0.771930
+2020-05-03 00:23:34,382:DEBUG:distillation:[110/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682139 acc: 0.771930
+2020-05-03 00:23:34,391:DEBUG:distillation:[111/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682284 acc: 0.771930
+2020-05-03 00:23:34,400:DEBUG:distillation:[112/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682342 acc: 0.771930
+2020-05-03 00:23:34,410:DEBUG:distillation:[113/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682425 acc: 0.771930
+2020-05-03 00:23:34,419:DEBUG:distillation:[114/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682530 acc: 0.771930
+2020-05-03 00:23:34,429:DEBUG:distillation:[115/200]0m 0.010s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682629 acc: 0.771930
+2020-05-03 00:23:34,441:DEBUG:distillation:[116/200]0m 0.011s: Train loss: 0.692926 acc: 0.632967 - Test loss: 0.682793 acc: 0.771930
+2020-05-03 00:23:34,451:DEBUG:distillation:[117/200]0m 0.010s: Train loss: 0.692926 acc: 0.632967 - Test loss: 0.682833 acc: 0.771930
+2020-05-03 00:23:34,460:DEBUG:distillation:[118/200]0m 0.009s: Train loss: 0.692926 acc: 0.632967 - Test loss: 0.682804 acc: 0.771930
+2020-05-03 00:23:34,470:DEBUG:distillation:[119/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682610 acc: 0.771930
+2020-05-03 00:23:34,479:DEBUG:distillation:[120/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682393 acc: 0.771930
+2020-05-03 00:23:34,489:DEBUG:distillation:[121/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682302 acc: 0.771930
+2020-05-03 00:23:34,498:DEBUG:distillation:[122/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682154 acc: 0.771930
+2020-05-03 00:23:34,507:DEBUG:distillation:[123/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681902 acc: 0.771930
+2020-05-03 00:23:34,517:DEBUG:distillation:[124/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681792 acc: 0.771930
+2020-05-03 00:23:34,526:DEBUG:distillation:[125/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681679 acc: 0.771930
+2020-05-03 00:23:34,535:DEBUG:distillation:[126/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681660 acc: 0.771930
+2020-05-03 00:23:34,545:DEBUG:distillation:[127/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681585 acc: 0.771930
+2020-05-03 00:23:34,554:DEBUG:distillation:[128/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681472 acc: 0.771930
+2020-05-03 00:23:34,563:DEBUG:distillation:[129/200]0m 0.009s: Train loss: 0.692926 acc: 0.632967 - Test loss: 0.681375 acc: 0.771930
+2020-05-03 00:23:34,573:DEBUG:distillation:[130/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681635 acc: 0.771930
+2020-05-03 00:23:34,582:DEBUG:distillation:[131/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681719 acc: 0.771930
+2020-05-03 00:23:34,591:DEBUG:distillation:[132/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682003 acc: 0.771930
+2020-05-03 00:23:34,601:DEBUG:distillation:[133/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682097 acc: 0.771930
+2020-05-03 00:23:34,610:DEBUG:distillation:[134/200]0m 0.010s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682225 acc: 0.771930
+2020-05-03 00:23:34,621:DEBUG:distillation:[135/200]0m 0.011s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682393 acc: 0.771930
+2020-05-03 00:23:34,631:DEBUG:distillation:[136/200]0m 0.010s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682531 acc: 0.771930
+2020-05-03 00:23:34,640:DEBUG:distillation:[137/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682639 acc: 0.771930
+2020-05-03 00:23:34,649:DEBUG:distillation:[138/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682551 acc: 0.771930
+2020-05-03 00:23:34,659:DEBUG:distillation:[139/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682456 acc: 0.771930
+2020-05-03 00:23:34,668:DEBUG:distillation:[140/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682413 acc: 0.771930
+2020-05-03 00:23:34,677:DEBUG:distillation:[141/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682303 acc: 0.771930
+2020-05-03 00:23:34,687:DEBUG:distillation:[142/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682355 acc: 0.771930
+2020-05-03 00:23:34,696:DEBUG:distillation:[143/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682252 acc: 0.771930
+2020-05-03 00:23:34,705:DEBUG:distillation:[144/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682208 acc: 0.771930
+2020-05-03 00:23:34,715:DEBUG:distillation:[145/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682077 acc: 0.771930
+2020-05-03 00:23:34,724:DEBUG:distillation:[146/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682076 acc: 0.771930
+2020-05-03 00:23:34,733:DEBUG:distillation:[147/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681914 acc: 0.771930
+2020-05-03 00:23:34,742:DEBUG:distillation:[148/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.681767 acc: 0.771930
+2020-05-03 00:23:34,752:DEBUG:distillation:[149/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681687 acc: 0.771930
+2020-05-03 00:23:34,761:DEBUG:distillation:[150/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681685 acc: 0.771930
+2020-05-03 00:23:34,770:DEBUG:distillation:[151/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681812 acc: 0.771930
+2020-05-03 00:23:34,779:DEBUG:distillation:[152/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682030 acc: 0.771930
+2020-05-03 00:23:34,789:DEBUG:distillation:[153/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682158 acc: 0.771930
+2020-05-03 00:23:34,798:DEBUG:distillation:[154/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682221 acc: 0.771930
+2020-05-03 00:23:34,807:DEBUG:distillation:[155/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682249 acc: 0.771930
+2020-05-03 00:23:34,816:DEBUG:distillation:[156/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682262 acc: 0.771930
+2020-05-03 00:23:34,826:DEBUG:distillation:[157/200]0m 0.009s: Train loss: 0.692926 acc: 0.632967 - Test loss: 0.682395 acc: 0.771930
+2020-05-03 00:23:34,835:DEBUG:distillation:[158/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682365 acc: 0.771930
+2020-05-03 00:23:34,844:DEBUG:distillation:[159/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682211 acc: 0.771930
+2020-05-03 00:23:34,853:DEBUG:distillation:[160/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682169 acc: 0.771930
+2020-05-03 00:23:34,863:DEBUG:distillation:[161/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682082 acc: 0.771930
+2020-05-03 00:23:34,872:DEBUG:distillation:[162/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681946 acc: 0.771930
+2020-05-03 00:23:34,881:DEBUG:distillation:[163/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681853 acc: 0.771930
+2020-05-03 00:23:34,891:DEBUG:distillation:[164/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681922 acc: 0.771930
+2020-05-03 00:23:34,900:DEBUG:distillation:[165/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682012 acc: 0.771930
+2020-05-03 00:23:34,910:DEBUG:distillation:[166/200]0m 0.010s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681865 acc: 0.771930
+2020-05-03 00:23:34,920:DEBUG:distillation:[167/200]0m 0.010s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681757 acc: 0.771930
+2020-05-03 00:23:34,930:DEBUG:distillation:[168/200]0m 0.010s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.681790 acc: 0.771930
+2020-05-03 00:23:34,939:DEBUG:distillation:[169/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.681573 acc: 0.771930
+2020-05-03 00:23:34,949:DEBUG:distillation:[170/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681526 acc: 0.771930
+2020-05-03 00:23:34,958:DEBUG:distillation:[171/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681507 acc: 0.771930
+2020-05-03 00:23:34,967:DEBUG:distillation:[172/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.681535 acc: 0.771930
+2020-05-03 00:23:34,977:DEBUG:distillation:[173/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681709 acc: 0.771930
+2020-05-03 00:23:34,986:DEBUG:distillation:[174/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681855 acc: 0.771930
+2020-05-03 00:23:34,995:DEBUG:distillation:[175/200]0m 0.009s: Train loss: 0.692923 acc: 0.632967 - Test loss: 0.682049 acc: 0.771930
+2020-05-03 00:23:35,005:DEBUG:distillation:[176/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682288 acc: 0.771930
+2020-05-03 00:23:35,014:DEBUG:distillation:[177/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682294 acc: 0.771930
+2020-05-03 00:23:35,023:DEBUG:distillation:[178/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682405 acc: 0.771930
+2020-05-03 00:23:35,033:DEBUG:distillation:[179/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682369 acc: 0.771930
+2020-05-03 00:23:35,042:DEBUG:distillation:[180/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682331 acc: 0.771930
+2020-05-03 00:23:35,051:DEBUG:distillation:[181/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682269 acc: 0.771930
+2020-05-03 00:23:35,061:DEBUG:distillation:[182/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682271 acc: 0.771930
+2020-05-03 00:23:35,070:DEBUG:distillation:[183/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682184 acc: 0.771930
+2020-05-03 00:23:35,079:DEBUG:distillation:[184/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682097 acc: 0.771930
+2020-05-03 00:23:35,089:DEBUG:distillation:[185/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682019 acc: 0.771930
+2020-05-03 00:23:35,098:DEBUG:distillation:[186/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681959 acc: 0.771930
+2020-05-03 00:23:35,107:DEBUG:distillation:[187/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.681858 acc: 0.771930
+2020-05-03 00:23:35,117:DEBUG:distillation:[188/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681892 acc: 0.771930
+2020-05-03 00:23:35,126:DEBUG:distillation:[189/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681967 acc: 0.771930
+2020-05-03 00:23:35,135:DEBUG:distillation:[190/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681915 acc: 0.771930
+2020-05-03 00:23:35,144:DEBUG:distillation:[191/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682042 acc: 0.771930
+2020-05-03 00:23:35,154:DEBUG:distillation:[192/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682108 acc: 0.771930
+2020-05-03 00:23:35,163:DEBUG:distillation:[193/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682034 acc: 0.771930
+2020-05-03 00:23:35,172:DEBUG:distillation:[194/200]0m 0.009s: Train loss: 0.692925 acc: 0.632967 - Test loss: 0.682072 acc: 0.771930
+2020-05-03 00:23:35,182:DEBUG:distillation:[195/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.681981 acc: 0.771930
+2020-05-03 00:23:35,191:DEBUG:distillation:[196/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682015 acc: 0.771930
+2020-05-03 00:23:35,200:DEBUG:distillation:[197/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682004 acc: 0.771930
+2020-05-03 00:23:35,210:DEBUG:distillation:[198/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682049 acc: 0.771930
+2020-05-03 00:23:35,219:DEBUG:distillation:[199/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682087 acc: 0.771930
+2020-05-03 00:23:35,228:DEBUG:distillation:[200/200]0m 0.009s: Train loss: 0.692924 acc: 0.632967 - Test loss: 0.682055 acc: 0.771930
+2020-05-03 00:23:35,229:INFO:model_container_pt:Saved model to save/distill_BCNN_BreastCancerWisconsin_t20_e200.pt
+2020-05-03 00:23:35,236:DEBUG:defend_distill:Load save/BCNN_BreastCancerWisconsin_FGSM_x.npy...
+2020-05-03 00:23:35,238:INFO:defend_distill:Accuracy on clean set - OG: 1.000000, Distill: 0.657895
+2020-05-03 00:23:35,239:INFO:defend_distill:Blocked 39/114 samples on clean
+2020-05-03 00:23:35,239:DEBUG:defend_distill:Load save/BCNN_BreastCancerWisconsin_FGSM_adv.npy...
+2020-05-03 00:23:35,241:INFO:defend_distill:Accuracy on FGSM set - OG: 0.026316, Distill: 0.657895
+2020-05-03 00:23:35,242:INFO:defend_distill:Blocked 78/114 samples on FGSM
+2020-05-03 00:23:35,242:DEBUG:defend_distill:Load save/BCNN_BreastCancerWisconsin_BIM_adv.npy...
+2020-05-03 00:23:35,244:INFO:defend_distill:Accuracy on BIM set - OG: 0.008772, Distill: 0.657895
+2020-05-03 00:23:35,246:INFO:defend_distill:Blocked 76/114 samples on BIM
+2020-05-03 00:23:35,246:DEBUG:defend_distill:Load save/BCNN_BreastCancerWisconsin_DeepFool_adv.npy...
+2020-05-03 00:23:35,247:INFO:defend_distill:Accuracy on DeepFool set - OG: 0.078947, Distill: 0.657895
+2020-05-03 00:23:35,249:INFO:defend_distill:Blocked 66/114 samples on DeepFool
+2020-05-03 00:23:35,249:DEBUG:defend_distill:Load save/BCNN_BreastCancerWisconsin_Carlini_adv.npy...
+2020-05-03 00:23:35,251:INFO:defend_distill:Accuracy on Carlini set - OG: 0.526316, Distill: 0.657895
+2020-05-03 00:23:35,252:INFO:defend_distill:Blocked 71/114 samples on Carlini
