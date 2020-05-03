@@ -1,6 +1,7 @@
 import argparse as ap
 import logging
 import os
+import sys
 
 import numpy as np
 
@@ -29,7 +30,7 @@ def main():
         '-b', '--batchsize', type=int, default=128, help='batch size')
     parser.add_argument(
         '-t', '--train', action='store_true', default=False,
-        help='require training')
+        help='Force the model to retrain without searching existing pretrained file')
     parser.add_argument(
         '-s', '--seed', type=int, default=4096,
         help='the seed for random number generator')
@@ -78,6 +79,11 @@ def main():
         attack_list.append('FGSM')
     if args.saliency:
         attack_list.append('Saliency')
+
+    # Quit, if there is nothing to do.
+    if len(attack_list) == 0:
+        logger.warning('Neither received any filter nor any attack. Exit')
+        sys.exit(0)
 
     y_file = os.path.join(
         'save', f'{model_name}_{data_name}_{attack_list[0]}_y.npy')

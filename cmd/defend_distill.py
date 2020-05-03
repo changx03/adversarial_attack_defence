@@ -1,10 +1,10 @@
 import argparse as ap
 import logging
 import os
+import sys
 
 import numpy as np
 
-from aad.attacks import BIMContainer
 from aad.basemodels import IrisNN, ModelContainerPT, get_model
 from aad.defences import DistillationContainer
 from aad.utils import get_time_str, master_seed
@@ -33,7 +33,7 @@ def main():
         '-b', '--batchsize', type=int, default=128, help='batch size')
     parser.add_argument(
         '-T', '--train', action='store_true', default=False,
-        help='require training')
+        help='Force the model to retrain without searching existing pretrained file')
     parser.add_argument(
         '-s', '--seed', type=int, default=4096,
         help='the seed for random number generator')
@@ -82,6 +82,11 @@ def main():
         attack_list.append('Carlini')
     if args.saliency:
         attack_list.append('Saliency')
+
+    # Quit, if there is nothing to do.
+    if len(attack_list) == 0:
+        logger.warning('Neither received any filter nor any attack. Exit')
+        sys.exit(0)
 
     y_file = os.path.join(
         'save', f'{model_name}_{data_name}_{attack_list[0]}_y.npy')
@@ -175,7 +180,7 @@ def main():
         acc_og = classifier_mc.evaluate(adv, y)
         acc_distill = smooth_mc.evaluate(adv, y)
         logger.info('Accuracy on %s set - OG: %f, Distill: %f',
-            adv_name, acc_og, acc_distill)
+                    adv_name, acc_og, acc_distill)
         blocked_indices = distillation.detect(adv, return_passed_x=False)
         logger.info('Blocked %d/%d samples on %s',
                     len(blocked_indices), len(adv), adv_name)
