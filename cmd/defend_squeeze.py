@@ -1,10 +1,10 @@
 import argparse as ap
 import logging
 import os
+import sys
 
 import numpy as np
 
-from aad.attacks import BIMContainer
 from aad.basemodels import IrisNN, ModelContainerPT, get_model
 from aad.defences import FeatureSqueezing
 from aad.utils import get_time_str, master_seed
@@ -14,29 +14,32 @@ LOG_NAME = 'DefSqueeze'
 logger = logging.getLogger(LOG_NAME)
 
 
+def build_squeezer_filename(model_name, data_name, max_epochs):
+    return f'squeezer_{model_name}_{data_name}_e{max_epochs}.pt'
+
+
 def main():
     parser = ap.ArgumentParser()
     parser.add_argument(
         '-m', '--model', type=str, required=True,
         help='a file which contains a pretrained model. The filename should in "<model>_<dataset>_e<max epochs>[_<date>].pt" format')
     parser.add_argument(
-        '-b', '--bitdepth', type=int, required=True,
-        help='The image color depth for input images')
+        '-e', '--epoch', type=int, required=True,
+        help='the number of max epochs for training')
     parser.add_argument(
-        '-s', '--sigma', type=int, required=True,
-        help='The Standard Deviation of normal distribution')
+        '-d', '--depth', type=int, default=0,
+        help='The image color depth for input images. Apply Binary-Depth filter when receives a parameter')
     parser.add_argument(
-        '-k', '--kernelsize', type=int, required=True,
-        help='The kernel size for median filter')
+        '--sigma', type=float, default=0,
+        help='The Standard Deviation of Normal distribution. Apply Gaussian Noise filter when receives a parameter')
     parser.add_argument(
-        '-M', '--median', action='store_true', default=False,
-        help='Apply median filter')
+        '-k', '--kernelsize', type=int, default=0,
+        help='The kernel size for Median filter. Apply median filter when receives a parameter')
     parser.add_argument(
-        '-D', '--depth', action='store_true', default=False,
-        help='Apply binary-depth filter')
+        '-b', '--batchsize', type=int, default=128, help='batch size')
     parser.add_argument(
-        '-N', '--normal', action='store_true', default=False,
-        help='Apply Gaussian noise filter')
+        '-T', '--train', action='store_true', default=False,
+        help='Force the model to retrain without searching existing pretrained file')
     parser.add_argument(
         '-s', '--seed', type=int, default=4096,
         help='the seed for random number generator')
@@ -63,36 +66,44 @@ def main():
         help='Apply Saliency Map attack')
     args = parser.parse_args()
     model_file = args.model
-    bit_depth = args.bitdepth
+    max_epochs = args.epoch
+    bit_depth = args.depth
     sigma = args.sigma
     kernel_size = args.kernelsize
+    batch_size = args.batchsize
     seed = args.seed
     verbose = args.verbose
     save_log = args.savelog
+    need_train = args.train
 
     model_name, data_name = parse_model_filename(model_file)
 
     # Which filter should apply?
     filter_list = []
-    if args.median:
-        filter_list.append('median')
-    if args.depth:
+    if bit_depth > 0:
         filter_list.append('binary')
-    if args.normal:
+    if sigma > 0:
         filter_list.append('normal')
+    if kernel_size > 0:
+        filter_list.append('median')
 
     # Which attack should apply?
     attack_list = []
-    if args.bim:
-        attack_list.append('BIM')
-    if args.carlini:
-        attack_list.append('Carlini')
-    if args.deepfool:
-        attack_list.append('DeepFool')
     if args.fgsm:
         attack_list.append('FGSM')
+    if args.bim:
+        attack_list.append('BIM')
+    if args.deepfool:
+        attack_list.append('DeepFool')
+    if args.carlini:
+        attack_list.append('Carlini')
     if args.saliency:
         attack_list.append('Saliency')
+
+    # Quit, if there is nothing to do.
+    if len(filter_list) == 0 or len(attack_list) == 0:
+        logger.warning('Neither received any filter nor any attack. Exit')
+        sys.exit(0)
 
     y_file = os.path.join(
         'save', f'{model_name}_{data_name}_{attack_list[0]}_y.npy')
@@ -106,8 +117,9 @@ def main():
     # the 1st file this the clean inputs
     attack_list = ['clean'] + attack_list
 
-    need_train = False
-    pretrain_file = f'AdvTrain_{model_name}_{data_name}.pt'
+    # Do I need train the distillation network?
+    pretrain_file = build_squeezer_filename(
+        model_name, data_name, max_epochs)
     if not os.path.exists(os.path.join('save', pretrain_file)):
         need_train = True
 
@@ -121,9 +133,11 @@ def main():
     logger.info('model file  :%s', model_file)
     logger.info('model       :%s', model_name)
     logger.info('dataset     :%s', data_name)
-    logger.info('bit_depth  :%d', bit_depth)
-    logger.info('sigma  :%d', sigma)
-    logger.info('kernel_size  :%d', kernel_size)
+    logger.info('max_epochs  :%d', max_epochs)
+    logger.info('bit_depth   :%d', bit_depth)
+    logger.info('sigma       :%f', sigma)
+    logger.info('kernel_size :%d', kernel_size)
+    logger.info('batch_size  :%d', batch_size)
     logger.info('seed        :%d', seed)
     logger.info('verbose     :%r', verbose)
     logger.info('save_log    :%r', save_log)
@@ -162,6 +176,12 @@ def main():
     accuracy = classifier_mc.evaluate(dc.x_test, dc.y_test)
     logger.info('Accuracy on test set: %f', accuracy)
 
+
 if __name__ == '__main__':
+    """
+    Examples:
+    $ python ./cmd/defend_squeeze.py -v -e 50 -d 8 --sigma 0.2 -k 3 -m ./save/MnistCnnV2_MNIST_e50.pt -FBDCS
+    """
+
     main()
     print(f'[{LOG_NAME}] Task completed!')
