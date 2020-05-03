@@ -3,7 +3,7 @@ import os
 
 import numpy as np
 
-from aad.basemodels import ModelContainerPT, MnistCnnV2
+from aad.basemodels import MnistCnnV2, ModelContainerPT
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.defences import FeatureSqueezing
 from aad.utils import get_data_path
@@ -126,7 +126,7 @@ def main():
         acc_og = mc.evaluate(adv, y)
         acc_squeezer = squeezer.evaluate(adv, y)
         print(
-            f'Accuracy on {adv_name} set - OG: {acc_og}, Distill: {acc_squeezer}')
+            f'Accuracy on {adv_name} set - OG: {acc_og}, Squeezer: {acc_squeezer}')
 
 
 if __name__ == '__main__':

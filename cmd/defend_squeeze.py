@@ -124,7 +124,7 @@ def main():
     pretrain_files = []
     for fname in filter_list:
         pretrain_file = build_squeezer_filename(
-            model_name, data_name, max_epochs, fname    
+            model_name, data_name, max_epochs, fname
         )
         pretrain_files.append(pretrain_file)
         if not os.path.exists(os.path.join('save', pretrain_file)):
@@ -184,11 +184,45 @@ def main():
     accuracy = classifier_mc.evaluate(dc.x_test, dc.y_test)
     logger.info('Accuracy on test set: %f', accuracy)
 
+    # initialize Squeezer
+    squeezer = FeatureSqueezing(
+        classifier_mc,
+        filter_list,
+        bit_depth=bit_depth,
+        sigma=sigma,
+        kernel_size=kernel_size,
+        pretrained=True,
+    )
+
+    # train or load parameters for Squeezer
+    if need_train:
+        squeezer.fit(max_epochs=max_epochs, batch_size=batch_size)
+        squeezer.save(model_file, True)
+    else:
+        squeezer.load(model_file)
+
+    # traverse all attacks
+    y = np.load(y_file, allow_pickle=False)
+    for i in range(len(attack_list)):
+        adv_file = attack_files[i]
+        adv_name = attack_list[i]
+        logger.debug('Load %s...', adv_file)
+        adv = np.load(adv_file, allow_pickle=False)
+        acc_og = classifier_mc.evaluate(adv, y)
+        acc_squeezer = squeezer.evaluate(adv, y)
+        logger.info('Accuracy on %s set - OG: %f, Squeezer: %f',
+                    adv_name, acc_og, acc_squeezer)
+        blocked_indices = squeezer.detect(adv, return_passed_x=False)
+        logger.info('Blocked %d/%d samples on %s',
+                    len(blocked_indices), len(adv), adv_name)
+
 
 if __name__ == '__main__':
     """
     Examples:
     $ python ./cmd/defend_squeeze.py -v -e 50 -d 8 --sigma 0.2 -k 3 -m ./save/MnistCnnV2_MNIST_e50.pt -FBDCS
+    $ python ./cmd/defend_squeeze.py -v -e 50 -d 8 --sigma 0.2 -k 3 -m ./save/CifarCnn_CIFAR10_e50.pt -FBDCS
+    $ python ./cmd/defend_squeeze.py -v -e 50 -d 8 --sigma 0.2 -k 3 -m ./save/CifarCnn_SVHN_e50.pt -FBDCS
     """
 
     main()
