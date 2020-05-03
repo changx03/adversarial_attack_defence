@@ -144,17 +144,20 @@ class TestFeatureSqueezing(unittest.TestCase):
 
         # predictions before fit
         # without pre-trained parameter, expecting lower accuracy
-        acc_bin_before = mc_binary.evaluate(x_test, y_test)
+        acc_bin_before = mc_binary.evaluate(
+            squeezer.apply_binary_transform(x_test), y_test)
         logger.info(
             '[Before fit] Accuracy of binary squeezer: %f', acc_bin_before)
         self.assertLessEqual(acc_bin_before, 0.80)
 
-        acc_med_before = mc_median.evaluate(x_test, y_test)
+        acc_med_before = mc_median.evaluate(
+            squeezer.apply_median_transform(x_test), y_test)
         logger.info(
             '[Before fit] Accuracy of median squeezer: %f', acc_bin_before)
         self.assertLessEqual(acc_med_before, 0.80)
 
-        acc_nor_before = mc_normal.evaluate(x_test, y_test)
+        acc_nor_before = mc_normal.evaluate(
+            squeezer.apply_normal_transform(x_test), y_test)
         logger.info(
             '[Before fit] Accuracy of normal squeezer: %f', acc_nor_before)
         self.assertLessEqual(acc_nor_before, 0.80)
@@ -162,17 +165,20 @@ class TestFeatureSqueezing(unittest.TestCase):
         squeezer.fit(max_epochs=MAX_EPOCHS, batch_size=128)
 
         # predictions after fit
-        acc_bin_after = mc_binary.evaluate(x_test, y_test)
+        acc_bin_after = mc_binary.evaluate(
+            squeezer.apply_binary_transform(x_test), y_test)
         logger.info(
             '[After fit] Accuracy of binary squeezer: %f', acc_bin_after)
         self.assertGreater(acc_bin_after, acc_bin_before)
 
-        acc_med_after = mc_median.evaluate(x_test, y_test)
+        acc_med_after = mc_median.evaluate(
+            squeezer.apply_median_transform(x_test), y_test)
         logger.info(
             '[After fit] Accuracy of median squeezer: %f', acc_bin_after)
         self.assertGreater(acc_med_after, acc_med_before)
 
-        acc_nor_after = mc_normal.evaluate(x_test, y_test)
+        acc_nor_after = mc_normal.evaluate(
+            squeezer.apply_normal_transform(x_test), y_test)
         logger.info(
             '[After fit] Accuracy of normal squeezer: %f', acc_nor_after)
         self.assertGreater(acc_nor_after, acc_nor_before)

@@ -14,8 +14,11 @@ LOG_NAME = 'DefSqueeze'
 logger = logging.getLogger(LOG_NAME)
 
 
-def build_squeezer_filename(model_name, data_name, max_epochs):
-    return f'squeezer_{model_name}_{data_name}_e{max_epochs}.pt'
+def build_squeezer_filename(model_name, data_name, max_epochs, filter_name):
+    """
+    Pre-train file example: MnistCnnV2_MNIST_e50_binary.pt
+    """
+    return f'{model_name}_{data_name}_e{max_epochs}_{filter_name}.pt'
 
 
 def main():
@@ -118,10 +121,14 @@ def main():
     attack_list = ['clean'] + attack_list
 
     # Do I need train the distillation network?
-    pretrain_file = build_squeezer_filename(
-        model_name, data_name, max_epochs)
-    if not os.path.exists(os.path.join('save', pretrain_file)):
-        need_train = True
+    pretrain_files = []
+    for fname in filter_list:
+        pretrain_file = build_squeezer_filename(
+            model_name, data_name, max_epochs, fname    
+        )
+        pretrain_files.append(pretrain_file)
+        if not os.path.exists(os.path.join('save', pretrain_file)):
+            need_train = True
 
     # set logging config. Run this before logging anything!
     set_logging(LOG_NAME, data_name, verbose, save_log)
@@ -144,6 +151,7 @@ def main():
     logger.info('need train  :%r', need_train)
     logger.info('filters     :%s', ', '.join(filter_list))
     logger.info('attacks     :%s', ', '.join(attack_list))
+    logger.info('pretrained  :%s', ', '.join(pretrain_files))
 
     # check files
     for file_name in [model_file, y_file] + attack_files:

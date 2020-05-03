@@ -3,9 +3,12 @@ This module implements the Feature Squeezing defence.
 """
 import copy
 import logging
+import os
 
 import numpy as np
+import torch
 from scipy.ndimage import median_filter
+from scipy.stats import mode
 
 from ..basemodels import ModelContainerPT
 from ..utils import copy_model, name_handler, scale_normalize
@@ -81,24 +84,18 @@ class FeatureSqueezing(DetectorContainer):
 
             # replace train set with squeezed dataset
             if method_name == 'binary':
-                x_train, y_train = self.apply_binary_transform(
-                    dc.x_train, dc.y_train)
-                x_test, y_test = self.apply_binary_transform(
-                    dc.x_test, dc.y_test)
+                x_train = self.apply_binary_transform(dc.x_train)
+                x_test = self.apply_binary_transform(dc.x_test)
             elif method_name == 'normal':
-                x_train, y_train = self.apply_normal_transform(
-                    dc.x_train, dc.y_train)
-                x_test, y_test = self.apply_normal_transform(
-                    dc.x_test, dc.y_test)
+                x_train = self.apply_normal_transform(dc.x_train)
+                x_test = self.apply_normal_transform(dc.x_test)
             elif method_name == 'median':
-                x_train, y_train = self.apply_median_transform(
-                    dc.x_train, dc.y_train)
-                x_test, y_test = self.apply_median_transform(
-                    dc.x_test, dc.y_test)
+                x_train = self.apply_median_transform(dc.x_train)
+                x_test = self.apply_median_transform(dc.x_test)
             mc.data_container.x_train = x_train
-            mc.data_container.y_train = y_train
+            mc.data_container.y_train = np.copy(dc.y_train)
             mc.data_container.x_test = x_test
-            mc.data_container.y_test = y_test
+            mc.data_container.y_test = np.copy(dc.y_test)
             self._models.append({
                 'name': method_name,
                 'model_container': mc,
@@ -131,6 +128,9 @@ class FeatureSqueezing(DetectorContainer):
 
     def save(self, filename, overwrite=False):
         """Save trained parameters."""
+        filename = filename.split('/')[-1]
+        idx = filename.find('.pt')
+        filename = filename[:idx] if idx != -1 else filename
         for model in self._models:
             name = model['name']
             method_filename = name_handler(filename + '_' + name, 'pt', True)
@@ -138,10 +138,23 @@ class FeatureSqueezing(DetectorContainer):
 
     def load(self, filename):
         """Load pre-trained parameters."""
+        idx = filename.find('.pt')
+        filename = filename[:idx] if idx != -1 else filename
         for model in self._models:
             name = model['name']
             method_filename = name_handler(filename + '_' + name, 'pt', True)
             model['model_container'].load(method_filename)
+
+    def does_pretrained_exist(self, filename):
+        """Do pretrained files exist?"""
+        idx = filename.find('.pt')
+        filename = filename[:idx] if idx != -1 else filename
+        for model in self._models:
+            name = model['name']
+            method_filename = name_handler(filename + '_' + name, 'pt', True)
+            if not os.path.exists(method_filename):
+                return False
+        return True
 
     def detect(self, adv, pred=None, return_passed_x=False):
         """
@@ -179,11 +192,11 @@ class FeatureSqueezing(DetectorContainer):
             method_name = model['name']
             mc = model['model_container']
             if method_name == 'binary':
-                adv_trans, _ = self.apply_binary_transform(adv, pred)
+                adv_trans = self.apply_binary_transform(adv)
             elif method_name == 'normal':
-                adv_trans, _ = self.apply_normal_transform(adv, pred)
+                adv_trans = self.apply_normal_transform(adv)
             elif method_name == 'median':
-                adv_trans, _ = self.apply_median_transform(adv, pred)
+                adv_trans = self.apply_median_transform(adv)
             results[i] = mc.predict(adv_trans)
             i += 1
 
@@ -195,6 +208,52 @@ class FeatureSqueezing(DetectorContainer):
             # return the data without transformation
             return blocked_indices, adv[passed_indices]
         return blocked_indices
+
+    def evaluate(self, x, labels):
+        """
+        Given a list of samples, evaluate the accuracy of the classification model.
+
+        Parameters
+        ----------
+        x : numpy.ndarray, torch.Tensor
+            Input data for evaluation.
+        labels : numpy.ndarray, torch.Tensor
+            The true labels of x.
+
+        Returns
+        -------
+        accuracy : float
+            The accuracy of the predictions.
+        """
+        if len(x) == 0:
+            return 0.0
+
+        if isinstance(labels, torch.Tensor):
+            labels = labels.cpu().detach().numpy()
+
+        # use -1 as a place holder
+        results = -1 * np.ones((len(self._models) + 1,
+                                len(x)), dtype=np.int64)
+
+        mc = self.model_container
+        results[0] = mc.predict(x)
+
+        i = 1
+        for model in self._models:
+            method_name = model['name']
+            mc = model['model_container']
+            if method_name == 'binary':
+                adv_trans = self.apply_binary_transform(x)
+            elif method_name == 'normal':
+                adv_trans = self.apply_normal_transform(x)
+            elif method_name == 'median':
+                adv_trans = self.apply_median_transform(x)
+            results[i] = mc.predict(adv_trans)
+            i += 1
+
+        pred = mode(results, axis=0)[0].reshape(labels.shape)
+        accuracy = np.sum(np.equal(pred, labels)) / len(labels)
+        return accuracy
 
     def get_def_model_container(self, method):
         """
@@ -214,7 +273,7 @@ class FeatureSqueezing(DetectorContainer):
             if model['name'] == method:
                 return model['model_container']
 
-    def apply_binary_transform(self, x, y):
+    def apply_binary_transform(self, x):
         """
         Apply binary transformation on input x. Rescale the input based on given bit depth. The parameters for
         transformation were predefined when creating class instance.
@@ -223,15 +282,11 @@ class FeatureSqueezing(DetectorContainer):
         ----------
         x : np.ndarray
             Input data.
-        y : np.ndarray
-            The labels for the data.
 
         Returns
         -------
         x : np.ndarray
             Results after binary transformation.
-        y : np.ndarray
-            A copy of input parameter y.
         """
         clip_values = self._params['clip_values']
         bit_depth = self._params['bit_depth']
@@ -241,9 +296,9 @@ class FeatureSqueezing(DetectorContainer):
         res = np.rint(x_norm * max_val) / max_val
         res = res * (clip_values[1] - clip_values[0])
         res += clip_values[0]
-        return res.astype(np.float32), np.copy(y)
+        return res.astype(np.float32)
 
-    def apply_normal_transform(self, x, y):
+    def apply_normal_transform(self, x):
         """
         Add noise with Normal distribution to input x. The parameters for transformation were predefined when creating
         class instance.
@@ -253,15 +308,10 @@ class FeatureSqueezing(DetectorContainer):
         x : np.ndarray
             Input data.
 
-        y : np.ndarray
-            The labels for the data.
         Returns
         -------
         x : np.ndarray
             Input parameter x with noise.
-
-        y : np.ndarray
-            A copy of input parameter y.
         """
         sigma = self._params['sigma']
         clip_values = self._params['clip_values']
@@ -269,9 +319,9 @@ class FeatureSqueezing(DetectorContainer):
 
         res = x + np.random.normal(0, scale=sigma, size=shape)
         res = np.clip(res, clip_values[0], clip_values[1])
-        return res.astype(np.float32), np.copy(y)
+        return res.astype(np.float32)
 
-    def apply_median_transform(self, x, y):
+    def apply_median_transform(self, x):
         """
         Apply median filter on a given input x. The parameters for transformation were predefined when creating class
         instance.
@@ -281,19 +331,14 @@ class FeatureSqueezing(DetectorContainer):
         x : np.ndarray
             Input data.
 
-        y : np.ndarray
-            The labels for the data.
         Returns
         -------
         x : np.ndarray
             Input parameter x after median filer.
-
-        y : np.ndarray
-            A copy of input parameter y.
         """
         kernel_size = self._params['kernel_size']
 
         res = np.zeros_like(x, dtype=np.float32)
         for i in range(len(x)):
             res[i] = median_filter(x[i], size=kernel_size)
-        return res.astype(np.float32), np.copy(y)
+        return res.astype(np.float32)
