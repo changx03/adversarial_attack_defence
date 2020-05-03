@@ -10,8 +10,8 @@ import torch
 from scipy.ndimage import median_filter
 from scipy.stats import mode
 
-from ..basemodels import ModelContainerPT
-from ..utils import copy_model, name_handler, scale_normalize
+from ..basemodels import ModelContainerPT, copy_model
+from ..utils import name_handler, scale_normalize
 from .detector_container import DetectorContainer
 
 logger = logging.getLogger(__name__)
@@ -76,9 +76,17 @@ class FeatureSqueezing(DetectorContainer):
         if 'normal' in smoothing_methods and sigma is None:
             raise ValueError('sigma is required.')
 
+        num_features = data_container.dim_data[0]
+        num_classes = data_container.num_classes
         self._models = []
         for method_name in smoothing_methods:
-            model = copy_model(model_container.model, pretrained)
+            model = copy_model(
+                model_container.model,
+                num_features=num_features,
+                hidden_nodes=num_features*4,
+                num_classes=num_classes,
+                pretrained=pretrained,
+            )
             mc = ModelContainerPT(model, copy.deepcopy(data_container))
             dc = mc.data_container
 

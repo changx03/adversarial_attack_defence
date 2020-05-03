@@ -1,0 +1,450 @@
+2020-05-04 03:47:10,815:INFO:defend_squeeze:Start at    : 20200504034710
+2020-05-04 03:47:10,815:INFO:defend_squeeze:RECEIVED PARAMETERS:
+2020-05-04 03:47:10,815:INFO:defend_squeeze:model file  :./save/IrisNN_HTRU2_e200.pt
+2020-05-04 03:47:10,815:INFO:defend_squeeze:model       :IrisNN
+2020-05-04 03:47:10,815:INFO:defend_squeeze:dataset     :HTRU2
+2020-05-04 03:47:10,815:INFO:defend_squeeze:max_epochs  :200
+2020-05-04 03:47:10,815:INFO:defend_squeeze:bit_depth   :8
+2020-05-04 03:47:10,815:INFO:defend_squeeze:sigma       :0.200000
+2020-05-04 03:47:10,815:INFO:defend_squeeze:kernel_size :0
+2020-05-04 03:47:10,815:INFO:defend_squeeze:batch_size  :128
+2020-05-04 03:47:10,815:INFO:defend_squeeze:seed        :4096
+2020-05-04 03:47:10,815:INFO:defend_squeeze:verbose     :True
+2020-05-04 03:47:10,815:INFO:defend_squeeze:save_log    :True
+2020-05-04 03:47:10,815:INFO:defend_squeeze:need train  :True
+2020-05-04 03:47:10,815:INFO:defend_squeeze:filters     :binary, normal
+2020-05-04 03:47:10,815:INFO:defend_squeeze:attacks     :clean, FGSM, BIM, DeepFool, Carlini
+2020-05-04 03:47:10,815:INFO:defend_squeeze:pretrained  :IrisNN_HTRU2_e200_binary.pt, IrisNN_HTRU2_e200_normal.pt
+2020-05-04 03:47:10,816:DEBUG:utils:Setting random seed for PyTorch.
+2020-05-04 03:47:10,838:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-05-04 03:47:10,838:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/HTRU2/HTRU_2.arff
+2020-05-04 03:47:10,898:INFO:data_container:Train size: 14318 - Test size: 3580
+2020-05-04 03:47:10,898:INFO:data_container:Successfully load data. Time to complete: 0m 0.060s
+2020-05-04 03:47:12,482:DEBUG:model_container_pt:Using device: cuda
+2020-05-04 03:47:12,483:INFO:model_container_pt:Loaded model from ./save/IrisNN_HTRU2_e200.pt
+2020-05-04 03:47:12,518:INFO:defend_squeeze:Accuracy on test set: 0.981564
+2020-05-04 03:47:12,519:DEBUG:model_container_pt:Using device: cuda
+2020-05-04 03:47:12,522:DEBUG:model_container_pt:Using device: cuda
+2020-05-04 03:47:12,528:DEBUG:feature_squeezing:Start training binary squeezing model...
+2020-05-04 03:47:12,715:DEBUG:model_container_pt:[1/200]0m 0.187s: Train loss: 0.091737 acc: 0.976254 - Test loss: 0.087079 acc: 0.978212
+2020-05-04 03:47:12,902:DEBUG:model_container_pt:[2/200]0m 0.186s: Train loss: 0.080971 acc: 0.977581 - Test loss: 0.081625 acc: 0.977095
+2020-05-04 03:47:13,089:DEBUG:model_container_pt:[3/200]0m 0.187s: Train loss: 0.080376 acc: 0.977581 - Test loss: 0.094413 acc: 0.975140
+2020-05-04 03:47:13,276:DEBUG:model_container_pt:[4/200]0m 0.187s: Train loss: 0.080870 acc: 0.977371 - Test loss: 0.078618 acc: 0.978492
+2020-05-04 03:47:13,464:DEBUG:model_container_pt:[5/200]0m 0.188s: Train loss: 0.078519 acc: 0.978279 - Test loss: 0.078830 acc: 0.978492
+2020-05-04 03:47:13,651:DEBUG:model_container_pt:[6/200]0m 0.187s: Train loss: 0.081197 acc: 0.977651 - Test loss: 0.078428 acc: 0.978492
+2020-05-04 03:47:13,837:DEBUG:model_container_pt:[7/200]0m 0.185s: Train loss: 0.079220 acc: 0.978698 - Test loss: 0.076256 acc: 0.978492
+2020-05-04 03:47:14,023:DEBUG:model_container_pt:[8/200]0m 0.185s: Train loss: 0.079139 acc: 0.978489 - Test loss: 0.075884 acc: 0.978492
+2020-05-04 03:47:14,210:DEBUG:model_container_pt:[9/200]0m 0.186s: Train loss: 0.078682 acc: 0.977860 - Test loss: 0.076625 acc: 0.978492
+2020-05-04 03:47:14,397:DEBUG:model_container_pt:[10/200]0m 0.187s: Train loss: 0.079642 acc: 0.978628 - Test loss: 0.079847 acc: 0.979330
+2020-05-04 03:47:14,585:DEBUG:model_container_pt:[11/200]0m 0.187s: Train loss: 0.079836 acc: 0.978349 - Test loss: 0.080839 acc: 0.978492
+2020-05-04 03:47:14,772:DEBUG:model_container_pt:[12/200]0m 0.187s: Train loss: 0.077628 acc: 0.978978 - Test loss: 0.076074 acc: 0.978492
+2020-05-04 03:47:14,961:DEBUG:model_container_pt:[13/200]0m 0.189s: Train loss: 0.083302 acc: 0.977092 - Test loss: 0.075697 acc: 0.978492
+2020-05-04 03:47:15,153:DEBUG:model_container_pt:[14/200]0m 0.192s: Train loss: 0.077733 acc: 0.978698 - Test loss: 0.077985 acc: 0.978492
+2020-05-04 03:47:15,341:DEBUG:model_container_pt:[15/200]0m 0.188s: Train loss: 0.082708 acc: 0.977092 - Test loss: 0.077855 acc: 0.978771
+2020-05-04 03:47:15,532:DEBUG:model_container_pt:[16/200]0m 0.191s: Train loss: 0.081285 acc: 0.977092 - Test loss: 0.076430 acc: 0.978771
+2020-05-04 03:47:15,722:DEBUG:model_container_pt:[17/200]0m 0.190s: Train loss: 0.079714 acc: 0.978070 - Test loss: 0.075975 acc: 0.978492
+2020-05-04 03:47:15,909:DEBUG:model_container_pt:[18/200]0m 0.187s: Train loss: 0.079925 acc: 0.977860 - Test loss: 0.076447 acc: 0.978492
+2020-05-04 03:47:16,095:DEBUG:model_container_pt:[19/200]0m 0.186s: Train loss: 0.076882 acc: 0.979047 - Test loss: 0.075322 acc: 0.978492
+2020-05-04 03:47:16,279:DEBUG:model_container_pt:[20/200]0m 0.184s: Train loss: 0.077795 acc: 0.978978 - Test loss: 0.076855 acc: 0.978492
+2020-05-04 03:47:16,464:DEBUG:model_container_pt:[21/200]0m 0.185s: Train loss: 0.077236 acc: 0.978908 - Test loss: 0.075082 acc: 0.978492
+2020-05-04 03:47:16,649:DEBUG:model_container_pt:[22/200]0m 0.185s: Train loss: 0.078276 acc: 0.978489 - Test loss: 0.075627 acc: 0.979050
+2020-05-04 03:47:16,834:DEBUG:model_container_pt:[23/200]0m 0.185s: Train loss: 0.078285 acc: 0.978978 - Test loss: 0.076316 acc: 0.978492
+2020-05-04 03:47:17,019:DEBUG:model_container_pt:[24/200]0m 0.185s: Train loss: 0.081712 acc: 0.978139 - Test loss: 0.121148 acc: 0.972346
+2020-05-04 03:47:17,204:DEBUG:model_container_pt:[25/200]0m 0.185s: Train loss: 0.079711 acc: 0.978628 - Test loss: 0.075530 acc: 0.978492
+2020-05-04 03:47:17,389:DEBUG:model_container_pt:[26/200]0m 0.185s: Train loss: 0.078052 acc: 0.978978 - Test loss: 0.075243 acc: 0.978492
+2020-05-04 03:47:17,574:DEBUG:model_container_pt:[27/200]0m 0.184s: Train loss: 0.076840 acc: 0.978768 - Test loss: 0.075454 acc: 0.978492
+2020-05-04 03:47:17,758:DEBUG:model_container_pt:[28/200]0m 0.184s: Train loss: 0.077203 acc: 0.978838 - Test loss: 0.074986 acc: 0.978492
+2020-05-04 03:47:17,946:DEBUG:model_container_pt:[29/200]0m 0.187s: Train loss: 0.077505 acc: 0.978279 - Test loss: 0.081354 acc: 0.979330
+2020-05-04 03:47:18,132:DEBUG:model_container_pt:[30/200]0m 0.186s: Train loss: 0.077409 acc: 0.979047 - Test loss: 0.077139 acc: 0.978771
+2020-05-04 03:47:18,318:DEBUG:model_container_pt:[31/200]0m 0.186s: Train loss: 0.080482 acc: 0.977022 - Test loss: 0.075858 acc: 0.978492
+2020-05-04 03:47:18,505:DEBUG:model_container_pt:[32/200]0m 0.186s: Train loss: 0.078445 acc: 0.978209 - Test loss: 0.076548 acc: 0.979050
+2020-05-04 03:47:18,692:DEBUG:model_container_pt:[33/200]0m 0.188s: Train loss: 0.077653 acc: 0.978419 - Test loss: 0.076888 acc: 0.978492
+2020-05-04 03:47:18,880:DEBUG:model_container_pt:[34/200]0m 0.188s: Train loss: 0.078364 acc: 0.978349 - Test loss: 0.078830 acc: 0.978771
+2020-05-04 03:47:19,069:DEBUG:model_container_pt:[35/200]0m 0.188s: Train loss: 0.079617 acc: 0.977371 - Test loss: 0.075720 acc: 0.978771
+2020-05-04 03:47:19,257:DEBUG:model_container_pt:[36/200]0m 0.189s: Train loss: 0.079925 acc: 0.977581 - Test loss: 0.075764 acc: 0.978771
+2020-05-04 03:47:19,446:DEBUG:model_container_pt:[37/200]0m 0.188s: Train loss: 0.076370 acc: 0.978768 - Test loss: 0.077201 acc: 0.979050
+2020-05-04 03:47:19,633:DEBUG:model_container_pt:[38/200]0m 0.187s: Train loss: 0.076927 acc: 0.978419 - Test loss: 0.075057 acc: 0.978492
+2020-05-04 03:47:19,819:DEBUG:model_container_pt:[39/200]0m 0.186s: Train loss: 0.079943 acc: 0.978419 - Test loss: 0.076602 acc: 0.978771
+2020-05-04 03:47:20,006:DEBUG:model_container_pt:[40/200]0m 0.187s: Train loss: 0.079594 acc: 0.977720 - Test loss: 0.076850 acc: 0.978771
+2020-05-04 03:47:20,193:DEBUG:model_container_pt:[41/200]0m 0.187s: Train loss: 0.078659 acc: 0.977651 - Test loss: 0.074920 acc: 0.978212
+2020-05-04 03:47:20,380:DEBUG:model_container_pt:[42/200]0m 0.187s: Train loss: 0.076975 acc: 0.978698 - Test loss: 0.075302 acc: 0.978492
+2020-05-04 03:47:20,566:DEBUG:model_container_pt:[43/200]0m 0.186s: Train loss: 0.076594 acc: 0.979536 - Test loss: 0.074880 acc: 0.978492
+2020-05-04 03:47:20,752:DEBUG:model_container_pt:[44/200]0m 0.186s: Train loss: 0.077068 acc: 0.978838 - Test loss: 0.075075 acc: 0.978492
+2020-05-04 03:47:20,939:DEBUG:model_container_pt:[45/200]0m 0.186s: Train loss: 0.077466 acc: 0.978698 - Test loss: 0.075276 acc: 0.978492
+2020-05-04 03:47:21,125:DEBUG:model_container_pt:[46/200]0m 0.186s: Train loss: 0.077013 acc: 0.978768 - Test loss: 0.077759 acc: 0.979050
+2020-05-04 03:47:21,310:DEBUG:model_container_pt:[47/200]0m 0.185s: Train loss: 0.078528 acc: 0.978628 - Test loss: 0.075713 acc: 0.978492
+2020-05-04 03:47:21,495:DEBUG:model_container_pt:[48/200]0m 0.185s: Train loss: 0.077839 acc: 0.978139 - Test loss: 0.077450 acc: 0.978771
+2020-05-04 03:47:21,680:DEBUG:model_container_pt:[49/200]0m 0.184s: Train loss: 0.077056 acc: 0.978489 - Test loss: 0.075692 acc: 0.978492
+2020-05-04 03:47:21,865:DEBUG:model_container_pt:[50/200]0m 0.185s: Train loss: 0.076737 acc: 0.978489 - Test loss: 0.075261 acc: 0.978492
+2020-05-04 03:47:22,050:DEBUG:model_container_pt:[51/200]0m 0.185s: Train loss: 0.076540 acc: 0.979047 - Test loss: 0.076715 acc: 0.978492
+2020-05-04 03:47:22,236:DEBUG:model_container_pt:[52/200]0m 0.185s: Train loss: 0.077680 acc: 0.977860 - Test loss: 0.086315 acc: 0.976816
+2020-05-04 03:47:22,421:DEBUG:model_container_pt:[53/200]0m 0.186s: Train loss: 0.076718 acc: 0.978908 - Test loss: 0.075118 acc: 0.978492
+2020-05-04 03:47:22,607:DEBUG:model_container_pt:[54/200]0m 0.186s: Train loss: 0.076558 acc: 0.978698 - Test loss: 0.075779 acc: 0.979330
+2020-05-04 03:47:22,795:DEBUG:model_container_pt:[55/200]0m 0.187s: Train loss: 0.076954 acc: 0.978628 - Test loss: 0.075692 acc: 0.978492
+2020-05-04 03:47:22,980:DEBUG:model_container_pt:[56/200]0m 0.185s: Train loss: 0.076549 acc: 0.978908 - Test loss: 0.074913 acc: 0.978492
+2020-05-04 03:47:23,166:DEBUG:model_container_pt:[57/200]0m 0.185s: Train loss: 0.076873 acc: 0.978908 - Test loss: 0.084375 acc: 0.976257
+2020-05-04 03:47:23,351:DEBUG:model_container_pt:[58/200]0m 0.185s: Train loss: 0.077554 acc: 0.978070 - Test loss: 0.074586 acc: 0.978492
+2020-05-04 03:47:23,536:DEBUG:model_container_pt:[59/200]0m 0.185s: Train loss: 0.076867 acc: 0.978628 - Test loss: 0.077351 acc: 0.978771
+2020-05-04 03:47:23,721:DEBUG:model_container_pt:[60/200]0m 0.185s: Train loss: 0.078909 acc: 0.977860 - Test loss: 0.076854 acc: 0.978771
+2020-05-04 03:47:23,906:DEBUG:model_container_pt:[61/200]0m 0.185s: Train loss: 0.077844 acc: 0.978139 - Test loss: 0.080750 acc: 0.978212
+2020-05-04 03:47:24,093:DEBUG:model_container_pt:[62/200]0m 0.187s: Train loss: 0.076543 acc: 0.978698 - Test loss: 0.074889 acc: 0.978492
+2020-05-04 03:47:24,280:DEBUG:model_container_pt:[63/200]0m 0.187s: Train loss: 0.077552 acc: 0.978908 - Test loss: 0.074452 acc: 0.978492
+2020-05-04 03:47:24,467:DEBUG:model_container_pt:[64/200]0m 0.187s: Train loss: 0.077887 acc: 0.978558 - Test loss: 0.081467 acc: 0.978212
+2020-05-04 03:47:24,654:DEBUG:model_container_pt:[65/200]0m 0.187s: Train loss: 0.078364 acc: 0.978489 - Test loss: 0.079878 acc: 0.977933
+2020-05-04 03:47:24,842:DEBUG:model_container_pt:[66/200]0m 0.187s: Train loss: 0.077321 acc: 0.978489 - Test loss: 0.083349 acc: 0.975978
+2020-05-04 03:47:25,030:DEBUG:model_container_pt:[67/200]0m 0.188s: Train loss: 0.077808 acc: 0.978349 - Test loss: 0.078503 acc: 0.978771
+2020-05-04 03:47:25,218:DEBUG:model_container_pt:[68/200]0m 0.188s: Train loss: 0.077779 acc: 0.979117 - Test loss: 0.075928 acc: 0.978212
+2020-05-04 03:47:25,405:DEBUG:model_container_pt:[69/200]0m 0.187s: Train loss: 0.076569 acc: 0.978908 - Test loss: 0.075032 acc: 0.978492
+2020-05-04 03:47:25,592:DEBUG:model_container_pt:[70/200]0m 0.186s: Train loss: 0.077290 acc: 0.978628 - Test loss: 0.075634 acc: 0.978212
+2020-05-04 03:47:25,779:DEBUG:model_container_pt:[71/200]0m 0.187s: Train loss: 0.076392 acc: 0.979117 - Test loss: 0.075326 acc: 0.978492
+2020-05-04 03:47:25,965:DEBUG:model_container_pt:[72/200]0m 0.186s: Train loss: 0.076690 acc: 0.978838 - Test loss: 0.074708 acc: 0.978492
+2020-05-04 03:47:26,150:DEBUG:model_container_pt:[73/200]0m 0.186s: Train loss: 0.078316 acc: 0.978628 - Test loss: 0.079590 acc: 0.977933
+2020-05-04 03:47:26,336:DEBUG:model_container_pt:[74/200]0m 0.186s: Train loss: 0.076818 acc: 0.978838 - Test loss: 0.081118 acc: 0.978212
+2020-05-04 03:47:26,522:DEBUG:model_container_pt:[75/200]0m 0.185s: Train loss: 0.078475 acc: 0.979187 - Test loss: 0.075221 acc: 0.978492
+2020-05-04 03:47:26,707:DEBUG:model_container_pt:[76/200]0m 0.185s: Train loss: 0.076810 acc: 0.978698 - Test loss: 0.075846 acc: 0.978771
+2020-05-04 03:47:26,893:DEBUG:model_container_pt:[77/200]0m 0.186s: Train loss: 0.077943 acc: 0.978209 - Test loss: 0.076819 acc: 0.979050
+2020-05-04 03:47:27,078:DEBUG:model_container_pt:[78/200]0m 0.185s: Train loss: 0.078232 acc: 0.978349 - Test loss: 0.076249 acc: 0.978492
+2020-05-04 03:47:27,264:DEBUG:model_container_pt:[79/200]0m 0.186s: Train loss: 0.077811 acc: 0.978768 - Test loss: 0.079158 acc: 0.977933
+2020-05-04 03:47:27,452:DEBUG:model_container_pt:[80/200]0m 0.188s: Train loss: 0.078729 acc: 0.978698 - Test loss: 0.077902 acc: 0.978771
+2020-05-04 03:47:27,639:DEBUG:model_container_pt:[81/200]0m 0.187s: Train loss: 0.076791 acc: 0.978139 - Test loss: 0.074823 acc: 0.978492
+2020-05-04 03:47:27,827:DEBUG:model_container_pt:[82/200]0m 0.187s: Train loss: 0.078398 acc: 0.978698 - Test loss: 0.077739 acc: 0.977654
+2020-05-04 03:47:28,013:DEBUG:model_container_pt:[83/200]0m 0.186s: Train loss: 0.076802 acc: 0.978489 - Test loss: 0.075278 acc: 0.978212
+2020-05-04 03:47:28,200:DEBUG:model_container_pt:[84/200]0m 0.187s: Train loss: 0.077404 acc: 0.978978 - Test loss: 0.074541 acc: 0.978212
+2020-05-04 03:47:28,388:DEBUG:model_container_pt:[85/200]0m 0.188s: Train loss: 0.076539 acc: 0.979117 - Test loss: 0.074480 acc: 0.978492
+2020-05-04 03:47:28,574:DEBUG:model_container_pt:[86/200]0m 0.186s: Train loss: 0.078290 acc: 0.978558 - Test loss: 0.076120 acc: 0.978771
+2020-05-04 03:47:28,762:DEBUG:model_container_pt:[87/200]0m 0.188s: Train loss: 0.076133 acc: 0.979327 - Test loss: 0.075822 acc: 0.978492
+2020-05-04 03:47:28,949:DEBUG:model_container_pt:[88/200]0m 0.187s: Train loss: 0.077875 acc: 0.978768 - Test loss: 0.075715 acc: 0.978771
+2020-05-04 03:47:29,135:DEBUG:model_container_pt:[89/200]0m 0.186s: Train loss: 0.077822 acc: 0.978349 - Test loss: 0.075015 acc: 0.978492
+2020-05-04 03:47:29,322:DEBUG:model_container_pt:[90/200]0m 0.187s: Train loss: 0.077336 acc: 0.978489 - Test loss: 0.074998 acc: 0.978492
+2020-05-04 03:47:29,509:DEBUG:model_container_pt:[91/200]0m 0.187s: Train loss: 0.076004 acc: 0.979397 - Test loss: 0.075606 acc: 0.978492
+2020-05-04 03:47:29,694:DEBUG:model_container_pt:[92/200]0m 0.185s: Train loss: 0.076264 acc: 0.978209 - Test loss: 0.075181 acc: 0.978771
+2020-05-04 03:47:29,879:DEBUG:model_container_pt:[93/200]0m 0.185s: Train loss: 0.076342 acc: 0.979257 - Test loss: 0.075268 acc: 0.978212
+2020-05-04 03:47:30,065:DEBUG:model_container_pt:[94/200]0m 0.186s: Train loss: 0.077248 acc: 0.979466 - Test loss: 0.076437 acc: 0.978492
+2020-05-04 03:47:30,250:DEBUG:model_container_pt:[95/200]0m 0.185s: Train loss: 0.076595 acc: 0.978768 - Test loss: 0.076686 acc: 0.979050
+2020-05-04 03:47:30,435:DEBUG:model_container_pt:[96/200]0m 0.184s: Train loss: 0.077457 acc: 0.978768 - Test loss: 0.074801 acc: 0.978492
+2020-05-04 03:47:30,619:DEBUG:model_container_pt:[97/200]0m 0.185s: Train loss: 0.075851 acc: 0.979117 - Test loss: 0.080255 acc: 0.977654
+2020-05-04 03:47:30,804:DEBUG:model_container_pt:[98/200]0m 0.184s: Train loss: 0.076999 acc: 0.977860 - Test loss: 0.074691 acc: 0.978492
+2020-05-04 03:47:30,990:DEBUG:model_container_pt:[99/200]0m 0.186s: Train loss: 0.076763 acc: 0.979047 - Test loss: 0.075602 acc: 0.978492
+2020-05-04 03:47:31,177:DEBUG:model_container_pt:[100/200]0m 0.187s: Train loss: 0.076418 acc: 0.978838 - Test loss: 0.074594 acc: 0.978492
+2020-05-04 03:47:31,366:DEBUG:model_container_pt:[101/200]0m 0.188s: Train loss: 0.076147 acc: 0.978978 - Test loss: 0.077304 acc: 0.978771
+2020-05-04 03:47:31,554:DEBUG:model_container_pt:[102/200]0m 0.189s: Train loss: 0.079093 acc: 0.978908 - Test loss: 0.074878 acc: 0.978492
+2020-05-04 03:47:31,743:DEBUG:model_container_pt:[103/200]0m 0.188s: Train loss: 0.076219 acc: 0.978908 - Test loss: 0.075944 acc: 0.978492
+2020-05-04 03:47:31,931:DEBUG:model_container_pt:[104/200]0m 0.188s: Train loss: 0.076626 acc: 0.978558 - Test loss: 0.075352 acc: 0.978212
+2020-05-04 03:47:32,119:DEBUG:model_container_pt:[105/200]0m 0.188s: Train loss: 0.077089 acc: 0.978070 - Test loss: 0.076315 acc: 0.979330
+2020-05-04 03:47:32,307:DEBUG:model_container_pt:[106/200]0m 0.187s: Train loss: 0.077084 acc: 0.978209 - Test loss: 0.082557 acc: 0.978212
+2020-05-04 03:47:32,494:DEBUG:model_container_pt:[107/200]0m 0.187s: Train loss: 0.075810 acc: 0.979047 - Test loss: 0.074582 acc: 0.978492
+2020-05-04 03:47:32,681:DEBUG:model_container_pt:[108/200]0m 0.187s: Train loss: 0.078947 acc: 0.978419 - Test loss: 0.080133 acc: 0.978771
+2020-05-04 03:47:32,867:DEBUG:model_container_pt:[109/200]0m 0.186s: Train loss: 0.076057 acc: 0.979047 - Test loss: 0.074753 acc: 0.978212
+2020-05-04 03:47:33,052:DEBUG:model_container_pt:[110/200]0m 0.185s: Train loss: 0.077136 acc: 0.978978 - Test loss: 0.079470 acc: 0.978212
+2020-05-04 03:47:33,237:DEBUG:model_container_pt:[111/200]0m 0.185s: Train loss: 0.076700 acc: 0.979257 - Test loss: 0.074916 acc: 0.978492
+2020-05-04 03:47:33,422:DEBUG:model_container_pt:[112/200]0m 0.185s: Train loss: 0.075978 acc: 0.979187 - Test loss: 0.076706 acc: 0.978771
+2020-05-04 03:47:33,606:DEBUG:model_container_pt:[113/200]0m 0.184s: Train loss: 0.076497 acc: 0.978838 - Test loss: 0.084007 acc: 0.976816
+2020-05-04 03:47:33,791:DEBUG:model_container_pt:[114/200]0m 0.184s: Train loss: 0.078171 acc: 0.978000 - Test loss: 0.079008 acc: 0.977933
+2020-05-04 03:47:33,976:DEBUG:model_container_pt:[115/200]0m 0.185s: Train loss: 0.076309 acc: 0.979047 - Test loss: 0.077294 acc: 0.978212
+2020-05-04 03:47:34,161:DEBUG:model_container_pt:[116/200]0m 0.185s: Train loss: 0.076623 acc: 0.978698 - Test loss: 0.078384 acc: 0.979330
+2020-05-04 03:47:34,347:DEBUG:model_container_pt:[117/200]0m 0.186s: Train loss: 0.076228 acc: 0.978489 - Test loss: 0.074847 acc: 0.978492
+2020-05-04 03:47:34,533:DEBUG:model_container_pt:[118/200]0m 0.185s: Train loss: 0.076197 acc: 0.978489 - Test loss: 0.076502 acc: 0.979050
+2020-05-04 03:47:34,719:DEBUG:model_container_pt:[119/200]0m 0.186s: Train loss: 0.075998 acc: 0.978628 - Test loss: 0.076370 acc: 0.979050
+2020-05-04 03:47:34,904:DEBUG:model_container_pt:[120/200]0m 0.186s: Train loss: 0.075957 acc: 0.978698 - Test loss: 0.075180 acc: 0.978771
+2020-05-04 03:47:35,090:DEBUG:model_container_pt:[121/200]0m 0.186s: Train loss: 0.075875 acc: 0.978628 - Test loss: 0.074587 acc: 0.978212
+2020-05-04 03:47:35,277:DEBUG:model_container_pt:[122/200]0m 0.187s: Train loss: 0.076256 acc: 0.979466 - Test loss: 0.075015 acc: 0.978492
+2020-05-04 03:47:35,464:DEBUG:model_container_pt:[123/200]0m 0.187s: Train loss: 0.076696 acc: 0.978978 - Test loss: 0.075276 acc: 0.978771
+2020-05-04 03:47:35,652:DEBUG:model_container_pt:[124/200]0m 0.188s: Train loss: 0.076623 acc: 0.978349 - Test loss: 0.075398 acc: 0.978212
+2020-05-04 03:47:35,840:DEBUG:model_container_pt:[125/200]0m 0.188s: Train loss: 0.075924 acc: 0.979187 - Test loss: 0.078548 acc: 0.978492
+2020-05-04 03:47:36,028:DEBUG:model_container_pt:[126/200]0m 0.188s: Train loss: 0.076234 acc: 0.978768 - Test loss: 0.083333 acc: 0.976816
+2020-05-04 03:47:36,216:DEBUG:model_container_pt:[127/200]0m 0.188s: Train loss: 0.078039 acc: 0.977930 - Test loss: 0.074836 acc: 0.979330
+2020-05-04 03:47:36,404:DEBUG:model_container_pt:[128/200]0m 0.187s: Train loss: 0.077046 acc: 0.978978 - Test loss: 0.076455 acc: 0.978771
+2020-05-04 03:47:36,589:DEBUG:model_container_pt:[129/200]0m 0.185s: Train loss: 0.077403 acc: 0.978209 - Test loss: 0.074839 acc: 0.978212
+2020-05-04 03:47:36,774:DEBUG:model_container_pt:[130/200]0m 0.185s: Train loss: 0.076601 acc: 0.978489 - Test loss: 0.076465 acc: 0.979050
+2020-05-04 03:47:36,960:DEBUG:model_container_pt:[131/200]0m 0.185s: Train loss: 0.077084 acc: 0.978558 - Test loss: 0.075626 acc: 0.978771
+2020-05-04 03:47:37,146:DEBUG:model_container_pt:[132/200]0m 0.186s: Train loss: 0.076986 acc: 0.978838 - Test loss: 0.075052 acc: 0.978492
+2020-05-04 03:47:37,333:DEBUG:model_container_pt:[133/200]0m 0.188s: Train loss: 0.077379 acc: 0.978908 - Test loss: 0.076016 acc: 0.979050
+2020-05-04 03:47:37,535:DEBUG:model_container_pt:[134/200]0m 0.201s: Train loss: 0.076253 acc: 0.978419 - Test loss: 0.077110 acc: 0.979330
+2020-05-04 03:47:37,736:DEBUG:model_container_pt:[135/200]0m 0.201s: Train loss: 0.077887 acc: 0.978209 - Test loss: 0.075253 acc: 0.978492
+2020-05-04 03:47:37,951:DEBUG:model_container_pt:[136/200]0m 0.215s: Train loss: 0.076920 acc: 0.979047 - Test loss: 0.074567 acc: 0.978492
+2020-05-04 03:47:38,167:DEBUG:model_container_pt:[137/200]0m 0.216s: Train loss: 0.077749 acc: 0.978558 - Test loss: 0.074588 acc: 0.978212
+2020-05-04 03:47:38,356:DEBUG:model_container_pt:[138/200]0m 0.189s: Train loss: 0.077549 acc: 0.978838 - Test loss: 0.075353 acc: 0.978212
+2020-05-04 03:47:38,553:DEBUG:model_container_pt:[139/200]0m 0.197s: Train loss: 0.078651 acc: 0.978349 - Test loss: 0.075014 acc: 0.978492
+2020-05-04 03:47:38,766:DEBUG:model_container_pt:[140/200]0m 0.213s: Train loss: 0.075876 acc: 0.978908 - Test loss: 0.074624 acc: 0.978492
+2020-05-04 03:47:38,983:DEBUG:model_container_pt:[141/200]0m 0.217s: Train loss: 0.076904 acc: 0.978489 - Test loss: 0.080116 acc: 0.977933
+2020-05-04 03:47:39,199:DEBUG:model_container_pt:[142/200]0m 0.215s: Train loss: 0.077614 acc: 0.978489 - Test loss: 0.074570 acc: 0.978212
+2020-05-04 03:47:39,405:DEBUG:model_container_pt:[143/200]0m 0.207s: Train loss: 0.076931 acc: 0.978558 - Test loss: 0.077499 acc: 0.978771
+2020-05-04 03:47:39,607:DEBUG:model_container_pt:[144/200]0m 0.202s: Train loss: 0.076203 acc: 0.978768 - Test loss: 0.079962 acc: 0.977654
+2020-05-04 03:47:39,800:DEBUG:model_container_pt:[145/200]0m 0.193s: Train loss: 0.077172 acc: 0.978978 - Test loss: 0.074626 acc: 0.978492
+2020-05-04 03:47:39,988:DEBUG:model_container_pt:[146/200]0m 0.188s: Train loss: 0.075840 acc: 0.978628 - Test loss: 0.075936 acc: 0.979330
+2020-05-04 03:47:40,223:DEBUG:model_container_pt:[147/200]0m 0.234s: Train loss: 0.075773 acc: 0.978838 - Test loss: 0.075228 acc: 0.978492
+2020-05-04 03:47:40,484:DEBUG:model_container_pt:[148/200]0m 0.261s: Train loss: 0.076418 acc: 0.978070 - Test loss: 0.074577 acc: 0.978212
+2020-05-04 03:47:40,739:DEBUG:model_container_pt:[149/200]0m 0.255s: Train loss: 0.075738 acc: 0.979047 - Test loss: 0.075859 acc: 0.979050
+2020-05-04 03:47:40,956:DEBUG:model_container_pt:[150/200]0m 0.216s: Train loss: 0.079083 acc: 0.978000 - Test loss: 0.076185 acc: 0.978492
+2020-05-04 03:47:41,160:DEBUG:model_container_pt:[151/200]0m 0.204s: Train loss: 0.077632 acc: 0.978349 - Test loss: 0.076940 acc: 0.979050
+2020-05-04 03:47:41,363:DEBUG:model_container_pt:[152/200]0m 0.203s: Train loss: 0.076294 acc: 0.978908 - Test loss: 0.075076 acc: 0.978212
+2020-05-04 03:47:41,572:DEBUG:model_container_pt:[153/200]0m 0.209s: Train loss: 0.076444 acc: 0.979327 - Test loss: 0.075393 acc: 0.978771
+2020-05-04 03:47:41,775:DEBUG:model_container_pt:[154/200]0m 0.203s: Train loss: 0.076306 acc: 0.978419 - Test loss: 0.076135 acc: 0.979050
+2020-05-04 03:47:41,962:DEBUG:model_container_pt:[155/200]0m 0.187s: Train loss: 0.077061 acc: 0.978768 - Test loss: 0.074984 acc: 0.978492
+2020-05-04 03:47:42,155:DEBUG:model_container_pt:[156/200]0m 0.193s: Train loss: 0.075924 acc: 0.979187 - Test loss: 0.077609 acc: 0.979330
+2020-05-04 03:47:42,367:DEBUG:model_container_pt:[157/200]0m 0.211s: Train loss: 0.076274 acc: 0.979257 - Test loss: 0.075683 acc: 0.978771
+2020-05-04 03:47:42,565:DEBUG:model_container_pt:[158/200]0m 0.198s: Train loss: 0.075531 acc: 0.979257 - Test loss: 0.075101 acc: 0.978492
+2020-05-04 03:47:42,755:DEBUG:model_container_pt:[159/200]0m 0.190s: Train loss: 0.076365 acc: 0.978768 - Test loss: 0.074640 acc: 0.978212
+2020-05-04 03:47:42,942:DEBUG:model_container_pt:[160/200]0m 0.186s: Train loss: 0.075990 acc: 0.978558 - Test loss: 0.074120 acc: 0.978492
+2020-05-04 03:47:43,134:DEBUG:model_container_pt:[161/200]0m 0.192s: Train loss: 0.075847 acc: 0.978628 - Test loss: 0.075283 acc: 0.978212
+2020-05-04 03:47:43,320:DEBUG:model_container_pt:[162/200]0m 0.186s: Train loss: 0.075879 acc: 0.978558 - Test loss: 0.076526 acc: 0.978492
+2020-05-04 03:47:43,505:DEBUG:model_container_pt:[163/200]0m 0.185s: Train loss: 0.076814 acc: 0.978698 - Test loss: 0.080694 acc: 0.978492
+2020-05-04 03:47:43,691:DEBUG:model_container_pt:[164/200]0m 0.186s: Train loss: 0.078226 acc: 0.978139 - Test loss: 0.075099 acc: 0.978212
+2020-05-04 03:47:43,891:DEBUG:model_container_pt:[165/200]0m 0.200s: Train loss: 0.076894 acc: 0.978349 - Test loss: 0.077504 acc: 0.978771
+2020-05-04 03:47:44,079:DEBUG:model_container_pt:[166/200]0m 0.188s: Train loss: 0.075686 acc: 0.979047 - Test loss: 0.074312 acc: 0.978492
+2020-05-04 03:47:44,268:DEBUG:model_container_pt:[167/200]0m 0.189s: Train loss: 0.076121 acc: 0.979117 - Test loss: 0.075989 acc: 0.979330
+2020-05-04 03:47:44,456:DEBUG:model_container_pt:[168/200]0m 0.187s: Train loss: 0.075915 acc: 0.978908 - Test loss: 0.074181 acc: 0.978212
+2020-05-04 03:47:44,645:DEBUG:model_container_pt:[169/200]0m 0.189s: Train loss: 0.075896 acc: 0.978698 - Test loss: 0.074241 acc: 0.978492
+2020-05-04 03:47:44,830:DEBUG:model_container_pt:[170/200]0m 0.186s: Train loss: 0.076322 acc: 0.978558 - Test loss: 0.074439 acc: 0.978492
+2020-05-04 03:47:45,016:DEBUG:model_container_pt:[171/200]0m 0.186s: Train loss: 0.075193 acc: 0.979397 - Test loss: 0.082235 acc: 0.976816
+2020-05-04 03:47:45,205:DEBUG:model_container_pt:[172/200]0m 0.188s: Train loss: 0.078091 acc: 0.979187 - Test loss: 0.076052 acc: 0.978492
+2020-05-04 03:47:45,392:DEBUG:model_container_pt:[173/200]0m 0.188s: Train loss: 0.075376 acc: 0.979885 - Test loss: 0.082159 acc: 0.976816
+2020-05-04 03:47:45,579:DEBUG:model_container_pt:[174/200]0m 0.186s: Train loss: 0.077615 acc: 0.978419 - Test loss: 0.076041 acc: 0.979050
+2020-05-04 03:47:45,765:DEBUG:model_container_pt:[175/200]0m 0.186s: Train loss: 0.076664 acc: 0.978419 - Test loss: 0.075317 acc: 0.978492
+2020-05-04 03:47:45,950:DEBUG:model_container_pt:[176/200]0m 0.185s: Train loss: 0.076524 acc: 0.978768 - Test loss: 0.074356 acc: 0.978212
+2020-05-04 03:47:46,146:DEBUG:model_container_pt:[177/200]0m 0.196s: Train loss: 0.076531 acc: 0.978489 - Test loss: 0.075193 acc: 0.978492
+2020-05-04 03:47:46,364:DEBUG:model_container_pt:[178/200]0m 0.218s: Train loss: 0.075140 acc: 0.979327 - Test loss: 0.078134 acc: 0.978771
+2020-05-04 03:47:46,556:DEBUG:model_container_pt:[179/200]0m 0.192s: Train loss: 0.076148 acc: 0.978558 - Test loss: 0.075040 acc: 0.978771
+2020-05-04 03:47:46,744:DEBUG:model_container_pt:[180/200]0m 0.188s: Train loss: 0.074777 acc: 0.979117 - Test loss: 0.074357 acc: 0.978492
+2020-05-04 03:47:46,931:DEBUG:model_container_pt:[181/200]0m 0.187s: Train loss: 0.075285 acc: 0.979327 - Test loss: 0.075344 acc: 0.978492
+2020-05-04 03:47:47,120:DEBUG:model_container_pt:[182/200]0m 0.189s: Train loss: 0.078102 acc: 0.978349 - Test loss: 0.081261 acc: 0.976816
+2020-05-04 03:47:47,340:DEBUG:model_container_pt:[183/200]0m 0.219s: Train loss: 0.077017 acc: 0.978908 - Test loss: 0.074714 acc: 0.978771
+2020-05-04 03:47:47,543:DEBUG:model_container_pt:[184/200]0m 0.203s: Train loss: 0.075397 acc: 0.978698 - Test loss: 0.076867 acc: 0.978771
+2020-05-04 03:47:47,735:DEBUG:model_container_pt:[185/200]0m 0.192s: Train loss: 0.075034 acc: 0.978838 - Test loss: 0.074460 acc: 0.978771
+2020-05-04 03:47:47,950:DEBUG:model_container_pt:[186/200]0m 0.214s: Train loss: 0.075584 acc: 0.978978 - Test loss: 0.074515 acc: 0.979330
+2020-05-04 03:47:48,181:DEBUG:model_container_pt:[187/200]0m 0.230s: Train loss: 0.075802 acc: 0.978628 - Test loss: 0.074259 acc: 0.978492
+2020-05-04 03:47:48,395:DEBUG:model_container_pt:[188/200]0m 0.214s: Train loss: 0.075536 acc: 0.979117 - Test loss: 0.076694 acc: 0.979050
+2020-05-04 03:47:48,623:DEBUG:model_container_pt:[189/200]0m 0.228s: Train loss: 0.076017 acc: 0.979187 - Test loss: 0.076663 acc: 0.978771
+2020-05-04 03:47:48,835:DEBUG:model_container_pt:[190/200]0m 0.212s: Train loss: 0.075546 acc: 0.979117 - Test loss: 0.074688 acc: 0.978492
+2020-05-04 03:47:49,039:DEBUG:model_container_pt:[191/200]0m 0.204s: Train loss: 0.075819 acc: 0.978908 - Test loss: 0.074394 acc: 0.978492
+2020-05-04 03:47:49,258:DEBUG:model_container_pt:[192/200]0m 0.218s: Train loss: 0.075531 acc: 0.979117 - Test loss: 0.081651 acc: 0.977933
+2020-05-04 03:47:49,457:DEBUG:model_container_pt:[193/200]0m 0.199s: Train loss: 0.077319 acc: 0.978698 - Test loss: 0.074412 acc: 0.978212
+2020-05-04 03:47:49,665:DEBUG:model_container_pt:[194/200]0m 0.208s: Train loss: 0.077394 acc: 0.979536 - Test loss: 0.075047 acc: 0.978771
+2020-05-04 03:47:49,880:DEBUG:model_container_pt:[195/200]0m 0.215s: Train loss: 0.076186 acc: 0.979187 - Test loss: 0.074345 acc: 0.978492
+2020-05-04 03:47:50,074:DEBUG:model_container_pt:[196/200]0m 0.194s: Train loss: 0.076838 acc: 0.978978 - Test loss: 0.081323 acc: 0.977933
+2020-05-04 03:47:50,265:DEBUG:model_container_pt:[197/200]0m 0.191s: Train loss: 0.075328 acc: 0.978628 - Test loss: 0.074724 acc: 0.978492
+2020-05-04 03:47:50,463:DEBUG:model_container_pt:[198/200]0m 0.198s: Train loss: 0.076747 acc: 0.978489 - Test loss: 0.074137 acc: 0.978492
+2020-05-04 03:47:50,673:DEBUG:model_container_pt:[199/200]0m 0.210s: Train loss: 0.076079 acc: 0.978558 - Test loss: 0.075389 acc: 0.978771
+2020-05-04 03:47:50,862:DEBUG:model_container_pt:[200/200]0m 0.189s: Train loss: 0.075429 acc: 0.978838 - Test loss: 0.074793 acc: 0.978492
+2020-05-04 03:47:50,862:INFO:model_container_pt:Time to complete training: 0m 38.335s
+2020-05-04 03:47:50,862:DEBUG:detector_container:Time to complete [Train binary]: 0m 38.335s
+2020-05-04 03:47:50,862:DEBUG:feature_squeezing:Start training normal squeezing model...
+2020-05-04 03:47:51,038:DEBUG:model_container_pt:[1/200]0m 0.175s: Train loss: 1.296909 acc: 0.892303 - Test loss: 0.305114 acc: 0.909218
+2020-05-04 03:47:51,216:DEBUG:model_container_pt:[2/200]0m 0.178s: Train loss: 0.308841 acc: 0.908227 - Test loss: 0.303209 acc: 0.909218
+2020-05-04 03:47:51,392:DEBUG:model_container_pt:[3/200]0m 0.175s: Train loss: 0.306703 acc: 0.908227 - Test loss: 0.308277 acc: 0.909218
+2020-05-04 03:47:51,569:DEBUG:model_container_pt:[4/200]0m 0.176s: Train loss: 0.307172 acc: 0.908227 - Test loss: 0.306012 acc: 0.909218
+2020-05-04 03:47:51,758:DEBUG:model_container_pt:[5/200]0m 0.189s: Train loss: 0.306495 acc: 0.908227 - Test loss: 0.302875 acc: 0.909218
+2020-05-04 03:47:51,935:DEBUG:model_container_pt:[6/200]0m 0.177s: Train loss: 0.304795 acc: 0.908227 - Test loss: 0.300334 acc: 0.909218
+2020-05-04 03:47:52,112:DEBUG:model_container_pt:[7/200]0m 0.176s: Train loss: 0.305301 acc: 0.908227 - Test loss: 0.306534 acc: 0.909218
+2020-05-04 03:47:52,291:DEBUG:model_container_pt:[8/200]0m 0.180s: Train loss: 0.305748 acc: 0.908227 - Test loss: 0.302661 acc: 0.909218
+2020-05-04 03:47:52,481:DEBUG:model_container_pt:[9/200]0m 0.189s: Train loss: 0.299939 acc: 0.908227 - Test loss: 0.296174 acc: 0.909218
+2020-05-04 03:47:52,673:DEBUG:model_container_pt:[10/200]0m 0.192s: Train loss: 0.299427 acc: 0.908227 - Test loss: 0.314830 acc: 0.909218
+2020-05-04 03:47:52,853:DEBUG:model_container_pt:[11/200]0m 0.180s: Train loss: 0.294838 acc: 0.908227 - Test loss: 0.282828 acc: 0.909218
+2020-05-04 03:47:53,033:DEBUG:model_container_pt:[12/200]0m 0.179s: Train loss: 0.305775 acc: 0.908227 - Test loss: 0.309138 acc: 0.909218
+2020-05-04 03:47:53,208:DEBUG:model_container_pt:[13/200]0m 0.175s: Train loss: 0.307443 acc: 0.908227 - Test loss: 0.304378 acc: 0.909218
+2020-05-04 03:47:53,384:DEBUG:model_container_pt:[14/200]0m 0.176s: Train loss: 0.306691 acc: 0.908227 - Test loss: 0.304377 acc: 0.909218
+2020-05-04 03:47:53,578:DEBUG:model_container_pt:[15/200]0m 0.193s: Train loss: 0.306664 acc: 0.908227 - Test loss: 0.304361 acc: 0.909218
+2020-05-04 03:47:53,754:DEBUG:model_container_pt:[16/200]0m 0.176s: Train loss: 0.306679 acc: 0.908227 - Test loss: 0.304357 acc: 0.909218
+2020-05-04 03:47:53,928:DEBUG:model_container_pt:[17/200]0m 0.174s: Train loss: 0.306651 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:47:54,100:DEBUG:model_container_pt:[18/200]0m 0.171s: Train loss: 0.306690 acc: 0.908227 - Test loss: 0.304348 acc: 0.909218
+2020-05-04 03:47:54,271:DEBUG:model_container_pt:[19/200]0m 0.170s: Train loss: 0.306676 acc: 0.908227 - Test loss: 0.304346 acc: 0.909218
+2020-05-04 03:47:54,442:DEBUG:model_container_pt:[20/200]0m 0.171s: Train loss: 0.306684 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:47:54,620:DEBUG:model_container_pt:[21/200]0m 0.178s: Train loss: 0.306662 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:47:54,794:DEBUG:model_container_pt:[22/200]0m 0.173s: Train loss: 0.306649 acc: 0.908227 - Test loss: 0.304355 acc: 0.909218
+2020-05-04 03:47:54,966:DEBUG:model_container_pt:[23/200]0m 0.172s: Train loss: 0.306644 acc: 0.908227 - Test loss: 0.304354 acc: 0.909218
+2020-05-04 03:47:55,137:DEBUG:model_container_pt:[24/200]0m 0.171s: Train loss: 0.306636 acc: 0.908227 - Test loss: 0.304362 acc: 0.909218
+2020-05-04 03:47:55,308:DEBUG:model_container_pt:[25/200]0m 0.171s: Train loss: 0.306667 acc: 0.908227 - Test loss: 0.304378 acc: 0.909218
+2020-05-04 03:47:55,479:DEBUG:model_container_pt:[26/200]0m 0.170s: Train loss: 0.306688 acc: 0.908227 - Test loss: 0.304369 acc: 0.909218
+2020-05-04 03:47:55,649:DEBUG:model_container_pt:[27/200]0m 0.170s: Train loss: 0.306662 acc: 0.908227 - Test loss: 0.304349 acc: 0.909218
+2020-05-04 03:47:55,841:DEBUG:model_container_pt:[28/200]0m 0.191s: Train loss: 0.306715 acc: 0.908227 - Test loss: 0.304360 acc: 0.909218
+2020-05-04 03:47:56,037:DEBUG:model_container_pt:[29/200]0m 0.196s: Train loss: 0.306658 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:47:56,225:DEBUG:model_container_pt:[30/200]0m 0.188s: Train loss: 0.306663 acc: 0.908227 - Test loss: 0.304350 acc: 0.909218
+2020-05-04 03:47:56,424:DEBUG:model_container_pt:[31/200]0m 0.198s: Train loss: 0.306648 acc: 0.908227 - Test loss: 0.304353 acc: 0.909218
+2020-05-04 03:47:56,609:DEBUG:model_container_pt:[32/200]0m 0.185s: Train loss: 0.306697 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:47:56,785:DEBUG:model_container_pt:[33/200]0m 0.176s: Train loss: 0.306655 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:47:56,957:DEBUG:model_container_pt:[34/200]0m 0.172s: Train loss: 0.306650 acc: 0.908227 - Test loss: 0.304350 acc: 0.909218
+2020-05-04 03:47:57,131:DEBUG:model_container_pt:[35/200]0m 0.173s: Train loss: 0.306691 acc: 0.908227 - Test loss: 0.304359 acc: 0.909218
+2020-05-04 03:47:57,302:DEBUG:model_container_pt:[36/200]0m 0.170s: Train loss: 0.306661 acc: 0.908227 - Test loss: 0.304350 acc: 0.909218
+2020-05-04 03:47:57,472:DEBUG:model_container_pt:[37/200]0m 0.170s: Train loss: 0.306659 acc: 0.908227 - Test loss: 0.304352 acc: 0.909218
+2020-05-04 03:47:57,648:DEBUG:model_container_pt:[38/200]0m 0.176s: Train loss: 0.306685 acc: 0.908227 - Test loss: 0.304356 acc: 0.909218
+2020-05-04 03:47:57,852:DEBUG:model_container_pt:[39/200]0m 0.204s: Train loss: 0.306660 acc: 0.908227 - Test loss: 0.304348 acc: 0.909218
+2020-05-04 03:47:58,039:DEBUG:model_container_pt:[40/200]0m 0.187s: Train loss: 0.306654 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:47:58,216:DEBUG:model_container_pt:[41/200]0m 0.176s: Train loss: 0.306671 acc: 0.908227 - Test loss: 0.304352 acc: 0.909218
+2020-05-04 03:47:58,394:DEBUG:model_container_pt:[42/200]0m 0.177s: Train loss: 0.306706 acc: 0.908227 - Test loss: 0.304346 acc: 0.909218
+2020-05-04 03:47:58,577:DEBUG:model_container_pt:[43/200]0m 0.182s: Train loss: 0.306698 acc: 0.908227 - Test loss: 0.304361 acc: 0.909218
+2020-05-04 03:47:58,765:DEBUG:model_container_pt:[44/200]0m 0.188s: Train loss: 0.306687 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:47:58,953:DEBUG:model_container_pt:[45/200]0m 0.188s: Train loss: 0.306674 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:47:59,133:DEBUG:model_container_pt:[46/200]0m 0.179s: Train loss: 0.306660 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:47:59,325:DEBUG:model_container_pt:[47/200]0m 0.192s: Train loss: 0.306672 acc: 0.908227 - Test loss: 0.304348 acc: 0.909218
+2020-05-04 03:47:59,496:DEBUG:model_container_pt:[48/200]0m 0.170s: Train loss: 0.306649 acc: 0.908227 - Test loss: 0.304361 acc: 0.909218
+2020-05-04 03:47:59,690:DEBUG:model_container_pt:[49/200]0m 0.193s: Train loss: 0.306651 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:47:59,871:DEBUG:model_container_pt:[50/200]0m 0.181s: Train loss: 0.306684 acc: 0.908227 - Test loss: 0.304346 acc: 0.909218
+2020-05-04 03:48:00,052:DEBUG:model_container_pt:[51/200]0m 0.180s: Train loss: 0.306632 acc: 0.908227 - Test loss: 0.304377 acc: 0.909218
+2020-05-04 03:48:00,226:DEBUG:model_container_pt:[52/200]0m 0.174s: Train loss: 0.306656 acc: 0.908227 - Test loss: 0.304352 acc: 0.909218
+2020-05-04 03:48:00,402:DEBUG:model_container_pt:[53/200]0m 0.176s: Train loss: 0.306663 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:00,598:DEBUG:model_container_pt:[54/200]0m 0.195s: Train loss: 0.306655 acc: 0.908227 - Test loss: 0.304357 acc: 0.909218
+2020-05-04 03:48:00,772:DEBUG:model_container_pt:[55/200]0m 0.173s: Train loss: 0.306646 acc: 0.908227 - Test loss: 0.304350 acc: 0.909218
+2020-05-04 03:48:00,944:DEBUG:model_container_pt:[56/200]0m 0.171s: Train loss: 0.306672 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:01,118:DEBUG:model_container_pt:[57/200]0m 0.174s: Train loss: 0.306639 acc: 0.908227 - Test loss: 0.304350 acc: 0.909218
+2020-05-04 03:48:01,293:DEBUG:model_container_pt:[58/200]0m 0.174s: Train loss: 0.306681 acc: 0.908227 - Test loss: 0.304350 acc: 0.909218
+2020-05-04 03:48:01,470:DEBUG:model_container_pt:[59/200]0m 0.177s: Train loss: 0.306646 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:01,658:DEBUG:model_container_pt:[60/200]0m 0.187s: Train loss: 0.306654 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:01,847:DEBUG:model_container_pt:[61/200]0m 0.189s: Train loss: 0.306676 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:02,044:DEBUG:model_container_pt:[62/200]0m 0.196s: Train loss: 0.306664 acc: 0.908227 - Test loss: 0.304349 acc: 0.909218
+2020-05-04 03:48:02,241:DEBUG:model_container_pt:[63/200]0m 0.197s: Train loss: 0.306659 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:02,422:DEBUG:model_container_pt:[64/200]0m 0.181s: Train loss: 0.306692 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:02,595:DEBUG:model_container_pt:[65/200]0m 0.172s: Train loss: 0.306659 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:02,803:DEBUG:model_container_pt:[66/200]0m 0.208s: Train loss: 0.306652 acc: 0.908227 - Test loss: 0.304357 acc: 0.909218
+2020-05-04 03:48:02,994:DEBUG:model_container_pt:[67/200]0m 0.191s: Train loss: 0.306680 acc: 0.908227 - Test loss: 0.304354 acc: 0.909218
+2020-05-04 03:48:03,168:DEBUG:model_container_pt:[68/200]0m 0.173s: Train loss: 0.306667 acc: 0.908227 - Test loss: 0.304366 acc: 0.909218
+2020-05-04 03:48:03,340:DEBUG:model_container_pt:[69/200]0m 0.172s: Train loss: 0.306674 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:03,533:DEBUG:model_container_pt:[70/200]0m 0.193s: Train loss: 0.306660 acc: 0.908227 - Test loss: 0.304349 acc: 0.909218
+2020-05-04 03:48:03,717:DEBUG:model_container_pt:[71/200]0m 0.184s: Train loss: 0.306641 acc: 0.908227 - Test loss: 0.304372 acc: 0.909218
+2020-05-04 03:48:03,907:DEBUG:model_container_pt:[72/200]0m 0.190s: Train loss: 0.306685 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:04,103:DEBUG:model_container_pt:[73/200]0m 0.195s: Train loss: 0.306655 acc: 0.908227 - Test loss: 0.304370 acc: 0.909218
+2020-05-04 03:48:04,275:DEBUG:model_container_pt:[74/200]0m 0.171s: Train loss: 0.306663 acc: 0.908227 - Test loss: 0.304357 acc: 0.909218
+2020-05-04 03:48:04,447:DEBUG:model_container_pt:[75/200]0m 0.171s: Train loss: 0.306645 acc: 0.908227 - Test loss: 0.304348 acc: 0.909218
+2020-05-04 03:48:04,624:DEBUG:model_container_pt:[76/200]0m 0.177s: Train loss: 0.306663 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:04,824:DEBUG:model_container_pt:[77/200]0m 0.199s: Train loss: 0.306705 acc: 0.908227 - Test loss: 0.304368 acc: 0.909218
+2020-05-04 03:48:04,998:DEBUG:model_container_pt:[78/200]0m 0.173s: Train loss: 0.306655 acc: 0.908227 - Test loss: 0.304347 acc: 0.909218
+2020-05-04 03:48:05,178:DEBUG:model_container_pt:[79/200]0m 0.180s: Train loss: 0.306643 acc: 0.908227 - Test loss: 0.304362 acc: 0.909218
+2020-05-04 03:48:05,350:DEBUG:model_container_pt:[80/200]0m 0.171s: Train loss: 0.306694 acc: 0.908227 - Test loss: 0.304350 acc: 0.909218
+2020-05-04 03:48:05,555:DEBUG:model_container_pt:[81/200]0m 0.205s: Train loss: 0.306714 acc: 0.908227 - Test loss: 0.304385 acc: 0.909218
+2020-05-04 03:48:05,729:DEBUG:model_container_pt:[82/200]0m 0.174s: Train loss: 0.306681 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:05,902:DEBUG:model_container_pt:[83/200]0m 0.173s: Train loss: 0.306662 acc: 0.908227 - Test loss: 0.304350 acc: 0.909218
+2020-05-04 03:48:06,075:DEBUG:model_container_pt:[84/200]0m 0.172s: Train loss: 0.306690 acc: 0.908227 - Test loss: 0.304353 acc: 0.909218
+2020-05-04 03:48:06,259:DEBUG:model_container_pt:[85/200]0m 0.183s: Train loss: 0.306689 acc: 0.908227 - Test loss: 0.304382 acc: 0.909218
+2020-05-04 03:48:06,468:DEBUG:model_container_pt:[86/200]0m 0.209s: Train loss: 0.306676 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:06,670:DEBUG:model_container_pt:[87/200]0m 0.201s: Train loss: 0.306672 acc: 0.908227 - Test loss: 0.304369 acc: 0.909218
+2020-05-04 03:48:06,866:DEBUG:model_container_pt:[88/200]0m 0.195s: Train loss: 0.306656 acc: 0.908227 - Test loss: 0.304380 acc: 0.909218
+2020-05-04 03:48:07,088:DEBUG:model_container_pt:[89/200]0m 0.222s: Train loss: 0.306668 acc: 0.908227 - Test loss: 0.304352 acc: 0.909218
+2020-05-04 03:48:07,286:DEBUG:model_container_pt:[90/200]0m 0.198s: Train loss: 0.306662 acc: 0.908227 - Test loss: 0.304347 acc: 0.909218
+2020-05-04 03:48:07,484:DEBUG:model_container_pt:[91/200]0m 0.198s: Train loss: 0.306681 acc: 0.908227 - Test loss: 0.304355 acc: 0.909218
+2020-05-04 03:48:07,684:DEBUG:model_container_pt:[92/200]0m 0.199s: Train loss: 0.306647 acc: 0.908227 - Test loss: 0.304358 acc: 0.909218
+2020-05-04 03:48:07,878:DEBUG:model_container_pt:[93/200]0m 0.194s: Train loss: 0.306689 acc: 0.908227 - Test loss: 0.304350 acc: 0.909218
+2020-05-04 03:48:08,052:DEBUG:model_container_pt:[94/200]0m 0.173s: Train loss: 0.306664 acc: 0.908227 - Test loss: 0.304358 acc: 0.909218
+2020-05-04 03:48:08,228:DEBUG:model_container_pt:[95/200]0m 0.175s: Train loss: 0.306638 acc: 0.908227 - Test loss: 0.304352 acc: 0.909218
+2020-05-04 03:48:08,400:DEBUG:model_container_pt:[96/200]0m 0.172s: Train loss: 0.306651 acc: 0.908227 - Test loss: 0.304354 acc: 0.909218
+2020-05-04 03:48:08,587:DEBUG:model_container_pt:[97/200]0m 0.186s: Train loss: 0.306700 acc: 0.908227 - Test loss: 0.304374 acc: 0.909218
+2020-05-04 03:48:08,776:DEBUG:model_container_pt:[98/200]0m 0.189s: Train loss: 0.306675 acc: 0.908227 - Test loss: 0.304370 acc: 0.909218
+2020-05-04 03:48:08,956:DEBUG:model_container_pt:[99/200]0m 0.179s: Train loss: 0.306647 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:09,138:DEBUG:model_container_pt:[100/200]0m 0.182s: Train loss: 0.306639 acc: 0.908227 - Test loss: 0.304358 acc: 0.909218
+2020-05-04 03:48:09,317:DEBUG:model_container_pt:[101/200]0m 0.178s: Train loss: 0.306636 acc: 0.908227 - Test loss: 0.304351 acc: 0.909218
+2020-05-04 03:48:09,497:DEBUG:model_container_pt:[102/200]0m 0.179s: Train loss: 0.306669 acc: 0.908227 - Test loss: 0.304350 acc: 0.909218
+2020-05-04 03:48:09,674:DEBUG:model_container_pt:[103/200]0m 0.177s: Train loss: 0.306698 acc: 0.908227 - Test loss: 0.304377 acc: 0.909218
+2020-05-04 03:48:09,850:DEBUG:model_container_pt:[104/200]0m 0.176s: Train loss: 0.306650 acc: 0.908227 - Test loss: 0.304355 acc: 0.909218
+2020-05-04 03:48:10,049:DEBUG:model_container_pt:[105/200]0m 0.199s: Train loss: 0.306652 acc: 0.908227 - Test loss: 0.304347 acc: 0.909218
+2020-05-04 03:48:10,229:DEBUG:model_container_pt:[106/200]0m 0.180s: Train loss: 0.306665 acc: 0.908227 - Test loss: 0.304347 acc: 0.909218
+2020-05-04 03:48:10,403:DEBUG:model_container_pt:[107/200]0m 0.173s: Train loss: 0.306674 acc: 0.908227 - Test loss: 0.304362 acc: 0.909218
+2020-05-04 03:48:10,576:DEBUG:model_container_pt:[108/200]0m 0.173s: Train loss: 0.306676 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:10,758:DEBUG:model_container_pt:[109/200]0m 0.182s: Train loss: 0.306635 acc: 0.908227 - Test loss: 0.304361 acc: 0.909218
+2020-05-04 03:48:10,933:DEBUG:model_container_pt:[110/200]0m 0.174s: Train loss: 0.306666 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:11,107:DEBUG:model_container_pt:[111/200]0m 0.173s: Train loss: 0.306639 acc: 0.908227 - Test loss: 0.304446 acc: 0.909218
+2020-05-04 03:48:11,285:DEBUG:model_container_pt:[112/200]0m 0.178s: Train loss: 0.306718 acc: 0.908227 - Test loss: 0.304349 acc: 0.909218
+2020-05-04 03:48:11,473:DEBUG:model_container_pt:[113/200]0m 0.188s: Train loss: 0.306712 acc: 0.908227 - Test loss: 0.304366 acc: 0.909218
+2020-05-04 03:48:11,684:DEBUG:model_container_pt:[114/200]0m 0.211s: Train loss: 0.306686 acc: 0.908227 - Test loss: 0.304364 acc: 0.909218
+2020-05-04 03:48:11,879:DEBUG:model_container_pt:[115/200]0m 0.195s: Train loss: 0.306676 acc: 0.908227 - Test loss: 0.304386 acc: 0.909218
+2020-05-04 03:48:12,097:DEBUG:model_container_pt:[116/200]0m 0.217s: Train loss: 0.306688 acc: 0.908227 - Test loss: 0.304352 acc: 0.909218
+2020-05-04 03:48:12,282:DEBUG:model_container_pt:[117/200]0m 0.185s: Train loss: 0.306665 acc: 0.908227 - Test loss: 0.304376 acc: 0.909218
+2020-05-04 03:48:12,457:DEBUG:model_container_pt:[118/200]0m 0.175s: Train loss: 0.306667 acc: 0.908227 - Test loss: 0.304354 acc: 0.909218
+2020-05-04 03:48:12,628:DEBUG:model_container_pt:[119/200]0m 0.170s: Train loss: 0.306647 acc: 0.908227 - Test loss: 0.304366 acc: 0.909218
+2020-05-04 03:48:12,811:DEBUG:model_container_pt:[120/200]0m 0.182s: Train loss: 0.306702 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:13,007:DEBUG:model_container_pt:[121/200]0m 0.196s: Train loss: 0.306706 acc: 0.908227 - Test loss: 0.304380 acc: 0.909218
+2020-05-04 03:48:13,188:DEBUG:model_container_pt:[122/200]0m 0.181s: Train loss: 0.306651 acc: 0.908227 - Test loss: 0.304350 acc: 0.909218
+2020-05-04 03:48:13,402:DEBUG:model_container_pt:[123/200]0m 0.214s: Train loss: 0.306675 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:13,624:DEBUG:model_container_pt:[124/200]0m 0.222s: Train loss: 0.306642 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:13,845:DEBUG:model_container_pt:[125/200]0m 0.221s: Train loss: 0.306655 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:14,063:DEBUG:model_container_pt:[126/200]0m 0.218s: Train loss: 0.306668 acc: 0.908227 - Test loss: 0.304352 acc: 0.909218
+2020-05-04 03:48:14,248:DEBUG:model_container_pt:[127/200]0m 0.185s: Train loss: 0.306692 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:14,440:DEBUG:model_container_pt:[128/200]0m 0.192s: Train loss: 0.306657 acc: 0.908227 - Test loss: 0.304350 acc: 0.909218
+2020-05-04 03:48:14,648:DEBUG:model_container_pt:[129/200]0m 0.207s: Train loss: 0.306641 acc: 0.908227 - Test loss: 0.304380 acc: 0.909218
+2020-05-04 03:48:14,850:DEBUG:model_container_pt:[130/200]0m 0.201s: Train loss: 0.306680 acc: 0.908227 - Test loss: 0.304374 acc: 0.909218
+2020-05-04 03:48:15,049:DEBUG:model_container_pt:[131/200]0m 0.198s: Train loss: 0.306673 acc: 0.908227 - Test loss: 0.304351 acc: 0.909218
+2020-05-04 03:48:15,249:DEBUG:model_container_pt:[132/200]0m 0.200s: Train loss: 0.306670 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:15,447:DEBUG:model_container_pt:[133/200]0m 0.198s: Train loss: 0.306685 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:15,625:DEBUG:model_container_pt:[134/200]0m 0.178s: Train loss: 0.306708 acc: 0.908227 - Test loss: 0.304359 acc: 0.909218
+2020-05-04 03:48:15,796:DEBUG:model_container_pt:[135/200]0m 0.171s: Train loss: 0.306651 acc: 0.908227 - Test loss: 0.304352 acc: 0.909218
+2020-05-04 03:48:15,971:DEBUG:model_container_pt:[136/200]0m 0.174s: Train loss: 0.306657 acc: 0.908227 - Test loss: 0.304360 acc: 0.909218
+2020-05-04 03:48:16,145:DEBUG:model_container_pt:[137/200]0m 0.174s: Train loss: 0.306641 acc: 0.908227 - Test loss: 0.304369 acc: 0.909218
+2020-05-04 03:48:16,328:DEBUG:model_container_pt:[138/200]0m 0.183s: Train loss: 0.306654 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:16,510:DEBUG:model_container_pt:[139/200]0m 0.182s: Train loss: 0.306649 acc: 0.908227 - Test loss: 0.304349 acc: 0.909218
+2020-05-04 03:48:16,688:DEBUG:model_container_pt:[140/200]0m 0.177s: Train loss: 0.306683 acc: 0.908227 - Test loss: 0.304369 acc: 0.909218
+2020-05-04 03:48:16,866:DEBUG:model_container_pt:[141/200]0m 0.178s: Train loss: 0.306612 acc: 0.908227 - Test loss: 0.304352 acc: 0.909218
+2020-05-04 03:48:17,045:DEBUG:model_container_pt:[142/200]0m 0.178s: Train loss: 0.306705 acc: 0.908227 - Test loss: 0.304358 acc: 0.909218
+2020-05-04 03:48:17,220:DEBUG:model_container_pt:[143/200]0m 0.175s: Train loss: 0.306684 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:17,395:DEBUG:model_container_pt:[144/200]0m 0.175s: Train loss: 0.306651 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:17,569:DEBUG:model_container_pt:[145/200]0m 0.174s: Train loss: 0.306643 acc: 0.908227 - Test loss: 0.304351 acc: 0.909218
+2020-05-04 03:48:17,743:DEBUG:model_container_pt:[146/200]0m 0.173s: Train loss: 0.306664 acc: 0.908227 - Test loss: 0.304354 acc: 0.909218
+2020-05-04 03:48:17,939:DEBUG:model_container_pt:[147/200]0m 0.195s: Train loss: 0.306643 acc: 0.908227 - Test loss: 0.304353 acc: 0.909218
+2020-05-04 03:48:18,141:DEBUG:model_container_pt:[148/200]0m 0.202s: Train loss: 0.306641 acc: 0.908227 - Test loss: 0.304374 acc: 0.909218
+2020-05-04 03:48:18,321:DEBUG:model_container_pt:[149/200]0m 0.180s: Train loss: 0.306711 acc: 0.908227 - Test loss: 0.304405 acc: 0.909218
+2020-05-04 03:48:18,506:DEBUG:model_container_pt:[150/200]0m 0.185s: Train loss: 0.306678 acc: 0.908227 - Test loss: 0.304362 acc: 0.909218
+2020-05-04 03:48:18,706:DEBUG:model_container_pt:[151/200]0m 0.200s: Train loss: 0.306671 acc: 0.908227 - Test loss: 0.304355 acc: 0.909218
+2020-05-04 03:48:18,882:DEBUG:model_container_pt:[152/200]0m 0.176s: Train loss: 0.306702 acc: 0.908227 - Test loss: 0.304352 acc: 0.909218
+2020-05-04 03:48:19,061:DEBUG:model_container_pt:[153/200]0m 0.179s: Train loss: 0.306656 acc: 0.908227 - Test loss: 0.304372 acc: 0.909218
+2020-05-04 03:48:19,235:DEBUG:model_container_pt:[154/200]0m 0.173s: Train loss: 0.306640 acc: 0.908227 - Test loss: 0.304356 acc: 0.909218
+2020-05-04 03:48:19,432:DEBUG:model_container_pt:[155/200]0m 0.196s: Train loss: 0.306651 acc: 0.908227 - Test loss: 0.304368 acc: 0.909218
+2020-05-04 03:48:19,627:DEBUG:model_container_pt:[156/200]0m 0.195s: Train loss: 0.306659 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:19,822:DEBUG:model_container_pt:[157/200]0m 0.195s: Train loss: 0.306682 acc: 0.908227 - Test loss: 0.304353 acc: 0.909218
+2020-05-04 03:48:20,018:DEBUG:model_container_pt:[158/200]0m 0.196s: Train loss: 0.306661 acc: 0.908227 - Test loss: 0.304347 acc: 0.909218
+2020-05-04 03:48:20,201:DEBUG:model_container_pt:[159/200]0m 0.183s: Train loss: 0.306652 acc: 0.908227 - Test loss: 0.304363 acc: 0.909218
+2020-05-04 03:48:20,379:DEBUG:model_container_pt:[160/200]0m 0.178s: Train loss: 0.306673 acc: 0.908227 - Test loss: 0.304358 acc: 0.909218
+2020-05-04 03:48:20,552:DEBUG:model_container_pt:[161/200]0m 0.172s: Train loss: 0.306682 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:20,724:DEBUG:model_container_pt:[162/200]0m 0.171s: Train loss: 0.306691 acc: 0.908227 - Test loss: 0.304372 acc: 0.909218
+2020-05-04 03:48:20,897:DEBUG:model_container_pt:[163/200]0m 0.173s: Train loss: 0.306652 acc: 0.908227 - Test loss: 0.304356 acc: 0.909218
+2020-05-04 03:48:21,067:DEBUG:model_container_pt:[164/200]0m 0.170s: Train loss: 0.306683 acc: 0.908227 - Test loss: 0.304369 acc: 0.909218
+2020-05-04 03:48:21,238:DEBUG:model_container_pt:[165/200]0m 0.171s: Train loss: 0.306667 acc: 0.908227 - Test loss: 0.304357 acc: 0.909218
+2020-05-04 03:48:21,412:DEBUG:model_container_pt:[166/200]0m 0.173s: Train loss: 0.306677 acc: 0.908227 - Test loss: 0.304348 acc: 0.909218
+2020-05-04 03:48:21,583:DEBUG:model_container_pt:[167/200]0m 0.171s: Train loss: 0.306649 acc: 0.908227 - Test loss: 0.304371 acc: 0.909218
+2020-05-04 03:48:21,754:DEBUG:model_container_pt:[168/200]0m 0.170s: Train loss: 0.306678 acc: 0.908227 - Test loss: 0.304383 acc: 0.909218
+2020-05-04 03:48:21,929:DEBUG:model_container_pt:[169/200]0m 0.175s: Train loss: 0.306678 acc: 0.908227 - Test loss: 0.304364 acc: 0.909218
+2020-05-04 03:48:22,102:DEBUG:model_container_pt:[170/200]0m 0.172s: Train loss: 0.306641 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:22,274:DEBUG:model_container_pt:[171/200]0m 0.172s: Train loss: 0.306667 acc: 0.908227 - Test loss: 0.304355 acc: 0.909218
+2020-05-04 03:48:22,448:DEBUG:model_container_pt:[172/200]0m 0.173s: Train loss: 0.306696 acc: 0.908227 - Test loss: 0.304351 acc: 0.909218
+2020-05-04 03:48:22,620:DEBUG:model_container_pt:[173/200]0m 0.172s: Train loss: 0.306665 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:22,792:DEBUG:model_container_pt:[174/200]0m 0.171s: Train loss: 0.306682 acc: 0.908227 - Test loss: 0.304371 acc: 0.909218
+2020-05-04 03:48:22,967:DEBUG:model_container_pt:[175/200]0m 0.175s: Train loss: 0.306720 acc: 0.908227 - Test loss: 0.304359 acc: 0.909218
+2020-05-04 03:48:23,142:DEBUG:model_container_pt:[176/200]0m 0.174s: Train loss: 0.306691 acc: 0.908227 - Test loss: 0.304352 acc: 0.909218
+2020-05-04 03:48:23,318:DEBUG:model_container_pt:[177/200]0m 0.176s: Train loss: 0.306654 acc: 0.908227 - Test loss: 0.304377 acc: 0.909218
+2020-05-04 03:48:23,493:DEBUG:model_container_pt:[178/200]0m 0.174s: Train loss: 0.306680 acc: 0.908227 - Test loss: 0.304361 acc: 0.909218
+2020-05-04 03:48:23,665:DEBUG:model_container_pt:[179/200]0m 0.172s: Train loss: 0.306675 acc: 0.908227 - Test loss: 0.304349 acc: 0.909218
+2020-05-04 03:48:23,839:DEBUG:model_container_pt:[180/200]0m 0.173s: Train loss: 0.306648 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:24,010:DEBUG:model_container_pt:[181/200]0m 0.170s: Train loss: 0.306648 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:24,181:DEBUG:model_container_pt:[182/200]0m 0.171s: Train loss: 0.306671 acc: 0.908227 - Test loss: 0.304362 acc: 0.909218
+2020-05-04 03:48:24,356:DEBUG:model_container_pt:[183/200]0m 0.175s: Train loss: 0.306646 acc: 0.908227 - Test loss: 0.304362 acc: 0.909218
+2020-05-04 03:48:24,531:DEBUG:model_container_pt:[184/200]0m 0.174s: Train loss: 0.306663 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:24,705:DEBUG:model_container_pt:[185/200]0m 0.174s: Train loss: 0.306646 acc: 0.908227 - Test loss: 0.304348 acc: 0.909218
+2020-05-04 03:48:24,881:DEBUG:model_container_pt:[186/200]0m 0.175s: Train loss: 0.306678 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:25,052:DEBUG:model_container_pt:[187/200]0m 0.171s: Train loss: 0.306659 acc: 0.908227 - Test loss: 0.304347 acc: 0.909218
+2020-05-04 03:48:25,223:DEBUG:model_container_pt:[188/200]0m 0.171s: Train loss: 0.306667 acc: 0.908227 - Test loss: 0.304351 acc: 0.909218
+2020-05-04 03:48:25,398:DEBUG:model_container_pt:[189/200]0m 0.175s: Train loss: 0.306675 acc: 0.908227 - Test loss: 0.304347 acc: 0.909218
+2020-05-04 03:48:25,572:DEBUG:model_container_pt:[190/200]0m 0.173s: Train loss: 0.306680 acc: 0.908227 - Test loss: 0.304351 acc: 0.909218
+2020-05-04 03:48:25,744:DEBUG:model_container_pt:[191/200]0m 0.171s: Train loss: 0.306725 acc: 0.908227 - Test loss: 0.304347 acc: 0.909218
+2020-05-04 03:48:25,917:DEBUG:model_container_pt:[192/200]0m 0.173s: Train loss: 0.306692 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:26,088:DEBUG:model_container_pt:[193/200]0m 0.171s: Train loss: 0.306660 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:26,260:DEBUG:model_container_pt:[194/200]0m 0.172s: Train loss: 0.306653 acc: 0.908227 - Test loss: 0.304353 acc: 0.909218
+2020-05-04 03:48:26,436:DEBUG:model_container_pt:[195/200]0m 0.175s: Train loss: 0.306675 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:26,609:DEBUG:model_container_pt:[196/200]0m 0.173s: Train loss: 0.306671 acc: 0.908227 - Test loss: 0.304366 acc: 0.909218
+2020-05-04 03:48:26,783:DEBUG:model_container_pt:[197/200]0m 0.174s: Train loss: 0.306682 acc: 0.908227 - Test loss: 0.304345 acc: 0.909218
+2020-05-04 03:48:26,959:DEBUG:model_container_pt:[198/200]0m 0.175s: Train loss: 0.306665 acc: 0.908227 - Test loss: 0.304379 acc: 0.909218
+2020-05-04 03:48:27,131:DEBUG:model_container_pt:[199/200]0m 0.172s: Train loss: 0.306674 acc: 0.908227 - Test loss: 0.304353 acc: 0.909218
+2020-05-04 03:48:27,304:DEBUG:model_container_pt:[200/200]0m 0.172s: Train loss: 0.306687 acc: 0.908227 - Test loss: 0.304344 acc: 0.909218
+2020-05-04 03:48:27,304:INFO:model_container_pt:Time to complete training: 0m 36.442s
+2020-05-04 03:48:27,304:DEBUG:detector_container:Time to complete [Train normal]: 0m 36.442s
+2020-05-04 03:48:27,305:INFO:model_container_pt:Saved model to save/IrisNN_HTRU2_e200_binary.pt
+2020-05-04 03:48:27,305:INFO:model_container_pt:Saved model to save/IrisNN_HTRU2_e200_normal.pt
+2020-05-04 03:48:27,305:DEBUG:defend_squeeze:Load save/IrisNN_HTRU2_FGSM_x.npy...
+2020-05-04 03:48:27,326:INFO:defend_squeeze:Accuracy on clean set - OG: 1.000000, Squeezer: 0.997000
+2020-05-04 03:48:27,340:INFO:defend_squeeze:Blocked 97/1000 samples on clean
+2020-05-04 03:48:27,341:DEBUG:defend_squeeze:Load save/IrisNN_HTRU2_FGSM_adv.npy...
+2020-05-04 03:48:27,357:INFO:defend_squeeze:Accuracy on FGSM set - OG: 0.028000, Squeezer: 0.595000
+2020-05-04 03:48:27,370:INFO:defend_squeeze:Blocked 947/1000 samples on FGSM
+2020-05-04 03:48:27,370:DEBUG:defend_squeeze:Load save/IrisNN_HTRU2_BIM_adv.npy...
+2020-05-04 03:48:27,389:INFO:defend_squeeze:Accuracy on BIM set - OG: 0.013000, Squeezer: 0.013000
+2020-05-04 03:48:27,404:INFO:defend_squeeze:Blocked 932/1000 samples on BIM
+2020-05-04 03:48:27,404:DEBUG:defend_squeeze:Load save/IrisNN_HTRU2_DeepFool_adv.npy...
+2020-05-04 03:48:27,423:INFO:defend_squeeze:Accuracy on DeepFool set - OG: 0.024000, Squeezer: 0.670000
+2020-05-04 03:48:27,437:INFO:defend_squeeze:Blocked 926/1000 samples on DeepFool
+2020-05-04 03:48:27,437:DEBUG:defend_squeeze:Load save/IrisNN_HTRU2_Carlini_adv.npy...
+2020-05-04 03:48:27,456:INFO:defend_squeeze:Accuracy on Carlini set - OG: 0.120000, Squeezer: 0.684000
+2020-05-04 03:48:27,471:INFO:defend_squeeze:Blocked 986/1000 samples on Carlini

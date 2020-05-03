@@ -1,0 +1,48 @@
+2020-05-03 23:45:16,027:INFO:defend_squeeze:Start at    : 20200503234516
+2020-05-03 23:45:16,028:INFO:defend_squeeze:RECEIVED PARAMETERS:
+2020-05-03 23:45:16,028:INFO:defend_squeeze:model file  :./save/CifarCnn_CIFAR10_e50.pt
+2020-05-03 23:45:16,028:INFO:defend_squeeze:model       :CifarCnn
+2020-05-03 23:45:16,028:INFO:defend_squeeze:dataset     :CIFAR10
+2020-05-03 23:45:16,028:INFO:defend_squeeze:max_epochs  :50
+2020-05-03 23:45:16,028:INFO:defend_squeeze:bit_depth   :8
+2020-05-03 23:45:16,028:INFO:defend_squeeze:sigma       :0.200000
+2020-05-03 23:45:16,028:INFO:defend_squeeze:kernel_size :3
+2020-05-03 23:45:16,028:INFO:defend_squeeze:batch_size  :128
+2020-05-03 23:45:16,028:INFO:defend_squeeze:seed        :4096
+2020-05-03 23:45:16,028:INFO:defend_squeeze:verbose     :True
+2020-05-03 23:45:16,028:INFO:defend_squeeze:save_log    :True
+2020-05-03 23:45:16,028:INFO:defend_squeeze:need train  :False
+2020-05-03 23:45:16,028:INFO:defend_squeeze:filters     :binary, normal, median
+2020-05-03 23:45:16,028:INFO:defend_squeeze:attacks     :clean, FGSM, BIM, DeepFool, Carlini, Saliency
+2020-05-03 23:45:16,028:INFO:defend_squeeze:pretrained  :CifarCnn_CIFAR10_e50_binary.pt, CifarCnn_CIFAR10_e50_normal.pt, CifarCnn_CIFAR10_e50_median.pt
+2020-05-03 23:45:16,028:DEBUG:utils:Setting random seed for PyTorch.
+2020-05-03 23:45:16,048:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-05-03 23:45:21,663:INFO:data_container:Train size: 50000 - Test size: 10000
+2020-05-03 23:45:21,663:INFO:data_container:Successfully load data. Time to complete: 0m 5.614s
+2020-05-03 23:45:23,444:DEBUG:model_container_pt:Using device: cuda
+2020-05-03 23:45:23,449:INFO:model_container_pt:Loaded model from ./save/CifarCnn_CIFAR10_e50.pt
+2020-05-03 23:45:23,901:INFO:defend_squeeze:Accuracy on test set: 0.814800
+2020-05-03 23:45:24,134:DEBUG:model_container_pt:Using device: cuda
+2020-05-03 23:45:25,712:DEBUG:model_container_pt:Using device: cuda
+2020-05-03 23:45:32,725:DEBUG:model_container_pt:Using device: cuda
+2020-05-03 23:46:20,500:INFO:model_container_pt:Loaded model from ./save/CifarCnn_CIFAR10_e50_binary.pt
+2020-05-03 23:46:20,503:INFO:model_container_pt:Loaded model from ./save/CifarCnn_CIFAR10_e50_normal.pt
+2020-05-03 23:46:20,507:INFO:model_container_pt:Loaded model from ./save/CifarCnn_CIFAR10_e50_median.pt
+2020-05-03 23:46:20,507:DEBUG:defend_squeeze:Load save/CifarCnn_CIFAR10_FGSM_x.npy...
+2020-05-03 23:46:21,662:INFO:defend_squeeze:Accuracy on clean set - OG: 1.000000, Squeezer: 0.898000
+2020-05-03 23:46:22,741:INFO:defend_squeeze:Blocked 433/1000 samples on clean
+2020-05-03 23:46:22,741:DEBUG:defend_squeeze:Load save/CifarCnn_CIFAR10_FGSM_adv.npy...
+2020-05-03 23:46:23,928:INFO:defend_squeeze:Accuracy on FGSM set - OG: 0.023000, Squeezer: 0.113000
+2020-05-03 23:46:25,065:INFO:defend_squeeze:Blocked 961/1000 samples on FGSM
+2020-05-03 23:46:25,065:DEBUG:defend_squeeze:Load save/CifarCnn_CIFAR10_BIM_adv.npy...
+2020-05-03 23:46:26,261:INFO:defend_squeeze:Accuracy on BIM set - OG: 0.065000, Squeezer: 0.066000
+2020-05-03 23:46:27,416:INFO:defend_squeeze:Blocked 783/1000 samples on BIM
+2020-05-03 23:46:27,416:DEBUG:defend_squeeze:Load save/CifarCnn_CIFAR10_DeepFool_adv.npy...
+2020-05-03 23:46:28,590:INFO:defend_squeeze:Accuracy on DeepFool set - OG: 0.972000, Squeezer: 0.887000
+2020-05-03 23:46:29,712:INFO:defend_squeeze:Blocked 447/1000 samples on DeepFool
+2020-05-03 23:46:29,712:DEBUG:defend_squeeze:Load save/CifarCnn_CIFAR10_Carlini_adv.npy...
+2020-05-03 23:46:30,868:INFO:defend_squeeze:Accuracy on Carlini set - OG: 0.087000, Squeezer: 0.088000
+2020-05-03 23:46:31,992:INFO:defend_squeeze:Blocked 441/1000 samples on Carlini
+2020-05-03 23:46:31,992:DEBUG:defend_squeeze:Load save/CifarCnn_CIFAR10_Saliency_adv.npy...
+2020-05-03 23:46:33,141:INFO:defend_squeeze:Accuracy on Saliency set - OG: 0.817000, Squeezer: 0.821000
+2020-05-03 23:46:34,228:INFO:defend_squeeze:Blocked 509/1000 samples on Saliency

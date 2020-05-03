@@ -1,14 +1,12 @@
 """
 This module contains all static utility functions
 """
-import copy
 import logging
 import math
 import os
 import time
 
 import numpy as np
-import torch.nn as nn
 
 logger = logging.getLogger(__name__)
 
@@ -191,31 +189,6 @@ def is_probability(vector):
     smaller_than_1 = np.amax(vector) <= 1.0
     larger_than_0 = np.all(vector >= 0.0)
     return sum_to_1 and smaller_than_1 and larger_than_0
-
-
-def copy_model(model, pretrained=False):
-    """Create a copy of a model"""
-    assert isinstance(model, nn.Module)
-    Model = model.__class__
-    loss_fn = model.loss_fn
-    optimizer = model.optimizer
-    optim_params = model.optim_params
-    scheduler = model.scheduler
-    scheduler_params = model.scheduler_params
-    from_logits = model.from_logits
-    clone = Model(
-        loss_fn=loss_fn,
-        optimizer=optimizer,
-        optim_params=optim_params,
-        scheduler=scheduler,
-        scheduler_params=scheduler_params,
-        from_logits=from_logits,
-    )
-    if pretrained:
-        state_dict = copy.deepcopy(model.state_dict())
-        clone.load_state_dict(state_dict)
-
-    return clone
 
 
 def get_random_targets(true_labels,
