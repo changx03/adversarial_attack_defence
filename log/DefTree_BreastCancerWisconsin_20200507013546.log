@@ -1,0 +1,64 @@
+2020-05-07 01:35:46,972:INFO:defend_tree:Start at    : 20200507013546
+2020-05-07 01:35:46,972:INFO:defend_tree:RECEIVED PARAMETERS:
+2020-05-07 01:35:46,972:INFO:defend_tree:model       :BCNN
+2020-05-07 01:35:46,972:INFO:defend_tree:dataset     :BreastCancerWisconsin
+2020-05-07 01:35:46,972:INFO:defend_tree:param file  :./cmd/AdParamsNumeral.json
+2020-05-07 01:35:46,972:INFO:defend_tree:seed        :4096
+2020-05-07 01:35:46,972:INFO:defend_tree:verbose     :True
+2020-05-07 01:35:46,972:INFO:defend_tree:save_log    :True
+2020-05-07 01:35:46,972:INFO:defend_tree:attacks     :clean, FGSM, BIM, DeepFool, Carlini
+2020-05-07 01:35:46,972:DEBUG:defend_tree:params     : {'k2': 1, 'reliability': 1.0, 'sample_ratio': 1.0, 'kappa': 6, 'confidence': 0.8, 'disable_s2': False}
+2020-05-07 01:35:46,972:DEBUG:utils:Setting random seed for PyTorch.
+2020-05-07 01:35:46,997:DEBUG:utils:/home/lukec/workspace/aad/aad/../data
+2020-05-07 01:35:46,997:DEBUG:data_container:Reading file /home/lukec/workspace/aad/aad/../data/BreastCancerWisconsin.csv
+2020-05-07 01:35:47,013:INFO:data_container:Train size: 455 - Test size: 114
+2020-05-07 01:35:47,013:INFO:data_container:Successfully load data. Time to complete: 0m 0.016s
+2020-05-07 01:35:47,013:INFO:model_container_tree:Time to complete training: 0m 0.000s
+2020-05-07 01:35:47,043:INFO:decision_tree_attack:Success rate of decision tree attack: 100.00%
+2020-05-07 01:35:47,046:DEBUG:applicability_domain:Number of input attributes: 30
+2020-05-07 01:35:47,046:DEBUG:detector_container:Time to complete [AD Stage 1]: 0m 0.000s
+2020-05-07 01:35:47,258:DEBUG:detector_container:Time to complete [AD Stage 2]: 0m 0.212s
+2020-05-07 01:35:47,259:DEBUG:applicability_domain:k for Stage 3: 12
+2020-05-07 01:35:47,262:DEBUG:applicability_domain:[AD Stage 3]: Size of train set: 455
+2020-05-07 01:35:47,405:DEBUG:applicability_domain:Train set likelihood: 0.947619
+2020-05-07 01:35:47,405:DEBUG:detector_container:Time to complete [AD Stage 3]: 0m 0.146s
+2020-05-07 01:35:47,408:INFO:defend_tree:Accuracy on DecisionTreeAttack set: 0.087719
+2020-05-07 01:35:47,409:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-05-07 01:35:47,616:DEBUG:applicability_domain:Stage 2: blocked 49 inputs
+2020-05-07 01:35:47,749:DEBUG:applicability_domain:Mean likelihood on adv: 0.923077
+2020-05-07 01:35:47,749:DEBUG:applicability_domain:Stage 3: blocked 2 inputs
+2020-05-07 01:35:47,750:INFO:defend_tree:Blocked 51/114 samples on DecisionTreeAttack
+2020-05-07 01:35:47,750:DEBUG:defend_tree:Load save/BCNN_BreastCancerWisconsin_FGSM_x.npy...
+2020-05-07 01:35:47,751:INFO:defend_tree:Accuracy on clean set: 0.912281
+2020-05-07 01:35:47,756:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-05-07 01:35:47,965:DEBUG:applicability_domain:Stage 2: blocked 13 inputs
+2020-05-07 01:35:48,115:DEBUG:applicability_domain:Mean likelihood on adv: 0.953795
+2020-05-07 01:35:48,115:DEBUG:applicability_domain:Stage 3: blocked 9 inputs
+2020-05-07 01:35:48,116:INFO:defend_tree:Blocked 22/114 samples on clean
+2020-05-07 01:35:48,116:DEBUG:defend_tree:Load save/BCNN_BreastCancerWisconsin_FGSM_adv.npy...
+2020-05-07 01:35:48,119:INFO:defend_tree:Accuracy on FGSM set: 0.421053
+2020-05-07 01:35:48,121:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-05-07 01:35:48,329:DEBUG:applicability_domain:Stage 2: blocked 66 inputs
+2020-05-07 01:35:48,449:DEBUG:applicability_domain:Mean likelihood on adv: 0.812500
+2020-05-07 01:35:48,449:DEBUG:applicability_domain:Stage 3: blocked 11 inputs
+2020-05-07 01:35:48,449:INFO:defend_tree:Blocked 77/114 samples on FGSM
+2020-05-07 01:35:48,449:DEBUG:defend_tree:Load save/BCNN_BreastCancerWisconsin_BIM_adv.npy...
+2020-05-07 01:35:48,452:INFO:defend_tree:Accuracy on BIM set: 0.043860
+2020-05-07 01:35:48,453:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-05-07 01:35:48,660:DEBUG:applicability_domain:Stage 2: blocked 114 inputs
+2020-05-07 01:35:48,661:DEBUG:applicability_domain:Stage 3: blocked 0 inputs
+2020-05-07 01:35:48,661:INFO:defend_tree:Blocked 114/114 samples on BIM
+2020-05-07 01:35:48,661:DEBUG:defend_tree:Load save/BCNN_BreastCancerWisconsin_DeepFool_adv.npy...
+2020-05-07 01:35:48,665:INFO:defend_tree:Accuracy on DeepFool set: 0.307018
+2020-05-07 01:35:48,670:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-05-07 01:35:48,877:DEBUG:applicability_domain:Stage 2: blocked 50 inputs
+2020-05-07 01:35:49,014:DEBUG:applicability_domain:Mean likelihood on adv: 0.707031
+2020-05-07 01:35:49,014:DEBUG:applicability_domain:Stage 3: blocked 26 inputs
+2020-05-07 01:35:49,014:INFO:defend_tree:Blocked 76/114 samples on DeepFool
+2020-05-07 01:35:49,015:DEBUG:defend_tree:Load save/BCNN_BreastCancerWisconsin_Carlini_adv.npy...
+2020-05-07 01:35:49,019:INFO:defend_tree:Accuracy on Carlini set: 0.456140
+2020-05-07 01:35:49,024:DEBUG:applicability_domain:Stage 1: blocked 0 inputs
+2020-05-07 01:35:49,233:DEBUG:applicability_domain:Stage 2: blocked 26 inputs
+2020-05-07 01:35:49,354:DEBUG:applicability_domain:Mean likelihood on adv: 0.816288
+2020-05-07 01:35:49,354:DEBUG:applicability_domain:Stage 3: blocked 26 inputs
+2020-05-07 01:35:49,354:INFO:defend_tree:Blocked 52/114 samples on Carlini
