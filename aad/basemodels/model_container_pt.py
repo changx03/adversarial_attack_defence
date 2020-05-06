@@ -1,4 +1,3 @@
-
 """
 This module implements the base class for PyTorch model container.
 """
@@ -213,9 +212,9 @@ class ModelContainerPT:
 
         Returns
         -------
-        prediction : numpy.ndarray
+        prediction : int
             The predicted label.
-        score : numpy.ndarray
+        score : float
             The output score. Return this only if `require_score` is True.
         """
         if len(x) == 0:
