@@ -1,3 +1,12 @@
+"""
+Full pipeline for testing Applicability Domain
+
+The following steps will repeat 100 times:
+1) Build Extra Tree model
+2) Generate Adversarial Examples using Decision Tree Attack
+3) Train Applicability Domain
+4) Blocking adversarial examples with Applicability Domain
+"""
 import argparse as ap
 import json
 import logging
@@ -15,7 +24,7 @@ from cmd_utils import get_data_container, set_logging
 LOG_NAME = 'MulTree'
 logger = logging.getLogger(LOG_NAME)
 
-MAX_ITERATION = 100
+MAX_ITERATIONS = 100
 # We don't reset random seed in every run
 
 
@@ -36,15 +45,17 @@ def experiment(data_name, params):
     mc = ModelContainerTree(classifier, dc)
     mc.fit()
 
-    # generate adversarial examples
-    x = dc.x_test
-    y = dc.y_test
-    art_classifier = SklearnClassifier(classifier)
-
     # train Applicability Domain
     ad = ApplicabilityDomainContainer(
         mc, mc.hidden_model, **params)
     ad.fit()
+
+    # no more than 1000 samples are required
+    x = dc.x_test
+    y = dc.y_test
+    if len(x) > 1000:
+        x = x[:1000]
+        y = y[:1000]
 
     accuracy = mc.evaluate(x, y)
     logger.info('Accuracy on clean: %f', accuracy)
@@ -53,6 +64,8 @@ def experiment(data_name, params):
                 len(blocked_indices), len(y))
     num_blk_clean = len(blocked_indices)
 
+    # generate adversarial examples
+    art_classifier = SklearnClassifier(classifier)
     try:
         attack = DecisionTreeAttack(art_classifier)
         adv = attack.generate(x)
@@ -76,8 +89,11 @@ def main():
         '-d', '--dataset', type=str, required=True,
         help='Name of the dataset')
     parser.add_argument(
+        '-i', '--iteration', type=int, default=MAX_ITERATIONS,
+        help='the number of iterations that the experiment will repeat')
+    parser.add_argument(
         '-p', '--param', type=str, required=True,
-        help='a JSON config file which contains the parameters for the attacks')
+        help='a JSON config file which contains the parameters for the applicability domain')
     parser.add_argument(
         '-v', '--verbose', action='store_true', default=False,
         help='set logger level to debug')
@@ -89,6 +105,7 @@ def main():
         help='overwrite the existing file')
     args = parser.parse_args()
     data_name = args.dataset
+    max_iterations = args.iteration
     param_file = args.param
     verbose = args.verbose
     save_log = args.savelog
@@ -111,6 +128,7 @@ def main():
     logger.info('Start at    :%s', get_time_str())
     logger.info('RECEIVED PARAMETERS:')
     logger.info('dataset     :%s', data_name)
+    logger.info('iterations  :%d', max_iterations)
     logger.info('param file  :%s', param_file)
     logger.info('verbose     :%r', verbose)
     logger.info('save_log    :%r', save_log)
@@ -124,7 +142,7 @@ def main():
 
     with open(result_filename, 'w') as file:
         file.write(','.join(['index', 'clean', 'DecisionTreeAttack']) + '\n')
-        for i in range(MAX_ITERATION):
+        for i in range(max_iterations):
             num_blk_clean, num_blk_adv = experiment(data_name, params)
             file.write(f'{i},{num_blk_clean},{num_blk_adv}\n')
         file.close()
