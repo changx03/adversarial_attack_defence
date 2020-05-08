@@ -132,6 +132,7 @@ class CarliniL2V2Container(AttackContainer):
             logger.info('Accuracy on clean set: %f', acc)
         else:
             x = np.copy(x)
+            count = len(x)
 
         # handle (h, w, c) to (c, h, w)
         data_type = self.model_container.data_container.data_type
