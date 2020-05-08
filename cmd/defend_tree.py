@@ -95,8 +95,8 @@ def main():
         params = json.load(param_json)
 
     # show parameters
-    print(f'[{LOG_NAME}] Running feature squeezing on {model_name}...')
-    logger.info('Start at    : %s', get_time_str())
+    print(f'[{LOG_NAME}] Running tree model...')
+    logger.info('Start at    :%s', get_time_str())
     logger.info('RECEIVED PARAMETERS:')
     logger.info('model       :%s', model_name)
     logger.info('dataset     :%s', data_name)
@@ -105,7 +105,7 @@ def main():
     logger.info('verbose     :%r', verbose)
     logger.info('save_log    :%r', save_log)
     logger.info('attacks     :%s', ', '.join(attack_list))
-    logger.debug('params     : %s', str(params))
+    logger.debug('params     :%s', str(params))
 
     # check files
     for file_name in [y_file] + attack_files:

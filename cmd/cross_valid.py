@@ -86,7 +86,7 @@ def main():
     logger.info('save_log      :%r', save_log)
     logger.info('Ignore saving :%r', does_ignore)
     logger.info('overwrite     :%r', overwrite)
-    logger.info('PARAMETERS FROM JSON FILE:')
+    logger.debug('params       :%s', str(params))
 
     # load parameters
     k_range = params['k_range']
