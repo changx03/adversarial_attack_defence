@@ -37,7 +37,6 @@ def experiment(data_name, params):
     )
 
     # train the model
-    # train the model
     classifier = ExtraTreeClassifier(
         criterion='gini',
         splitter='random',
@@ -141,7 +140,7 @@ def main():
     # identical, thus adversarial examples are also not the same.
 
     with open(result_filename, 'w') as file:
-        file.write(','.join(['index', 'clean', 'DecisionTreeAttack']) + '\n')
+        file.write(','.join(['Index', 'Clean', 'DecisionTreeAttack']) + '\n')
         for i in range(max_iterations):
             num_blk_clean, num_blk_adv = experiment(data_name, params)
             file.write(f'{i},{num_blk_clean},{num_blk_adv}\n')

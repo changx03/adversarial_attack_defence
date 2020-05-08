@@ -26,6 +26,7 @@ logger = logging.getLogger(LOG_NAME)
 # We don't reset random seed in every run
 MAX_ITERATIONS = 100
 TITLE = [
+    'Index',
     'Clean:AdvTraining',
     'Clean:Destillation',
     'Clean:Squeezing',
@@ -48,10 +49,25 @@ TITLE = [
     'C&W:AD',
 ]
 ATTACK_LIST = ['FGSM', 'BIM', 'DeepFool', 'Carlini']
+DEFENCE_LIST = ['AdvTraining', 'Destillation', 'Squeezing', 'AD']
 
 
 def experiment(index, dname, file):
-    pass
+    # select data
+    dc = get_data_container(dname, use_shuffle=True, use_normalize=True)
+
+    results = [index]
+    # train models
+    for def_name in DEFENCE_LIST:
+        print(def_name)
+
+    # generate adv. examples
+    for att_name in ATTACK_LIST:
+        print(att_name)
+
+        # run defence
+
+    file.write(','.join(results) + '\n')
 
 
 def main():
