@@ -14,7 +14,7 @@ import os
 
 import numpy as np
 
-from aad.attacks import get_attack, BIMContainer
+from aad.attacks import BIMContainer, get_attack
 from aad.basemodels import BCNN, IrisNN, ModelContainerPT
 from aad.defences import (AdversarialTraining, ApplicabilityDomainContainer,
                           DistillationContainer, FeatureSqueezing)
@@ -50,13 +50,22 @@ TITLE_RESULTS = [
     'C&W:Squeezing',
     'C&W:AD',
 ]
-ATTACK_LIST = ['FGSM', 'BIM', 'DeepFool', 'Carlini']
-TITLE_ADV = ['Test', 'Clean'] + ATTACK_LIST
+ATTACK_LIST = ['Clean', 'FGSM', 'BIM', 'DeepFool', 'Carlini']
+TITLE_ADV = ['Test'] + ATTACK_LIST
 DEFENCE_LIST = ['AdvTraining', 'Destillation', 'Squeezing', 'AD']
 ADV_TRAIN_RATIO = 0.25
 SQUEEZER_FILTER_LIST = ['binary', 'normal']
 SQUEEZER_DEPTH = 8
 SQUEEZER_SIGMA = 0.2
+
+
+def block_attack(advs, defence, def_name, blocked_res):
+    for j in range(len(ATTACK_LIST)):
+        adv = advs[j]
+        blocked_indices = defence.detect(adv, return_passed_x=False)
+        blocked_res[j*len(DEFENCE_LIST) + 2] = len(blocked_indices)
+        logger.info('%s blocks %d/%d samples on %s',
+                    def_name, len(blocked_indices), len(adv), ATTACK_LIST[j])
 
 
 def experiment(index, dname, max_epochs, adv_file, res_file):
@@ -101,9 +110,9 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
     accuracy = mc.evaluate(x, y)
     adv_res.append(accuracy)
 
-    advs = np.zeros((len(ATTACK_LIST)+1, x.shape[0], x.shape[1]),
+    advs = np.zeros((len(ATTACK_LIST), x.shape[0], x.shape[1]),
                     dtype=np.float32)
-    pred_advs = -np.ones((len(ATTACK_LIST)+1, len(y)),
+    pred_advs = -np.ones((len(ATTACK_LIST), len(y)),
                          dtype=np.int32)  # assign -1 as initial value
     pred_clean = mc.predict(x)
 
@@ -113,25 +122,29 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
     att_param_json = open(os.path.join('cmd', 'AttackParams.json'))
     att_params = json.load(att_param_json)
 
-    # TODO: result on FGSM is not correct!
     for i, att_name in enumerate(ATTACK_LIST):
+        if att_name == 'Clean':
+            continue
+
         logger.debug('[%d]Running %s attack...', i, att_name)
         kwargs = att_params[att_name]
         logger.debug('%s params: %s', att_name, str(kwargs))
         Attack = get_attack(att_name)
         attack = Attack(mc, **kwargs)
-        advs[i+1], pred_advs[i+1], _, _ = attack.generate(
+        adv, pred_adv, x_clean, pred_clean_ = attack.generate(
             use_testset=False,
-            x=x,
-        )
+            x=x)
+        assert np.all(pred_clean == pred_clean_)
+        assert np.all(x == x_clean)
         logger.info('created %d adv examples using %s from %s',
                     len(advs[i]),
                     att_name,
-                    dname,
-                    )
-        not_match = pred_advs[i] != pred_clean
-        success_rate = len(not_match[not_match == True]) / len(advs[i])
-        accuracy = mc.evaluate(advs[i], y)
+                    dname)
+        not_match = pred_adv != pred_clean
+        success_rate = len(not_match[not_match == True]) / len(pred_clean)
+        accuracy = mc.evaluate(adv, y)
+        advs[i] = adv
+        pred_advs[i] = pred_adv
         logger.info('Success rate of %s: %f', att_name, success_rate)
         logger.info('Accuracy on %s: %f', att_name, accuracy)
         adv_res.append(accuracy)
@@ -153,10 +166,7 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
             defence.fit(max_epochs=max_epochs,
                         batch_size=BATCH_SIZE,
                         ratio=ADV_TRAIN_RATIO)
-            for j in range(len(ATTACK_LIST)+1):
-                adv = advs[j]
-                blocked_indices = defence.detect(adv, return_passed_x=False)
-                blocked_res[j*len(DEFENCE_LIST) + 1] = len(blocked_indices)
+            block_attack(advs, defence, def_name, blocked_res)
         elif def_name == 'Destillation':
             if dname == 'Iris':
                 temp = 10
@@ -167,10 +177,7 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
             defence = DistillationContainer(
                 mc, distill_model, temperature=temp, pretrained=False)
             defence.fit(max_epochs=max_epochs, batch_size=BATCH_SIZE)
-            for j in range(len(ATTACK_LIST)+1):
-                adv = advs[j]
-                blocked_indices = defence.detect(adv, return_passed_x=False)
-                blocked_res[j*len(DEFENCE_LIST) + 2] = len(blocked_indices)
+            block_attack(advs, defence, def_name, blocked_res)
         elif def_name == 'Squeezing':
             defence = FeatureSqueezing(
                 mc,
@@ -180,10 +187,7 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
                 pretrained=True,
             )
             defence.fit(max_epochs=max_epochs, batch_size=BATCH_SIZE)
-            for j in range(len(ATTACK_LIST)+1):
-                adv = advs[j]
-                blocked_indices = defence.detect(adv, return_passed_x=False)
-                blocked_res[j*len(DEFENCE_LIST) + 3] = len(blocked_indices)
+            block_attack(advs, defence, def_name, blocked_res)
         elif def_name == 'AD':
             # TODO: implement AD
             pass
