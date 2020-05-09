@@ -62,9 +62,9 @@ class ApplicabilityDomainContainer(DetectorContainer):
             'disable_s2': disable_s2,
         }
         self.device = model_container.device
-        dc = model_container.data_container
-        self.num_classes = dc.num_classes
-        self.data_type = dc.data_type
+        data_container = model_container.data_container
+        self.num_classes = data_container.num_classes
+        self.data_type = data_container.data_type
 
         if hidden_model is not None:
             self.hidden_model = hidden_model
@@ -86,10 +86,9 @@ class ApplicabilityDomainContainer(DetectorContainer):
         self._s2_thresholds = np.zeros_like(self._s2_means)
         self._s3_likelihood = None
 
-        dc = self.model_container.data_container
-        x_train = dc.x_train
+        x_train = data_container.x_train
         self.encode_train_np = self.preprocessing_(x_train)
-        self.y_train_np = dc.y_train
+        self.y_train_np = data_container.y_train
         self.num_components = self.encode_train_np.shape[1]
         logger.debug('Number of input attributes: %d', self.num_components)
 
@@ -334,7 +333,7 @@ class ApplicabilityDomainContainer(DetectorContainer):
                 continue
 
             x = passed_adv[inclass_indices]
-            neigh_dist, neigh_indices = model.kneighbors(
+            neigh_dist, _ = model.kneighbors(
                 x, n_neighbors=k2, return_distance=True)
             mean = np.mean(neigh_dist, axis=1)
             sub_blocked_indices = np.where(mean > threshold)[0]

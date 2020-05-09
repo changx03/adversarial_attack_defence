@@ -19,7 +19,7 @@ from aad.basemodels import BCNN, IrisNN, ModelContainerPT
 from aad.defences import (AdversarialTraining, ApplicabilityDomainContainer,
                           DistillationContainer, FeatureSqueezing)
 from aad.utils import get_time_str, name_handler
-from cmd_utils import get_data_container, parse_model_filename, set_logging
+from cmd_utils import get_data_container, set_logging
 
 LOG_NAME = 'Mul'
 logger = logging.getLogger(LOG_NAME)
@@ -57,6 +57,7 @@ ADV_TRAIN_RATIO = 0.25
 SQUEEZER_FILTER_LIST = ['binary', 'normal']
 SQUEEZER_DEPTH = 8
 SQUEEZER_SIGMA = 0.2
+AD_PARAM_FILE = os.path.join('cmd', 'AdParamsNumeral.json')
 
 
 def block_attack(advs, defence, def_name, blocked_res):
@@ -123,6 +124,7 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
     att_params = json.load(att_param_json)
 
     for i, att_name in enumerate(ATTACK_LIST):
+        # Clean set is only used in evaluation phase.
         if att_name == 'Clean':
             continue
 
@@ -166,7 +168,6 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
             defence.fit(max_epochs=max_epochs,
                         batch_size=BATCH_SIZE,
                         ratio=ADV_TRAIN_RATIO)
-            block_attack(advs, defence, def_name, blocked_res)
         elif def_name == 'Destillation':
             if dname == 'Iris':
                 temp = 10
@@ -177,7 +178,6 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
             defence = DistillationContainer(
                 mc, distill_model, temperature=temp, pretrained=False)
             defence.fit(max_epochs=max_epochs, batch_size=BATCH_SIZE)
-            block_attack(advs, defence, def_name, blocked_res)
         elif def_name == 'Squeezing':
             defence = FeatureSqueezing(
                 mc,
@@ -187,10 +187,16 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
                 pretrained=True,
             )
             defence.fit(max_epochs=max_epochs, batch_size=BATCH_SIZE)
-            block_attack(advs, defence, def_name, blocked_res)
         elif def_name == 'AD':
-            # TODO: implement AD
-            pass
+            ad_param_file = open(AD_PARAM_FILE)
+            ad_params = json.load(ad_param_file)
+            defence = ApplicabilityDomainContainer(
+                mc,
+                hidden_model=model.hidden_model,
+                **ad_params)
+            defence.fit()
+        # preform blocking
+        block_attack(advs, defence, def_name, blocked_res)
 
     res_file.write(','.join([str(r) for r in blocked_res]) + '\n')
 
@@ -230,11 +236,11 @@ def main():
     set_logging(LOG_NAME, dname, verbose, save_log)
 
     print('[{}] Start experiment on {}...'.format(LOG_NAME, dname))
-    logger.info('Start at      : %s', get_time_str())
+    logger.info('Start at    :%s', get_time_str())
     logger.info('RECEIVED PARAMETERS:')
-    logger.info('dataset    :%s', dname)
+    logger.info('dataset     :%s', dname)
     logger.info('iterations  :%d', max_iterations)
-    logger.info('max_epochs    :%d', max_epochs)
+    logger.info('max_epochs  :%d', max_epochs)
     logger.info('verbose     :%r', verbose)
     logger.info('save_log    :%r', save_log)
     logger.info('overwrite   :%r', overwrite)
@@ -261,10 +267,8 @@ def main():
     res_file.close()
 
 
+# Examples:
+# python ./cmd/multi_numeric.py -vl -i 3 -e 200 -d Iris
 if __name__ == '__main__':
-    """
-    Examples:
-    $ python ./cmd/multi_numeric.py -vl -i 3 -e 200 -d Iris
-    """
     main()
     print(f'[{LOG_NAME}] Task completed!')
