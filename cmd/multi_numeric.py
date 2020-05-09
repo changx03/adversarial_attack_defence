@@ -11,6 +11,7 @@ import argparse as ap
 import json
 import logging
 import os
+import time
 
 import numpy as np
 
@@ -262,7 +263,15 @@ def main():
     res_file = open(result_file, 'w')
     res_file.write(','.join(TITLE_RESULTS) + '\n')
     for i in range(max_iterations):
+        since = time.time()
         experiment(i, dname, max_epochs, adv_file, res_file)
+        time_elapsed = time.time() - since
+        print('Completed [{}/{}]: {:d}m{:2.1f}s'.format(
+            i,
+            max_iterations,
+            int(time_elapsed // 60),
+            time_elapsed % 60))
+
     adv_file.close()
     res_file.close()
 
