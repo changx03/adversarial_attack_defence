@@ -61,11 +61,11 @@ SQUEEZER_SIGMA = 0.2
 AD_PARAM_FILE = os.path.join('cmd', 'AdParamsNumeral.json')
 
 
-def block_attack(advs, defence, def_name, blocked_res):
+def block_attack(offset, advs, defence, def_name, blocked_res):
     for j in range(len(ATTACK_LIST)):
         adv = advs[j]
         blocked_indices = defence.detect(adv, return_passed_x=False)
-        blocked_res[j*len(DEFENCE_LIST) + 2] = len(blocked_indices)
+        blocked_res[j*len(DEFENCE_LIST) + offset + 1] = len(blocked_indices)
         logger.info('%s blocks %d/%d samples on %s',
                     def_name, len(blocked_indices), len(adv), ATTACK_LIST[j])
 
@@ -169,6 +169,7 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
             defence.fit(max_epochs=max_epochs,
                         batch_size=BATCH_SIZE,
                         ratio=ADV_TRAIN_RATIO)
+            block_attack(0, advs, defence, def_name, blocked_res)
         elif def_name == 'Destillation':
             if dname == 'Iris':
                 temp = 10
@@ -179,6 +180,7 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
             defence = DistillationContainer(
                 mc, distill_model, temperature=temp, pretrained=False)
             defence.fit(max_epochs=max_epochs, batch_size=BATCH_SIZE)
+            block_attack(1, advs, defence, def_name, blocked_res)
         elif def_name == 'Squeezing':
             defence = FeatureSqueezing(
                 mc,
@@ -188,6 +190,7 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
                 pretrained=True,
             )
             defence.fit(max_epochs=max_epochs, batch_size=BATCH_SIZE)
+            block_attack(2, advs, defence, def_name, blocked_res)
         elif def_name == 'AD':
             ad_param_file = open(AD_PARAM_FILE)
             ad_params = json.load(ad_param_file)
@@ -196,8 +199,7 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
                 hidden_model=model.hidden_model,
                 **ad_params)
             defence.fit()
-        # preform blocking
-        block_attack(advs, defence, def_name, blocked_res)
+            block_attack(3, advs, defence, def_name, blocked_res)
 
     res_file.write(','.join([str(r) for r in blocked_res]) + '\n')
 
@@ -266,8 +268,9 @@ def main():
         since = time.time()
         experiment(i, dname, max_epochs, adv_file, res_file)
         time_elapsed = time.time() - since
-        print('Completed [{}/{}]: {:d}m{:2.1f}s'.format(
-            i,
+        print('Completed {} [{}/{}]: {:d}m {:2.1f}s'.format(
+            dname,
+            i+1,
             max_iterations,
             int(time_elapsed // 60),
             time_elapsed % 60))
@@ -278,6 +281,7 @@ def main():
 
 # Examples:
 # python ./cmd/multi_numeric.py -vl -i 3 -e 200 -d Iris
+# python ./cmd/multi_numeric.py -l -i 3 -e 200 -d Iris
 if __name__ == '__main__':
     main()
     print(f'[{LOG_NAME}] Task completed!')
