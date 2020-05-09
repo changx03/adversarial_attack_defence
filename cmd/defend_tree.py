@@ -162,14 +162,12 @@ def main():
                     len(blocked_indices), len(adv), adv_name)
 
 
+# Examples:
+# python ./cmd/defend_tree.py -v -p ./cmd/AdParamsNumeral.json -d Iris -BCDF
+# python ./cmd/defend_tree.py -v -p ./cmd/AdParamsNumeral.json -d BreastCancerWisconsin -BCDF
+# python ./cmd/defend_tree.py -v -p ./cmd/AdParamsNumeral.json -d BankNote -BCDF
+# python ./cmd/defend_tree.py -v -p ./cmd/AdParamsNumeral.json -d HTRU2 -BCDF
+# python ./cmd/defend_tree.py -v -p ./cmd/AdParamsNumeral.json -d WheatSeed -BCDF
 if __name__ == '__main__':
-    """
-    Examples:
-    $ python ./cmd/defend_tree.py -v -p ./cmd/AdParamsNumeral.json -d Iris -BCDF
-    $ python ./cmd/defend_tree.py -v -p ./cmd/AdParamsNumeral.json -d BreastCancerWisconsin -BCDF
-    $ python ./cmd/defend_tree.py -v -p ./cmd/AdParamsNumeral.json -d BankNote -BCDF
-    $ python ./cmd/defend_tree.py -v -p ./cmd/AdParamsNumeral.json -d HTRU2 -BCDF
-    $ python ./cmd/defend_tree.py -v -p ./cmd/AdParamsNumeral.json -d WheatSeed -BCDF
-    """
     main()
     print(f'[{LOG_NAME}] Task completed!')

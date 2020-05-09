@@ -147,14 +147,12 @@ def main():
         file.close()
 
 
+# Examples:
+# python ./cmd/multi_tree.py -vl -p ./cmd/AdParamsNumeral.json -d Iris
+# python ./cmd/multi_tree.py -vl -p ./cmd/AdParamsNumeral.json -d BankNote
+# python ./cmd/multi_tree.py -vl -p ./cmd/AdParamsNumeral.json -d WheatSeed
+# python ./cmd/multi_tree.py -vl -p ./cmd/AdParamsNumeral.json -d HTRU2
+# python ./cmd/multi_tree.py -vl -p ./cmd/AdParamsNumeral.json -d BreastCancerWisconsin
 if __name__ == '__main__':
-    """
-    Examples:
-    $ python ./cmd/multi_tree.py -vl -p ./cmd/AdParamsNumeral.json -d Iris
-    $ python ./cmd/multi_tree.py -vl -p ./cmd/AdParamsNumeral.json -d BankNote
-    $ python ./cmd/multi_tree.py -vl -p ./cmd/AdParamsNumeral.json -d WheatSeed
-    $ python ./cmd/multi_tree.py -vl -p ./cmd/AdParamsNumeral.json -d HTRU2
-    $ python ./cmd/multi_tree.py -vl -p ./cmd/AdParamsNumeral.json -d BreastCancerWisconsin
-    """
     main()
     print(f'[{LOG_NAME}] Task completed!')

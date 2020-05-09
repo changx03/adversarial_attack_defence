@@ -217,13 +217,10 @@ def main():
                     len(blocked_indices), len(adv), adv_name)
 
 
+# Examples:
+# python ./cmd/defend_squeeze.py -v -e 50 -d 8 --sigma 0.2 -k 3 -m ./save/MnistCnnV2_MNIST_e50.pt -FBDCS
+# python ./cmd/defend_squeeze.py -v -e 50 -d 8 --sigma 0.2 -k 3 -m ./save/CifarCnn_CIFAR10_e50.pt -FBDCS
+# python ./cmd/defend_squeeze.py -v -e 50 -d 8 --sigma 0.2 -k 3 -m ./save/CifarCnn_SVHN_e50.pt -FBDCS
 if __name__ == '__main__':
-    """
-    Examples:
-    $ python ./cmd/defend_squeeze.py -v -e 50 -d 8 --sigma 0.2 -k 3 -m ./save/MnistCnnV2_MNIST_e50.pt -FBDCS
-    $ python ./cmd/defend_squeeze.py -v -e 50 -d 8 --sigma 0.2 -k 3 -m ./save/CifarCnn_CIFAR10_e50.pt -FBDCS
-    $ python ./cmd/defend_squeeze.py -v -e 50 -d 8 --sigma 0.2 -k 3 -m ./save/CifarCnn_SVHN_e50.pt -FBDCS
-    """
-
     main()
     print(f'[{LOG_NAME}] Task completed!')

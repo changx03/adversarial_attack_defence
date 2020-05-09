@@ -186,18 +186,16 @@ def main():
                     len(blocked_indices), len(adv), adv_name)
 
 
+# Examples:
+# python ./cmd/defend_distill.py -vl -t 20 -e 200 -m ./save/IrisNN_Iris_e200.pt -BCDF
+# python ./cmd/defend_distill.py -vl -t 20 -e 200 -m ./save/BCNN_BreastCancerWisconsin_e200.pt  -BCDF
+# python ./cmd/defend_distill.py -vl -t 20 -e 200 -m ./save/IrisNN_BankNote_e200.pt  -BCDF
+# python ./cmd/defend_distill.py -vl -t 20 -e 200 -m ./save/IrisNN_HTRU2_e200.pt  -BCDF
+# python ./cmd/defend_distill.py -vl -t 20 -e 300 -m ./save/IrisNN_WheatSeed_e300.pt  -BCDF
+# python ./cmd/defend_distill.py -vl -t 20 -e 50 -m ./save/MnistCnnV2_MNIST_e50.pt  -BCDFS
+# python ./cmd/defend_distill.py -vl -t 20 -e 50 -m ./save/CifarCnn_CIFAR10_e50.pt  -BCDFS
+# python ./cmd/defend_distill.py -vl -t 20 -e 50 -m ./save/CifarResnet50_CIFAR10_e50.pt  -BCDFS
+# python ./cmd/defend_distill.py -vl -t 20 -e 50 -m ./save/CifarResnet50_SVHN_e50.pt  -BCDFS
 if __name__ == '__main__':
-    """
-    Examples:
-    $ python ./cmd/defend_distill.py -vl -t 20 -e 200 -m ./save/IrisNN_Iris_e200.pt -BCDF
-    $ python ./cmd/defend_distill.py -vl -t 20 -e 200 -m ./save/BCNN_BreastCancerWisconsin_e200.pt  -BCDF
-    $ python ./cmd/defend_distill.py -vl -t 20 -e 200 -m ./save/IrisNN_BankNote_e200.pt  -BCDF
-    $ python ./cmd/defend_distill.py -vl -t 20 -e 200 -m ./save/IrisNN_HTRU2_e200.pt  -BCDF
-    $ python ./cmd/defend_distill.py -vl -t 20 -e 300 -m ./save/IrisNN_WheatSeed_e300.pt  -BCDF
-    $ python ./cmd/defend_distill.py -vl -t 20 -e 50 -m ./save/MnistCnnV2_MNIST_e50.pt  -BCDFS
-    $ python ./cmd/defend_distill.py -vl -t 20 -e 50 -m ./save/CifarCnn_CIFAR10_e50.pt  -BCDFS
-    $ python ./cmd/defend_distill.py -vl -t 20 -e 50 -m ./save/CifarResnet50_CIFAR10_e50.pt  -BCDFS
-    $ python ./cmd/defend_distill.py -vl -t 20 -e 50 -m ./save/CifarResnet50_SVHN_e50.pt  -BCDFS
-    """
     main()
     print(f'[{LOG_NAME}] Task completed!')

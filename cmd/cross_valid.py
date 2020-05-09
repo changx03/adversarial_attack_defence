@@ -11,7 +11,7 @@ from aad.basemodels import ModelContainerPT, get_model
 from aad.datasets import DATASET_LIST, DataContainer
 from aad.defences import ApplicabilityDomainContainer
 from aad.utils import get_data_path, get_time_str, master_seed, name_handler
-from cmd_utils import get_data_container, parse_model_filename, set_logging
+from cmd_utils import parse_model_filename, set_logging
 from cross_valid_core import CrossValidation
 
 logger = logging.getLogger('CV')
@@ -187,11 +187,9 @@ def main():
         cross_validation.save(file_name)
 
 
+# Examples:
+# python ./cmd/cross_valid.py -vl -m ./save/IrisNN_Iris_e200.pt -p ./cmd/CvParams_iris.json -a IrisNN_Iris_Carlini_adv.npy
+# python ./cmd/cross_valid.py -vl -m ./save/CifarResnet50_CIFAR10_e30.pt -p ./cmd/CvParams_cifar.json
 if __name__ == '__main__':
-    """
-    Examples:
-    $ python ./cmd/cross_valid.py -vl -m ./save/IrisNN_Iris_e200.pt -p ./cmd/CvParams_iris.json -a IrisNN_Iris_Carlini_adv.npy
-    $ python ./cmd/cross_valid.py -vl -m ./save/CifarResnet50_CIFAR10_e30.pt -p ./cmd/CvParams_cifar.json
-    """
     main()
     print('[cv] Task completed!')

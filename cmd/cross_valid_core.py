@@ -1,3 +1,6 @@
+"""
+A module for computing the parameters for Applicability Domain using cross-validation.
+"""
 import logging
 import os
 import time
