@@ -19,7 +19,8 @@
     "initial_const": 1e-3,
     "c_range": [0, 1e10],
     "abort_early": false,
-    "batch_size": 64
+    "batch_size": 64,
+    "check_prob": false
   },
   "DeepFool": {
     "max_iter": 100,

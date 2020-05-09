@@ -34,7 +34,8 @@ class CarliniL2V2Container(AttackContainer):
                  c_range=(0, 1e10),
                  abort_early=True,
                  batch_size=32,
-                 clip_values=None):
+                 clip_values=None,
+                 check_prob=True):
         """
         Create an instance of Carlini and Wagner L2-norm attack Container.
 
@@ -58,6 +59,8 @@ class CarliniL2V2Container(AttackContainer):
             The size of a mini-batch.
         clip_values : tuple
             The clipping lower bound and upper bound for adversarial examples.
+        check_prob : bool
+            The score should not use softmax probability! Turn is off, if you know what you are doing.
         """
         super(CarliniL2V2Container, self).__init__(model_container)
 
@@ -85,6 +88,7 @@ class CarliniL2V2Container(AttackContainer):
         }
 
         self.confidence = confidence
+        self.check_prob = check_prob
 
     def generate(self, count=1000, use_testset=True, x=None, targets=None, **kwargs):
         """
@@ -404,7 +408,8 @@ class CarliniL2V2Container(AttackContainer):
         # The softmax is stripped out from this model.
         model = self.model_container.model
         adv_outputs = model(advs)
-        if torch.equal(
+
+        if self.check_prob and torch.equal(
                 torch.round(adv_outputs.sum(1)),
                 torch.ones(len(adv_outputs)).to(device)):
             raise ValueError(
