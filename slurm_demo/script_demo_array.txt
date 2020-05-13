@@ -1,0 +1,2 @@
+python ./aad/cmd/train.py -d BreastCancerWisconsin -e 200 -vwl
+python ./aad/cmd/train.py -d HTRU2 -e 200 -vwl
