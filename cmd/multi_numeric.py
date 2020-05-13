@@ -25,6 +25,8 @@ from cmd_utils import get_data_container, set_logging
 LOG_NAME = 'Mul'
 logger = logging.getLogger(LOG_NAME)
 
+DIR_PATH = os.path.dirname(os.path.realpath(__file__))
+
 # We don't reset random seed in every run
 MAX_ITERATIONS = 100
 BATCH_SIZE = 64  # 128 has some funny effects when the training set is just above it, eg: 150
@@ -58,7 +60,7 @@ ADV_TRAIN_RATIO = 0.25
 SQUEEZER_FILTER_LIST = ['binary', 'normal']
 SQUEEZER_DEPTH = 8
 SQUEEZER_SIGMA = 0.2
-AD_PARAM_FILE = os.path.join('cmd', 'AdParamsNumeral.json')
+AD_PARAM_FILE = os.path.join(DIR_PATH, 'AdParamsNumeral.json')
 
 
 def block_attack(offset, advs, defence, def_name, blocked_res):
@@ -121,7 +123,7 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
     advs[0] = x
     pred_advs[0] = pred_clean
 
-    att_param_json = open(os.path.join('cmd', 'AttackParams.json'))
+    att_param_json = open(os.path.join(DIR_PATH, 'AttackParams.json'))
     att_params = json.load(att_param_json)
 
     for i, att_name in enumerate(ATTACK_LIST):
