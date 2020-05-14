@@ -1,0 +1,5 @@
+python ./aad/cmd/multi_numeric.py -l -i 20 -e 200 -d BreastCancerWisconsin
+python ./aad/cmd/multi_numeric.py -l -i 20 -e 200 -d BreastCancerWisconsin
+python ./aad/cmd/multi_numeric.py -l -i 20 -e 200 -d BreastCancerWisconsin
+python ./aad/cmd/multi_numeric.py -l -i 20 -e 200 -d BreastCancerWisconsin
+python ./aad/cmd/multi_numeric.py -l -i 20 -e 200 -d BreastCancerWisconsin
