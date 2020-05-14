@@ -195,7 +195,12 @@ def experiment(index, dname, max_epochs, adv_file, res_file):
             block_attack(2, advs, defence, def_name, blocked_res)
         elif def_name == 'AD':
             ad_param_file = open(AD_PARAM_FILE)
+            # BreastCancer uses a different set of parameters
+            if dname == 'BreastCancerWisconsin':
+                param_file = os.path.join(DIR_PATH, 'AdParamsBC.json')
+                ad_param_file = open(param_file)
             ad_params = json.load(ad_param_file)
+            logger.debug('AD params: %s', str(ad_params))
             defence = ApplicabilityDomainContainer(
                 mc,
                 hidden_model=model.hidden_model,
@@ -284,6 +289,7 @@ def main():
 # Examples:
 # python ./cmd/multi_numeric.py -vl -i 3 -e 200 -d Iris
 # python ./cmd/multi_numeric.py -l -i 3 -e 200 -d Iris
+# python ./cmd/multi_numeric.py -l -i 10 -e 200 -d BreastCancerWisconsin
 if __name__ == '__main__':
     main()
     print(f'[{LOG_NAME}] Task completed!')
