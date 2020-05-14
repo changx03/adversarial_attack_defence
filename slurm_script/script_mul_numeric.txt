@@ -1,0 +1,5 @@
+python ./aad/cmd/multi_numeric.py -l -i 100 -e 200 -d Iris
+python ./aad/cmd/multi_numeric.py -l -i 100 -e 200 -d BankNote
+python ./aad/cmd/multi_numeric.py -l -i 100 -e 300 -d WheatSeed
+python ./aad/cmd/multi_numeric.py -l -i 100 -e 200 -d HTRU2
+python ./aad/cmd/multi_numeric.py -l -i 100 -e 200 -d BreastCancerWisconsin

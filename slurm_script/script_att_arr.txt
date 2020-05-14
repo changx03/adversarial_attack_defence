@@ -1,0 +1,6 @@
+python ./aad/cmd/attack.py -m ./save/MnistCnnV2_MNIST_e50.pt -p ./aad/cmd/AttackParams.json -lvw -BCDFS
+python ./aad/cmd/attack.py -m ./save/CifarCnn_CIFAR10_e50.pt -p ./aad/cmd/AttackParams.json -lvw -BCDFS
+python ./aad/cmd/attack.py -m ./save/CifarResnet50_CIFAR10_e50.pt -p ./aad/cmd/AttackParams.json -lvw -BCDFS
+python ./aad/cmd/attack.py -m ./save/CifarCnn_SVHN_e50.pt -p ./aad/cmd/AttackParams.json -lvw -BCDFS
+python ./aad/cmd/attack.py -m ./save/CifarResnet50_SVHN_e50.pt -p ./aad/cmd/AttackParams.json -lvw -BCDFS
+python ./aad/cmd/attack.py -m ./save/BCNN_BreastCancerWisconsin_e200.pt -p ./aad/cmd/AttackParams.json -lvw -BCDF

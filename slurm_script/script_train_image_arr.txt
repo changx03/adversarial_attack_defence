@@ -1,0 +1,5 @@
+python ./aad/cmd/train.py -d MNIST -e 50 -lvw
+python ./aad/cmd/train.py -d CIFAR10 -m CifarCnn -e 50 -vwl
+python ./aad/cmd/train.py -d CIFAR10 -m CifarResnet50 -e 50 -vwl
+python ./aad/cmd/train.py -d SVHN -m CifarCnn -e 50 -vwl
+python ./aad/cmd/train.py -d SVHN -m CifarResnet50 -e 50 -vwl
