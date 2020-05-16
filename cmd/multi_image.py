@@ -244,13 +244,13 @@ def main():
     logger.info('save_log    :%r', save_log)
     logger.info('overwrite   :%r', overwrite)
 
-    result_file = name_handler(
-        os.path.join('save', f'{LOG_NAME}_{dname}_i{max_iterations}'),
+    adv_file = name_handler(
+        os.path.join('save', f'{LOG_NAME}_{dname}_{mname}_acc'),
         'csv',
         overwrite=overwrite)
-
-    adv_file = name_handler(
-        os.path.join('save', f'{LOG_NAME}_{dname}_AdvExamples'),
+    result_file = name_handler(
+        os.path.join(
+            'save', f'{LOG_NAME}_{dname}_{mname}_res_i{max_iterations}'),
         'csv',
         overwrite=overwrite)
 
