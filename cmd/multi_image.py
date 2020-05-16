@@ -29,7 +29,7 @@ DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 
 # We don't reset random seed in every run
 MAX_ITERATIONS = 100
-BATCH_SIZE = 128
+BATCH_SIZE = 64
 TITLE_RESULTS = [
     'Index',
     'Clean:AdvTraining',
