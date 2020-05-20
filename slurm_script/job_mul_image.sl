@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #SBATCH --job-name=mul_image
 #SBATCH --output=slurm_log/%x_%j.out
-#SBATCH --time=20:00:00
+#SBATCH --time=80:00:00
 #SBATCH --mem=8G
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
