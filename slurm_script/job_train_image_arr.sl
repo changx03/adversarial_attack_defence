@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #SBATCH --job-name=train_image_arr
 #SBATCH --output=slurm_log/%x_%j.out
-#SBATCH --time=04:00:00
+#SBATCH --time=10:00:00
 #SBATCH --mem=8G
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
