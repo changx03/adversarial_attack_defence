@@ -220,9 +220,10 @@ class DataContainer:
 
         if normalize:
             (xmin, xmax) = self._data_range
-            mean = self._train_mean
-            x_train = scale_normalize(x_train, xmin, xmax, mean)
-            x_test = scale_normalize(x_test, xmin, xmax, mean)
+            # NOTE: Carlini attack expects the data in range [0, 1]
+            # mean = self._train_mean
+            x_train = scale_normalize(x_train, xmin, xmax, mean=None)
+            x_test = scale_normalize(x_test, xmin, xmax, mean=None)
 
         # to numpy array
         # NOTE: Only handle numeral data

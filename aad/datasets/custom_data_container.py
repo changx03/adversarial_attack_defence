@@ -70,8 +70,9 @@ class CustomDataContainer(DataContainer):
 
         if normalize:
             (xmin, xmax) = self._data_range
-            mean = self._train_mean
+            # NOTE: Carlini attack expects the data in range [0, 1]
+            # mean = self._train_mean
             self._x_train_np = scale_normalize(
-                self._x_train_np, xmin, xmax, mean)
+                self._x_train_np, xmin, xmax, mean=None)
             self._x_test_np = scale_normalize(
-                self._x_test_np, xmin, xmax, mean)
+                self._x_test_np, xmin, xmax, mean=None)

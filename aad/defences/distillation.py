@@ -10,7 +10,7 @@ import torch
 import torch.nn as nn
 
 from ..basemodels import ModelContainerPT
-from ..datasets import DATASET_LIST, DataContainer
+from ..datasets import DATASET_LIST, DataContainer, get_synthetic_dataset_dict
 from ..utils import get_data_path, is_probability
 from .detector_container import DetectorContainer
 
@@ -53,11 +53,11 @@ class DistillationContainer(DetectorContainer):
             raise ValueError('Distillation model must be a new instance.')
 
         # check if the model produces probability outputs
-        dc = self.model_container.data_container
+        base_dc = self.model_container.data_container
         accuracy = self.model_container.evaluate(
-            dc.x_test, dc.y_test)
+            base_dc.x_test, base_dc.y_test)
         logger.debug('Test set accuracy on pre-trained model: %f', accuracy)
-        score_train = self.model_container.get_score(dc.x_train)
+        score_train = self.model_container.get_score(base_dc.x_train)
         are_probability = np.all([is_probability(yy) for yy in score_train])
         # We do NOT need soft label for test set.
         # NOTE: What about missclassification?
@@ -68,16 +68,24 @@ class DistillationContainer(DetectorContainer):
             prob_train = score_train
 
         labels = np.argmax(prob_train, axis=1)
-        correct = len(np.where(labels == dc.y_train)[0])
+        correct = len(np.where(labels == base_dc.y_train)[0])
         logger.debug('Accuracy of smooth labels: %f',
-                     correct / len(dc.y_train))
+                     correct / len(base_dc.y_train))
 
         # create new data container and replace the label to smooth probability
-        dataset_name = dc.name
-        dc = DataContainer(DATASET_LIST[dataset_name], get_data_path())
-        dc(shuffle=False)
+        dataset_name = base_dc.name
+        # handle synthetic dataset
+        if dataset_name == 'Synthetic':
+            data_dict = get_synthetic_dataset_dict(
+                len(base_dc), base_dc.num_classes, base_dc.dim_data[0])
+            dc = DataContainer(data_dict, get_data_path())
+            dc.x_test = np.copy(base_dc.x_test)
+            dc.y_test = np.copy(base_dc.y_test)
+        else:
+            dc = DataContainer(DATASET_LIST[dataset_name], get_data_path())
+            dc(shuffle=False)
         # prevent the train set permutate.
-        dc.x_train = self.model_container.data_container.x_train
+        dc.x_train = np.copy(base_dc.x_train)
         dc.y_train = prob_train
 
         # load pre-trained parameters

@@ -70,7 +70,8 @@ class CarliniL2V2Container(AttackContainer):
         dmin = np.min(data)
         if dmax > 1.0 or dmin < 0.0:
             logger.warning(
-                'The data may not normalised. Consider using a normalised dataset.')
+                'The data is range [%f, %f]. Consider using a normalised dataset.',
+                dmin, dmax)
 
         if clip_values is None:
             clip_values = get_range(dc.x_train, dc.data_type == 'image')
