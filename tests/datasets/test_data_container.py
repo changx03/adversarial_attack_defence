@@ -5,7 +5,7 @@ import unittest
 import numpy as np
 
 from aad.datasets import (DATASET_LIST, DataContainer, get_sample_mean,
-                          get_sample_std)
+                          get_sample_std, get_synthetic_dataset_dict)
 from aad.utils import (get_data_path, master_seed, onehot_encoding,
                        swap_image_channel)
 
@@ -484,6 +484,17 @@ class TestDataContainer(unittest.TestCase):
         label_shape = list(y_train.shape)
         label_shape[0] = len(y_train) + len(y_test)
         self.assertTupleEqual(y_all.shape, tuple(label_shape))
+
+    def test_synthetic_dict(self):
+        dataset_dict = get_synthetic_dataset_dict(100, 10, 20)
+        expectation = {
+            'name': 'Synthetic',
+            'type': 'numeric',
+            'size': 100,
+            'num_classes': 10,
+            'dim_data': (20,),
+        }
+        self.assertDictEqual(dataset_dict, expectation)
 
 
 if __name__ == '__main__':

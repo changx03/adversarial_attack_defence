@@ -83,6 +83,10 @@ class DataContainer:
         is_image = self._data_type == 'image'
         self._data_range = get_range(self._x_train_np, is_image=is_image)
 
+        # update mean and mu
+        self._train_mean = self._x_train_np.mean(axis=0)
+        self._train_std = self._x_train_np.std(axis=0)
+
     @property
     def y_train(self):
         return self._y_train_np
@@ -133,10 +137,13 @@ class DataContainer:
             self._train_mean = get_sample_mean(self.name)
             self._train_std = get_sample_std(self.name)
         else:
-            self._prepare_numeric_data(
-                shuffle, normalize, size_train)
-            self._train_mean = self._x_train_np.mean(axis=0)
-            self._train_std = self._x_train_np.std(axis=0)
+            if self.name is not 'Synthetic':
+                self._prepare_numeric_data(
+                    shuffle, normalize, size_train)
+                self._train_mean = self._x_train_np.mean(axis=0)
+                self._train_std = self._x_train_np.std(axis=0)
+            else:
+                logger.warning('Load the synthetic data from external source before proceed.')
 
         time_elapsed = time.time() - since
 

@@ -96,3 +96,16 @@ def get_sample_std(dataset_name):
         return STD_LOOKUP[dataset_name]
     logger.warning('%s is not in the lookup', dataset_name)
     return [1.]
+
+
+def get_synthetic_dataset_dict(size, num_classes, num_attributes):
+    """
+    Get the dictionary of the synthetic dataset.
+    """
+    return {
+        'name': 'Synthetic',
+        'type': 'numeric',
+        'size': size,
+        'num_classes': num_classes,
+        'dim_data': (num_attributes,),
+    }
