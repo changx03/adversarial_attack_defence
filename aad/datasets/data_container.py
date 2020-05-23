@@ -216,7 +216,7 @@ class DataContainer:
         x_train, y_train, x_test, y_test = self._split_dataframe2np(size_train)
 
         if normalize:
-            (xmin, xmax) = self.data_range
+            (xmin, xmax) = get_range(x_train, is_image=False)
             # NOTE: Carlini attack expects the data in range [0, 1]
             # mean = self._train_mean
             x_train = scale_normalize(x_train, xmin, xmax, mean=None)

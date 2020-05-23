@@ -48,7 +48,7 @@ def master_seed(seed):
 
 def get_range(data, is_image=False):
     """Returns (min, max) of a numpy array."""
-    assert type(data) == np.ndarray
+    assert isinstance(data, np.ndarray), '{} is not a numpy array'.format(type(data))
 
     axis = None if is_image else 0
     x_max = np.max(data, axis=axis)

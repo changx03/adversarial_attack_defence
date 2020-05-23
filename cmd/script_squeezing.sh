@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # chmod +x ./cmd/script_squeezing.sh
 
 # echo "start MNIST..."

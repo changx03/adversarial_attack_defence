@@ -31,6 +31,9 @@ def get_data_container(dname, use_shuffle=True, use_normalize=True):
         dc(shuffle=use_shuffle, normalize=use_normalize, size_train=0.6)
     elif dname in ('BankNote', 'BreastCancerWisconsin', 'HTRU2', 'WheatSeed'):
         dc(shuffle=use_shuffle, normalize=use_normalize)
+    elif dname == 'Synthetic':
+        # No function call for synthetic
+        return dc
     else:
         raise AttributeError('Received unknown dataset "{}"'.format(dname))
     return dc
