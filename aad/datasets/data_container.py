@@ -22,6 +22,10 @@ logger = logging.getLogger(__name__)
 
 
 class DataContainer:
+    """
+    DataContainer class provides utility methods for fetching and manipulating the dataset.
+    """
+
     def __init__(self, dataset_dict, path=None):
         self.name = dataset_dict['name']
         self._data_type = dataset_dict['type']
@@ -31,7 +35,6 @@ class DataContainer:
         self._train_mean = None
         self._train_std = None
         self._dataframe = None
-        self._data_range = None
         self._x_train_np = None
         self._y_train_np = None
         self._x_test_np = None
@@ -71,7 +74,8 @@ class DataContainer:
 
     @property
     def data_range(self):
-        return self._data_range
+        is_image = self._data_type == 'image'
+        return get_range(self._x_train_np, is_image=is_image)
 
     @property
     def x_train(self):
@@ -80,9 +84,6 @@ class DataContainer:
     @x_train.setter
     def x_train(self, x):
         self._x_train_np = x
-        is_image = self._data_type == 'image'
-        self._data_range = get_range(self._x_train_np, is_image=is_image)
-
         # update mean and mu
         self._train_mean = self._x_train_np.mean(axis=0)
         self._train_std = self._x_train_np.std(axis=0)
@@ -143,7 +144,8 @@ class DataContainer:
                 self._train_mean = self._x_train_np.mean(axis=0)
                 self._train_std = self._x_train_np.std(axis=0)
             else:
-                logger.warning('Load the synthetic data from external source before proceed.')
+                logger.warning(
+                    'Load the synthetic data from external source before proceed.')
 
         time_elapsed = time.time() - since
 
@@ -203,15 +205,10 @@ class DataContainer:
         self._x_train_np = swap_image_channel(self._x_train_np)
         self._x_test_np = swap_image_channel(self._x_test_np)
 
-        self._data_range = get_range(self._x_train_np, is_image=True)
-
     def _prepare_numeric_data(self, shuffle, normalize, size_train):
         # for numeric, starts with a Pandas dataframe, and then
         # populate numpy array and then pytorch DataLoader
         self._dataframe = self._get_dataframe()
-        m = self._dataframe.shape[1] - 1  # the label is also in the frame
-
-        self._data_range = get_range(self._dataframe.values[:, :m])
 
         if shuffle:
             self._dataframe = shuffle_data(self._dataframe)
@@ -219,7 +216,7 @@ class DataContainer:
         x_train, y_train, x_test, y_test = self._split_dataframe2np(size_train)
 
         if normalize:
-            (xmin, xmax) = self._data_range
+            (xmin, xmax) = self.data_range
             # NOTE: Carlini attack expects the data in range [0, 1]
             # mean = self._train_mean
             x_train = scale_normalize(x_train, xmin, xmax, mean=None)
