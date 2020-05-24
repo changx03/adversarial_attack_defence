@@ -1,0 +1,3 @@
+python ./aad/cmd/synth_sample.py -vl -s 50000 -f 30 -c 2 -i 10 -e 200
+python ./aad/cmd/synth_sample.py -vl -s 50000 -f 30 -c 2 -i 10 -e 200
+python ./aad/cmd/synth_sample.py -vl -s 50000 -f 30 -c 2 -i 10 -e 200
