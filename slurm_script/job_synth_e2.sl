@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #SBATCH --job-name=synth_e2
 #SBATCH --output=slurm_log/%x_%j.out
-#SBATCH --time=12:00:00
+#SBATCH --time=6:00:00
 #SBATCH --mem=6G
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
