@@ -6,7 +6,7 @@
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=4
-#SBATCH --array=1-25
+#SBATCH --array=1-27
 
 module load CUDA
 module load Python/3.7.3-gimkl-2018b
