@@ -159,9 +159,13 @@ def main():
 
     with open(result_filename, 'w') as file:
         file.write(','.join(['Index', 'Clean', 'DecisionTreeAttack']) + '\n')
-        for i in range(max_iterations):
+        i = 1
+        while i <= max_iterations:
             num_blk_clean, num_blk_adv = experiment(
                 data_name, filter_list, bit_depth, sigma, kernel_size)
+            if num_blk_adv == -1:
+                continue
+            i += 1
             file.write(f'{i},{num_blk_clean},{num_blk_adv}\n')
         file.close()
 
