@@ -5,7 +5,7 @@ import logging
 import time
 
 import numpy as np
-from art.attacks import ZooAttack
+from art.attacks.evasion import ZooAttack
 from art.classifiers import PyTorchClassifier
 
 from ..utils import get_range, swap_image_channel

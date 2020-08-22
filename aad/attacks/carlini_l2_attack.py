@@ -5,7 +5,7 @@ import logging
 import time
 
 import numpy as np
-from art.attacks import CarliniL2Method
+from art.attacks.evasion import CarliniL2Method
 from art.classifiers import PyTorchClassifier
 
 from ..utils import get_range, swap_image_channel
