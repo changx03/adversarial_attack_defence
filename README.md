@@ -15,13 +15,15 @@ Install module as a package using `setuptools`
 
    ```bash
    virtualenv --system-site-packages -p python3 ./venv
-   source ./venv/bin/activate  # sh, bash, ksh, or zsh
+   source ./venv/bin/activate
    ```
 
 1. Install you project from `pip`
 
    ```bash
+   pip install --upgrade pip
    pip install -e .
+   pip check
    pip freeze
    ```
 

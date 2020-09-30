@@ -3,17 +3,16 @@ import codecs
 from setuptools import setup, find_packages
 
 install_requires = [
-    'adversarial-robustness-toolbox==1.3.3',
+    'adversarial-robustness-toolbox==1.4.0',
+    'scikit-learn==0.22.2',
+    'numpy>=1.15.4',
+    'pillow>=6.2.0',
+    'python-dateutil>=2.7.3',
     'astroid',
     'jupyterlab',
     'launchpadlib',
     'matplotlib',
-    'numpy',
     'pandas',
-    'pillow',
-    'python-dateutil',
-    'scikit-learn==0.23.2',
-    'scipy',
     'torch',
     'torchvision',
 ]
