@@ -37,7 +37,7 @@ Install module as a package using `setuptools`
 1. Run the script from terminal
 
    ```bash
-   python ./cmd/train.py -d MNIST -e 5 -lvw
+   python ./cmd/train.py -d MNIST -e 5 -vw
    ```
 
 ## Code Structure
